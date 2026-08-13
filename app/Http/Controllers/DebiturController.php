@@ -1042,20 +1042,28 @@ class DebiturController extends Controller
         // Mencari data debitur berdasarkan ID, jika tidak ketemu akan otomatis memunculkan error 404
         $item = Debitur::findOrFail($id);
 
-        // Di sini nanti kamu bisa mengarahkan ke halaman detail khusus (misal: view('riwayat-detail'))
-        // Untuk sekarang kita tampilkan datanya dulu atau kembalikan ke view detail
         return view('detail-riwayat', compact('item'));
     }
 
     // ==========================================
     //  DETAIL RIWAYAT
     // ==========================================
+    
     public function show($id)
     {
-        // Mengambil data berdasarkan ID atau memunculkan error 404 jika tidak ada
-        $data = Debitur::findOrFail($id); 
+        $data = Debitur::with([
+            'agunan_tanah',
+            'badanusaha',
+            'capital',
+            'datalengkap',
+            'dataslik',
+            'infousaha',
+            'kondisi',
+            'pinjaman',
+            'takeover'
+        ])->findOrFail($id);
 
-        // Mengirim data ke view 'riwayat-detail'
         return view('riwayat-detail', compact('data'));
     }
+    
 }

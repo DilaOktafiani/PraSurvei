@@ -47,18 +47,10 @@
             
             <!-- ===== KONTEN TAB 1: PRA-SURVEI AO ===== -->
             <div x-show="activeTab === 'prasurvei'">
-                <!-- Judul & Tombol Export Pra-Survei -->
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                    <div>
-                        <h2 class="text-xl font-bold text-[#0A3370]">Riwayat Pengajuan Pra-Survei AO</h2>
-                        <p class="text-gray-500 text-sm mt-1">Daftar ringkasan data nasabah tahap awal dari Account Officer.</p>
-                    </div>
-
-                    <div class="flex flex-wrap gap-2">
-                        <a href="{{ route('riwayat.excel') }}" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700 transition shadow-sm">Export Excel</a>
-                        <a href="{{ route('riwayat.pdf') }}" class="bg-rose-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-rose-700 transition shadow-sm">Export PDF</a>
-                        <a href="{{ route('riwayat.word') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition shadow-sm">Export Word</a>
-                    </div>
+                <!-- Judul Pra-Survei -->
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-[#0A3370]">Riwayat Pengajuan Pra-Survei AO</h2>
+                    <p class="text-gray-500 text-sm mt-1">Daftar ringkasan data nasabah tahap awal dari Account Officer.</p>
                 </div>
 
                 <!-- Kolom Search User-Friendly -->
@@ -86,7 +78,11 @@
                         </thead>
                         <tbody class="text-sm text-gray-700 divide-y divide-gray-200">
                             @forelse($dataDebitur ?? [] as $index => $item)
-                            <tr class="hover:bg-blue-50/60 transition-colors">
+                            <tr class="hover:bg-blue-50/60 transition-colors"
+                                x-show="searchPrasurvei === '' || 
+                                        '{{ strtolower($item->no_register ?? '') }}'.includes(searchPrasurvei.toLowerCase()) || 
+                                        '{{ strtolower($item->nama ?? '') }}'.includes(searchPrasurvei.toLowerCase()) || 
+                                        '{{ strtolower($item->usaha ?? '') }}'.includes(searchPrasurvei.toLowerCase())">
                                 <td class="p-3.5">{{ $loop->iteration }}</td>
                                 <td class="p-3.5 font-semibold text-gray-800">{{ $item->no_register ?? '-' }}</td>
                                 <td class="p-3.5 font-medium text-gray-900">{{ $item->nama ?? '-' }}</td>
@@ -114,18 +110,10 @@
 
             <!-- ===== KONTEN TAB 2: SURVEI CA ===== -->
             <div x-show="activeTab === 'surveica'" style="display: none;">
-                <!-- Judul & Tombol Export Survei CA -->
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                    <div>
-                        <h2 class="text-xl font-bold text-[#0A3370]">Riwayat Analisis Survei CA</h2>
-                        <p class="text-gray-500 text-sm mt-1">Daftar ringkasan analisis kelayakan kredit oleh Credit Analyst.</p>
-                    </div>
-
-                    <div class="flex flex-wrap gap-2">
-                        <a href="#" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700 transition shadow-sm">Export Excel</a>
-                        <a href="#" class="bg-rose-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-rose-700 transition shadow-sm">Export PDF</a>
-                        <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition shadow-sm">Export Word</a>
-                    </div>
+                <!-- Judul Survei CA -->
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-[#0A3370]">Riwayat Analisis Survei CA</h2>
+                    <p class="text-gray-500 text-sm mt-1">Daftar ringkasan analisis kelayakan kredit oleh Credit Analyst.</p>
                 </div>
 
                 <!-- Kolom Search User-Friendly -->
@@ -153,7 +141,10 @@
                         </thead>
                         <tbody class="text-sm text-gray-700 divide-y divide-gray-200">
                             @forelse($dataSurveiCa ?? [] as $index => $ca)
-                            <tr class="hover:bg-blue-50/60 transition-colors">
+                            <tr class="hover:bg-blue-50/60 transition-colors"
+                                x-show="searchCa === '' || 
+                                        '{{ strtolower($ca->nama ?? '') }}'.includes(searchCa.toLowerCase()) || 
+                                        '{{ strtolower($ca->nama_ca ?? '') }}'.includes(searchCa.toLowerCase())">
                                 <td class="p-3.5">{{ $loop->iteration }}</td>
                                 <td class="p-3.5 font-medium text-gray-900">{{ $ca->nama ?? '-' }}</td>
                                 <td class="p-3.5">{{ $ca->nama_ca ?? '-' }}</td>
