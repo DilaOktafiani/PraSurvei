@@ -18,6 +18,7 @@ return new class extends Migration
             $table->json('slik')->nullable();
             $table->json('kk')->nullable();
             $table->json('surat_nikah')->nullable();
+            $table->enum('apakah_badan_usaha', ['YA', 'TIDAK'])->nullable();
             $table->timestamps();
         });
     }

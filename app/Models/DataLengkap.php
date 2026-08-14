@@ -17,6 +17,7 @@ class DataLengkap extends Model
         'slik',
         'kk',
         'surat_nikah',
+        'apakah_badan_usaha',
     ];
 
     // Otomatis ubah format JSON dari database menjadi array PHP dan sebaliknya

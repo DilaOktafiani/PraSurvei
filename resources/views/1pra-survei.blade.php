@@ -157,7 +157,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Estimasi Kewajiban <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="estimasi_kewajiban" value="{{ old('estimasi_kewajiban', $debitur->estimasi_kewajiban ?? '') }}" placeholder="Hitungan Angsuran..." required
+                    <input type="number" name="estimasi_kewajiban" value="{{ old('estimasi_kewajiban', $debitur->estimasi_kewajiban ?? '') }}" placeholder="Total angsuran perbulan" required
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 

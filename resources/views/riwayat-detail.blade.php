@@ -31,9 +31,26 @@
             
             <!-- JUDUL FORM & TOMBOL EXPORT DI ATAS -->
             <div class="flex flex-col sm:flex-row justify-between items-center mb-6 pb-4 border-b-2 border-[#0A3370] gap-4">
+    
+            <!-- KIRI: JUDUL & TOMBOL EDIT (BAGIAN TENGAH/DEKAT JUDUL) -->
+            <div class="flex flex-wrap items-center gap-4">
                 <h2 class="text-xl font-bold text-[#0A3370] tracking-wider">FORM PRA SURVEY (MARKETING)</h2>
+                
+                <!-- TOMBOL EDIT DI TENGAH/DEKAT JUDUL -->
+                <a href="#" class="inline-flex items-center gap-2 bg-amber-600 text-white px-3.5 py-1.5 rounded-lg text-sm font-semibold hover:bg-amber-700 transition shadow-sm">
+                    <span>✏️ Edit Data</span>
+                </a>
+            </div>
 
-                <!-- DROPDOWN TOMBOL EXPORT -->
+            <!-- KANAN: TOMBOL CETAK & EXPORT (BAGIAN PINGGIR) -->
+            <div class="flex flex-wrap items-center justify-end gap-3">
+                
+                <!-- 1. TOMBOL CETAK -->
+                <a href="#" target="_blank" class="inline-flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition shadow-sm">
+                    <span>🖨️ Cetak</span>
+                </a>
+
+                <!-- 2. DROPDOWN TOMBOL EXPORT -->
                 <div class="relative inline-block text-left" x-data="{ open: false }">
                     <button @click="open = !open" type="button" class="inline-flex items-center gap-2 bg-[#0A3370] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#07224e] transition shadow-sm">
                         <span>📥 Export Dokumen</span>
@@ -43,18 +60,20 @@
                     </button>
 
                     <div x-show="open" @click.away="open = false" 
-                         x-transition:enter="transition ease-out duration-100"
-                         x-transition:enter-start="transform opacity-0 scale-95"
-                         x-transition:enter-end="transform opacity-100 scale-100"
-                         class="origin-top-right absolute right-0 mt-2 w-48 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50 rounded-none shadow-lg">
+                        x-transition:enter="transition ease-out duration-100"
+                        x-transition:enter-start="transform opacity-0 scale-95"
+                        x-transition:enter-end="transform opacity-100 scale-100"
+                        class="origin-top-right absolute right-0 mt-2 w-48 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50 rounded-none shadow-lg">
                         <div class="py-1">
-                            <a href="#" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📄 Export ke PDF</a>
-                            <a href="#" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📝 Export ke Word</a>
-                            <a href="#" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📊 Export ke Excel</a>
+                            <a href="{{ route('riwayat.export', ['id' => $data->id, 'type' => 'pdf']) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📄 Export ke PDF</a>
+                            <a href="{{ route('riwayat.export', ['id' => $data->id, 'type' => 'word']) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📝 Export ke Word</a>
+                            <a href="{{ route('riwayat.export', ['id' => $data->id, 'type' => 'excel']) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📊 Export ke Excel</a>
                         </div>
                     </div>
                 </div>
+
             </div>
+        </div>
 
             <!-- A. DATA DEBITUR -->
             <div class="mb-6">
@@ -141,7 +160,13 @@
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
                         <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Share Loc</div>
                         <div class="p-3.5 sm:col-span-3">
-                            <a href="{{ $agunan->share_location ?? '#' }}" target="_blank" class="text-blue-600 underline truncate block">{{ $agunan->share_location ?? '-' }}</a>
+                            @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
+                                <a href="{{ $agunan->share_location }}" target="_blank" class="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-800 font-medium underline">
+                                    <span>📍 Lihat Lokasi di Peta</span>
+                                </a>
+                            @else
+                                <span>-</span>
+                            @endif
                         </div>
                     </div>
 
@@ -188,11 +213,18 @@
                         <div class="p-3.5 sm:col-span-3 whitespace-pre-line">{{ $agunan->spesifikasi ?? '-' }}</div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Denah</div>
-                        <div class="p-3.5 sm:col-span-3">
-                            <a href="{{ $agunan->denah ?? '#' }}" target="_blank" class="text-blue-600 underline truncate block">{{ $agunan->denah ?? '-' }}</a>
-                        </div>
+                    <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Denah</div>
+                    <div class="p-3.5 sm:col-span-3">
+                        @if(!empty($agunan->denah) && $agunan->denah !== '-')
+                            <div class="w-full max-w-sm border border-gray-200 rounded overflow-hidden bg-white shadow-sm">
+                                <!-- Menggunakan asset('storage/...') karena file di-upload dan disimpan di server -->
+                                <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" class="w-full h-auto object-cover max-h-64">
+                            </div>
+                        @else
+                            <span>-</span>
+                        @endif
                     </div>
+                </div>
                     
                     <!-- INFORMASI HARGA -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">
@@ -239,10 +271,10 @@
                         <tbody>
                             @forelse($data->pinjaman ?? [] as $slik)
                             <tr class="border-b border-gray-200">
-                                <td class="p-3.5 border-r border-gray-300 text-center font-medium">{{ $slik->bank ?? '-' }}</td>
+                                <td class="p-3.5 border-r border-gray-300 text-center font-medium">{{ $slik->nama_ljk ?? '-' }}</td>
                                 <td class="p-3.5 border-r border-gray-300 text-right">Rp {{ number_format($slik->plafon ?? 0, 0, ',', '.') }}</td>
                                 <td class="p-3.5 border-r border-gray-300 text-right">Rp {{ number_format($slik->outstanding ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-center font-bold text-red-600">{{ $slik->kol ?? '-' }}</td>
+                                <td class="p-3.5 border-r border-gray-300 text-center font-bold text-red-600">{{ $slik->kolekbilitas ?? '-' }}</td>
                                 <td class="p-3.5 border-r border-gray-300 text-right">Rp {{ number_format($slik->angsuran ?? 0, 0, ',', '.') }}</td>
                                 <td class="p-3.5 border-r border-gray-300 text-center">{{ $slik->jkw ?? '-' }}</td>
                                 <td class="p-3.5 text-center">{{ $slik->keterangan ?? '-' }}</td>
@@ -395,14 +427,25 @@
             </div>
 
             <!-- E. LEGALITAS -->
-            <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
-                    E. Legalitas
+            @forelse($data->agunan_tanah ?? [] as $tanah)
+                <div class="mb-6">
+                    <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                        E. Legalitas {{ $tanah->urutan ? '- ' . $tanah->urutan : '' }}
+                    </div>
+                    <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
+                        {{ $tanah->kepemilikan ?? '-' }}
+                    </div>
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
-                    {{ $data->legalitas ?? '-' }}
+            @empty
+                <div class="mb-6">
+                    <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                        E. Legalitas
+                    </div>
+                    <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
+                        -
+                    </div>
                 </div>
-            </div>
+            @endforelse
 
             <!-- F. CAPITAL / ASET YANG DIMILIKI -->
             <div class="mb-6">
@@ -459,7 +502,7 @@
                 </div>
                 <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
                     @php 
-                        $val = $data->dataslik->slik ?? null; 
+                        $val = $data->datalengkap->slik ?? null; 
                         
                         // Handle jika data tersimpan sebagai string JSON
                         if (is_string($val)) {

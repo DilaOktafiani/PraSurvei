@@ -118,8 +118,14 @@ class DebiturController extends Controller
             return redirect()->route('1pra-survei')->with('error', 'Sesi telah berakhir. Silakan isi dari awal.');
         }
 
-        $jaminanId = session('jaminan_id');
-        $data = $jaminanId ? Jaminan::find($jaminanId) : null;
+        // Cari data agunan berdasarkan debitur_id langsung dari database
+        // (Lebih aman dan tidak bergantung pada session yang kadang bisa terhapus)
+        $data = \App\Models\Agunan::where('debitur_id', $debiturId)->first();
+
+        // Jika datanya ada, simpan juga ID-nya ke session agar sinkron
+        if ($data) {
+            session(['agunan_id' => $data->id]);
+        }
 
         return view('2pra-survei', compact('debiturId', 'data'));
     }
@@ -133,17 +139,20 @@ class DebiturController extends Controller
         ]);
 
         $debiturId = session('debitur_id');
-        $agunanId = session('agunan_id'); // Pastikan key session konsisten
+        $agunanId = session('agunan_id'); 
 
-        // Update jika sudah ada, Create jika belum
+        // Update jika sudah ada, Create jika belum berdasarkan debitur_id
         $agunan = \App\Models\Agunan::updateOrCreate(
-            ['id' => $agunanId, 'debitur_id' => $debiturId],
+            [
+                'debitur_id' => $debiturId // Kunci pencarian utama
+            ],
             [
                 'jenis_agunan' => $request->jenis_agunan,
                 'jenis_agunan_lainnya' => $request->jenis_agunan == 'yang_lain' ? $request->jenis_agunan_lainnya : null,
             ]
         );
 
+        // Simpan konsisten menggunakan 'agunan_id'
         session(['agunan_id' => $agunan->id]);
 
         // Logika Percabangan Route
@@ -408,9 +417,26 @@ class DebiturController extends Controller
 
         // Ambil data agunan logam mulia yang sudah pernah disimpan sebelumnya (jika ada)
         $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'logam_mulia')->first();
-        $data = $agunan ? $agunan->logamMulia : null; // Asumsi relasi di model Agunan bernama 'logamMulia'
+        $data = $agunan ? $agunan->logamMulia : null; 
 
-        return view('3-4logam', compact('debitur_id', 'data'));
+        // Daftar opsi standar logam mulia yang ada di dropdown HTML Anda
+        $opsiStandar = ['Antam', 'UBS', 'Lotus Archi', 'Goldber']; // Sesuaikan dengan <option> di Blade Anda
+
+        $isLainnya = false;
+        $jenisLogamVal = '';
+        $jenisLogamLainVal = '';
+
+        if ($data) {
+            if (in_array($data->jenis_logam, $opsiStandar)) {
+                $jenisLogamVal = $data->jenis_logam;
+            } else {
+                // Jika tidak ada di opsi standar, berarti itu dulunya "yang_lain"
+                $jenisLogamVal = 'yang_lain';
+                $jenisLogamLainVal = $data->jenis_logam;
+            }
+        }
+
+        return view('3-4logam', compact('debitur_id', 'data', 'jenisLogamVal', 'jenisLogamLainVal'));
     }
 
     public function storeStep3_4(Request $request)
@@ -920,37 +946,46 @@ class DebiturController extends Controller
 
     public function storeStep9(Request $request)
     {
-        // Validasi input data dari form (dibuat nullable agar tidak wajib diisi)
+        // Validasi input data dari form (termasuk apakah_badan_usaha)
         $request->validate([
-            'debitur_id'    => 'required|exists:debiturs,id',
-            'ktp'           => 'nullable|array',
-            'ktp.*'         => 'string',
-            'slik'          => 'nullable|array',
-            'slik.*'        => 'string',
-            'kk'            => 'nullable|array',
-            'kk.*'          => 'string',
-            'surat_nikah'   => 'nullable|array',
-            'surat_nikah.*' => 'string',
+            'debitur_id'         => 'required|exists:debiturs,id',
+            'ktp'                => 'nullable|array',
+            'ktp.*'              => 'string',
+            'slik'               => 'nullable|array',
+            'slik.*'             => 'string',
+            'kk'                 => 'nullable|array',
+            'kk.*'               => 'string',
+            'surat_nikah'        => 'nullable|array',
+            'surat_nikah.*'      => 'string',
+            'apakah_badan_usaha' => 'required|in:YA,TIDAK', // Validasi pilihan badan usaha
         ]);
 
         DB::beginTransaction();
         try {
-            // Menggunakan updateOrCreate agar data di-update jika sudah ada, atau dibuat baru jika belum
+            // Menggunakan updateOrCreate dengan $request->input() 
+            // agar checkbox yang kosong/tidak dicentang tetap diperbarui dengan benar
             DataLengkap::updateOrCreate(
                 [
                     'debitur_id' => $request->debitur_id
                 ],
                 [
-                    'ktp'         => $request->ktp,
-                    'slik'        => $request->slik,
-                    'kk'          => $request->kk,
-                    'surat_nikah' => $request->surat_nikah,
+                    'ktp'                => $request->input('ktp'),
+                    'slik'               => $request->input('slik'),
+                    'kk'                 => $request->input('kk'),
+                    'surat_nikah'        => $request->input('surat_nikah'),
+                    'apakah_badan_usaha' => $request->apakah_badan_usaha,
                 ]
             );
 
             DB::commit();
             
-            return redirect()->route('10badanusaha')->with('success', 'Kelengkapan data berhasil disimpan.');
+            // Percabangan Redirect Berdasarkan Input "Apakah Badan Usaha"
+            if ($request->apakah_badan_usaha === 'YA') {
+                return redirect()->route('10badanusaha')->with('success', 'Kelengkapan data berhasil disimpan.');
+            } else {
+                return redirect()->route('11final')->with('success', 'Kelengkapan data berhasil disimpan.');
+            }
+
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
@@ -963,23 +998,23 @@ class DebiturController extends Controller
 
     public function createStep10($debitur_id = null)
     {
-        // Ambil debitur_id dari parameter URL atau dari session
         $debitur_id = $debitur_id ?? session('debitur_id');
 
         if (!$debitur_id) {
             return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
         }
 
-        // Simpan ke session agar aman saat perpindahan halaman
         session(['debitur_id' => $debitur_id]);
 
-        // Cari data debitur
         $debitur = Debitur::findOrFail($debitur_id);
-
-        // Ambil data badan usaha yang sudah pernah disimpan sebelumnya (jika ada)
+        
+        // AMBIL DATA YANG PERNAH DISIMPAN SEBELUMNYA AGAR TIDAK HILANG
         $badanUsaha = BadanUsaha::where('debitur_id', $debitur_id)->first();
 
-        return view('10badanusaha', compact('debitur', 'badanUsaha'));
+        // Tombol Kembali di Halaman 10 selalu kembali ke Halaman 9 (karena dia lewat sini karena pilih YA)
+        $backRoute = route('9datalengkap');
+
+        return view('10badanusaha', compact('debitur', 'badanUsaha', 'backRoute'));
     }
 
     public function storeStep10(Request $request)
@@ -992,27 +1027,69 @@ class DebiturController extends Controller
 
         DB::beginTransaction();
         try {
-            // Menggunakan updateOrCreate agar data ter-update jika sudah ada, atau dibuat baru jika belum
+            // Menggunakan updateOrCreate agar data terupdate dan aman (tidak hilang/duplikat)
             BadanUsaha::updateOrCreate(
                 [
                     'debitur_id' => $request->debitur_id
                 ],
                 [
-                    'berkas_badan_usaha' => $request->berkas_badan_usaha,
+                    'berkas_badan_usaha' => $request->input('berkas_badan_usaha'),
                 ]
             );
 
             DB::commit();
             
-            // Hapus session formulir secara keseluruhan agar kembali kosong saat input baru lagi
+            // Setelah dari Halaman 10 (Badan Usaha), lanjut ke Halaman Final (11final)
+            return redirect()->route('11final')->with('success', 'Data badan usaha berhasil disimpan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // FINAL
+    // ==========================================
+    public function createStep11()
+    {
+        $debitur_id = session('debitur_id');
+
+        if (!$debitur_id) {
+            return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
+        }
+
+        // Cek pilihan user di Halaman 9 (apakah_badan_usaha)
+        $dataLengkap = DataLengkap::where('debitur_id', $debitur_id)->first();
+
+        // ATUR TOMBOL KEMBALI DI HALAMAN FINAL SECARA DINAMIS:
+        // - Jika di Halaman 9 pilih YA, berarti dia melewati Halaman 10. Tombol kembali harus ke Halaman 10 (10badanusaha).
+        // - Jika di Halaman 9 pilih TIDAK, berarti dia langsung ke Final. Tombol kembali harus langsung ke Halaman 9 (9datalengkap).
+        if ($dataLengkap && $dataLengkap->apakah_badan_usaha === 'YA') {
+            $backRoute = route('10badanusaha');
+        } else {
+            $backRoute = route('9datalengkap');
+        }
+
+        return view('11final', compact('debitur_id', 'backRoute'));
+    }
+
+    public function storeStep11(Request $request)
+    {
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            DB::commit();
+            
+            // Hapus session formulir secara keseluruhan setelah sukses dikirim
             session()->forget([
-                'debitur_id', 
-                // Tambahkan key session lain milik step sebelumnya jika ada, contoh:
-                // 'step_1_data', 'step_2_data', dst.
+                'debitur_id',
             ]);
 
-            // Arahkan ke halaman utama/dashboard dengan pesan sukses
-            return redirect('/0dashboard')->with('success', 'Data Anda berhasil tersimpan!');
+            return redirect('/0dashboard')->with('success', 'Pengajuan Berhasil Dikirim!');
+            
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
@@ -1052,18 +1129,42 @@ class DebiturController extends Controller
     public function show($id)
     {
         $data = Debitur::with([
-            'agunan_tanah',
-            'badanusaha',
-            'capital',
-            'datalengkap',
-            'dataslik',
-            'infousaha',
-            'kondisi',
-            'pinjaman',
-            'takeover'
+            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
+            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
         ])->findOrFail($id);
 
         return view('riwayat-detail', compact('data'));
+    }
+
+    // Method Export (Tambah ini di bawah show)
+    public function export($id, $type)
+    {
+        $data = Debitur::with([
+            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
+            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+        ])->findOrFail($id);
+
+        // Anda bisa membuat view khusus print: 'riwayat-export'
+        // Jika ingin pakai view yang sama, cukup pastikan di view tersebut 
+        // ada kondisi @if untuk menyembunyikan tombol-tombol saat print/export
+        $view = view('riwayat-detail', compact('data'))->render();
+
+        if ($type === 'pdf') {
+            $pdf = Pdf::loadHtml($view);
+            return $pdf->download('Data_Debitur_' . $data->nama . '.pdf');
+        }
+
+        if ($type === 'word') {
+            return response($view)
+                ->header('Content-Type', 'application/vnd.ms-word')
+                ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.doc"');
+        }
+
+        if ($type === 'excel') {
+            return response($view)
+                ->header('Content-Type', 'application/vnd.ms-excel')
+                ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.xls"');
+        }
     }
     
 }

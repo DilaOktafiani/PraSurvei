@@ -116,9 +116,8 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Deskripsi Usaha <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="deskripsi_usaha" required placeholder="Masukkan deskripsi usaha"
-                           value="{{ old('deskripsi_usaha', $infoUsaha->deskripsi_usaha ?? '') }}"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <textarea name="deskripsi_usaha" rows="5" required placeholder="Masukkan deskripsi usaha"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB] whitespace-pre-line">{{ old('deskripsi_usaha', $infoUsaha->deskripsi_usaha ?? '') }}</textarea>
                 </div>
 
                 <!-- Kelengkapan Berkas -->

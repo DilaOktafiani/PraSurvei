@@ -71,24 +71,26 @@ Route::post('/9datalengkap', [DebiturController::class, 'storeStep9'])->name('st
 Route::get('/10badanusaha', [DebiturController::class, 'createStep10'])->name('10badanusaha');
 Route::post('/10badanusaha', [DebiturController::class, 'storeStep10'])->name('storeStep10');
 
+// Route Halaman 11 Final
+Route::get('/11final', [DebiturController::class, 'createStep11'])->name('11final');
+Route::post('/11final', [DebiturController::class, 'storeStep11'])->name('storeStep11');
 
 
 
-// Route untuk menampilkan halaman Riwayat Pengajuan (menggunakan fungsi yang sudah ada)
+
+// 1. Route untuk Menampilkan Daftar Riwayat
 Route::get('/riwayat', [DebiturController::class, 'createStepRiwayat'])->name('riwayat');
 
-// Route untuk proses simpan (jika ada form di halaman riwayat)
+// 2. Route untuk Proses Simpan (jika ada)
 Route::post('/riwayat', [DebiturController::class, 'storeStepRiwayat'])->name('storeStepRiwayat');
 
-// Route tambahan khusus untuk tombol Download / Export (Excel, PDF, Word)
-Route::get('/riwayat/export-excel', [DebiturController::class, 'exportExcel'])->name('riwayat.excel');
-Route::get('/riwayat/export-pdf', [DebiturController::class, 'exportPdf'])->name('riwayat.pdf');
-Route::get('/riwayat/export-word', [DebiturController::class, 'exportWord'])->name('riwayat.word');
-
-
-
-// Route untuk halaman utama riwayat (daftar data)
-Route::get('/riwayat', [DebiturController::class, 'createStepRiwayat'])->name('riwayat');
-
-// Route untuk melihat detail lengkap nasabah
+// Route Detail
 Route::get('/riwayat/detail/{id}', [DebiturController::class, 'show'])->name('riwayat.detail');
+
+// Route Export (Menggunakan parameter {type} untuk menentukan pdf/word/excel)
+Route::get('/riwayat/detail/{id}/export/{type}', [DebiturController::class, 'export'])->name('riwayat.export');
+
+// --- Route Tambahan untuk Export (sesuai pertanyaan sebelumnya) ---
+Route::get('/pra-survei/{id}/pdf', [PraSurveiController::class, 'exportPdf'])->name('pra-survei.pdf');
+Route::get('/pra-survei/{id}/word', [PraSurveiController::class, 'exportWord'])->name('pra-survei.word');
+Route::get('/pra-survei/{id}/excel', [PraSurveiController::class, 'exportExcel'])->name('pra-survei.excel');
