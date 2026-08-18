@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Pra Survei - BPR Adipura Santosa</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js untuk dropdown interaktif -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 </head>
 <body class="bg-gray-100 font-sans min-h-screen flex flex-col justify-between text-xs sm:text-sm">
 
     <!-- HEADER -->
-    <header class="bg-[#0A3370] text-white shadow-md py-4 border-b-4 border-[#0082CB] sticky top-0 z-50">
+    <header class="no-print bg-[#0A3370] text-white shadow-md py-4 border-b-4 border-[#0082CB] sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo BPR Adipura Santosa" class="h-9 w-auto bg-white p-1 rounded object-contain">
                 <h1 class="text-xl font-bold tracking-wide">BPR ADIPURA SANTOSA</h1>
             </div>
-            <!-- Tombol Kembali Melengkung -->
             <a href="{{ route('riwayat') }}" class="inline-flex items-center justify-center gap-2 text-sm text-white font-medium px-4 py-1.5 rounded-full border-2 border-white hover:bg-white/10 transition"> 
                 <span>Kembali</span> 
             </a>
@@ -26,54 +26,45 @@
 
     <!-- KONTEN UTAMA -->
     <main class="max-w-5xl mx-auto my-8 px-4 w-full flex-grow">
-        <!-- Kotak Utama dengan Sudut Lancip (rounded-none) -->
-        <div class="bg-white shadow-sm p-6 sm:p-8 border border-gray-200 rounded-none">
+        
+        <!-- KOTAK UTAMA (ID print-area MEMBUNGKUS SEMUA ISI SAMPAI BAWAH) -->
+        <div id="print-area" class="bg-white shadow-sm p-6 sm:p-8 border border-gray-200 rounded-none">
             
-            <!-- JUDUL FORM & TOMBOL EXPORT DI ATAS -->
+            <!-- JUDUL FORM & TOMBOL AKSI -->
             <div class="flex flex-col sm:flex-row justify-between items-center mb-6 pb-4 border-b-2 border-[#0A3370] gap-4">
-    
-            <!-- KIRI: JUDUL & TOMBOL EDIT (BAGIAN TENGAH/DEKAT JUDUL) -->
-            <div class="flex flex-wrap items-center gap-4">
-                <h2 class="text-xl font-bold text-[#0A3370] tracking-wider">FORM PRA SURVEY (MARKETING)</h2>
-                
-                <!-- TOMBOL EDIT DI TENGAH/DEKAT JUDUL -->
-                <a href="#" class="inline-flex items-center gap-2 bg-amber-600 text-white px-3.5 py-1.5 rounded-lg text-sm font-semibold hover:bg-amber-700 transition shadow-sm">
-                    <span>✏️ Edit Data</span>
-                </a>
-            </div>
+                <div class="flex flex-wrap items-center gap-4">
+                    <h2 class="text-xl font-bold text-[#0A3370] tracking-wider">FORM PRA SURVEY (MARKETING)</h2>
+                    <a href="{{ route('1pra-survei', ['id' => $data->id]) }}" class="no-print inline-flex items-center gap-2 bg-amber-600 text-white px-3.5 py-1.5 rounded-lg text-sm font-semibold hover:bg-amber-700 transition shadow-sm">
+                        <span>✏️ Edit Data</span>
+                    </a>
+                </div>
 
-            <!-- KANAN: TOMBOL CETAK & EXPORT (BAGIAN PINGGIR) -->
-            <div class="flex flex-wrap items-center justify-end gap-3">
-                
-                <!-- 1. TOMBOL CETAK -->
-                <a href="#" target="_blank" class="inline-flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition shadow-sm">
+                <div class="no-print flex flex-wrap items-center justify-end gap-3">
+                    <a href="{{ route('riwayat.print', ['id' => $data->id]) }}" target="_blank" class="inline-flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition shadow-sm">
                     <span>🖨️ Cetak</span>
                 </a>
 
-                <!-- 2. DROPDOWN TOMBOL EXPORT -->
-                <div class="relative inline-block text-left" x-data="{ open: false }">
-                    <button @click="open = !open" type="button" class="inline-flex items-center gap-2 bg-[#0A3370] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#07224e] transition shadow-sm">
-                        <span>📥 Export Dokumen</span>
-                        <svg class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': open }" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
+                    @if(!isset($isExport))
+                    <div class="relative inline-block text-left" x-data="{ open: false }">
+                        <button @click="open = !open" type="button" class="inline-flex items-center gap-2 bg-[#0A3370] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#07224e] transition shadow-sm">
+                            <span>📥 Export Dokumen</span>
+                            <svg class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': open }" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
 
-                    <div x-show="open" @click.away="open = false" 
-                        x-transition:enter="transition ease-out duration-100"
-                        x-transition:enter-start="transform opacity-0 scale-95"
-                        x-transition:enter-end="transform opacity-100 scale-100"
-                        class="origin-top-right absolute right-0 mt-2 w-48 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50 rounded-none shadow-lg">
-                        <div class="py-1">
-                            <a href="{{ route('riwayat.export', ['id' => $data->id, 'type' => 'pdf']) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📄 Export ke PDF</a>
-                            <a href="{{ route('riwayat.export', ['id' => $data->id, 'type' => 'word']) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📝 Export ke Word</a>
-                            <a href="{{ route('riwayat.export', ['id' => $data->id, 'type' => 'excel']) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📊 Export ke Excel</a>
+                        <div x-show="open" @click.away="open = false" 
+                            class="origin-top-right absolute right-0 mt-2 w-48 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50 rounded-none shadow-lg">
+                            <div class="py-1">
+                                <a href="{{ route('riwayat.export', ['id' => $data->id, 'type' => 'pdf']) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📄 Export ke PDF</a>
+                                <a href="{{ route('riwayat.export', ['id' => $data->id, 'type' => 'word']) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📝 Export ke Word</a>
+                                <a href="{{ route('riwayat.export', ['id' => $data->id, 'type' => 'excel']) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📊 Export ke Excel</a>
+                            </div>
                         </div>
                     </div>
+                    @endif
                 </div>
-
             </div>
-        </div>
 
             <!-- A. DATA DEBITUR -->
             <div class="mb-6">
@@ -549,7 +540,8 @@
                 </div>
             </div>
 
-        </div>
+            </div>
+
     </main>
 
     <!-- FOOTER -->

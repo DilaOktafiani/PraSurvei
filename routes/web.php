@@ -87,10 +87,9 @@ Route::post('/riwayat', [DebiturController::class, 'storeStepRiwayat'])->name('s
 // Route Detail
 Route::get('/riwayat/detail/{id}', [DebiturController::class, 'show'])->name('riwayat.detail');
 
-// Route Export (Menggunakan parameter {type} untuk menentukan pdf/word/excel)
+// Route Export (SATU ROUTE UNTUK SEMUA)
+// Contoh: /riwayat/detail/1/export/pdf
+// Contoh: /riwayat/detail/1/export/word
 Route::get('/riwayat/detail/{id}/export/{type}', [DebiturController::class, 'export'])->name('riwayat.export');
 
-// --- Route Tambahan untuk Export (sesuai pertanyaan sebelumnya) ---
-Route::get('/pra-survei/{id}/pdf', [PraSurveiController::class, 'exportPdf'])->name('pra-survei.pdf');
-Route::get('/pra-survei/{id}/word', [PraSurveiController::class, 'exportWord'])->name('pra-survei.word');
-Route::get('/pra-survei/{id}/excel', [PraSurveiController::class, 'exportExcel'])->name('pra-survei.excel');
+Route::get('/riwayat/detail/{id}/print', [DebiturController::class, 'printPage'])->name('riwayat.print');

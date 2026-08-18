@@ -20,6 +20,7 @@ use App\Models\TakeOver;
 use App\Models\Kondisi;
 use App\Models\DataLengkap;
 use App\Models\BadanUsaha;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class DebiturController extends Controller
@@ -29,11 +30,16 @@ class DebiturController extends Controller
     // =========================================================================
 
     // 1. Tampilkan Halaman Step 1 (dengan data lama jika ada)
-    public function createStep1()
+    public function createStep1(Request $request)
     {
         $debitur = null;
-        
-        // Cek apakah di session sudah ada ID debitur
+
+        // Jika ada ID dari tombol edit, simpan ke session & ambil datanya
+        if ($request->has('id')) {
+            session(['debitur_id' => $request->id]);
+        }
+
+        // Ambil data berdasarkan session yang aktif
         if (session()->has('debitur_id')) {
             $debitur = Debitur::find(session('debitur_id'));
         }
@@ -1037,10 +1043,15 @@ class DebiturController extends Controller
                 ]
             );
 
+            // (Opsional) Bersihkan session debitur_id jika alurnya sudah benar-benar selesai
+            session()->forget('debitur_id');
+
             DB::commit();
             
-            // Setelah dari Halaman 10 (Badan Usaha), lanjut ke Halaman Final (11final)
-            return redirect()->route('11final')->with('success', 'Data badan usaha berhasil disimpan.');
+            // Ubah arah redirect ke halaman report/detail dengan membawa ID debitur
+            return redirect()->route('riwayat.detail', ['id' => $request->debitur_id])
+                             ->with('success', 'Data berhasil diperbarui dan disimpan secara keseluruhan!');
+                             
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
@@ -1088,7 +1099,7 @@ class DebiturController extends Controller
                 'debitur_id',
             ]);
 
-            return redirect('/0dashboard')->with('success', 'Pengajuan Berhasil Dikirim!');
+            return redirect('/riwayat.detail')->with('success', 'Pengajuan Berhasil Dikirim!');
             
         } catch (\Exception $e) {
             DB::rollBack();
@@ -1123,9 +1134,8 @@ class DebiturController extends Controller
     }
 
     // ==========================================
-    //  DETAIL RIWAYAT
+    // DETAIL RIWAYAT (Untuk Tampilan Web Normal)
     // ==========================================
-    
     public function show($id)
     {
         $data = Debitur::with([
@@ -1136,18 +1146,34 @@ class DebiturController extends Controller
         return view('riwayat-detail', compact('data'));
     }
 
-    // Method Export (Tambah ini di bawah show)
-    public function export($id, $type)
+    // ==========================================
+    // METHOD CETAK (PRINT LANGSUNG)
+    // ==========================================
+    public function printPage($id)
     {
+        // Mengambil data dengan semua relasi yang dibutuhkan
         $data = Debitur::with([
             'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
             'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
         ])->findOrFail($id);
 
-        // Anda bisa membuat view khusus print: 'riwayat-export'
-        // Jika ingin pakai view yang sama, cukup pastikan di view tersebut 
-        // ada kondisi @if untuk menyembunyikan tombol-tombol saat print/export
-        $view = view('riwayat-detail', compact('data'))->render();
+        // Mengarahkan ke view khusus cetak (riwayat-print.blade.php)
+        return view('riwayat-print', compact('data'));
+    }            
+
+    // ==========================================
+    // METHOD EXPORT (PDF, Word, Excel)
+    // ==========================================
+    public function export($id, $type)
+    {
+        // Mengambil data dengan semua relasi yang dibutuhkan
+        $data = Debitur::with([
+            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
+            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+        ])->findOrFail($id);
+
+        // Menggunakan view khusus agar tampilan di PDF/Word/Excel rapi
+        $view = view('riwayat-export', compact('data'))->render();
 
         if ($type === 'pdf') {
             $pdf = Pdf::loadHtml($view);
@@ -1165,6 +1191,8 @@ class DebiturController extends Controller
                 ->header('Content-Type', 'application/vnd.ms-excel')
                 ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.xls"');
         }
+        
+        abort(404); // Jika tipe tidak ditemukan
     }
     
 }
