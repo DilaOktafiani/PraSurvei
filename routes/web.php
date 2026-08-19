@@ -87,9 +87,9 @@ Route::post('/riwayat', [DebiturController::class, 'storeStepRiwayat'])->name('s
 // Route Detail
 Route::get('/riwayat/detail/{id}', [DebiturController::class, 'show'])->name('riwayat.detail');
 
-// Route Export (SATU ROUTE UNTUK SEMUA)
-// Contoh: /riwayat/detail/1/export/pdf
-// Contoh: /riwayat/detail/1/export/word
-Route::get('/riwayat/detail/{id}/export/{type}', [DebiturController::class, 'export'])->name('riwayat.export');
+// Route Export Terpisah
+Route::get('/riwayat/detail/{id}/export/pdf', [DebiturController::class, 'exportPdf'])->name('riwayat.pdf');
+Route::get('/riwayat/detail/{id}/export/word', [DebiturController::class, 'exportWord'])->name('riwayat.word');
+Route::get('/riwayat/detail/{id}/export/excel', [DebiturController::class, 'exportExcel'])->name('riwayat.excel');
 
 Route::get('/riwayat/detail/{id}/print', [DebiturController::class, 'printPage'])->name('riwayat.print');

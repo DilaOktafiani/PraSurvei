@@ -40,9 +40,9 @@
                 </div>
 
                 <div class="no-print flex flex-wrap items-center justify-end gap-3">
-                    <a href="{{ route('riwayat.print', ['id' => $data->id]) }}" target="_blank" class="inline-flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition shadow-sm">
-                    <span>🖨️ Cetak</span>
-                </a>
+                    <button type="button" onclick="printRiwayat({{ $data->id }})" class="inline-flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition shadow-sm cursor-pointer">
+                        <span>🖨️ Cetak</span>
+                    </button>
 
                     @if(!isset($isExport))
                     <div class="relative inline-block text-left" x-data="{ open: false }">
@@ -56,9 +56,9 @@
                         <div x-show="open" @click.away="open = false" 
                             class="origin-top-right absolute right-0 mt-2 w-48 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50 rounded-none shadow-lg">
                             <div class="py-1">
-                                <a href="{{ route('riwayat.export', ['id' => $data->id, 'type' => 'pdf']) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📄 Export ke PDF</a>
-                                <a href="{{ route('riwayat.export', ['id' => $data->id, 'type' => 'word']) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📝 Export ke Word</a>
-                                <a href="{{ route('riwayat.export', ['id' => $data->id, 'type' => 'excel']) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📊 Export ke Excel</a>
+                                <a href="{{ route('riwayat.pdf', $data->id) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📄 Export ke PDF</a>
+                                <a href="{{ route('riwayat.word', $data->id) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📝 Export ke Word</a>
+                                <a href="{{ route('riwayat.excel', $data->id) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📊 Export ke Excel</a>
                             </div>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                         <div class="p-3.5 font-medium">{{ $data->nama_pasangan ?? '-' }}</div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Usia</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 pl-7">Usia</div>
                         <div class="p-3.5 border-r border-gray-300">{{ $data->usia ?? '-' }}</div>
                         <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Usia Pasangan</div>
                         <div class="p-3.5">{{ $data->usia_pasangan ?? '-' }}</div>
@@ -102,7 +102,7 @@
                         <div class="p-3.5 sm:col-span-3 font-medium">{{ $data->alamat_ktp ?? '-' }}</div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Alamat Domisili</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 pl-7">Alamat Domisili</div>
                         <div class="p-3.5 sm:col-span-3 font-medium">{{ $data->alamat_domisili ?? '-' }}</div>
                     </div>
 
@@ -141,7 +141,7 @@
                 </div>
                 <div class="border border-[#0A3370] rounded-none">
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">1. Kepemilikan</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Kepemilikan</div>
                         <div class="p-3.5 sm:col-span-3 font-medium">{{ $agunan->kepemilikan ?? '-' }}</div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
@@ -247,7 +247,16 @@
                     C. SLIK
                 </div>
                 <div class="border border-[#0A3370] rounded-none overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
+                    <table class="w-full text-left border-collapse table-fixed">
+                        <colgroup>
+                            <col style="width: 16.666%;">
+                            <col style="width: 13.888%;">
+                            <col style="width: 13.888%;">
+                            <col style="width: 8.333%;">
+                            <col style="width: 13.888%;">
+                            <col style="width: 8.333%;">
+                            <col style="width: 25%;">
+                        </colgroup>
                         <thead>
                             <tr class="bg-gray-100 border-b border-gray-300">
                                 <th class="p-3.5 border-r border-gray-300 text-center">Nama Bank</th>
@@ -549,5 +558,22 @@
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
 
+<!-- Iframe tersembunyi untuk mengambil tampilan riwayat-print -->
+<iframe id="iframe-print" style="display: none;"></iframe>
+
+<script>
+function printRiwayat(id) {
+    // Sesuaikan URL route print kamu di sini
+    var urlPrint = "{{ url('/riwayat/detail') }}/" + id + "/print";
+    
+    var iframe = document.getElementById('iframe-print');
+    iframe.src = urlPrint;
+    
+    // Begitu desain dari riwayat-print selesai dimuat di latar belakang, langsung print
+    iframe.onload = function() {
+        iframe.contentWindow.print();
+    };
+}
+</script>
 </body>
 </html>

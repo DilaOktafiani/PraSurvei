@@ -1162,37 +1162,56 @@ class DebiturController extends Controller
     }            
 
     // ==========================================
-    // METHOD EXPORT (PDF, Word, Excel)
+    // METHOD EXPORT PDF
     // ==========================================
-    public function export($id, $type)
+    public function exportPdf($id)
     {
-        // Mengambil data dengan semua relasi yang dibutuhkan
         $data = Debitur::with([
             'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
             'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
         ])->findOrFail($id);
 
-        // Menggunakan view khusus agar tampilan di PDF/Word/Excel rapi
-        $view = view('riwayat-export', compact('data'))->render();
-
-        if ($type === 'pdf') {
-            $pdf = Pdf::loadHtml($view);
-            return $pdf->download('Data_Debitur_' . $data->nama . '.pdf');
-        }
-
-        if ($type === 'word') {
-            return response($view)
-                ->header('Content-Type', 'application/vnd.ms-word')
-                ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.doc"');
-        }
-
-        if ($type === 'excel') {
-            return response($view)
-                ->header('Content-Type', 'application/vnd.ms-excel')
-                ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.xls"');
-        }
+        // Menggunakan riwayat-pdf.blade.php
+        $view = view('riwayat-pdf', compact('data'))->render();
+        $pdf = Pdf::loadHtml($view);
         
-        abort(404); // Jika tipe tidak ditemukan
+        return $pdf->download('Data_Debitur_' . $data->nama . '.pdf');
+    }
+
+    // ==========================================
+    // METHOD EXPORT WORD
+    // ==========================================
+    public function exportWord($id)
+    {
+        $data = Debitur::with([
+            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
+            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+        ])->findOrFail($id);
+
+        // Menggunakan riwayat-word.blade.php
+        $view = view('riwayat-word', compact('data'))->render();
+
+        return response($view)
+            ->header('Content-Type', 'application/vnd.ms-word')
+            ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.doc"');
+    }
+
+    // ==========================================
+    // METHOD EXPORT EXCEL
+    // ==========================================
+    public function exportExcel($id)
+    {
+        $data = Debitur::with([
+            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
+            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+        ])->findOrFail($id);
+
+        // Menggunakan riwayat-excel.blade.php
+        $view = view('riwayat-excel', compact('data'))->render();
+
+        return response($view)
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.xls"');
     }
     
 }
