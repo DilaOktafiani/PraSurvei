@@ -51,7 +51,7 @@
                     <h3 class="text-lg font-bold text-gray-800">Survei CA</h3>
                     <p class="text-gray-500 text-sm mt-2">Analisis kelayakan kredit mendalam dan verifikasi data lanjutan oleh Credit Analyst.</p>
                 </div>
-                <a href="/survei-ca" class="block text-center bg-[#0A3370] text-white font-semibold py-2.5 rounded-lg hover:bg-[#062452] transition shadow-sm text-sm">
+                <a href="/z1-surveica" class="block text-center bg-[#0A3370] text-white font-semibold py-2.5 rounded-lg hover:bg-[#062452] transition shadow-sm text-sm">
                     Isi Formulir Survei
                 </a>
             </div>

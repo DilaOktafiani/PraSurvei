@@ -29,24 +29,28 @@ class DebiturController extends Controller
     // 1PRA-SURVEI
     // =========================================================================
 
-    // 1. Tampilkan Halaman Step 1 (dengan data lama jika ada)
     public function createStep1(Request $request)
     {
         $debitur = null;
 
-        // Jika ada ID dari tombol edit, simpan ke session & ambil datanya
+        // 1. KALO ADA ID (Artinya user klik tombol EDIT)
         if ($request->has('id')) {
+            // Simpan ID baru ini ke session, dan ambil datanya
             session(['debitur_id' => $request->id]);
-        }
-
-        // Ambil data berdasarkan session yang aktif
-        if (session()->has('debitur_id')) {
-            $debitur = Debitur::find(session('debitur_id'));
+            $debitur = Debitur::find($request->id);
+        } 
+        // 2. KALO TIDAK ADA ID (Artinya user klik tombol ISI BARU dari menu utama)
+        else {
+            // HAPUS session lama! Supaya memori data sebelumnya hilang
+            session()->forget('debitur_id');
+            
+            // $debitur dibiarkan NULL, jadi form otomatis KOSONG dari awal
+            $debitur = null;
         }
 
         return view('1pra-survei', compact('debitur'));
     }
-
+    
     public function storeStep1(Request $request)
     {
         $validated = $request->validate([
@@ -1099,8 +1103,9 @@ class DebiturController extends Controller
                 'debitur_id',
             ]);
 
-            return redirect('/riwayat.detail')->with('success', 'Pengajuan Berhasil Dikirim!');
-            
+            return redirect()->route('riwayat.detail', ['id' => $request->debitur_id])
+                             ->with('success', 'Data berhasil diperbarui dan disimpan secara keseluruhan!');
+
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();

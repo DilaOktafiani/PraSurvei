@@ -15,7 +15,6 @@ Route::post('/1pra-survei', [DebiturController::class, 'storeStep1'])->name('sto
 Route::get('/2pra-survei', [DebiturController::class, 'createStep2'])->name('2pra-survei');
 Route::post('/2pra-survei', [DebiturController::class, 'storeStep2'])->name('storeStep2');
 
-
 // Route Halaman 3 Jika Pengguna Memilih Opsi Tanah Sawah, Tanah Pekarangan, dan Tanah Bangunan di Jenis Agunan
 Route::get('/3-1tanah', [DebiturController::class, 'createStep3_1'])->name('3-1tanah');
 Route::post('/3-1tanah', [DebiturController::class, 'storeStep3_1'])->name('storeStep3-1');
@@ -36,7 +35,6 @@ Route::post('/3-4logam', [DebiturController::class, 'storeStep3_4'])->name('stor
 Route::get('/4jaminan', [DebiturController::class, 'createStep4'])->name('4jaminan');
 Route::post('/4jaminan', [DebiturController::class, 'storeStep4'])->name('storeStep4');
 
-
 // Route Halaman 5 Informasi Usaha
 Route::get('/5infousaha', [DebiturController::class, 'createStep5'])->name('5infousaha');
 Route::post('/5infousaha', [DebiturController::class, 'storeStep5'])->name('storeStep5');
@@ -49,11 +47,9 @@ Route::post('/6-1dataslik', [DebiturController::class, 'storeStep6_1'])->name('s
 Route::get('/6-1pinjaman1', [DebiturController::class, 'createStep6_11'])->name('6-1pinjaman1');
 Route::post('/6-1pinjaman1', [DebiturController::class, 'storeStep6_11'])->name('storeStep6-11');
 
-
 // Route Halaman 7 Capital
 Route::get('/7capital', [DebiturController::class, 'createStep7'])->name('7capital');
 Route::post('/7capital', [DebiturController::class, 'storeStep7'])->name('storeStep7');
-
 
 // Route Halaman 8 Take Over
 Route::get('/8-1takeover', [DebiturController::class, 'createStep8_1'])->name('8-1takeover');
@@ -77,7 +73,6 @@ Route::post('/11final', [DebiturController::class, 'storeStep11'])->name('storeS
 
 
 
-
 // 1. Route untuk Menampilkan Daftar Riwayat
 Route::get('/riwayat', [DebiturController::class, 'createStepRiwayat'])->name('riwayat');
 
@@ -93,3 +88,11 @@ Route::get('/riwayat/detail/{id}/export/word', [DebiturController::class, 'expor
 Route::get('/riwayat/detail/{id}/export/excel', [DebiturController::class, 'exportExcel'])->name('riwayat.excel');
 
 Route::get('/riwayat/detail/{id}/print', [DebiturController::class, 'printPage'])->name('riwayat.print');
+
+
+
+
+// Route Halaman 1
+Route::get('/z1-surveica', [SurveiController::class, 'createAlur1'])->name('z1-surveica');
+Route::post('/z1-surveica', [SurveiController::class, 'storeAlur1'])->name('storeAlur1');
+

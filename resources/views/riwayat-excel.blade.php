@@ -62,10 +62,10 @@
         </tr>
 
         <!-- A. DATA DEBITUR -->
-        <tr><th colspan="6" class="header-section">A. DATA DEBITUR</th></tr>
+        <tr><th colspan="6" class="header-section" style="background-color: #0A3370; color: #FFFFFF; font-weight: bold; padding: 5px 8px; text-transform: uppercase;">A. DATA DEBITUR</th></tr>
         <tr>
             <td class="bg-label" style="width: 20%;">Nomor Register</td>
-            <td colspan="2" style="width: 30%;">{{ $data->no_register ?? '-' }}</td>
+            <td colspan="2" style="width: 30%;"><b>{{ $data->no_register ?? '-' }}</b></td>
             <td class="bg-label" style="width: 20%;">Nama Marketing</td>
             <td colspan="2" style="width: 30%;">{{ $data->nama_marketing ?? '-' }}</td>
         </tr>
@@ -73,84 +73,83 @@
             <td class="bg-label">1. Nama Debitur</td>
             <td colspan="2"><b>{{ $data->nama ?? '-' }}</b></td>
             <td class="bg-label">Nama Pasangan</td>
-            <td colspan="2">{{ optional($data->datalengkap)->nama_pasangan ?? '-' }}</td>
+            <td colspan="2">{{ $data->nama_pasangan ?? '-' }}</td>
         </tr>
         <tr>
-            <td class="bg-label" style="padding-left: 18px;">Usia</td>
-            <td colspan="2">{{ optional($data->datalengkap)->usia ? $data->datalengkap->usia . ' Tahun' : '-' }}</td>
+            <td class="bg-label">Usia</td>
+            <td colspan="2">{{ $data->usia ?? '-' }}</td>
             <td class="bg-label">Usia Pasangan</td>
-            <td colspan="2">{{ optional($data->datalengkap)->usia_pasangan ? $data->datalengkap->usia_pasangan . ' Tahun' : '-' }}</td>
+            <td colspan="2">{{ $data->usia_pasangan ?? '-' }}</td>
         </tr>
         <tr>
             <td class="bg-label">2. Usaha</td>
-            <td colspan="2">{{ optional($data->infousaha)->jenis_usaha ?? '-' }}</td>
+            <td colspan="2">{{ $data->usaha ?? '-' }}</td>
             <td class="bg-label">Lama Usaha</td>
-            <td colspan="2">{{ optional($data->infousaha)->lama_usaha ?? '-' }}</td>
+            <td colspan="2">{{ $data->lama_usaha ?? '-' }}</td>
         </tr>
         <tr>
             <td class="bg-label">3. Alamat Debitur</td>
             <td colspan="5"><b>{{ $data->alamat_ktp ?? '-' }}</b></td>
         </tr>
         <tr>
-            <td class="bg-label" style="padding-left: 17px;">Alamat Domisili</td>
+            <td class="bg-label">Alamat Domisili</td>
             <td colspan="5"><b>{{ $data->alamat_domisili ?? '-' }}</b></td>
         </tr>
         <tr>
             <td class="bg-label">4. Plafon</td>
-            <td colspan="2" class="text-emerald">{{ optional($data->pinjaman_utama)->plafon ?? 0 }}</td>
+            <td colspan="2" class="text-emerald">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</td>
             <td class="bg-label">JKW</td>
-            <td colspan="2">{{ optional($data->pinjaman_utama)->jangka_waktu ? optional($data->pinjaman_utama)->jangka_waktu . ' Bulan' : '-' }}</td>
+            <td colspan="2">{{ $data->jangka_waktu ?? '-' }}</td>
         </tr>
         <tr>
-            <td class="bg-label" rowspan="2">5. Tujuan Penggunaan</td>
-            <td colspan="2" rowspan="2" style="vertical-align: top;">{{ optional($data->pinjaman_utama)->tujuan_penggunaan ?? '-' }}</td>
+            <td class="bg-label" rowspan="2" style="vertical-align: top !important;">5. Tujuan Penggunaan</td>
+            <td colspan="2" rowspan="2" style="vertical-align: top !important; word-break: break-word;">{{ $data->tujuan_penggunaan ?? '-' }}</td>
             <td class="bg-label">Angsuran</td>
-            <td colspan="2" class="text-emerald">{{ optional($data->pinjaman_utama)->estimasi_kewajiban ?? 0 }}</td>
+            <td colspan="2" class="text-emerald">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</td>
         </tr>
         <tr>
             <td class="bg-label">Type Fasilitas</td>
             <td colspan="2">
-                @php $tf = optional($data->pinjaman_utama)->tipe_fasilitas; @endphp
-                {{ is_array($tf) ? implode(', ', $tf) : ($tf ?? '-') }}
+                {{ is_array($data->tipe_fasilitas ?? null) ? implode(', ', $data->tipe_fasilitas) : ($data->tipe_fasilitas ?? '-') }}
             </td>
         </tr>
 
         @php $agunan = $data->agunan_tanah->first() ?? null; @endphp
 
         <!-- B. DATA JAMINAN -->
-        <tr><th colspan="6" class="header-section">B. DATA JAMINAN</th></tr>
-        <tr><td class="bg-label">1. Kepemilikan</td><td colspan="5">{{ $agunan->kepemilikan ?? '-' }}</td></tr>
+        <tr><th colspan="6" class="header-section" style="background-color: #0A3370; color: #FFFFFF; font-weight: bold; padding: 5px 8px; text-transform: uppercase;">B. DATA JAMINAN</th></tr>
+        <tr><td class="bg-label"><b>Kepemilikan</b></td><td colspan="5"><b>{{ $agunan->kepemilikan ?? '-' }}</b></td></tr>
         <tr><td class="bg-label">Alamat</td><td colspan="5">{{ $agunan->alamat ?? '-' }}</td></tr>
         <tr><td class="bg-label">Share Loc</td><td colspan="5">{{ $agunan->share_location ?? '-' }}</td></tr>
         <tr class="bg-label" style="text-align: center;">
-            <td style="text-align: center;">Uraian</td>
-            <td style="text-align: center;">Luas (m2)</td>
-            <td style="text-align: center;">Harga</td>
-            <td style="text-align: center;">Nilai Pasar</td>
-            <td style="text-align: center;">Nilai Taksasi</td>
-            <td style="text-align: center;">Nilai Likuidasi</td>
+            <td style="text-align: center; font-weight: bold;">Uraian</td>
+            <td style="text-align: center; font-weight: bold;">Luas (m2)</td>
+            <td style="text-align: center; font-weight: bold;">Harga</td>
+            <td style="text-align: center; font-weight: bold;">Nilai Pasar</td>
+            <td style="text-align: center; font-weight: bold;">Nilai Taksasi</td>
+            <td style="text-align: center; font-weight: bold;">Nilai Likuidasi</td>
         </tr>
         <tr>
             <td class="bg-label">Tanah</td>
             <td class="text-center">{{ $agunan->luas_tanah ?? '-' }}</td>
-            <td class="text-right">{{ $agunan->harga_tanah ?? 0 }}</td>
-            <td class="text-right">{{ $agunan->tanah_pasar ?? 0 }}</td>
-            <td class="text-right">{{ $agunan->tanah_taksasi ?? 0 }}</td>
-            <td class="text-right">{{ $agunan->tanah_likuidasi ?? 0 }}</td>
+            <td class="text-right">Rp {{ number_format($agunan->harga_tanah ?? 0, 0, ',', '.') }}</td>
+            <td class="text-right">Rp {{ number_format($agunan->tanah_pasar ?? 0, 0, ',', '.') }}</td>
+            <td class="text-right">Rp {{ number_format($agunan->tanah_taksasi ?? 0, 0, ',', '.') }}</td>
+            <td class="text-right">Rp {{ number_format($agunan->tanah_likuidasi ?? 0, 0, ',', '.') }}</td>
         </tr>
         <tr>
             <td class="bg-label">Bangunan</td>
             <td class="text-center">{{ $agunan->luas_bangunan ?? '-' }}</td>
-            <td class="text-right">{{ $agunan->harga_bangunan ?? 0 }}</td>
-            <td class="text-right">{{ $agunan->bangunan_pasar ?? 0 }}</td>
-            <td class="text-right">{{ $agunan->bangunan_taksasi ?? 0 }}</td>
-            <td class="text-right">{{ $agunan->bangunan_likuidasi ?? 0 }}</td>
+            <td class="text-right">Rp {{ number_format($agunan->harga_bangunan ?? 0, 0, ',', '.') }}</td>
+            <td class="text-right">Rp {{ number_format($agunan->bangunan_pasar ?? 0, 0, ',', '.') }}</td>
+            <td class="text-right">Rp {{ number_format($agunan->bangunan_taksasi ?? 0, 0, ',', '.') }}</td>
+            <td class="text-right">Rp {{ number_format($agunan->bangunan_likuidasi ?? 0, 0, ',', '.') }}</td>
         </tr>
         <tr style="font-weight: bold;" class="bg-label">
-            <td colspan="3" class="text-center">TOTAL</td>
-            <td class="text-right">{{ ($agunan->tanah_pasar ?? 0) + ($agunan->bangunan_pasar ?? 0) }}</td>
-            <td class="text-right">{{ ($agunan->tanah_taksasi ?? 0) + ($agunan->bangunan_taksasi ?? 0) }}</td>
-            <td class="text-right">{{ ($agunan->tanah_likuidasi ?? 0) + ($agunan->bangunan_likuidasi ?? 0) }}</td>
+            <td colspan="3" class="text-center" style="text-align: center;">TOTAL</td>
+            <td class="text-right">Rp {{ number_format(($agunan->tanah_pasar ?? 0) + ($agunan->bangunan_pasar ?? 0), 0, ',', '.') }}</td>
+            <td class="text-right">Rp {{ number_format(($agunan->tanah_taksasi ?? 0) + ($agunan->bangunan_taksasi ?? 0), 0, ',', '.') }}</td>
+            <td class="text-right">Rp {{ number_format(($agunan->tanah_likuidasi ?? 0) + ($agunan->bangunan_likuidasi ?? 0), 0, ',', '.') }}</td>
         </tr>
         <tr>
             <td class="bg-label">Spesifikasi Jaminan</td>
@@ -162,66 +161,80 @@
             <td class="bg-label" style="background-color: #f2f2f2 !important; border: 1px solid #d9d9d9 !important; font-weight: bold; padding: 5px 8px; vertical-align: top;">Denah</td>
             <td colspan="5" style="border: 1px solid #d9d9d9 !important; padding: 5px 8px;">
                 @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                    <div style="width: 100%; max-width: 300px; border: 1px solid #d9d9d9; border-radius: 2px; overflow: hidden; background: #fff;">
-                        <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; max-height: 250px; object-fit: cover;">
-                    </div>
+                    <a href="{{ asset('storage/' . $agunan->denah) }}" target="_blank" style="font-size: 11px; color: #000000; text-decoration: none;">
+                        {{ asset('storage/' . $agunan->denah) }}
+                    </a>
                 @else
-                    <div style="padding: 4px 0;">-</div>
+                    -
                 @endif
             </td>
         </tr>
 
         <!-- Informasi Harga -->
         <tr>
-            <td class="bg-label" style="background-color: #f2f2f2 !important; border: 1px solid #d9d9d9 !important; font-weight: bold; padding: 5px 8px; vertical-align: top;">Informasi Harga</td>
-            <td colspan="5" style="border: 1px solid #d9d9d9 !important; padding: 0 !important;">
-                @php
-                    $infoList = [
-                        $agunan->info_harga1 ?? '-',
-                        $agunan->info_harga2 ?? '-',
-                        $agunan->info_harga3 ?? '-'
-                    ];
-                @endphp
-                <table style="width: 100%; border-collapse: collapse; border: none !important;">
-                    @foreach($infoList as $index => $info)
-                        <tr>
-                            <td style="width: 10%; border-top: {{ $loop->first ? 'none' : '1px solid #d9d9d9' }}; border-bottom: none; border-right: 1px solid #d9d9d9; border-left: none; text-align: center; padding: 5px 8px; background-color: #f2f2f2; font-weight: bold; vertical-align: middle;">{{ $index + 1 }}</td>
-                            <td style="width: 90%; border-top: {{ $loop->first ? 'none' : '1px solid #d9d9d9' }}; border-bottom: none; border-right: none; border-left: none; padding: 5px 8px; white-space: pre-line; vertical-align: middle;">{{ !empty(trim($info)) ? $info : '-' }}</td>
-                        </tr>
-                    @endforeach
-                </table>
-            </td>
+            <td class="bg-label" rowspan="3" style="background-color: #f2f2f2 !important; border: 1px solid #d9d9d9 !important; font-weight: bold; padding: 5px 8px; vertical-align: top; width: 20%;">Informasi Harga</td>
+            <td style="width: 8%; border: 1px solid #d9d9d9 !important; text-align: center; font-weight: bold; background-color: #f2f2f2; vertical-align: top; padding: 5px 8px;">1</td>
+            <td colspan="4" style="border: 1px solid #d9d9d9 !important; padding: 5px 8px; vertical-align: top; word-break: break-word;">{{ !empty(trim($agunan->info_harga1)) ? $agunan->info_harga1 : '-' }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #d9d9d9 !important; text-align: center; font-weight: bold; background-color: #f2f2f2; vertical-align: top; padding: 5px 8px;">2</td>
+            <td colspan="4" style="border: 1px solid #d9d9d9 !important; padding: 5px 8px; vertical-align: top; word-break: break-word;">{{ !empty(trim($agunan->info_harga2)) ? $agunan->info_harga2 : '-' }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #d9d9d9 !important; text-align: center; font-weight: bold; background-color: #f2f2f2; vertical-align: top; padding: 5px 8px;">3</td>
+            <td colspan="4" style="border: 1px solid #d9d9d9 !important; padding: 5px 8px; vertical-align: top; word-break: break-word;">{{ !empty(trim($agunan->info_harga3)) ? $agunan->info_harga3 : '-' }}</td>
         </tr>
 
         <!-- C. SLIK -->
-        <tr><th colspan="6" class="header-section">C. SLIK</th></tr>
+        <tr><th colspan="6" class="header-section" style="background-color: #0A3370; color: #FFFFFF; font-weight: bold; padding: 5px 8px; text-transform: uppercase;">C. SLIK</th></tr>
         <tr class="bg-label" style="text-align: center;">
-            <td style="text-align: center;">Nama Bank</td>
-            <td style="text-align: center;">Plafon</td>
-            <td style="text-align: center;">Outstanding</td>
-            <td style="text-align: center;">KOL</td>
-            <td style="text-align: center;">Angsuran</td>
-            <td style="text-align: center;">JKW / Keterangan</td>
+            <td style="text-align: center; font-weight: bold; width: 22%;">Nama Bank</td>
+            <td style="text-align: center; font-weight: bold; width: 15%;">Plafon</td>
+            <td style="text-align: center; font-weight: bold; width: 15%;">Outstanding</td>
+            <td style="text-align: center; font-weight: bold; width: 8%;">KOL</td>
+            <td style="text-align: center; font-weight: bold; width: 15%;">Angsuran</td>
+            <td style="padding: 0; width: 25%;">
+                <table style="width: 100%; border-collapse: collapse; border: none; background: transparent; margin: 0;">
+                    <tr>
+                        <td style="width: 50%; text-align: center; font-weight: bold; border: none; border-right: 1px solid #d9d9d9; padding: 5px 4px;">JKW</td>
+                        <td style="width: 50%; text-align: center; font-weight: bold; border: none; padding: 5px 4px;">Keterangan</td>
+                    </tr>
+                </table>
+            </td>
         </tr>
         @forelse($data->pinjaman ?? [] as $slik)
         <tr>
-            <td>{{ $slik->nama_ljk ?? '-' }}</td>
-            <td class="text-right">{{ $slik->plafon ?? 0 }}</td>
-            <td class="text-right">{{ $slik->outstanding ?? 0 }}</td>
+            <td style="text-align: center;">{{ $slik->nama_ljk ?? '-' }}</td>
+            <td class="text-right">Rp {{ number_format($slik->plafon ?? 0, 0, ',', '.') }}</td>
+            <td class="text-right">Rp {{ number_format($slik->outstanding ?? 0, 0, ',', '.') }}</td>
             <td class="text-center">{{ $slik->kolekbilitas ?? $slik->kolektibilitas ?? '-' }}</td>
-            <td class="text-right">{{ $slik->angsuran ?? 0 }}</td>
-            <td>{{ $slik->jkw ?? '-' }} - {{ $slik->keterangan ?? '-' }}</td>
+            <td class="text-right">Rp {{ number_format($slik->angsuran ?? 0, 0, ',', '.') }}</td>
+            <td style="padding: 0;">
+                <table style="width: 100%; border-collapse: collapse; border: none; background: transparent; margin: 0;">
+                    <tr>
+                        <td style="width: 50%; text-align: center; border: none; border-right: 1px solid #d9d9d9; padding: 5px 4px;">{{ $slik->jkw ?? '-' }}</td>
+                        <td style="width: 50%; text-align: center; border: none; padding: 5px 4px;">{{ $slik->keterangan ?? '-' }}</td>
+                    </tr>
+                </table>
+            </td>
         </tr>
         @empty
-        <tr><td colspan="6" class="text-center">Tidak ada data SLIK.</td></tr>
+        <tr><td colspan="6" class="text-center" style="text-align: center; padding: 8px;">Tidak ada data SLIK.</td></tr>
         @endforelse
         <tr style="font-weight: bold;" class="bg-label">
-            <td class="text-center">TOTAL</td>
-            <td class="text-right">{{ $data->pinjaman->sum('plafon') ?? 0 }}</td>
-            <td class="text-right">{{ $data->pinjaman->sum('outstanding') ?? 0 }}</td>
+            <td style="text-align: center;">TOTAL</td>
+            <td class="text-right">Rp {{ number_format($data->pinjaman->sum('plafon') ?? 0, 0, ',', '.') }}</td>
+            <td class="text-right">Rp {{ number_format($data->pinjaman->sum('outstanding') ?? 0, 0, ',', '.') }}</td>
             <td class="text-center">-</td>
-            <td class="text-right">{{ $data->pinjaman->sum('angsuran') ?? 0 }}</td>
-            <td>-</td>
+            <td class="text-right">Rp {{ number_format($data->pinjaman->sum('angsuran') ?? 0, 0, ',', '.') }}</td>
+            <td style="padding: 0;">
+                <table style="width: 100%; border-collapse: collapse; border: none; background: transparent; margin: 0;">
+                    <tr>
+                        <td style="width: 50%; text-align: center; border: none; border-right: 1px solid #d9d9d9; padding: 5px 4px;">-</td>
+                        <td style="width: 50%; text-align: center; border: none; padding: 5px 4px;">-</td>
+                    </tr>
+                </table>
+            </td>
         </tr>
 
         <!-- D. INFORMASI USAHA -->

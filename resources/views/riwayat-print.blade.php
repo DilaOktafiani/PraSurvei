@@ -103,8 +103,9 @@
                 </td>
             </tr>
             <tr>
-                <td class="bg-label" style="width: 20%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nomor Register</td>
-                <td style="width: 30%; border: 1px solid #0A3370 !important;">{{ $data->no_register ?? '-' }}</td>
+                <!-- Ditambahkan padding-left agar menjorok ke dalam -->
+                <td class="bg-label" style="width: 20%; padding-left: 17px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nomor Register</td>
+                <td style="width: 30%; border: 1px solid #0A3370 !important; font-weight: bold;">{{ $data->no_register ?? '-' }}</td>
                 <td class="bg-label" style="width: 20%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nama Marketing</td>
                 <td style="width: 30%; border: 1px solid #0A3370 !important;">{{ $data->nama_marketing ?? '-' }}</td>
             </tr>
@@ -112,19 +113,19 @@
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">1. Nama Debitur</td>
                 <td class="font-bold" style="border: 1px solid #0A3370 !important;">{{ $data->nama ?? '-' }}</td>
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nama Pasangan</td>
-                <td style="border: 1px solid #0A3370 !important;">{{ optional($data->datalengkap)->nama_pasangan ?? '-' }}</td>
+                <td style="border: 1px solid #0A3370 !important;">{{ $data->nama_pasangan ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label" style="padding-left: 17px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Usia</td>
-                <td style="border: 1px solid #0A3370 !important;">{{ optional($data->datalengkap)->usia ? $data->datalengkap->usia . ' Tahun' : '-' }}</td>
+                <td style="border: 1px solid #0A3370 !important;">{{ $data->usia ?? '-' }}</td>
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Usia Pasangan</td>
-                <td style="border: 1px solid #0A3370 !important;">{{ optional($data->datalengkap)->usia_pasangan ? $data->datalengkap->usia_pasangan . ' Tahun' : '-' }}</td>
+                <td style="border: 1px solid #0A3370 !important;">{{ $data->usia_pasangan ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">2. Usaha</td>
-                <td style="border: 1px solid #0A3370 !important;">{{ optional($data->infousaha)->jenis_usaha ?? '-' }}</td>
+                <td style="border: 1px solid #0A3370 !important;">{{ $data->usaha ?? '-' }}</td>
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Lama Usaha</td>
-                <td style="border: 1px solid #0A3370 !important;">{{ optional($data->infousaha)->lama_usaha ?? '-' }}</td>
+                <td style="border: 1px solid #0A3370 !important;">{{ $data->lama_usaha ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">3. Alamat Debitur</td>
@@ -136,21 +137,20 @@
             </tr>
             <tr>
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">4. Plafon</td>
-                <td class="text-emerald" style="border: 1px solid #0A3370 !important;">Rp {{ number_format(optional($data->pinjaman_utama)->plafon ?? 0, 0, ',', '.') }}</td>
+                <td class="text-emerald" style="border: 1px solid #0A3370 !important;">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</td>
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">JKW</td>
-                <td style="border: 1px solid #0A3370 !important;">{{ optional($data->pinjaman_utama)->jangka_waktu ? optional($data->pinjaman_utama)->jangka_waktu . ' Bulan' : '-' }}</td>
+                <td style="border: 1px solid #0A3370 !important;">{{ $data->jangka_waktu ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label" rowspan="2" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">5. Tujuan Penggunaan</td>
-                <td rowspan="2" style="vertical-align: top; border: 1px solid #0A3370 !important;">{{ optional($data->pinjaman_utama)->tujuan_penggunaan ?? '-' }}</td>
+                <td rowspan="2" style="vertical-align: top; border: 1px solid #0A3370 !important;">{{ $data->tujuan_penggunaan ?? '-' }}</td>
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Angsuran</td>
-                <td class="text-emerald" style="border: 1px solid #0A3370 !important;">Rp {{ number_format(optional($data->pinjaman_utama)->estimasi_kewajiban ?? 0, 0, ',', '.') }}</td>
+                <td class="text-emerald" style="border: 1px solid #0A3370 !important;">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Type Fasilitas</td>
                 <td style="font-size: 8pt; border: 1px solid #0A3370 !important;">
-                    @php $tf = optional($data->pinjaman_utama)->tipe_fasilitas; @endphp
-                    {{ is_array($tf) ? implode(', ', $tf) : ($tf ?? '-') }}
+                    {{ is_array($data->tipe_fasilitas ?? null) ? implode(', ', $data->tipe_fasilitas) : ($data->tipe_fasilitas ?? '-') }}
                 </td>
             </tr>
         </table>
@@ -171,7 +171,7 @@
             <!-- Kepemilikan -->
             <tr>
                 <td class="bg-label" style="width: 20%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Kepemilikan</td>
-                <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px;">{{ $agunan->kepemilikan ?? '-' }}</td>
+                <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px; font-weight: bold;">{{ $agunan->kepemilikan ?? '-' }}</td>
             </tr>
             
             <!-- Alamat -->
@@ -286,7 +286,7 @@
             </tr>
             @forelse($data->pinjaman ?? [] as $slik)
             <tr>
-                <td style="border: 1px solid #0A3370 !important;">{{ $slik->nama_ljk ?? '-' }}</td>
+                <td style="border: 1px solid #0A3370 !important; text-align: center;">{{ $slik->nama_ljk ?? '-' }}</td>
                 <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right;">Rp {{ number_format($slik->plafon ?? 0, 0, ',', '.') }}</td>
                 <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right;">Rp {{ number_format($slik->outstanding ?? 0, 0, ',', '.') }}</td>
                 <td class="text-center" style="border: 1px solid #0A3370 !important; text-align: center;">{{ $slik->kolekbilitas ?? $slik->kolektibilitas ?? '-' }}</td>
@@ -408,7 +408,7 @@
         <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px;">
             <tr>
                 <td style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; padding: 6px 10px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
-                    E. LEGALITAS {{ $tanah->urutan ? '- ' . $tanah->urutan : '' }}
+                    E. LEGALITAS
                 </td>
             </tr>
             <tr>

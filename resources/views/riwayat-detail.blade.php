@@ -73,7 +73,7 @@
                 </div>
                 <div class="border border-[#0A3370] rounded-none">
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Nomor Register</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 pl-7">Nomor Register</div>
                         <div class="p-3.5 border-r border-gray-300 font-medium">{{ $data->no_register ?? '-' }}</div>
                         <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Nama Marketing</div>
                         <div class="p-3.5 font-medium">{{ $data->nama_marketing ?? '-' }}</div>
@@ -430,7 +430,7 @@
             @forelse($data->agunan_tanah ?? [] as $tanah)
                 <div class="mb-6">
                     <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
-                        E. Legalitas {{ $tanah->urutan ? '- ' . $tanah->urutan : '' }}
+                        E. Legalitas
                     </div>
                     <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
                         {{ $tanah->kepemilikan ?? '-' }}

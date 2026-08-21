@@ -95,8 +95,9 @@
                 <td colspan="4" style="background-color: #0A3370; color: #FFFFFF; font-weight: bold; padding: 5px 8px; text-transform: uppercase;">A. DATA DEBITUR</td>
             </tr>
             <tr>
-                <td class="bg-label" style="width: 20%;">Nomor Register</td>
-                <td style="width: 30%;">{{ $data->no_register ?? '-' }}</td>
+                <!-- Ditambahkan padding-left: 16px di sini -->
+                <td class="bg-label" style="width: 20%; padding-left: 16px;">Nomor Register</td>
+                <td style="width: 30%; font-weight: bold;">{{ $data->no_register ?? '-' }}</td>
                 <td class="bg-label" style="width: 20%;">Nama Marketing</td>
                 <td style="width: 30%;">{{ $data->nama_marketing ?? '-' }}</td>
             </tr>
@@ -104,19 +105,19 @@
                 <td class="bg-label">1. Nama Debitur</td>
                 <td class="font-bold">{{ $data->nama ?? '-' }}</td>
                 <td class="bg-label">Nama Pasangan</td>
-                <td>{{ optional($data->datalengkap)->nama_pasangan ?? '-' }}</td>
+                <td>{{ $data->nama_pasangan ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label" style="padding-left: 16px;">Usia</td>
-                <td>{{ optional($data->datalengkap)->usia ? $data->datalengkap->usia . ' Tahun' : '-' }}</td>
+                <td>{{ $data->usia ?? '-' }}</td>
                 <td class="bg-label">Usia Pasangan</td>
-                <td>{{ optional($data->datalengkap)->usia_pasangan ? $data->datalengkap->usia_pasangan . ' Tahun' : '-' }}</td>
+                <td>{{ $data->usia_pasangan ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label">2. Usaha</td>
-                <td>{{ optional($data->infousaha)->jenis_usaha ?? '-' }}</td>
+                <td>{{ $data->usaha ?? '-' }}</td>
                 <td class="bg-label">Lama Usaha</td>
-                <td>{{ optional($data->infousaha)->lama_usaha ?? '-' }}</td>
+                <td>{{ $data->lama_usaha ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label">3. Alamat Debitur</td>
@@ -128,22 +129,19 @@
             </tr>
             <tr>
                 <td class="bg-label">4. Plafon</td>
-                <td class="text-emerald">Rp {{ number_format(optional($data->pinjaman_utama)->plafon ?? 0, 0, ',', '.') }}</td>
+                <td class="text-emerald">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</td>
                 <td class="bg-label">JKW</td>
-                <td>{{ optional($data->pinjaman_utama)->jangka_waktu ? optional($data->pinjaman_utama)->jangka_waktu . ' Bulan' : '-' }}</td>
+                <td>{{ $data->jangka_waktu ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label" rowspan="2">5. Tujuan Penggunaan</td>
-                <td rowspan="2" style="vertical-align: top;">{{ optional($data->pinjaman_utama)->tujuan_penggunaan ?? '-' }}</td>
+                <td rowspan="2" style="vertical-align: top;">{{ $data->tujuan_penggunaan ?? '-' }}</td>
                 <td class="bg-label">Angsuran</td>
-                <td class="text-emerald">Rp {{ number_format(optional($data->pinjaman_utama)->estimasi_kewajiban ?? 0, 0, ',', '.') }}</td>
+                <td class="text-emerald">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td class="bg-label">Type Fasilitas</td>
-                <td>
-                    @php $tf = optional($data->pinjaman_utama)->tipe_fasilitas; @endphp
-                    {{ is_array($tf) ? implode(', ', $tf) : ($tf ?? '-') }}
-                </td>
+                <td>{{ is_array($data->tipe_fasilitas ?? null) ? implode(', ', $data->tipe_fasilitas) : ($data->tipe_fasilitas ?? '-') }}</td>
             </tr>
         </table>
 
@@ -160,8 +158,8 @@
             
             <!-- Kepemilikan -->
             <tr>
-                <td class="bg-label-jaminan" style="width: 20%;">Kepemilikan</td>
-                <td colspan="5" class="cell-jaminan">{{ $agunan->kepemilikan ?? '-' }}</td>
+                <td class="bg-label" style="width: 20%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Kepemilikan</td>
+                <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px; font-weight: bold;">{{ $agunan->kepemilikan ?? '-' }}</td>
             </tr>
             
             <!-- Alamat -->
@@ -228,7 +226,8 @@
                 <td colspan="5" class="cell-jaminan">
                     @if(!empty($agunan->denah) && $agunan->denah !== '-')
                         <div style="width: 100%; max-width: 300px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff;">
-                            <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; max-height: 250px; object-fit: cover;">
+                            <!-- Menggunakan url() untuk absolute path dan atribut width agar terbaca di Word -->
+                            <img src="{{ url('storage/' . $agunan->denah) }}" alt="Denah Lokasi" width="300" style="width: 100%; max-width: 300px; height: auto; max-height: 250px; object-fit: cover; display: block;">
                         </div>
                     @else
                         <span>-</span>
@@ -260,40 +259,40 @@
         </table>
 
         <!-- C. SLIK -->
-        <table class="export-table" style="margin-top: 8px;">
+        <table class="export-table" style="margin-top: 8px; width: 100%; border-collapse: collapse;">
             <tr>
                 <td colspan="7" style="background-color: #0A3370; color: #FFFFFF; font-weight: bold; padding: 5px 8px; text-transform: uppercase;">C. SLIK</td>
             </tr>
             <tr class="bg-label text-center">
-                <td style="text-align: center;">Nama Bank</td>
-                <td style="text-align: center;">Plafon</td>
-                <td style="text-align: center;">Outstanding</td>
-                <td style="text-align: center;">KOL</td>
-                <td style="text-align: center;">Angsuran</td>
-                <td style="text-align: center;">JKW</td>
-                <td style="text-align: center;">Keterangan</td>
+                <td style="text-align: center; font-weight: bold;">Nama Bank</td>
+                <td style="text-align: center; font-weight: bold;">Plafon</td>
+                <td style="text-align: center; font-weight: bold;">Outstanding</td>
+                <td style="text-align: center; font-weight: bold;">KOL</td>
+                <td style="text-align: center; font-weight: bold;">Angsuran</td>
+                <td style="text-align: center; font-weight: bold;">JKW</td>
+                <td style="text-align: center; font-weight: bold;">Keterangan</td>
             </tr>
             @forelse($data->pinjaman ?? [] as $slik)
             <tr>
-                <td>{{ $slik->nama_ljk ?? '-' }}</td>
-                <td class="text-right">Rp {{ number_format($slik->plafon ?? 0, 0, ',', '.') }}</td>
-                <td class="text-right">Rp {{ number_format($slik->outstanding ?? 0, 0, ',', '.') }}</td>
-                <td class="text-center">{{ $slik->kolekbilitas ?? $slik->kolektibilitas ?? '-' }}</td>
-                <td class="text-right">Rp {{ number_format($slik->angsuran ?? 0, 0, ',', '.') }}</td>
-                <td class="text-center">{{ $slik->jkw ?? '-' }}</td>
-                <td class="text-center">{{ $slik->keterangan ?? '-' }}</td>
+                <td class="text-center" style="text-align: center;">{{ $slik->nama_ljk ?? '-' }}</td>
+                <td class="text-right" style="text-align: right;">Rp {{ number_format($slik->plafon ?? 0, 0, ',', '.') }}</td>
+                <td class="text-right" style="text-align: right;">Rp {{ number_format($slik->outstanding ?? 0, 0, ',', '.') }}</td>
+                <td class="text-center" style="text-align: center;">{{ $slik->kolekbilitas ?? $slik->kolektibilitas ?? '-' }}</td>
+                <td class="text-right" style="text-align: right;">Rp {{ number_format($slik->angsuran ?? 0, 0, ',', '.') }}</td>
+                <td class="text-center" style="text-align: center;">{{ $slik->jkw ?? '-' }}</td>
+                <td class="text-center" style="text-align: center;">{{ $slik->keterangan ?? '-' }}</td>
             </tr>
             @empty
-            <tr><td colspan="7" class="text-center">Tidak ada data SLIK.</td></tr>
+            <tr><td colspan="7" class="text-center" style="text-align: center;">Tidak ada data SLIK.</td></tr>
             @endforelse
             <tr class="font-bold bg-label">
-                <td class="text-center">TOTAL</td>
-                <td class="text-right">Rp {{ number_format($data->pinjaman->sum('plafon') ?? 0, 0, ',', '.') }}</td>
-                <td class="text-right">Rp {{ number_format($data->pinjaman->sum('outstanding') ?? 0, 0, ',', '.') }}</td>
-                <td class="text-center">-</td>
-                <td class="text-right">Rp {{ number_format($data->pinjaman->sum('angsuran') ?? 0, 0, ',', '.') }}</td>
-                <td class="text-center">-</td>
-                <td class="text-center">-</td>
+                <td class="text-center" style="text-align: center;">TOTAL</td>
+                <td class="text-right" style="text-align: right;">Rp {{ number_format($data->pinjaman->sum('plafon') ?? 0, 0, ',', '.') }}</td>
+                <td class="text-right" style="text-align: right;">Rp {{ number_format($data->pinjaman->sum('outstanding') ?? 0, 0, ',', '.') }}</td>
+                <td class="text-center" style="text-align: center;">-</td>
+                <td class="text-right" style="text-align: right;">Rp {{ number_format($data->pinjaman->sum('angsuran') ?? 0, 0, ',', '.') }}</td>
+                <td class="text-center" style="text-align: center;">-</td>
+                <td class="text-center" style="text-align: center;">-</td>
             </tr>
         </table>
 
