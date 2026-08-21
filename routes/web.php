@@ -2,6 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DebiturController;
+use App\Http\Controllers\SurveiController;
+
+// =========================================================================
+// PRA-SURVEI
+// =========================================================================
+
+// Route Halaman 1
+Route::get('/z1-surveica', [DebiturController::class, 'createAlur1'])->name('z1-surveica');
+Route::post('/z1-surveica', [DebiturController::class, 'storeAlur1'])->name('storeAlur1');
 
 // Dashboard
 Route::view('/', '0dashboard');
@@ -91,8 +100,64 @@ Route::get('/riwayat/detail/{id}/print', [DebiturController::class, 'printPage']
 
 
 
+// =========================================================================
+// SURVEI
+// =========================================================================
 
 // Route Halaman 1
 Route::get('/z1-surveica', [SurveiController::class, 'createAlur1'])->name('z1-surveica');
 Route::post('/z1-surveica', [SurveiController::class, 'storeAlur1'])->name('storeAlur1');
 
+// Route Halaman 2
+Route::get('/z2-surveica', [SurveiController::class, 'createAlur2'])->name('z2-surveica');
+Route::post('/z2-surveica', [SurveiController::class, 'storeAlur2'])->name('storeAlur2');
+
+// Route Halaman 3 Jika Pengguna Memilih Opsi Tanah Sawah, Tanah Pekarangan, dan Tanah Bangunan di Jenis Agunan
+Route::get('/z3-1tanah', [SurveiController::class, 'createAlur3_1'])->name('z3-1tanah');
+Route::post('/z3-1tanah', [SurveiController::class, 'storeAlur3_1'])->name('storeAlur3-1');
+
+// Route Halaman 3 Jika Pengguna Memilih Opsi Kendaraan di Jenis Agunan
+Route::get('/z3-2kendaraan', [SurveiController::class, 'createAlur3_2'])->name('z3-2kendaraan');
+Route::post('/z3-2kendaraan', [SurveiController::class, 'storeAlur3_2'])->name('storeAlur3-2');
+
+// Route Halaman 3 Jika Pengguna Memilih Opsi Simpanan di Jenis Agunan
+Route::get('/z3-3simpanan', [SurveiController::class, 'createAlur3_3'])->name('z3-3simpanan');
+Route::post('/z3-3simpanan', [SurveiController::class, 'storeAlur3_3'])->name('storeAlur3-3');
+
+// Route Halaman 3 Jika Pengguna Memilih Opsi Logam Mulia di Jenis Agunan
+Route::get('/z3-4logam', [SurveiController::class, 'createAlur3_4'])->name('z3-4logam');
+Route::post('/z3-4logam', [SurveiController::class, 'storeAlur3_4'])->name('storeAlur3-4');
+
+// Route Halaman 3 Jika Pengguna Memilih Opsi Jaminan di Jenis Agunan
+Route::get('/z4-jaminan', [SurveiController::class, 'createAlur4'])->name('z4-jaminan');
+Route::post('/z4-jaminan', [SurveiController::class, 'storeAlur4'])->name('storeAlur4');
+
+Route::get('/z5-jaminan-analisis', [SurveiController::class, 'createAlur5'])->name('z5-jaminan-analisis');
+Route::post('/z5-jaminan-analisis', [SurveiController::class, 'storeAlur5'])->name('storeAlur5');
+
+Route::get('/z6-capacity', [SurveiController::class, 'createAlur6'])->name('z6-capacity');
+Route::post('/z6-capacity', [SurveiController::class, 'storeAlur6'])->name('storeAlur6');
+
+Route::get('/z7-dataslik', [SurveiController::class, 'createAlur7'])->name('z7-dataslik');
+Route::post('/z7-dataslik', [SurveiController::class, 'storeAlur7'])->name('storeAlur7');
+
+Route::get('/z8-capital', [SurveiController::class, 'createAlur8'])->name('z8-capital');
+Route::post('/z8-capital', [SurveiController::class, 'storeAlur8'])->name('storeAlur8');
+
+Route::get('/z9-takeover', [SurveiController::class, 'createAlur9'])->name('z9-takeover');
+Route::post('/z9-takeover', [SurveiController::class, 'storeAlur9'])->name('storeAlur9');
+
+Route::get('/z10-kondisi', [SurveiController::class, 'createAlur10'])->name('z10-kondisi');
+Route::post('/z10-kondisi', [SurveiController::class, 'storeAlur10'])->name('storeAlur10');
+
+Route::get('/z11-berkas-lengkap', [SurveiController::class, 'createAlur11'])->name('z11-berkas-lengkap');
+Route::post('/z11-berkas-lengkap', [SurveiController::class, 'storeAlur11'])->name('storeAlur11');
+
+Route::get('/z12-badanusaha', [SurveiController::class, 'createAlur12'])->name('z12-badanusaha');
+Route::post('/z12-badanusaha', [SurveiController::class, 'storeAlur12'])->name('storeAlur12');
+
+Route::get('/z13-swot', [SurveiController::class, 'createAlur13'])->name('z13-swot');
+Route::post('/z13-swot', [SurveiController::class, 'storeAlur13'])->name('storeAlur13');
+
+Route::get('/z14-data-tambahan.', [SurveiController::class, 'createAlur14'])->name('z14-data-tambahan.');
+Route::post('/z14-data-tambahan.', [SurveiController::class, 'storeAlur14'])->name('storeAlur14');

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pra-Survei - PT BPR Adipura Santosa</title>
+    <title>Form Credit Analys - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -30,8 +30,8 @@
         <div class="bg-white rounded-lg shadow-sm border-t-8 border-[#0082CB] border-x border-b border-gray-200 p-6 mb-6">
             <div class="flex justify-between items-start gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Formulir Pra-Survei AO</h2>
-                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan data awal calon nasabah hasil kunjungan lapangan secara akurat.</p>
+                    <h2 class="text-2xl font-bold text-gray-800">Form Credit Analys</h2>
+                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan hasil analisis lapangan untuk penentuan kelayakan akhir nasabah.</p>
                 </div>
             </div>
             <p class="text-xs text-red-500 mt-4 font-medium flex items-center gap-1 border-t border-gray-100 pt-3">
@@ -67,73 +67,17 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Usia <span class="text-red-500">*</span>
+                        Temuan CA <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="usia" value="{{ old('usia', $debitur->usia ?? '') }}" placeholder="ex : 35 Tahun" required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Usaha / Pekerjaan Debitur <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="usaha" value="{{ old('usaha', $debitur->usaha ?? '') }}" placeholder="ex : Toko Kelontong" required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Lama Usaha / Lama Bekerja <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="lama_usaha" value="{{ old('lama_usaha', $debitur->lama_usaha ?? '') }}" placeholder="ex : 5 Tahun" required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Alamat KTP <span class="text-red-500">*</span>
-                    </label>
-                    <textarea name="alamat_ktp" rows="2" placeholder="Masukkan alamat KTP" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('alamat_ktp', $debitur->alamat_ktp ?? '') }}</textarea>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Alamat Domisili <span class="text-red-500">*</span>
-                    </label>
-                    <textarea name="alamat_domisili" rows="2" placeholder="Masukkan alamat Domisili" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('alamat_domisili', $debitur->alamat_domisili ?? '') }}</textarea>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Nama Pasangan <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="nama_pasangan" value="{{ old('nama_pasangan', $debitur->nama_pasangan ?? '') }}" placeholder="Sesuai KTP / Apabila tidak ada pasangan '-'" required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Usia Pasangan <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="usia_pasangan" value="{{ old('usia_pasangan', $debitur->usia_pasangan ?? '') }}" placeholder="ex : 33 Tahun / Apabila tidak ada pasangan '-'" required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <textarea name="temuan_ca" rows="2" placeholder="ex : diisi apabila ada perbedaan data yang ditemukan oleh CA dengan data AO" required
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('temuan_ca', $debitur->temuan_ca ?? '') }}</textarea>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Plafon <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="plafon" value="{{ old('plafon', $debitur->plafon ?? '') }}" placeholder="ex : 10000000000" required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Plafon Terbilang <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="plafon_terbilang" value="{{ old('plafon_terbilang', $debitur->plafon_terbilang ?? '') }}" placeholder="ex : 1 Miliar" required
+                    <input type="number" name="plafon" value="{{ old('plafon', $debitur->plafon ?? '') }}" placeholder="ex : Rp1.000.000.000,-" required
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 

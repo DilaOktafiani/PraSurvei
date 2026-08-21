@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pra-Survei - PT BPR Adipura Santosa</title>
+    <title>Form Credit Analys - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -15,7 +15,11 @@
                 <img src="{{ asset('images/logo.png') }}" alt="Logo BPR Adipura Santosa" class="h-9 w-auto bg-white p-1 rounded object-contain">
                 <h1 class="text-xl font-bold tracking-wide">BPR ADIPURA SANTOSA</h1>
             </div>
+            <!-- Menggunakan link langsung ke beranda -->
             <a href="/" class="inline-flex items-center justify-center gap-2 text-sm text-white font-medium px-4 py-1.5 rounded-full border-2 border-white hover:bg-white/10 transition"> 
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"> 
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /> 
+                </svg> 
                 <span>Beranda</span> 
             </a>
         </div> 
@@ -27,8 +31,8 @@
         <div class="bg-white rounded-lg shadow-sm border-t-8 border-[#0082CB] border-x border-b border-gray-200 p-6 mb-6">
             <div class="flex justify-between items-start gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Formulir Pra-Survei AO</h2>
-                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan data awal calon nasabah hasil kunjungan lapangan secara akurat.</p>
+                    <h2 class="text-2xl font-bold text-gray-800">Form Credit Analys</h2>
+                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan hasil analisis lapangan untuk penentuan kelayakan akhir nasabah.</p>
                 </div>
             </div>
             <p class="text-xs text-red-500 mt-4 font-medium flex items-center gap-1 border-t border-gray-100 pt-3">
@@ -36,24 +40,8 @@
             </p>
         </div>
 
-        <!-- NOTIFIKASI ERROR -->
-        @if ($errors->any())
-            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md">
-                <div class="flex">
-                    <div class="ml-3">
-                        <p class="text-sm text-red-700 font-bold">Terjadi kesalahan pengisian form:</p>
-                        <ul class="list-disc list-inside text-sm text-red-600 mt-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        @endif
-
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeStep3-1') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeAlur3-1') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf 
             <input type="hidden" name="debitur_id" value="{{ $debiturId ?? session('debitur_id') }}">
             
@@ -224,7 +212,6 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
                         Kembali
                     </a>
 
-                    <!-- Tombol submit standar langsung mengirim ke Controller -->
                     <button type="submit"
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] transition">
                         Berikutnya

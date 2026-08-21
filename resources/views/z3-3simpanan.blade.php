@@ -41,56 +41,70 @@
         </div>
 
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeAlur2') }}" method="POST" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeAlur3-3') }}" method="POST" class="space-y-6">
             @csrf <!-- Security Token Laravel -->
+            
+            <!-- HIDDEN INPUT UNTUK DEBITUR ID -->
+            <input type="hidden" name="debitur_id" value="{{ $debitur_id ?? old('debitur_id') }}">
 
-            <!-- JAMINAN / COLLATERAL -->
+            <!-- TAMPILKAN ERROR VALIDASI JIKA ADA -->
+            @if ($errors->any())
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded text-sm text-red-700">
+                    <p class="font-bold">Terjadi Kesalahan Validasi:</p>
+                    <ul class="list-disc list-inside mt-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <!-- CEK DATA LAMA / OLD -->
+            @php
+                $valSimpanan = $data->jenis_simpanan ?? old('jenis_simpanan');
+                $isLainnya = !in_array($valSimpanan, ['deposito', 'tabungan']) && !empty($valSimpanan);
+            @endphp
+
+            <!-- BLOK PUTIH 1: JENIS SIMPANAN -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">JAMINAN / COLLATERAL</h3>
-
-                <!-- Jenis Agunan -->
+                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">SIMPANAN</h3>
+                    
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Jenis Agunan <span class="text-red-500">*</span>
+                        Jenis Simpanan <span class="text-red-500">*</span>
                     </label>
                     <div class="space-y-3 text-sm text-gray-700">
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="jenis_agunan" value="tanah_sawah" class="accent-[#0082CB]" @checked(old('jenis_agunan', $data['jenis_agunan'] ?? '') == 'tanah_sawah')>
-                            <span>Tanah Sawah</span>
+                            <input type="radio" name="jenis_simpanan" value="deposito" class="accent-[#0082CB]" {{ $valSimpanan == 'deposito' ? 'checked' : '' }}>
+                            <span>Deposito</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="jenis_agunan" value="tanah_pekarangan_kosong" class="accent-[#0082CB]" @checked(old('jenis_agunan', $data['jenis_agunan'] ?? '') == 'tanah_pekarangan_kosong')>
-                            <span>Tanah Pekarangan (Kosong)</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="jenis_agunan" value="tanah_pekarangan_bangunan" class="accent-[#0082CB]" @checked(old('jenis_agunan', $data['jenis_agunan'] ?? '') == 'tanah_pekarangan_bangunan')>
-                            <span>Tanah Pekarangan + Bangunan</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="jenis_agunan" value="kendaraan_bermotor" class="accent-[#0082CB]" @checked(old('jenis_agunan', $data['jenis_agunan'] ?? '') == 'kendaraan_bermotor')>
-                            <span>Kendaraan Bermotor</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="jenis_agunan" value="simpanan" class="accent-[#0082CB]" @checked(old('jenis_agunan', $data['jenis_agunan'] ?? '') == 'simpanan')>
-                            <span>Simpanan</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="jenis_agunan" value="logam_mulia" class="accent-[#0082CB]" @checked(old('jenis_agunan', $data['jenis_agunan'] ?? '') == 'logam_mulia')>
-                            <span>Logam Mulia</span>
+                            <input type="radio" name="jenis_simpanan" value="tabungan" class="accent-[#0082CB]" {{ $valSimpanan == 'tabungan' ? 'checked' : '' }}>
+                            <span>Tabungan</span>
                         </label>
                         
                         <!-- OPSI YANG LAIN + INPUT TEKS -->
                         <div class="flex flex-col gap-1">
                             <div class="flex items-center gap-2">
-                                <input type="radio" name="jenis_agunan" value="yang_lain" id="radio_lainnya" class="accent-[#0082CB]" @checked(old('jenis_agunan', $data['jenis_agunan'] ?? '') == 'yang_lain')>
+                                <input type="radio" name="jenis_simpanan" value="yang_lain" id="radio_lainnya" class="accent-[#0082CB]" {{ $isLainnya ? 'checked' : '' }}>
                                 <label for="radio_lainnya" class="cursor-pointer whitespace-nowrap text-sm">Yang Lain:</label>
-                                <input type="text" id="input_lainnya" name="jenis_agunan_lainnya" value="{{ old('jenis_agunan_lainnya', $data['jenis_agunan_lainnya'] ?? '') }}" placeholder=""
+                                <input type="text" id="input_lainnya" name="jenis_simpanan_lainnya" value="{{ $isLainnya ? $valSimpanan : old('jenis_simpanan_lainnya') }}" placeholder=""
                                        class="w-full border-b border-gray-300 px-1 py-0.5 text-sm focus:outline-none focus:border-[#0082CB] transition">
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <!-- BLOK PUTIH 2: NILAI SIMPANAN -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Nilai Simpanan <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="nilai_simpanan" id="nilai_simpanan" value="{{ $data->nilai_simpanan ?? old('nilai_simpanan') }}" placeholder="ex : 1100000000"
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                </div>
             </div>
 
             <!-- TOMBOL AKSI NAVIGASI -->
@@ -106,7 +120,7 @@
                         Kembali
                     </button>
 
-                    <button type="submit" 
+                    <button type="button" onclick="validateAndSubmit()" 
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         Berikutnya
                     </button>
@@ -119,36 +133,37 @@
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
 
-<script>
-    const inputLainnya = document.getElementById('input_lainnya');
-    const radioLainnya = document.getElementById('radio_lainnya');
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const inputLainnya = document.getElementById('input_lainnya');
+        const radioLainnya = document.getElementById('radio_lainnya');
 
-    // Jika user mengetik, otomatis pilih radio "Yang Lain"
-    inputLainnya.addEventListener('input', function() {
-        if (this.value.trim() !== '') {
-            radioLainnya.checked = true;
+        // Jika user mengetik, otomatis pilih radio "Yang Lain"
+        inputLainnya.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                radioLainnya.checked = true;
+            }
+        });
+
+        function validateAndSubmit() {
+            const form = document.getElementById('formPraSurvei');
+            const selectedSimpanan = form.querySelector('input[name="jenis_simpanan"]:checked');
+            
+            // 1. Validasi Radio terpilih
+            if (!selectedSimpanan) {
+                alert('Silakan pilih jenis simpanan!');
+                return;
+            }
+
+            // 2. Validasi "Yang Lain"
+            if (selectedSimpanan.value === 'yang_lain' && inputLainnya.value.trim() === '') {
+                alert('Silakan isi keterangan jenis simpanan lainnya!');
+                inputLainnya.focus();
+                return;
+            }
+
+            form.submit();
         }
-    });
-
-    function validateAndSubmit() {
-        const form = document.getElementById('formPraSurvei');
-        const selectedAgunan = form.querySelector('input[name="jenis_agunan"]:checked');
-        
-        // 1. Validasi Radio terpilih
-        if (!selectedAgunan) {
-            alert('Silakan pilih jenis agunan!');
-            return;
-        }
-
-        // 2. Validasi "Yang Lain"
-        if (selectedAgunan.value === 'yang_lain' && inputLainnya.value.trim() === '') {
-            alert('Silakan isi keterangan jenis agunan lainnya!');
-            inputLainnya.focus();
-            return;
-        }
-
-        form.submit();
-    }
-</script>
+    </script>
 </body>
 </html>

@@ -64,6 +64,27 @@ return [
             ]) : [],
         ],
 
+        // 👇 KONEKSI DATABASE KEDUA ('survei') DITAMBAHKAN DI SINI 👇
+        'survei' => [
+            'driver' => 'mysql',
+            'url' => env('DB_URL'),
+            'host' => env('DB_HOST_SURVEI', '127.0.0.1'),
+            'port' => env('DB_PORT_SURVEI', '3306'),
+            'database' => env('DB_DATABASE_SURVEI', 'survei'),
+            'username' => env('DB_USERNAME_SURVEI', 'root'),
+            'password' => env('DB_PASSWORD_SURVEI', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),
@@ -110,8 +131,6 @@ return [
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,
-            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
-            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
     ],
