@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pra-Survei - PT BPR Adipura Santosa</title>
+    <title>Form Credit Analys - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -30,68 +32,29 @@
         <div class="bg-white rounded-lg shadow-sm border-t-8 border-[#0082CB] border-x border-b border-gray-200 p-6 mb-6">
             <div class="flex justify-between items-start gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Formulir Pra-Survei AO</h2>
-                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan data awal calon nasabah hasil kunjungan lapangan secara akurat.</p>
+                    <h2 class="text-2xl font-bold text-gray-800">Form Credit Analys</h2>
+                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan hasil analisis lapangan untuk penentuan kelayakan akhir nasabah.</p>
                 </div>
             </div>
         </div>
 
-        @php
-            // Helper untuk membaca data lama dari database atau old input
-            $getSavedArray = function($fieldName) use ($badanUsaha) {
-                $val = old($fieldName, isset($badanUsaha->$fieldName) ? $badanUsaha->$fieldName : []);
-                return is_array($val) ? $val : json_decode($val, true) ?? [];
-            };
+        <!-- FORM DENGAN ID formPraSurvei -->
+        <form id="formPraSurvei" action="{{ route('storeAlur18') }}" method="POST" class="space-y-6">
+            @csrf
+            
+            <input type="hidden" name="debitur_id" value="{{ $debitur_id }}">
 
-            $berkasValues =$getSavedArray('berkas_badan_usaha');
-        @endphp
-
-        <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeStep10') }}" method="POST" class="space-y-6">
-            @csrf 
-            <input type="hidden" name="debitur_id" value="{{ $debitur->id ?? session('debitur_id') }}">
-
-            <!-- KELENGKAPAN BADAN USAHA -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">KELENGKAPAN BADAN USAHA</h3>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Berkas Badan Usaha</label>
-                    
-                    <div class="space-y-3 text-sm text-gray-700">
-                        @php
-                            $options = [
-                                'nib' => 'NIB',
-                                'akta perubahan terakhir' => 'Akta Perubahan Terakhir',
-                                'akta pengangkatan pengurus terbaru' => 'Akta Pengangkatan Pengurus Terbaru',
-                                'surat pernyataan akta terbaru' => 'Surat Pernyataan Akta Terbaru',
-                                'akta pendirian' => 'Akta Pendirian',
-                                'npwp' => 'NPWP',
-                                'slik badan usaha' => 'SLIK Badan Usaha',
-                                'slik semua pengurus' => 'SLIK Semua Pengurus',
-                                'slik pemilik dan pasangan' => 'SLIK Pemilik dan Pasangan'
-                            ];
-                        @endphp
-
-                        @foreach($options as $valKey =>$labelName)
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" name="berkas_badan_usaha[]" value="{{ $valKey }}" {{ in_array($valKey,$berkasValues) ? 'checked' : '' }} class="accent-[#0082CB] w-4 h-4 rounded">
-                                <span>{{ $labelName }}</span>
-                            </label>
-                        @endforeach
-                    </div>
-                </div>
+                <h3 class="text-md font-semibold text-[#0A3370]">Apakah data yang diinputkan sudah sesuai? Jika sudah, klik Kirim; jika belum, periksa kembali.</h3>
             </div>
 
             <!-- TOMBOL AKSI -->
-            <div class="flex justify-between items-center pt-2">
-                <button type="reset" class="text-[#0A3370] text-sm font-semibold hover:underline transition focus:outline-none">
-                    Kosongkan Form
-                </button>
+            <div class="flex justify-end items-center pt-2">
                 <div class="flex items-center gap-3">  
-                    <button type="button" onclick="window.history.back()" class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm">
+                    <!-- Menggunakan backRoute dinamis dari Controller -->
+                    <a href="{{ $backRoute }}" class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm inline-flex items-center justify-center">
                         Kembali
-                    </button>
+                    </a>
                     <button type="submit" class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
@@ -103,15 +66,13 @@
         </form>
     </main>
 
+    <!-- FOOTER -->
     <footer class="text-center text-xs text-gray-500 pb-6">
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
 
-    <!-- SweetAlert2 CDN untuk Pop-up Kotak Kecil & Background Blur -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <!-- SCRIPT SWEETALERT2 -->
     <script>
-        // Menangkap form saat tombol "Kirim" ditekan
         document.getElementById('formPraSurvei').addEventListener('submit', function(e) {
             e.preventDefault(); // Mencegah form langsung submit biasa
 

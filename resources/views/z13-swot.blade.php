@@ -39,9 +39,11 @@
             </p>
         </div>
 
-        <!-- FORM UTAMA -->
         <form id="formPraSurvei" action="{{ route('storeAlur13') }}" method="POST" class="space-y-6">
             @csrf
+
+            <!-- Hidden Input Debitur ID -->
+            <input type="hidden" name="debitur_id" value="{{ $debitur->id ?? session('debitur_id') }}">
 
             <!-- Analisis SWOT -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
@@ -53,7 +55,7 @@
                         Strengths (Kekuatan) <span class="text-red-500">*</span>
                     </label>
                     <textarea name="kekuatan" rows="3" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('temuan_ca', $debitur->temuan_ca ?? '') }}</textarea>
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('kekuatan', $swot->kekuatan ?? '') }}</textarea>
                 </div>
 
                 <!-- Weaknesses (Kelemahan) dan Mitigasi -->
@@ -62,7 +64,7 @@
                         Weaknesses (Kelemahan) dan Mitigasi <span class="text-red-500">*</span>
                     </label>
                     <textarea name="kelemahan" rows="3" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('temuan_ca', $debitur->temuan_ca ?? '') }}</textarea>
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('kelemahan', $swot->kelemahan ?? '') }}</textarea>
                 </div>
 
                 <!-- Opportunities (peluang) -->
@@ -71,7 +73,7 @@
                         Opportunities (peluang) <span class="text-red-500">*</span>
                     </label>
                     <textarea name="peluang" rows="3" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('temuan_ca', $debitur->temuan_ca ?? '') }}</textarea>
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('peluang', $swot->peluang ?? '') }}</textarea>
                 </div>
 
                 <!-- Threats (Ancaman) -->
@@ -80,7 +82,7 @@
                         Threats (Ancaman) <span class="text-red-500">*</span>
                     </label>
                     <textarea name="ancaman" rows="3" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('temuan_ca', $debitur->temuan_ca ?? '') }}</textarea>
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('ancaman', $swot->ancaman ?? '') }}</textarea>
                 </div>
 
                 <!-- Kesimpulan Analisis -->
@@ -89,31 +91,31 @@
                         Kesimpulan Analisis <span class="text-red-500">*</span>
                     </label>
                     <textarea name="kesimpulan" rows="3" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('temuan_ca', $debitur->temuan_ca ?? '') }}</textarea>
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('kesimpulan', $swot->kesimpulan ?? '') }}</textarea>
                 </div>
 
                 <!-- Rekomendasi -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Rekomendasi
+                        Rekomendasi <span class="text-red-500">*</span>
                     </label>
                     <div class="space-y-3 text-sm text-gray-700">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="rekomendasi" value="Disetujui" 
-                                   {{ (old('rekomendasi', $takeover->rekomendasi ?? '') == 'YA') ? 'checked' : '' }} 
-                                   class="accent-[#0082CB]" required>
+                                {{ (old('rekomendasi', $swot->rekomendasi ?? '') == 'Disetujui') ? 'checked' : '' }} 
+                                class="accent-[#0082CB]" required>
                             <span>Disetujui</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="rekomendasi" value="Disetujui dengan syarat" 
-                                   {{ (old('rekomendasi', $takeover->rekomendasi ?? '') == 'TIDAK') ? 'checked' : '' }} 
-                                   class="accent-[#0082CB]" required>
+                                {{ (old('rekomendasi', $swot->rekomendasi ?? '') == 'Disetujui dengan syarat') ? 'checked' : '' }} 
+                                class="accent-[#0082CB]" required>
                             <span>Disetujui dengan syarat</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="rekomendasi" value="Ditolak" 
-                                   {{ (old('rekomendasi', $takeover->rekomendasi ?? '') == 'TIDAK') ? 'checked' : '' }} 
-                                   class="accent-[#0082CB]" required>
+                                {{ (old('rekomendasi', $swot->rekomendasi ?? '') == 'Ditolak') ? 'checked' : '' }} 
+                                class="accent-[#0082CB]" required>
                             <span>Ditolak</span>
                         </label>
                     </div>
@@ -125,9 +127,9 @@
                         Syarat dan Catatan Lainnya <span class="text-red-500">*</span>
                     </label>
                     <textarea name="syarat_catatan" rows="3" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('temuan_ca', $debitur->temuan_ca ?? '') }}</textarea>
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('syarat_catatan', $swot->syarat_catatan ?? '') }}</textarea>
                 </div>
-            </div>
+            </div> <!-- Penutup div card container input SWOT -->
 
             <!-- TOMBOL AKSI NAVIGASI -->
             <div class="flex justify-between items-center pt-2">
@@ -135,13 +137,11 @@
                         class="text-[#0A3370] text-sm font-semibold hover:underline transition focus:outline-none">
                     Kosongkan Form
                 </button>
-
                 <div class="flex items-center gap-3">  
                     <button type="button" onclick="window.history.back()"
                             class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                         Kembali
                     </button>
-
                     <button type="submit" 
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         Berikutnya

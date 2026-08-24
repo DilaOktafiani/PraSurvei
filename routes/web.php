@@ -159,5 +159,17 @@ Route::post('/z12-badanusaha', [SurveiController::class, 'storeAlur12'])->name('
 Route::get('/z13-swot', [SurveiController::class, 'createAlur13'])->name('z13-swot');
 Route::post('/z13-swot', [SurveiController::class, 'storeAlur13'])->name('storeAlur13');
 
-Route::get('/z14-data-tambahan.', [SurveiController::class, 'createAlur14'])->name('z14-data-tambahan.');
-Route::post('/z14-data-tambahan.', [SurveiController::class, 'storeAlur14'])->name('storeAlur14');
+Route::get('/z14-data-tambahan', [SurveiController::class, 'createAlur14'])->name('z14-data-tambahan');
+Route::post('/z14-data-tambahan', [SurveiController::class, 'storeAlur14'])->name('storeAlur14');
+
+Route::get('/z15-pinjaman', [SurveiController::class, 'createAlur15'])->name('z15-pinjaman');
+Route::post('/z15-pinjaman', [SurveiController::class, 'storeAlur15'])->name('storeAlur15');
+
+Route::get('/z16-mutasi-rekening', [SurveiController::class, 'createAlur16'])->name('z16-mutasi-rekening');
+Route::post('/z16-mutasi-rekening', [SurveiController::class, 'storeAlur16'])->name('storeAlur16');
+
+Route::get('/z17-mutasi-rekening1', [SurveiController::class, 'createAlur17'])->name('z17-mutasi-rekening1');
+Route::post('/z17-mutasi-rekening1', [SurveiController::class, 'storeAlur17'])->name('storeAlur17');
+
+Route::get('/z18-selesai', [SurveiController::class, 'createAlur18'])->name('z18-selesai');
+Route::post('/z18-selesai', [SurveiController::class, 'storeAlur18'])->name('storeAlur18');

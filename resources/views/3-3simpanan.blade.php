@@ -114,13 +114,11 @@
                 </button>
 
                 <div class="flex items-center gap-3">  
-                    <!-- Tombol Kembali -->
                     <button type="button" onclick="window.history.back()"
                             class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                         Kembali
                     </button>
 
-                    <!-- Tombol Submit / Berikutnya -->
                     <button type="button" onclick="validateAndSubmit()" 
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         Berikutnya

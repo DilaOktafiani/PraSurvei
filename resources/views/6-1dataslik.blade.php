@@ -39,18 +39,6 @@
             </p>
         </div>
 
-        <!-- NOTIFIKASI ERROR VALIDASI -->
-        @if ($errors->any())
-            <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-6 shadow-sm" role="alert">
-                <p class="font-bold text-sm">Terjadi Kesalahan Pengisian Form</p>
-                <ul class="mt-1 list-disc list-inside text-xs space-y-1">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <!-- FORM UTAMA -->
         <form id="formPraSurvei" action="{{ route('storeStep6-1') }}" method="POST" class="space-y-6">
             @csrf 

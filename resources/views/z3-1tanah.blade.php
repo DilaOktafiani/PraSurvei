@@ -205,13 +205,11 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
                 <button type="button" onclick="clearForm()" class="text-[#0A3370] text-sm font-semibold hover:underline transition">
                     Kosongkan Form
                 </button>
-
                 <div class="flex items-center gap-3">  
                     <a href="javascript:history.back()"
                             class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition">
                         Kembali
                     </a>
-
                     <button type="submit"
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] transition">
                         Berikutnya

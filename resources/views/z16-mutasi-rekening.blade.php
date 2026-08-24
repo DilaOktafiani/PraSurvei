@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Credit Analysis - PT BPR Adipura Santosa</title>
+    <title>Form Credit Analys - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -15,7 +15,6 @@
                 <img src="{{ asset('images/logo.png') }}" alt="Logo BPR Adipura Santosa" class="h-9 w-auto bg-white p-1 rounded object-contain">
                 <h1 class="text-xl font-bold tracking-wide">BPR ADIPURA SANTOSA</h1>
             </div>
-            <!-- Menggunakan link langsung ke beranda -->
             <a href="/" class="inline-flex items-center justify-center gap-2 text-sm text-white font-medium px-4 py-1.5 rounded-full border-2 border-white hover:bg-white/10 transition"> 
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"> 
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /> 
@@ -31,40 +30,49 @@
         <div class="bg-white rounded-lg shadow-sm border-t-8 border-[#0082CB] border-x border-b border-gray-200 p-6 mb-6">
             <div class="flex justify-between items-start gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Form Credit Analysis</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">Form Credit Analys</h2>
                     <p class="text-gray-500 mt-1 text-sm">Silakan masukkan hasil analisis lapangan untuk penentuan kelayakan akhir nasabah.</p>
                 </div>
             </div>
-            <p class="text-xs text-red-500 mt-4 font-medium flex items-center gap-1 border-t border-gray-100 pt-3">
-                <span>*</span> Menunjukkan pertanyaan yang wajib diisi
-            </p>
         </div>
 
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeAlur5') }}" method="POST" class="space-y-6">
-            @csrf 
+        <form id="formPraSurvei" action="{{ route('storeAlur16') }}" method="POST" class="space-y-6">
+            @csrf <!-- Security Token Laravel -->
 
-            <!-- PENTING: Hidden input untuk mengirim debitur_id -->
+            <!-- Hidden Input Debitur ID (Wajib agar terhubung dengan tabel debitur) -->
             <input type="hidden" name="debitur_id" value="{{ $debitur->id ?? session('debitur_id') }}">
 
-            <!-- ANALISIS JAMINAN -->
+            <!-- Mutasi Rekening Tabungan -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">ANALISIS JAMINAN</h3>
+                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">Mutasi Rekening Tabungan</h3>
 
+                <!-- Apakah ingin mengisi detail mutasi tabungan -->
                 <div>
-                    <label for="analisis_jaminan" class="block text-sm font-medium text-gray-700 mb-1">
-                        Analisis Semua Jaminan <span class="text-red-500">*</span>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Apakah ingin mengisi detail mutasi tabungan
                     </label>
-                    <!-- Diubah menjadi textarea agar lebih leluasa untuk catatan analisis yang panjang -->
-                    <textarea id="analisis_jaminan" name="analisis_jaminan" rows="3"
-                              placeholder="Masukkan uraian atau hasil analisis dari semua jaminan nasabah"
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB] placeholder-gray-400">{{ old('analisis_jaminan', $yangLain->analisis_jaminan ?? '') }}</textarea>
+                    <div class="space-y-3 text-sm text-gray-700">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="detail_mutasi_tabungan" value="YA" 
+                                   {{ (old('detail_mutasi_tabungan', $takeover->detail_mutasi_tabungan ?? '') == 'YA') ? 'checked' : '' }} 
+                                   class="accent-[#0082CB]" required>
+                            <span>YA</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="detail_mutasi_tabungan" value="TIDAK" 
+                                   {{ (old('detail_mutasi_tabungan', $takeover->detail_mutasi_tabungan ?? '') == 'Tidak (saya mengisi data manual di excel)') ? 'checked' : '' }} 
+                                   class="accent-[#0082CB]" required>
+                            <span>Tidak (saya ingin  mengisi manual di excel)</span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <!-- TOMBOL AKSI NAVIGASI -->
             <div class="flex justify-between items-center pt-2">
-                <button type="reset" class="text-[#0A3370] text-sm font-semibold hover:underline transition focus:outline-none">
+                <button type="reset" 
+                        class="text-[#0A3370] text-sm font-semibold hover:underline transition focus:outline-none">
                     Kosongkan Form
                 </button>
                 <div class="flex items-center gap-3">  

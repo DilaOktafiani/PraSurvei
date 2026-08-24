@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pra-Survei - PT BPR Adipura Santosa</title>
+    <title>Form Credit Analys - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -30,8 +30,8 @@
         <div class="bg-white rounded-lg shadow-sm border-t-8 border-[#0082CB] border-x border-b border-gray-200 p-6 mb-6">
             <div class="flex justify-between items-start gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Formulir Pra-Survei AO</h2>
-                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan data awal calon nasabah hasil kunjungan lapangan secara akurat.</p>
+                    <h2 class="text-2xl font-bold text-gray-800">Form Credit Analys</h2>
+                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan hasil analisis lapangan untuk penentuan kelayakan akhir nasabah.</p>
                 </div>
             </div>
             <p class="text-xs text-red-500 mt-4 font-medium flex items-center gap-1 border-t border-gray-100 pt-3">
@@ -40,94 +40,75 @@
         </div>
 
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeStep6-11') }}" method="POST" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeAlur17') }}" method="POST" class="space-y-6">
             @csrf 
             <input type="hidden" name="debitur_id" value="{{ $debitur->id ?? session('debitur_id') }}">
             <input type="hidden" name="urutan" id="input_urutan" value="{{ $urutan }}">
 
-            <!-- DATA PINJAMAN -->
+            <!-- MUTASI REKENING -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-                <!-- Judul Diperbarui (Tanpa 'KE-') -->
-                <h3 id="judulPinjaman" class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">DATA PINJAMAN {{ $urutan }}</h3>
+                <h3 id="judulPinjaman" class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">MUTASI REKENING {{ $urutan }}</h3>
             
-                <!-- Nama LJK -->
+                <!-- Nama Bank -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Nama LJK <span class="text-red-500">*</span>
+                        Nama Bank <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="nama_ljk" value="{{ old('nama_ljk', $pinjaman->nama_ljk ?? '') }}"
+                    <input type="text" name="nama_bank" value="{{ old('nama_bank', $pinjaman->nama_bank ?? '') }}"
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
                 </div>
 
-                <!-- Plafon (step="any" dan float) -->
+                <!-- Bulan -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Plafon <span class="text-red-500">*</span>
+                        Bulan <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" step="any" min="0" name="plafon" value="{{ old('plafon', isset($pinjaman) ? (float)$pinjaman->plafon : '') }}"
+                    <input type="text" name="bulan" value="{{ old('bulan', $pinjaman->bulan ?? '') }}"
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
                 </div>
 
-                <!-- Outstanding (step="any" dan float) -->
+                <!-- Debet -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Outstanding <span class="text-red-500">*</span>
+                        Debet <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" step="any" min="0" name="outstanding" value="{{ old('outstanding', isset($pinjaman) ? (float)$pinjaman->outstanding : '') }}"
+                    <input type="number" step="any" min="0" name="debet" value="{{ old('debet', isset($pinjaman) ? (float)$pinjaman->debet : '') }}"
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
                 </div>
 
-                <!-- Kolekbilitas -->
+                <!-- Kredit -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Kolekbilitas <span class="text-red-500">*</span>
+                        Kredit <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="kolekbilitas" value="{{ old('kolekbilitas', $pinjaman->kolekbilitas ?? '') }}"
+                    <input type="number" step="any" min="0" name="kredit" value="{{ old('kredit', isset($pinjaman) ? (float)$pinjaman->kredit : '') }}"
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
                 </div>
 
-                <!-- Angsuran (step="any" dan float) -->
+                <!-- Saldo -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Angsuran <span class="text-red-500">*</span>
+                        Saldo <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" step="any" min="0" name="angsuran" value="{{ old('angsuran', isset($pinjaman) ? (float)$pinjaman->angsuran : '') }}"
+                    <input type="text" name="saldo" value="{{ old('saldo', $pinjaman->saldo ?? '') }}"
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
                 </div>
 
-                <!-- JKW -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        JKW
-                    </label>
-                    <input type="text" name="jkw" value="{{ old('jkw', $pinjaman->jkw ?? '') }}"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
-                </div>
-
-                <!-- Keterangan -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Keterangan <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="keterangan" value="{{ old('keterangan', $pinjaman->keterangan ?? '') }}"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
-                </div>
-
-                <!-- Bank Lain -->
+                <!-- Apakah masih ada mutasi tabungan -->
                 <div id="containerOpsiLanjut" class="{{ $urutan >= 20 ? 'hidden' : '' }}">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Apakah ada Pinjaman di Bank Lain? <span class="text-red-500">*</span>
+                        Apakah masih ada mutasi tabungan <span class="text-red-500">*</span>
                     </label>
                     <div class="space-y-3 text-sm text-gray-700">
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="apakah_ada_pinjaman_dibank_lain" value="YA" 
-                                   {{ (old('apakah_ada_pinjaman_dibank_lain', $pinjaman->apakah_ada_pinjaman_dibank_lain ?? '') === 'YA') ? 'checked' : '' }} 
+                            <input type="radio" name="apakah_masih_ada_mutasi_tabungan" value="YA" 
+                                   {{ (old('apakah_masih_ada_mutasi_tabungan', $pinjaman->apakah_masih_ada_mutasi_tabungan ?? '') === 'YA') ? 'checked' : '' }} 
                                    class="accent-[#0082CB]">
                             <span>YA</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="apakah_ada_pinjaman_dibank_lain" value="TIDAK ADA" 
-                                   {{ (old('apakah_ada_pinjaman_dibank_lain', $pinjaman->apakah_ada_pinjaman_dibank_lain ?? '') === 'TIDAK ADA') ? 'checked' : '' }} 
+                            <input type="radio" name="apakah_masih_ada_mutasi_tabungan" value="TIDAK ADA" 
+                                   {{ (old('apakah_masih_ada_mutasi_tabungan', $pinjaman->apakah_masih_ada_mutasi_tabungan ?? '') === 'TIDAK ADA') ? 'checked' : '' }} 
                                    class="accent-[#0082CB]">
                             <span>TIDAK ADA</span>
                         </label>
@@ -164,9 +145,11 @@
 
         function keHalamanSebelumnya() {
             if (currentUrutan > 1) {
-                window.location.href = "{{ route('6-1pinjaman1') }}?urutan=" + (currentUrutan - 1);
+                // Perbaikan: Arahkan kembali ke mutasi rekening urutan sebelumnya
+                window.location.href = "{{ route('z17-mutasi-rekening1') }}?urutan=" + (currentUrutan - 1);
             } else {
-                window.location.href = "{{ route('6-1dataslik') }}";
+                // Jika urutan 1, arahkan ke halaman sebelum mutasi rekening (Sesuaikan nama routenya jika berbeda)
+                window.location.href = "{{ route('z16-mutasi-rekening') }}"; 
             }
         }
 

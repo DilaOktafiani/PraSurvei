@@ -158,7 +158,6 @@
                 <button type="reset" class="text-[#0A3370] text-sm font-semibold hover:underline transition focus:outline-none">
                     Kosongkan Form
                 </button>
-
                 <div class="flex items-center gap-3">  
                     <button type="button" onclick="validateAndSubmit()"
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">

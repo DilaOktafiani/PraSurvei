@@ -224,7 +224,6 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
                         Kembali
                     </a>
 
-                    <!-- Tombol submit standar langsung mengirim ke Controller -->
                     <button type="submit"
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] transition">
                         Berikutnya

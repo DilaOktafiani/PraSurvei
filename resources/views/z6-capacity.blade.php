@@ -40,8 +40,11 @@
         </div>
 
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeAlur6') }}" method="POST" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeAlur6') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
+
+            <!-- Input tersembunyi untuk debitur_id (diambil dari session atau variabel controller) -->
+            <input type="hidden" name="debitur_id" value="{{ session('debitur_id') ?? ($debitur->id ?? '') }}">
 
             <!-- Capacity -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
@@ -52,7 +55,7 @@
                         Deskripsi Usaha <span class="text-red-500">*</span>
                     </label>
                     <textarea name="deskripsi_usaha" rows="2" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('temuan_ca', $debitur->temuan_ca ?? '') }}</textarea>
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('deskripsi_usaha', $capacity->deskripsi_usaha ?? '') }}</textarea>
                 </div>
 
                 <div>
@@ -60,22 +63,22 @@
                         Informasi Penghasilan Utama Menurut Nasabah <span class="text-red-500">*</span>
                     </label>
                     <textarea name="informasi_penghasilan_utama" rows="2" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('temuan_ca', $debitur->temuan_ca ?? '') }}</textarea>
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('informasi_penghasilan_utama', $capacity->informasi_penghasilan_utama ?? '') }}</textarea>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Informasi Penghasilan Pendukung Menurut Nasabah
                     </label>
-                    <textarea name="informasi_penghasilan_pendukung" rows="2" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('temuan_ca', $debitur->temuan_ca ?? '') }}</textarea>
+                    <textarea name="informasi_penghasilan_pendukung" rows="2" placeholder=""
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('informasi_penghasilan_pendukung', $capacity->informasi_penghasilan_pendukung ?? '') }}</textarea>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Pengeluaran Rumah Tangga <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="pengeluaran_rumah_tangga" value="{{ old('pengeluaran_rumah_tangga', $debitur->pengeluaran_rumah_tangga ?? '') }}" placeholder="ex : 20000000" required
+                    <input type="number" name="pengeluaran_rumah_tangga" value="{{ old('pengeluaran_rumah_tangga', $capacity->pengeluaran_rumah_tangga ?? '') }}" placeholder="ex : 2000000" required
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 
@@ -83,7 +86,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Angsuran Bank Lain <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="angsuran_bank_lain" value="{{ old('angsuran_bank_lain', $debitur->angsuran_bank_lain ?? '') }}" placeholder="ex : 100000000" required
+                    <input type="number" name="angsuran_bank_lain" value="{{ old('angsuran_bank_lain', $capacity->angsuran_bank_lain ?? '') }}" placeholder="ex : 1000000" required
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 
@@ -91,7 +94,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Angsuran BPR <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="angsuran_bpr" value="{{ old('angsuran_bpr', $debitur->angsuran_bpr ?? '') }}" placeholder="ex : 20000000" required
+                    <input type="number" name="angsuran_bpr" value="{{ old('angsuran_bpr', $capacity->angsuran_bpr ?? '') }}" placeholder="ex : 2000000" required
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 
@@ -100,23 +103,23 @@
                         Analisis Kapasitas oleh CA <span class="text-red-500">*</span>
                     </label>
                     <textarea name="analisis_kapasitas" rows="2" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('tujuan_penggunaan', $debitur->tujuan_penggunaan ?? '') }}</textarea>
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('analisis_kapasitas', $capacity->analisis_kapasitas ?? '') }}</textarea>
                 </div>
 
                 <!-- Upload Mutasi Rekening -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Denah <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Upload Mutasi Rekening <span class="text-red-500">*</span></label>
                     <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
-                        <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                        <input type="file" id="file_denah" name="file_denah" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this)">
-                        <button type="button" onclick="document.getElementById('file_denah').click()" 
+                        <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung. Maks 10 MB.</p>
+                        <input type="file" id="file_mutasi_rekening" name="file_mutasi_rekening" accept=".pdf, .jpg, .jpeg, .png" class="hidden" onchange="handleFileSelect(this)">
+                        <button type="button" onclick="document.getElementById('file_mutasi_rekening').click()" 
                                 class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
                             <span id="txt_btn_upload">Tambahkan file</span>
                         </button>
 
-                        @if(isset($tanah->denah) && $tanah->denah)
+                        @if(isset($capacity->mutasi_rekening) && $capacity->mutasi_rekening)
                             <div id="file_preview" class="mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                                <span id="file_name" class="truncate font-medium">{{ basename($tanah->denah) }}</span>
+                                <span id="file_name" class="truncate font-medium">{{ basename($capacity->mutasi_rekening) }}</span>
                                 <button type="button" onclick="removeFile()" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
                             </div>
                         @else
@@ -135,7 +138,7 @@
                     </label>
                     
                     @php
-                        $rawBerkas = old('kelengkapan_berkas', $infoUsaha->kelengkapan_berkas ?? []);
+                        $rawBerkas = old('kelengkapan_berkas', $capacity->kelengkapan_berkas ?? []);
                         if (is_string($rawBerkas)) {
                             $rawBerkas = json_decode($rawBerkas, true) ?? [];
                         }
@@ -201,12 +204,16 @@
 
             <!-- TOMBOL AKSI NAVIGASI -->
             <div class="flex justify-between items-center pt-2">
-                <button type="reset" class="text-[#0A3370] text-sm font-semibold hover:underline transition focus:outline-none">
+                <button type="reset" 
+                        class="text-[#0A3370] text-sm font-semibold hover:underline transition focus:outline-none">
                     Kosongkan Form
                 </button>
-
                 <div class="flex items-center gap-3">  
-                    <button type="button" onclick="validateAndSubmit()"
+                    <button type="button" onclick="window.history.back()"
+                            class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
+                        Kembali
+                    </button>
+                    <button type="button" onclick="validateAndSubmit()" 
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         Berikutnya
                     </button>
@@ -218,5 +225,42 @@
     <footer class="text-center text-xs text-gray-500 pb-6">
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
+
+    <!-- SCRIPT JAVASCRIPT UNTUK PREVIEW FILE & SUBMIT -->
+    <script>
+        function handleFileSelect(input) {
+            if (input.files && input.files[0]) {
+                const fileName = input.files[0].name;
+                const previewDiv = document.getElementById('file_preview');
+                const fileNameSpan = document.getElementById('file_name');
+                const btnText = document.getElementById('txt_btn_upload');
+
+                fileNameSpan.textContent = fileName;
+                previewDiv.classList.remove('hidden');
+                btnText.textContent = 'Ganti file';
+            }
+        }
+
+        function removeFile() {
+            const input = document.getElementById('file_mutasi_rekening');
+            const previewDiv = document.getElementById('file_preview');
+            const fileNameSpan = document.getElementById('file_name');
+            const btnText = document.getElementById('txt_btn_upload');
+
+            input.value = '';
+            fileNameSpan.textContent = '';
+            previewDiv.classList.add('hidden');
+            btnText.textContent = 'Tambahkan file';
+        }
+
+        function validateAndSubmit() {
+            const form = document.getElementById('formPraSurvei');
+            if (form.checkValidity()) {
+                form.submit();
+            } else {
+                form.reportValidity();
+            }
+        }
+    </script>
 </body>
 </html>

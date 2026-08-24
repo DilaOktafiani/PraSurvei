@@ -13,6 +13,18 @@ use App\Models\Survei\AgunanSimpanan;
 use App\Models\Survei\AgunanLogam;
 use App\Models\Survei\YangLain;
 use App\Models\Survei\AnalisisJaminan;
+use App\Models\Survei\Capacity;
+use App\Models\Survei\DataSlik;
+use App\Models\Survei\Capital;
+use App\Models\Survei\TakeOver;
+use App\Models\Survei\Kondisi;
+use App\Models\Survei\BerkasLengkap;
+use App\Models\Survei\BadanUsaha;
+use App\Models\Survei\Swot;
+use App\Models\Survei\DataTambahan;
+use App\Models\Survei\Pinjaman;
+use App\Models\Survei\MutasiRekening;
+use App\Models\Survei\MutasiRekening1;
 
 class SurveiController extends Controller
 {
@@ -265,7 +277,7 @@ class SurveiController extends Controller
                                 ->with('success', 'Data jaminan tanah ' . $urutanJaminan . ' berhasil disimpan. Silakan isi jaminan berikutnya.');
             } 
             else {
-                return redirect()->route('z5infousaha')
+                return redirect()->route('z6-capacity')
                                 ->with('success', 'Data agunan tanah selesai.');
             }
 
@@ -552,10 +564,887 @@ class SurveiController extends Controller
 
             DB::commit();
             // Arahkan ke alur / step berikutnya
-            return redirect()->route('z5-jaminan-analisis')->with('success', 'Analisis jaminan berhasil disimpan.');
+            return redirect()->route('z6-capacity')->with('success', 'Analisis jaminan berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
         }
+    }
+
+    // ==========================================
+    // ANALISIS CAPACITY
+    // ==========================================
+
+    public function createAlur6()
+    {
+        $debiturId = session('debitur_id'); // Mengambil debitur_id dari session
+        $capacity = null;
+
+        if ($debiturId) {
+            // Mencari data berdasarkan debitur_id jika sudah pernah diisi sebelumnya
+            $capacity = Capacity::where('debitur_id', $debiturId)->first();
+        }
+
+        // Contoh variabel tambahan jika dibutuhkan di view (sesuaikan dengan controller Anda sebelumnya)
+        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+        $infoUsaha = null;
+        $tanah = null;
+
+        return view('z6-capacity', compact('capacity', 'debitur', 'infoUsaha', 'tanah')); 
+    }
+
+    public function storeAlur6(Request $request)
+    {
+        // 1. Validasi input termasuk debitur_id
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+            'deskripsi_usaha' => 'required|string',
+            'informasi_penghasilan_utama' => 'required|string',
+            'informasi_penghasilan_pendukung' => 'nullable|string',
+            'pengeluaran_rumah_tangga' => 'required|numeric',
+            'angsuran_bank_lain' => 'required|numeric',
+            'angsuran_bpr' => 'required|numeric',
+            'analisis_kapasitas' => 'required|string',
+            'file_mutasi_rekening' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240', // Diubah dari file_denah & hapus dwg
+            'kelengkapan_berkas' => 'nullable|array',
+            'berkas_lainnya_detail' => 'nullable|string',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 2. Ambil data lama jika ada untuk pengecekan file mutasi rekening
+            $capacity = Capacity::where('debitur_id', $request->debitur_id)->first();
+            $filePath = $capacity ? $capacity->mutasi_rekening : null;
+
+            // 3. Handle Upload File Mutasi Rekening baru jika diunggah
+            if ($request->hasFile('file_mutasi_rekening')) {
+                // Hapus file lama jika ada
+                if ($filePath && \Storage::disk('public')->exists($filePath)) {
+                    \Storage::disk('public')->delete($filePath);
+                }
+                $filePath = $request->file('file_mutasi_rekening')->store('mutasi_rekening', 'public');
+            }
+
+            // 4. Handle Kelengkapan Berkas & Format "Yang Lain"
+            $berkas = $request->input('kelengkapan_berkas', []);
+            if (in_array('yang_lain', $berkas) && $request->filled('berkas_lainnya_detail')) {
+                $berkas = array_map(function($item) use ($request) {
+                    return $item === 'yang_lain' ? 'Lainnya: ' . $request->input('berkas_lainnya_detail') : $item;
+                }, $berkas);
+            }
+
+            // 5. Simpan atau perbarui data menggunakan updateOrCreate
+            Capacity::updateOrCreate(
+                ['debitur_id' => $request->debitur_id],
+                [
+                    'deskripsi_usaha' => $request->deskripsi_usaha,
+                    'informasi_penghasilan_utama' => $request->informasi_penghasilan_utama,
+                    'informasi_penghasilan_pendukung' => $request->informasi_penghasilan_pendukung,
+                    'pengeluaran_rumah_tangga' => $request->pengeluaran_rumah_tangga,
+                    'angsuran_bank_lain' => $request->angsuran_bank_lain,
+                    'angsuran_bpr' => $request->angsuran_bpr,
+                    'analisis_kapasitas' => $request->analisis_kapasitas,
+                    'mutasi_rekening' => $filePath, // Diubah dari file_denah
+                    'kelengkapan_berkas' => $berkas,
+                ]
+            );
+
+            DB::commit();
+
+            // Arahkan ke rute berikutnya atau kembali dengan pesan sukses
+            return redirect()->route('z7-dataslik')->with('success', 'Data Capacity berhasil disimpan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // DATA SLIK
+    // ==========================================
+
+    public function createAlur7()
+    {
+        $debiturId = session('debitur_id');
+        $dataslik = null;
+
+        if ($debiturId) {
+            $dataslik = DataSlik::where('debitur_id', $debiturId)->first();
+        }
+
+        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+
+        // Mengirimkan variabel '$dataslik' agar sesuai dengan yang digunakan di view
+        return view('z7-dataslik', compact('dataslik', 'debitur')); 
+    }
+
+    public function storeAlur7(Request $request)
+    {
+        // 1. Validasi input
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+            'file_slik' => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240', // Maksimal 10MB
+            'analisis_slik' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 2. Ambil data lama jika ada untuk pengecekan file
+            $dataslik = DataSlik::where('debitur_id', $request->debitur_id)->first();
+            $filePath = $dataslik ? $dataslik->file_slik : null;
+
+            // 3. Handle Upload File SLIK baru jika diunggah
+            if ($request->hasFile('file_slik')) {
+                if ($filePath && \Storage::disk('public')->exists($filePath)) {
+                    \Storage::disk('public')->delete($filePath);
+                }
+                $filePath = $request->file('file_slik')->store('slik_ojk', 'public');
+            }
+
+            // 4. Simpan atau perbarui data menggunakan updateOrCreate
+            DataSlik::updateOrCreate(
+                ['debitur_id' => $request->debitur_id],
+                [
+                    'file_slik' => $filePath,
+                    'analisis_slik' => $request->analisis_slik,
+                ]
+            );
+
+            DB::commit();
+
+            return redirect()->route('z8-capital')->with('success', 'Data SLIK berhasil disimpan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // CAPITAL - ANALISIS ASET
+    // ==========================================
+
+    public function createAlur8()
+    {
+        $debiturId = session('debitur_id');
+        $capital = null;
+
+        if ($debiturId) {
+            // Mencari data berdasarkan debitur_id
+            $capital = Capital::where('debitur_id', $debiturId)->first();
+        }
+
+        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+
+        return view('z8-capital', compact('capital', 'debitur')); // Sesuaikan nama view Anda
+    }
+
+    public function storeAlur8(Request $request)
+    {
+        // 1. Validasi input
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+            'analisis_aset' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 2. Simpan atau perbarui data menggunakan updateOrCreate
+            Capital::updateOrCreate(
+                ['debitur_id' => $request->debitur_id],
+                [
+                    'analisis_aset' => $request->analisis_aset,
+                ]
+            );
+
+            DB::commit();
+
+            return redirect()->route('z9-takeover')->with('success', 'Analisis Aset (Capital) berhasil disimpan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // TAKE OVER
+    // ==========================================
+
+    public function createAlur9()
+    {
+        $debiturId = session('debitur_id');
+        $takeover = null;
+
+        if ($debiturId) {
+            // Mencari data berdasarkan debitur_id
+            $takeover = TakeOver::where('debitur_id', $debiturId)->first();
+        }
+
+        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+
+        return view('z9-takeover', compact('takeover', 'debitur')); // Sesuaikan nama view Anda
+    }
+
+    public function storeAlur9(Request $request)
+    {
+        // 1. Validasi input
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+            'apakah_kredit_take_over' => 'required|in:YA,TIDAK',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 2. Simpan atau perbarui data menggunakan updateOrCreate
+            TakeOver::updateOrCreate(
+                ['debitur_id' => $request->debitur_id],
+                [
+                    'apakah_kredit_take_over' => $request->apakah_kredit_take_over,
+                ]
+            );
+
+            DB::commit();
+
+            // 3. Logika redirect bercabang berdasarkan pilihan user
+            if ($request->apakah_kredit_take_over === 'YA') {
+                // Jika pilih YA, arahkan ke halaman kondisi (z10-kondisi)
+                return redirect()->route('z10-kondisi')->with('success', 'Data berhasil disimpan. Silakan lanjutkan ke Kondisi Take Over.');
+            } else {
+                // Jika pilih TIDAK, lewati ke halaman berkas lengkap (z11-berkas-lengkap)
+                return redirect()->route('z11-berkas-lengkap')->with('success', 'Data berhasil disimpan. Silakan lanjutkan ke Verifikasi Berkas.');
+            }
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // KONDISI
+    // ==========================================
+
+    public function createAlur10()
+    {
+        $debiturId = session('debitur_id');
+        $analisisTakeOver = null;
+
+        if ($debiturId) {
+            // Mencari data berdasarkan debitur_id
+            $analisisTakeOver = Kondisi::where('debitur_id', $debiturId)->first();
+        }
+
+        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+
+        return view('z10-kondisi', compact('analisisTakeOver', 'debitur')); // Sesuaikan nama view Anda
+    }
+
+    public function storeAlur10(Request $request)
+    {
+        // 1. Validasi input
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+            'analisis_take_over' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 2. Simpan atau perbarui data menggunakan updateOrCreate
+            Kondisi::updateOrCreate(
+                ['debitur_id' => $request->debitur_id],
+                [
+                    'analisis_take_over' => $request->analisis_take_over,
+                ]
+            );
+
+            DB::commit();
+
+            return redirect()->route('z11-berkas-lengkap')->with('success', 'Analisis Take Over berhasil disimpan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // KELENGKAPAN BERKAS
+    // ==========================================
+
+    public function createAlur11()
+    {
+        $debiturId = session('debitur_id');
+        $kelengkapan = null;
+
+        if ($debiturId) {
+            $kelengkapan = BerkasLengkap::where('debitur_id', $debiturId)->first();
+        }
+
+        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+
+        return view('z11-berkas-lengkap', compact('kelengkapan', 'debitur')); // Sesuaikan nama view Anda
+    }
+
+    public function storeAlur11(Request $request)
+    {
+        // 1. Validasi input
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+            'analisis_kelengkapan_berkas' => 'required|string',
+            'apakah_badan_usaha' => 'required|in:YA,TIDAK',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 2. Simpan atau perbarui data menggunakan updateOrCreate
+            BerkasLengkap::updateOrCreate(
+                ['debitur_id' => $request->debitur_id],
+                [
+                    'analisis_kelengkapan_berkas' => $request->analisis_kelengkapan_berkas,
+                    'apakah_badan_usaha' => $request->apakah_badan_usaha,
+                ]
+            );
+
+            DB::commit();
+
+            // 3. Logika redirect bercabang berdasarkan pilihan Badan Usaha
+            if ($request->apakah_badan_usaha === 'YA') {
+                // Jika pilih YA, arahkan ke halaman Badan Usaha (z12-badanusaha)
+                return redirect()->route('z12-badanusaha')->with('success', 'Kelengkapan Berkas berhasil disimpan. Silakan lanjutkan ke Badan Usaha.');
+            } else {
+                // Jika pilih TIDAK, lewati langsung ke halaman SWOT (z13-swot)
+                return redirect()->route('z13-swot')->with('success', 'Kelengkapan Berkas berhasil disimpan. Silakan lanjutkan ke Analisis SWOT.');
+            }
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+        }
+    }
+    
+    // ==========================================
+    // BADAN USAHA
+    // ==========================================
+
+    public function createAlur12()
+    {
+        $debiturId = session('debitur_id');
+        $kelengkapanBadanUsaha = null;
+
+        if ($debiturId) {
+            $kelengkapanBadanUsaha = BadanUsaha::where('debitur_id', $debiturId)->first();
+        }
+
+        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+
+        // Diperbaiki: menggunakan '$kelengkapanBadanUsaha' agar sinkron
+        return view('z12-badanusaha', compact('kelengkapanBadanUsaha', 'debitur')); 
+    }
+
+    public function storeAlur12(Request $request)
+    {
+        // 1. Validasi input
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+            'analisa_badan_usaha' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 2. Simpan atau perbarui data menggunakan updateOrCreate
+            BadanUsaha::updateOrCreate(
+                ['debitur_id' => $request->debitur_id],
+                [
+                    'analisa_badan_usaha' => $request->analisa_badan_usaha,
+                ]
+            );
+
+            DB::commit();
+
+            return redirect()->route('z13-swot')->with('success', 'Analisa Badan Usaha berhasil disimpan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // ANALISIS SWOT
+    // ==========================================
+
+    public function createAlur13()
+    {
+        $debiturId = session('debitur_id');
+        $swot = null;
+
+        if ($debiturId) {
+            // Menggunakan Model Swot
+            $swot = \App\Models\Survei\Swot::where('debitur_id', $debiturId)->first();
+        }
+
+        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+
+        // Menggunakan compact('swot') agar sinkron
+        return view('z13-swot', compact('swot', 'debitur')); 
+    }
+
+    public function storeAlur13(Request $request)
+    {
+        // 1. Validasi input
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+            'kekuatan' => 'required|string',
+            'kelemahan' => 'required|string',
+            'peluang' => 'required|string',
+            'ancaman' => 'required|string',
+            'kesimpulan' => 'required|string',
+            'rekomendasi' => 'required|in:Disetujui,Disetujui dengan syarat,Ditolak',
+            'syarat_catatan' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 2. Simpan atau perbarui data menggunakan model Swot
+            \App\Models\Survei\Swot::updateOrCreate(
+                ['debitur_id' => $request->debitur_id],
+                [
+                    'kekuatan' => $request->kekuatan,
+                    'kelemahan' => $request->kelemahan,
+                    'peluang' => $request->peluang,
+                    'ancaman' => $request->ancaman,
+                    'kesimpulan' => $request->kesimpulan,
+                    'rekomendasi' => $request->rekomendasi,
+                    'syarat_catatan' => $request->syarat_catatan,
+                ]
+            );
+
+            DB::commit();
+
+            return redirect()->route('z14-data-tambahan')->with('success', 'Analisis SWOT berhasil disimpan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // DATA TAMBAHAN
+    // ==========================================
+
+    public function createAlur14()
+    {
+        $debiturId = session('debitur_id');
+        $takeover = null;
+
+        if ($debiturId) {
+            $takeover = DataTambahan::where('debitur_id', $debiturId)->first();
+        }
+
+        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+
+        return view('z14-data-tambahan', compact('takeover', 'debitur'));
+    }
+
+    public function storeAlur14(Request $request)
+    {
+        // 1. Validasi input
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+            'menambahkan_data_slik' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 2. Simpan atau perbarui data ke database
+            DataTambahan::updateOrCreate(
+                ['debitur_id' => $request->debitur_id],
+                [
+                    'menambahkan_data_slik' => $request->menambahkan_data_slik,
+                ]
+            );
+
+            DB::commit();
+
+            // 3. Logika Navigasi Kondisional
+            if ($request->menambahkan_data_slik === 'YA') {
+                return redirect()->route('z15-pinjaman', ['urutan' => 1])
+                                ->with('success', 'Data tambahan disimpan. Silakan isi data pinjaman.');
+            } else {
+                // Jika memilih opsi teks panjang "Tidak (saya mengisi data manual di excel)"
+                return redirect()->route('z16-mutasi-rekening')
+                                ->with('success', 'Data tambahan berhasil disimpan.');
+            }
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // DATA PINJAMAN (SLIK)
+    // ==========================================
+
+    public function createAlur15(Request $request)
+    {
+        $debiturId = session('debitur_id');
+        $urutan = $request->query('urutan', 1); // Default ke urutan 1 jika tidak ada
+        $pinjaman = null;
+
+        if ($debiturId) {
+            $pinjaman = Pinjaman::where('debitur_id', $debiturId)
+                                         ->where('urutan', $urutan)
+                                         ->first();
+        }
+
+        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+
+        return view('z15-pinjaman', compact('pinjaman', 'debitur', 'urutan')); // Sesuaikan nama view Blade Anda
+    }
+
+    public function storeAlur15(Request $request)
+    {
+        // 1. Validasi input
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+            'urutan' => 'required|integer|min:1',
+            'nama_ljk' => 'required|string',
+            'plafond' => 'required|numeric|min:0',
+            'outstanding' => 'required|numeric|min:0',
+            'kolekbilitas' => 'required|string',
+            'angsuran' => 'required|numeric|min:0',
+            'keterangan' => 'required|string',
+            'jkw' => 'nullable|string',
+            'jalan' => 'required|string',
+            'bunga' => 'nullable|string',
+            'apakah_ada_pinjaman_lain' => 'nullable|in:YA,TIDAK ADA',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 2. Simpan atau perbarui data berdasarkan debitur_id dan urutan
+            Pinjaman::updateOrCreate(
+                [
+                    'debitur_id' => $request->debitur_id,
+                    'urutan' => $request->urutan
+                ],
+                [
+                    'nama_ljk' => $request->nama_ljk,
+                    'plafond' => $request->plafond,
+                    'outstanding' => $request->outstanding,
+                    'kolekbilitas' => $request->kolekbilitas,
+                    'angsuran' => $request->angsuran,
+                    'keterangan' => $request->keterangan,
+                    'jkw' => $request->jkw,
+                    'jalan' => $request->jalan,
+                    'bunga' => $request->bunga,
+                    'apakah_ada_pinjaman_lain' => $request->apakah_ada_pinjaman_lain,
+                ]
+            );
+
+            DB::commit();
+
+            // 3. Logika Navigasi Lanjutan Berdasarkan Pilihan "Apakah ada pinjaman lain"
+            if ($request->apakah_ada_pinjaman_lain === 'YA' && $request->urutan < 20) {
+                // Jika user memilih ADA, arahkan ke form urutan berikutnya
+                $nextUrutan = $request->urutan + 1;
+                return redirect()->route('z15-pinjaman', ['urutan' => $nextUrutan])
+                                 ->with('success', 'Data pinjaman ' . $request->urutan . ' berhasil disimpan. Silakan isi data pinjaman berikutnya.');
+            } else {
+                // Jika TIDAK ADA atau mencapai batas maksimal, arahkan ke alur/langkah berikutnya (sesuaikan routenya)
+                return redirect()->route('z16-mutasi-rekening')
+                                 ->with('success', 'Data seluruh pinjaman SLIK berhasil disimpan.');
+            }
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // MUTASI REKENING
+    // ==========================================
+
+    public function createAlur16()
+    {
+        $debiturId = session('debitur_id');
+        $takeover = null;
+
+        if ($debiturId) {
+            $takeover = MutasiRekening::where('debitur_id', $debiturId)->first();
+        }
+
+        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+
+        return view('z16-mutasi-rekening', compact('takeover', 'debitur')); // Sesuaikan nama view Blade Anda
+    }
+
+    public function storeAlur16(Request $request)
+    {
+        // 1. Validasi input
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+            'detail_mutasi_tabungan' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 2. Simpan atau perbarui data menggunakan updateOrCreate
+            MutasiRekening::updateOrCreate(
+                ['debitur_id' => $request->debitur_id],
+                [
+                    'detail_mutasi_tabungan' => $request->detail_mutasi_tabungan,
+                ]
+            );
+
+            DB::commit();
+
+            // 3. Logika Navigasi Kondisional
+            if ($request->detail_mutasi_tabungan === 'YA') {
+                return redirect()->route('z17-mutasi-rekening1') // Sesuaikan route tujuan jika YA
+                                 ->with('success', 'Data mutasi tabungan disimpan. Silakan lanjutkan pengisian.');
+            } else {
+                return redirect()->route('z18-selesai') // Sesuaikan route tujuan jika memilih manual excel
+                                 ->with('success', 'Data mutasi tabungan berhasil disimpan.');
+            }
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // MUTASI REKENING1
+    // ==========================================
+
+    public function createAlur17(Request $request)
+    {
+        $debiturId = session('debitur_id');
+        $urutan = $request->query('urutan', 1); // Default ke urutan 1 jika tidak ada
+        $pinjaman = null; // Menggunakan nama variabel $pinjaman agar sesuai dengan Blade yang Anda sediakan
+
+        if ($debiturId) {
+            // Perbaikan: Gunakan MutasiRekening1 (sesuai nama model dan tabel)
+            $pinjaman = \App\Models\Survei\MutasiRekening1::where('debitur_id', $debiturId)
+                                                          ->where('urutan', $urutan)
+                                                          ->first();
+        }
+
+        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+
+        return view('z17-mutasi-rekening1', compact('pinjaman', 'debitur', 'urutan'));
+    }
+
+    public function storeAlur17(Request $request)
+    {
+        // 1. Validasi input
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+            'urutan' => 'required|integer|min:1',
+            'nama_bank' => 'required|string',
+            'bulan' => 'required|string',
+            'debet' => 'required|numeric|min:0',
+            'kredit' => 'required|numeric|min:0',
+            'saldo' => 'required|string',
+            'apakah_masih_ada_mutasi_tabungan' => 'nullable|in:YA,TIDAK ADA',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 2. Simpan atau perbarui data menggunakan model MutasiRekening1
+            \App\Models\Survei\MutasiRekening1::updateOrCreate(
+                [
+                    'debitur_id' => $request->debitur_id,
+                    'urutan' => $request->urutan
+                ],
+                [
+                    'nama_bank' => $request->nama_bank,
+                    'bulan' => $request->bulan,
+                    'debet' => $request->debet,
+                    'kredit' => $request->kredit,
+                    'saldo' => $request->saldo,
+                    'apakah_masih_ada_mutasi_tabungan' => $request->apakah_masih_ada_mutasi_tabungan,
+                ]
+            );
+
+            DB::commit();
+
+            // 3. Logika Navigasi Lanjutan Berdasarkan Pilihan "Apakah masih ada mutasi tabungan"
+            if ($request->apakah_masih_ada_mutasi_tabungan === 'YA' && $request->urutan < 20) {
+                // Jika user memilih YA, arahkan ke form urutan berikutnya
+                $nextUrutan = $request->urutan + 1;
+                return redirect()->route('z17-mutasi-rekening1', ['urutan' => $nextUrutan])
+                                 ->with('success', 'Data mutasi rekening urutan ' . $request->urutan . ' berhasil disimpan.');
+            } else {
+                // Jika TIDAK ADA atau batas maksimal tercapai, arahkan ke langkah berikutnya
+                return redirect()->route('z18-selesai')
+                                 ->with('success', 'Data seluruh mutasi rekening berhasil disimpan.');
+            }
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // Selesai
+    // ==========================================
+    public function createAlur18()
+    {
+        $debitur_id = session('debitur_id');
+
+        if (!$debitur_id) {
+            return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
+        }
+
+        // Cek pilihan user di Halaman 9 (apakah_badan_usaha)
+        $dataLengkap = MutasiRekening::where('debitur_id', $debitur_id)->first();
+
+        // ATUR TOMBOL KEMBALI DI HALAMAN FINAL SECARA DINAMIS:
+        // - Jika di Halaman 9 pilih YA, berarti dia melewati Halaman 10. Tombol kembali harus ke Halaman 10 (10badanusaha).
+        // - Jika di Halaman 9 pilih TIDAK, berarti dia langsung ke Final. Tombol kembali harus langsung ke Halaman 9 (9datalengkap).
+        if ($dataLengkap && $dataLengkap->apakah_badan_usaha === 'YA') {
+            $backRoute = route('z17-mutasi-rekening1');
+        } else {
+            $backRoute = route('z16-mutasi-rekening');
+        }
+
+        return view('11final', compact('debitur_id', 'backRoute'));
+    }
+
+    public function storeAlur18(Request $request)
+    {
+        $request->validate([
+            'debitur_id' => 'required|exists:debiturs,id',
+        ]);
+
+        // Ambil ID debitur terlebih dahulu sebelum session dibersihkan
+        $debiturId = $request->debitur_id;
+
+        DB::beginTransaction();
+        try {
+            DB::commit();
+            
+            // Hapus session formulir secara keseluruhan setelah sukses dikirim
+            session()->forget([
+                'debitur_id',
+            ]);
+
+            // Gunakan variabel lokal $debiturId untuk redirect
+            return redirect()->route('riwayat.detail', ['id' => $debiturId])
+                             ->with('success', 'Data berhasil diperbarui dan disimpan secara keseluruhan!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
+        }
+    }
+
+    // ==========================================
+    // RIWAYAT
+    // ==========================================
+
+    // 1. Menampilkan Halaman Riwayat dengan Data dari Database
+    public function createStepRiwayat()
+    {
+        // Mengambil semua data debitur dari database, diurutkan dari yang terbaru
+        $dataDebitur = Debitur::latest()->get(); 
+
+        // Jika kamu punya model khusus untuk survei CA, ambil juga datanya di sini
+        // $dataSurveiCa = SurveiCa::latest()->get();
+        $dataSurveiCa = []; // Kosongkan dulu jika belum ada tabelnya
+
+        return view('riwayat', compact('dataDebitur', 'dataSurveiCa'));
+    }
+
+    // 6. Detail Riwayat (Menampilkan detail berdasarkan ID)
+    public function detailRiwayat($id)
+    {
+        // Mencari data debitur berdasarkan ID, jika tidak ketemu akan otomatis memunculkan error 404
+        $item = Debitur::findOrFail($id);
+
+        return view('detail-riwayat', compact('item'));
+    }
+
+    // ==========================================
+    // DETAIL RIWAYAT (Untuk Tampilan Web Normal)
+    // ==========================================
+    public function show($id)
+    {
+        $data = Debitur::with([
+            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
+            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+        ])->findOrFail($id);
+
+        return view('riwayat-detail', compact('data'));
+    }
+
+    // ==========================================
+    // METHOD CETAK (PRINT LANGSUNG)
+    // ==========================================
+    public function printPage($id)
+    {
+        // Mengambil data dengan semua relasi yang dibutuhkan
+        $data = Debitur::with([
+            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
+            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+        ])->findOrFail($id);
+
+        // Mengarahkan ke view khusus cetak (riwayat-print.blade.php)
+        return view('riwayat-print', compact('data'));
+    }            
+
+    // ==========================================
+    // METHOD EXPORT PDF
+    // ==========================================
+    public function exportPdf($id)
+    {
+        $data = Debitur::with([
+            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
+            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+        ])->findOrFail($id);
+
+        // Menggunakan riwayat-pdf.blade.php
+        $view = view('riwayat-pdf', compact('data'))->render();
+        $pdf = Pdf::loadHtml($view);
+        
+        return $pdf->download('Data_Debitur_' . $data->nama . '.pdf');
+    }
+
+    // ==========================================
+    // METHOD EXPORT WORD
+    // ==========================================
+    public function exportWord($id)
+    {
+        $data = Debitur::with([
+            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
+            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+        ])->findOrFail($id);
+
+        // Menggunakan riwayat-word.blade.php
+        $view = view('riwayat-word', compact('data'))->render();
+
+        return response($view)
+            ->header('Content-Type', 'application/vnd.ms-word')
+            ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.doc"');
+    }
+
+    // ==========================================
+    // METHOD EXPORT EXCEL
+    // ==========================================
+    public function exportExcel($id)
+    {
+        $data = Debitur::with([
+            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
+            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+        ])->findOrFail($id);
+
+        // Menggunakan riwayat-excel.blade.php
+        $view = view('riwayat-excel', compact('data'))->render();
+
+        return response($view)
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.xls"');
     }
 }

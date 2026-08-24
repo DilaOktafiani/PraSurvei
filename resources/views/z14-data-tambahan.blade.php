@@ -34,6 +34,9 @@
                     <p class="text-gray-500 mt-1 text-sm">Silakan masukkan hasil analisis lapangan untuk penentuan kelayakan akhir nasabah.</p>
                 </div>
             </div>
+            <p class="text-xs text-red-500 mt-4 font-medium flex items-center gap-1 border-t border-gray-100 pt-3">
+                <span>*</span> Menunjukkan pertanyaan yang wajib diisi
+            </p>
         </div>
 
         <!-- FORM UTAMA -->
@@ -50,7 +53,7 @@
                 <!-- Apakah ingin menambahkan data SLIK -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Apakah ingin menambahkan data SLIK
+                        Apakah ingin menambahkan data SLIK <span class="text-red-500">*</span>
                     </label>
                     <div class="space-y-3 text-sm text-gray-700">
                         <label class="flex items-center gap-2 cursor-pointer">
@@ -60,7 +63,7 @@
                             <span>YA</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="menambahkan_data_slik" value="TIDAK" 
+                            <input type="radio" name="menambahkan_data_slik" value="Tidak (saya mengisi data manual di excel)" 
                                    {{ (old('menambahkan_data_slik', $takeover->menambahkan_data_slik ?? '') == 'Tidak (saya mengisi data manual di excel)') ? 'checked' : '' }} 
                                    class="accent-[#0082CB]" required>
                             <span>Tidak (saya mengisi data manual di excel)</span>
@@ -75,13 +78,11 @@
                         class="text-[#0A3370] text-sm font-semibold hover:underline transition focus:outline-none">
                     Kosongkan Form
                 </button>
-
                 <div class="flex items-center gap-3">  
                     <button type="button" onclick="window.history.back()"
                             class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                         Kembali
                     </button>
-
                     <button type="submit" 
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         Berikutnya
