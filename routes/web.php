@@ -8,19 +8,15 @@ use App\Http\Controllers\SurveiController;
 // PRA-SURVEI
 // =========================================================================
 
-// Route Halaman 1
-Route::get('/z1-surveica', [DebiturController::class, 'createAlur1'])->name('z1-surveica');
-Route::post('/z1-surveica', [DebiturController::class, 'storeAlur1'])->name('storeAlur1');
-
-// Dashboard
+// Halaman Dashboard
 Route::view('/', '0dashboard');
 Route::view('/0dashboard', '0dashboard');
 
-// Route Halaman 1
+// Route Halaman 1 Pra-Survei
 Route::get('/1pra-survei', [DebiturController::class, 'createStep1'])->name('1pra-survei');
 Route::post('/1pra-survei', [DebiturController::class, 'storeStep1'])->name('storeStep1');
 
-// Route Halaman 2
+// Route Halaman 2 Pra-Survei
 Route::get('/2pra-survei', [DebiturController::class, 'createStep2'])->name('2pra-survei');
 Route::post('/2pra-survei', [DebiturController::class, 'storeStep2'])->name('storeStep2');
 
@@ -40,7 +36,7 @@ Route::post('/3-3simpanan', [DebiturController::class, 'storeStep3_3'])->name('s
 Route::get('/3-4logam', [DebiturController::class, 'createStep3_4'])->name('3-4logam');
 Route::post('/3-4logam', [DebiturController::class, 'storeStep3_4'])->name('storeStep3-4');
 
-// Route Halaman 3 Jika Pengguna Memilih Opsi Jaminan di Jenis Agunan
+// Route Halaman 3 Jika Pengguna Memilih Opsi Yang Lain di Jenis Agunan
 Route::get('/4jaminan', [DebiturController::class, 'createStep4'])->name('4jaminan');
 Route::post('/4jaminan', [DebiturController::class, 'storeStep4'])->name('storeStep4');
 
@@ -81,21 +77,19 @@ Route::get('/11final', [DebiturController::class, 'createStep11'])->name('11fina
 Route::post('/11final', [DebiturController::class, 'storeStep11'])->name('storeStep11');
 
 
-
-// 1. Route untuk Menampilkan Daftar Riwayat
+// Route Halaman Riwayat
 Route::get('/riwayat', [DebiturController::class, 'createStepRiwayat'])->name('riwayat');
-
-// 2. Route untuk Proses Simpan (jika ada)
 Route::post('/riwayat', [DebiturController::class, 'storeStepRiwayat'])->name('storeStepRiwayat');
 
-// Route Detail
+// Route Halaman Riwayat Detail
 Route::get('/riwayat/detail/{id}', [DebiturController::class, 'show'])->name('riwayat.detail');
 
-// Route Export Terpisah
+// Route Export pdf, word, excel
 Route::get('/riwayat/detail/{id}/export/pdf', [DebiturController::class, 'exportPdf'])->name('riwayat.pdf');
 Route::get('/riwayat/detail/{id}/export/word', [DebiturController::class, 'exportWord'])->name('riwayat.word');
 Route::get('/riwayat/detail/{id}/export/excel', [DebiturController::class, 'exportExcel'])->name('riwayat.excel');
 
+// Route Cetak atau Print
 Route::get('/riwayat/detail/{id}/print', [DebiturController::class, 'printPage'])->name('riwayat.print');
 
 
@@ -104,11 +98,11 @@ Route::get('/riwayat/detail/{id}/print', [DebiturController::class, 'printPage']
 // SURVEI
 // =========================================================================
 
-// Route Halaman 1
+// Route Halaman 1 Survei
 Route::get('/z1-surveica', [SurveiController::class, 'createAlur1'])->name('z1-surveica');
 Route::post('/z1-surveica', [SurveiController::class, 'storeAlur1'])->name('storeAlur1');
 
-// Route Halaman 2
+// Route Halaman 2 Survei
 Route::get('/z2-surveica', [SurveiController::class, 'createAlur2'])->name('z2-surveica');
 Route::post('/z2-surveica', [SurveiController::class, 'storeAlur2'])->name('storeAlur2');
 
@@ -128,48 +122,69 @@ Route::post('/z3-3simpanan', [SurveiController::class, 'storeAlur3_3'])->name('s
 Route::get('/z3-4logam', [SurveiController::class, 'createAlur3_4'])->name('z3-4logam');
 Route::post('/z3-4logam', [SurveiController::class, 'storeAlur3_4'])->name('storeAlur3-4');
 
-// Route Halaman 3 Jika Pengguna Memilih Opsi Jaminan di Jenis Agunan
+// Route Halaman 3 Jika Pengguna Memilih Opsi Yang Lain di Jenis Agunan
 Route::get('/z4-jaminan', [SurveiController::class, 'createAlur4'])->name('z4-jaminan');
 Route::post('/z4-jaminan', [SurveiController::class, 'storeAlur4'])->name('storeAlur4');
 
+// Route Halaman Analisis Jaminan
 Route::get('/z5-jaminan-analisis', [SurveiController::class, 'createAlur5'])->name('z5-jaminan-analisis');
 Route::post('/z5-jaminan-analisis', [SurveiController::class, 'storeAlur5'])->name('storeAlur5');
 
+// Route Halaman Capacity
 Route::get('/z6-capacity', [SurveiController::class, 'createAlur6'])->name('z6-capacity');
 Route::post('/z6-capacity', [SurveiController::class, 'storeAlur6'])->name('storeAlur6');
 
+// Route Halaman Data Slik
 Route::get('/z7-dataslik', [SurveiController::class, 'createAlur7'])->name('z7-dataslik');
 Route::post('/z7-dataslik', [SurveiController::class, 'storeAlur7'])->name('storeAlur7');
 
+// Route Halaman Capital
 Route::get('/z8-capital', [SurveiController::class, 'createAlur8'])->name('z8-capital');
 Route::post('/z8-capital', [SurveiController::class, 'storeAlur8'])->name('storeAlur8');
 
+// Route Halaman Take Over
 Route::get('/z9-takeover', [SurveiController::class, 'createAlur9'])->name('z9-takeover');
 Route::post('/z9-takeover', [SurveiController::class, 'storeAlur9'])->name('storeAlur9');
 
+// Route Halaman Kondisi
 Route::get('/z10-kondisi', [SurveiController::class, 'createAlur10'])->name('z10-kondisi');
 Route::post('/z10-kondisi', [SurveiController::class, 'storeAlur10'])->name('storeAlur10');
 
+// Route Halaman Kelengkapan Berkas
 Route::get('/z11-berkas-lengkap', [SurveiController::class, 'createAlur11'])->name('z11-berkas-lengkap');
 Route::post('/z11-berkas-lengkap', [SurveiController::class, 'storeAlur11'])->name('storeAlur11');
 
+// Route Halaman Badan Usaha
 Route::get('/z12-badanusaha', [SurveiController::class, 'createAlur12'])->name('z12-badanusaha');
 Route::post('/z12-badanusaha', [SurveiController::class, 'storeAlur12'])->name('storeAlur12');
 
+// Route Halaman Analisis SWOT
 Route::get('/z13-swot', [SurveiController::class, 'createAlur13'])->name('z13-swot');
 Route::post('/z13-swot', [SurveiController::class, 'storeAlur13'])->name('storeAlur13');
 
+// Route Halaman Data Tambahan
 Route::get('/z14-data-tambahan', [SurveiController::class, 'createAlur14'])->name('z14-data-tambahan');
 Route::post('/z14-data-tambahan', [SurveiController::class, 'storeAlur14'])->name('storeAlur14');
 
+// Route Halaman Pinjaman
 Route::get('/z15-pinjaman', [SurveiController::class, 'createAlur15'])->name('z15-pinjaman');
 Route::post('/z15-pinjaman', [SurveiController::class, 'storeAlur15'])->name('storeAlur15');
 
+// Route Halaman Mutasi Rekening
 Route::get('/z16-mutasi-rekening', [SurveiController::class, 'createAlur16'])->name('z16-mutasi-rekening');
 Route::post('/z16-mutasi-rekening', [SurveiController::class, 'storeAlur16'])->name('storeAlur16');
 
 Route::get('/z17-mutasi-rekening1', [SurveiController::class, 'createAlur17'])->name('z17-mutasi-rekening1');
 Route::post('/z17-mutasi-rekening1', [SurveiController::class, 'storeAlur17'])->name('storeAlur17');
 
+// Route Halaman Kirim
 Route::get('/z18-selesai', [SurveiController::class, 'createAlur18'])->name('z18-selesai');
 Route::post('/z18-selesai', [SurveiController::class, 'storeAlur18'])->name('storeAlur18');
+
+
+// Route Halaman Riwayat
+Route::get('/riwayat', [SurveiController::class, 'createAlurRiwayat'])->name('riwayat');
+Route::post('/riwayat', [SurveiController::class, 'storeAlurRiwayat'])->name('storeAlurRiwayat');
+
+// Route Halaman Riwayat Detail
+Route::get('/riwayat/detail2/{id}', [SurveiController::class, 'show'])->name('riwayat.detail2');

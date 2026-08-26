@@ -72,62 +72,84 @@
                     A. Data Debitur
                 </div>
                 <div class="border border-[#0A3370] rounded-none">
-                    <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 pl-7">Nomor Register</div>
-                        <div class="p-3.5 border-r border-gray-300 font-medium">{{ $data->no_register ?? '-' }}</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Nama Marketing</div>
-                        <div class="p-3.5 font-medium">{{ $data->nama_marketing ?? '-' }}</div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">1. Nama Debitur</div>
-                        <div class="p-3.5 border-r border-gray-300 font-medium">{{ $data->nama ?? '-' }}</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Nama Pasangan</div>
-                        <div class="p-3.5 font-medium">{{ $data->nama_pasangan ?? '-' }}</div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 pl-7">Usia</div>
-                        <div class="p-3.5 border-r border-gray-300">{{ $data->usia ?? '-' }}</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Usia Pasangan</div>
-                        <div class="p-3.5">{{ $data->usia_pasangan ?? '-' }}</div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">2. Usaha</div>
-                        <div class="p-3.5 border-r border-gray-300">{{ $data->usaha ?? '-' }}</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Lama Usaha</div>
-                        <div class="p-3.5">{{ $data->lama_usaha ?? '-' }}</div>
-                    </div>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">3. Alamat Debitur</div>
-                        <div class="p-3.5 sm:col-span-3 font-medium">{{ $data->alamat_ktp ?? '-' }}</div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 pl-7">Alamat Domisili</div>
-                        <div class="p-3.5 sm:col-span-3 font-medium">{{ $data->alamat_domisili ?? '-' }}</div>
+                    <!-- Nomor Register & Nama Marketing -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center"></div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Nomor Register</div>
+                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 font-medium flex items-center">{{ $data->no_register ?? '-' }}</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Nama Marketing</div>
+                        <div class="p-3.5 sm:col-span-2 font-medium flex items-center">{{ $data->nama_marketing ?? '-' }}</div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">4. Plafon</div>
-                        <div class="p-3.5 border-r border-gray-300 font-semibold text-emerald-700">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">JKW</div>
-                        <div class="p-3.5">{{ $data->jangka_waktu ?? '-' }}</div>
+                    <!-- 1. Nama Debitur & Nama Pasangan -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">1</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Nama Debitur</div>
+                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 font-medium flex items-center">{{ $data->nama ?? '-' }}</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Nama Pasangan</div>
+                        <div class="p-3.5 sm:col-span-2 font-medium flex items-center">{{ $data->nama_pasangan ?? '-' }}</div>
+                    </div>
+
+                    <!-- Usia & Usia Pasangan -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center"></div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Usia</div>
+                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 flex items-center">{{ $data->usia ?? '-' }}</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Usia Pasangan</div>
+                        <div class="p-3.5 sm:col-span-2 flex items-center">{{ $data->usia_pasangan ?? '-' }}</div>
+                    </div>
+
+                    <!-- 2. Usaha & Lama Usaha -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">2</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Usaha</div>
+                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 flex items-center">{{ $data->usaha ?? '-' }}</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Lama Usaha</div>
+                        <div class="p-3.5 sm:col-span-2 flex items-center">{{ $data->lama_usaha ?? '-' }}</div>
                     </div>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-4">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">5. Tujuan Penggunaan</div>
-                        <div class="p-3.5 border-r border-gray-300 sm:col-span-1 whitespace-pre-line flex items-center">{{ $data->tujuan_penggunaan ?? '-' }}</div>
+                    <!-- 3. Alamat Debitur -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">3</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Alamat Debitur</div>
+                        <div class="p-3.5 sm:col-span-8 font-medium flex items-center">{{ $data->alamat_ktp ?? '-' }}</div>
+                    </div>
+
+                    <!-- Alamat Domisili -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center"></div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Alamat Domisili</div>
+                        <div class="p-3.5 sm:col-span-8 font-medium flex items-center">{{ $data->alamat_domisili ?? '-' }}</div>
+                    </div>
+
+                    <!-- 4. Plafon & JKW -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">4</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Plafon</div>
+                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 font-semibold text-emerald-700 flex items-center">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">JKW</div>
+                        <div class="p-3.5 sm:col-span-2 flex items-center">{{ $data->jangka_waktu ?? '-' }}</div>
+                    </div>
+                    
+                    <!-- 5. Tujuan Penggunaan, Angsuran & Type Fasilitas -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">5</div>
+                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Tujuan Penggunaan</div>
+                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 whitespace-pre-line flex items-center">{{ $data->tujuan_penggunaan ?? '-' }}</div>
                         
-                        <div class="sm:col-span-2 flex flex-col">
+                        <div class="sm:col-span-4 flex flex-col">
                             <div class="grid grid-cols-2 border-b border-gray-300">
-                                <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Angsuran</div>
-                                <div class="p-3.5 font-semibold text-emerald-700">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</div>
+                                <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Angsuran</div>
+                                <div class="p-3.5 font-semibold text-emerald-700 flex items-center">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</div>
                             </div>
                             <div class="grid grid-cols-2">
-                                <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Type Fasilitas</div>
-                                <div class="p-3.5 text-gray-700 font-medium">{{ is_array($data->tipe_fasilitas ?? null) ? implode(', ', $data->tipe_fasilitas) : ($data->tipe_fasilitas ?? '-') }}</div>
+                                <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Type Fasilitas</div>
+                                <div class="p-3.5 text-gray-700 font-medium flex items-center">{{ is_array($data->tipe_fasilitas ?? null) ? implode(', ', $data->tipe_fasilitas) : ($data->tipe_fasilitas ?? '-') }}</div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
 

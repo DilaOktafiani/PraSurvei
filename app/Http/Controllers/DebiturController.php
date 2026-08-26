@@ -1143,9 +1143,21 @@ class DebiturController extends Controller
     // ==========================================
     public function show($id)
     {
-        $data = Debitur::with([
-            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
-            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+        $data = \App\Models\Debitur::with([
+            'agunans',
+            'agunan_kendaraan',
+            'agunan_logam',
+            'agunan_simpanan',
+            'agunan_tanah',
+            'yang_lain',
+            'badanusaha',
+            'capital',
+            'datalengkap',
+            'dataslik',
+            'infousaha',
+            'kondisi',
+            'pinjaman',
+            'takeover'
         ])->findOrFail($id);
 
         return view('riwayat-detail', compact('data'));

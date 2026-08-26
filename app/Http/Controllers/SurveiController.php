@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\Survei\Debitur;
+use Illuminate\Support\Facades\DB;            
+use App\Models\Survei\Debitur;    
 use App\Models\Survei\Agunan;
 use App\Models\Survei\AgunanTanah;
 use App\Models\Survei\AgunanKendaraan;
@@ -1298,19 +1298,16 @@ class SurveiController extends Controller
             return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
         }
 
-        // Cek pilihan user di Halaman 9 (apakah_badan_usaha)
-        $dataLengkap = MutasiRekening::where('debitur_id', $debitur_id)->first();
+        // Cek data Mutasi Rekening dari namespace Survei
+        $dataLengkap = \App\Models\Survei\MutasiRekening::where('debitur_id', $debitur_id)->first();
 
-        // ATUR TOMBOL KEMBALI DI HALAMAN FINAL SECARA DINAMIS:
-        // - Jika di Halaman 9 pilih YA, berarti dia melewati Halaman 10. Tombol kembali harus ke Halaman 10 (10badanusaha).
-        // - Jika di Halaman 9 pilih TIDAK, berarti dia langsung ke Final. Tombol kembali harus langsung ke Halaman 9 (9datalengkap).
-        if ($dataLengkap && $dataLengkap->apakah_badan_usaha === 'YA') {
+        if ($dataLengkap && isset($dataLengkap->apakah_badan_usaha) && $dataLengkap->apakah_badan_usaha === 'YA') {
             $backRoute = route('z17-mutasi-rekening1');
         } else {
             $backRoute = route('z16-mutasi-rekening');
         }
 
-        return view('11final', compact('debitur_id', 'backRoute'));
+        return view('z18-selesai', compact('debitur_id', 'backRoute'));
     }
 
     public function storeAlur18(Request $request)
@@ -1319,21 +1316,27 @@ class SurveiController extends Controller
             'debitur_id' => 'required|exists:debiturs,id',
         ]);
 
-        // Ambil ID debitur terlebih dahulu sebelum session dibersihkan
         $debiturId = $request->debitur_id;
+        
+        // Mengambil data debitur dari model Survei CA atau model utama menggunakan path lengkap
+        $debitur = \App\Models\Survei\Debitur::find($debiturId) ?? \App\Models\Debitur::find($debiturId);
 
         DB::beginTransaction();
         try {
+            // Proses simpan atau update status akhir jika ada
+            if ($debitur) {
+                // Contoh: $debitur->status = 'selesai';
+                // $debitur->save();
+            }
+
             DB::commit();
             
-            // Hapus session formulir secara keseluruhan setelah sukses dikirim
-            session()->forget([
-                'debitur_id',
-            ]);
+            // Hapus session formulir setelah sukses
+            session()->forget(['debitur_id']);
 
-            // Gunakan variabel lokal $debiturId untuk redirect
-            return redirect()->route('riwayat.detail', ['id' => $debiturId])
-                             ->with('success', 'Data berhasil diperbarui dan disimpan secara keseluruhan!');
+            // Redirect ke halaman riwayat utama
+            return redirect()->route('riwayat')
+                             ->with('success', 'Data berhasil disimpan ke Survei CA!');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -1345,26 +1348,25 @@ class SurveiController extends Controller
     // RIWAYAT
     // ==========================================
 
-    // 1. Menampilkan Halaman Riwayat dengan Data dari Database
-    public function createStepRiwayat()
+    public function createAlurRiwayat()
     {
-        // Mengambil semua data debitur dari database, diurutkan dari yang terbaru
-        $dataDebitur = Debitur::latest()->get(); 
+        // Tab 1: Mengambil data Pra-Survei AO (Model utama)
+        $dataDebitur = \App\Models\Debitur::latest()->get(); 
 
-        // Jika kamu punya model khusus untuk survei CA, ambil juga datanya di sini
-        // $dataSurveiCa = SurveiCa::latest()->get();
-        $dataSurveiCa = []; // Kosongkan dulu jika belum ada tabelnya
+        // Tab 2: Mengambil data Survei CA (Model dari folder Survei)
+        $dataSurveiCa = \App\Models\Survei\Debitur::latest()->get(); 
 
+        // Kirim kedua variabel ke file blade riwayat
         return view('riwayat', compact('dataDebitur', 'dataSurveiCa'));
     }
 
     // 6. Detail Riwayat (Menampilkan detail berdasarkan ID)
     public function detailRiwayat($id)
     {
-        // Mencari data debitur berdasarkan ID, jika tidak ketemu akan otomatis memunculkan error 404
-        $item = Debitur::findOrFail($id);
+        // Mencari data debitur berdasarkan ID (Model utama)
+        $item = \App\Models\Debitur::findOrFail($id);
 
-        return view('detail-riwayat', compact('item'));
+        return view('detail-riwayat2', compact('item'));
     }
 
     // ==========================================
@@ -1373,11 +1375,31 @@ class SurveiController extends Controller
     public function show($id)
     {
         $data = Debitur::with([
-            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
-            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+            'agunans',            
+            'agunan_kendaraan',
+            'agunan_logam',
+            'agunan_simpanan',
+            'agunan_tanah',
+            'yang_lain',
+            'analisis_jaminan',
+            'badanusaha',
+            'berkas_lengkap',      
+            'capacity',
+            'capital',
+            'dataslik',
+            'data_tambahan',          
+            'kondisi',
+            'mutasi_rekening',
+            'mutasi_rekening1',
+            'pinjaman',
+            'swot',
+            'takeover'
         ])->findOrFail($id);
 
-        return view('riwayat-detail', compact('data'));
+        // Definisikan variabel pendukung yang tadinya dicari via $agunan
+        $agunan = $data->analisis_jaminan; // atau model terkait
+
+        return view('riwayat-detail2', compact('data', 'agunan'));
     }
 
     // ==========================================

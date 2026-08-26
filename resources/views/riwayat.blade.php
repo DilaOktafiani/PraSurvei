@@ -60,7 +60,7 @@
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
                     </span>
-                    <input type="text" x-model="searchPrasurvei" placeholder="Cari berdasarkan No. Register, Nama Nasabah, atau Jenis Usaha" class="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border-2 border-[#0A3370] rounded-lg focus:ring-2 focus:ring-[#0082CB] focus:border-[#0082CB] outline-none transition">
+                    <input type="text" x-model="searchPrasurvei" placeholder="Cari berdasarkan No. Register, atau Nama Nasabah..." class="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border-2 border-[#0A3370] rounded-lg focus:ring-2 focus:ring-[#0082CB] focus:border-[#0082CB] outline-none transition">
                 </div>
 
                 <!-- Tabel Pra-Survei Disamakan & User-Friendly -->
@@ -123,19 +123,19 @@
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
                     </span>
-                    <input type="text" x-model="searchCa" placeholder="Cari berdasarkan Nama Nasabah atau Analis (CA)..." class="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border-2 border-[#0A3370] rounded-lg focus:ring-2 focus:ring-[#0082CB] focus:border-[#0082CB] outline-none transition">
+                    <input type="text" x-model="searchCa" placeholder="Cari berdasarkan No. Register, atau Nama Nasabah..." class="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border-2 border-[#0A3370] rounded-lg focus:ring-2 focus:ring-[#0082CB] focus:border-[#0082CB] outline-none transition">
                 </div>
 
-                <!-- Tabel Survei CA Disamakan & User-Friendly -->
+                <!-- Tabel Survei CA -->
                 <div class="overflow-x-auto border-2 border-[#0A3370] rounded-lg shadow-sm">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-[#0A3370] text-white border-b border-[#0A3370] text-xs uppercase tracking-wider">
                                 <th class="p-3.5">No</th>
+                                <th class="p-3.5">No. Register</th>
                                 <th class="p-3.5">Nama Nasabah</th>
-                                <th class="p-3.5">Analis (CA)</th>
-                                <th class="p-3.5">Rekomendasi Plafon</th>
-                                <th class="p-3.5">Status Analisis</th>
+                                <th class="p-3.5">Plafon</th>
+                                <th class="p-3.5">Jangka Waktu</th>
                                 <th class="p-3.5 text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -143,15 +143,17 @@
                             @forelse($dataSurveiCa ?? [] as $index => $ca)
                             <tr class="hover:bg-blue-50/60 transition-colors"
                                 x-show="searchCa === '' || 
-                                        '{{ strtolower($ca->nama ?? '') }}'.includes(searchCa.toLowerCase()) || 
-                                        '{{ strtolower($ca->nama_ca ?? '') }}'.includes(searchCa.toLowerCase())">
+                                        '{{ strtolower($ca->no_register ?? '') }}'.includes(searchCa.toLowerCase()) || 
+                                        '{{ strtolower($ca->nama ?? '') }}'.includes(searchCa.toLowerCase())">
                                 <td class="p-3.5">{{ $loop->iteration }}</td>
+                                <td class="p-3.5 font-medium text-gray-900">{{ $ca->no_register ?? '-' }}</td>
                                 <td class="p-3.5 font-medium text-gray-900">{{ $ca->nama ?? '-' }}</td>
-                                <td class="p-3.5">{{ $ca->nama_ca ?? '-' }}</td>
-                                <td class="p-3.5 font-semibold text-emerald-700">Rp {{ number_format($ca->rekomendasi_plafon ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3.5"><span class="bg-yellow-100 text-yellow-800 text-xs px-2.5 py-1 rounded-full font-medium">Pending</span></td>
+                                <td class="p-3.5 font-semibold text-emerald-700">Rp {{ number_format($ca->plafon ?? 0, 0, ',', '.') }}</td>
+                                <td class="p-3.5">{{ $ca->jangka_waktu ?? '-' }} </td>
                                 <td class="p-3.5 text-center">
-                                    <a href="#" class="inline-block text-blue-700 hover:bg-[#0A3370] hover:text-white font-medium text-xs bg-blue-50 px-3.5 py-1.5 rounded-lg border border-blue-200 transition shadow-sm">Detail CA</a>
+                                    <a href="{{ route('riwayat.detail2', $ca->id) }}" class="inline-block text-blue-700 hover:bg-[#0A3370] hover:text-white font-medium text-xs bg-blue-50 px-3.5 py-1.5 rounded-lg border border-blue-200 transition shadow-sm">
+                                        Lihat Detail
+                                    </a>
                                 </td>
                             </tr>
                             @empty
@@ -165,7 +167,6 @@
                     </table>
                 </div>
             </div>
-
         </div>
     </main>
 
