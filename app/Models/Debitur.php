@@ -9,7 +9,6 @@ class Debitur extends Model
 {
     use HasFactory;
 
-    // Izinkan semua kolom ini diisi sekaligus
     protected $fillable = [
         'no_register',
         'nama',
@@ -28,22 +27,15 @@ class Debitur extends Model
         'tipe_fasilitas',
     ];
 
-    // Otomatis mengubah array fasilitas menjadi JSON saat disimpan ke database
     protected $casts = [
         'tipe_fasilitas' => 'array',
     ];
 
-    /**
-     * Mendefinisikan relasi ke model Agunan utama
-     */
     public function agunans()
     {
         return $this->hasMany(Agunan::class, 'debitur_id', 'id');
     }
 
-    /**
-     * Relasi turunan melalui tabel 'agunans' (Menggunakan hasManyThrough)
-     */
     public function agunan_kendaraan()
     {
         return $this->hasManyThrough(AgunanKendaraan::class, Agunan::class, 'debitur_id', 'agunan_id', 'id', 'id');
@@ -69,9 +61,6 @@ class Debitur extends Model
         return $this->hasManyThrough(YangLain::class, Agunan::class, 'debitur_id', 'agunan_id', 'id', 'id');
     }
 
-    /**
-     * Relasi One-to-One / One-to-Many standar (Memiliki debitur_id langsung)
-     */
     public function badanusaha()
     {
         return $this->hasOne(BadanUsaha::class, 'debitur_id', 'id');

@@ -70,7 +70,6 @@
                 <td colspan="4" style="background-color: #0A3370; color: #FFFFFF; font-weight: bold; padding: 5px 8px; text-transform: uppercase;">A. DATA DEBITUR</td>
             </tr>
             <tr>
-                <!-- Ditambahkan padding-left: 16px di sini -->
                 <td class="bg-label" style="width: 20%; padding-left: 16px;">Nomor Register</td>
                 <td style="width: 30%; font-weight: bold;">{{ $data->no_register ?? '-' }}</td>
                 <td class="bg-label" style="width: 20%;">Nama Marketing</td>

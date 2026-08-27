@@ -23,14 +23,10 @@ class Debitur extends Model
         'tipe_fasilitas',
     ];
 
-    // Otomatis mengubah array fasilitas menjadi JSON saat disimpan ke database
     protected $casts = [
         'tipe_fasilitas' => 'array',
     ];
 
-    /**
-     * Mendefinisikan relasi ke model Agunan utama
-     */
     public function agunans()
     {
         return $this->hasMany(Agunan::class, 'debitur_id', 'id');

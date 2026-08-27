@@ -17,7 +17,7 @@ class AnalisisJaminan extends Model
         'analisis_jaminan',
     ];
 
-    // Relasi ke model Debitur (jika diperlukan)
+    // Relasi ke model Debitur
     public function debitur()
     {
         return $this->belongsTo(Debitur::class, 'debitur_id');

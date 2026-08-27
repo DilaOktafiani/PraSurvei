@@ -9,14 +9,12 @@ class Capacity extends Model
 {
     use HasFactory;
 
-    // Menggunakan koneksi 'survei' sesuai contoh Anda
     protected $connection = 'survei';
 
     protected $table = 'capacity';
     
     protected $guarded = ['id'];
 
-    // Cast kolom kelengkapan_berkas agar otomatis menjadi array saat diambil dari database
     protected $casts = [
         'kelengkapan_berkas' => 'array',
     ];

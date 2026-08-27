@@ -58,7 +58,7 @@
                 </div>
             @endif
 
-            <!-- BLOK PUTIH 1: SPESIFIKASI JAMINAN KENDARAAN -->
+            <!-- SPESIFIKASI JAMINAN KENDARAAN -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
                 <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">JAMINAN KENDARAAN</h3>
                  
@@ -71,7 +71,7 @@
                 </div>
             </div>
 
-            <!-- BLOK PUTIH 2: STATUS KEPEMILIKAN -->
+            <!-- STATUS KEPEMILIKAN -->
             @php
                 $valStatus = $data->status_kepemilikan ?? old('status_kepemilikan');
                 $isLainnya = !in_array($valStatus, ['miliksendiri', 'milikkeluarga', 'barangdagangan']) && !empty($valStatus);

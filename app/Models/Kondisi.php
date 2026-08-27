@@ -16,12 +16,10 @@ class Kondisi extends Model
         'berkas_take_over',
     ];
 
-    // Otomatis ubah format JSON dari database menjadi array PHP dan sebaliknya
     protected $casts = [
         'berkas_take_over' => 'array',
     ];
 
-    // Relasi ke model Debitur
     public function debitur()
     {
         return $this->belongsTo(Debitur::class);

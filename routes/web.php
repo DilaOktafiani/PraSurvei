@@ -84,14 +84,13 @@ Route::post('/riwayat', [DebiturController::class, 'storeStepRiwayat'])->name('s
 // Route Halaman Riwayat Detail
 Route::get('/riwayat/detail/{id}', [DebiturController::class, 'show'])->name('riwayat.detail');
 
+// Route Cetak atau Print
+Route::get('/riwayat/detail/{id}/print', [DebiturController::class, 'printPage'])->name('riwayat.print');
+
 // Route Export pdf, word, excel
 Route::get('/riwayat/detail/{id}/export/pdf', [DebiturController::class, 'exportPdf'])->name('riwayat.pdf');
 Route::get('/riwayat/detail/{id}/export/word', [DebiturController::class, 'exportWord'])->name('riwayat.word');
 Route::get('/riwayat/detail/{id}/export/excel', [DebiturController::class, 'exportExcel'])->name('riwayat.excel');
-
-// Route Cetak atau Print
-Route::get('/riwayat/detail/{id}/print', [DebiturController::class, 'printPage'])->name('riwayat.print');
-
 
 
 // =========================================================================
@@ -188,3 +187,12 @@ Route::post('/riwayat', [SurveiController::class, 'storeAlurRiwayat'])->name('st
 
 // Route Halaman Riwayat Detail
 Route::get('/riwayat/detail2/{id}', [SurveiController::class, 'show'])->name('riwayat.detail2');
+
+// Route Cetak atau Print
+Route::get('/riwayat/detail2/{id}/print2', [SurveiController::class, 'printPage2'])->name('riwayat.print2');
+
+// Route Export pdf, word, excel
+Route::get('/riwayat/detail2/{id}/export/pdf2', [SurveiController::class, 'exportPdf2'])->name('riwayat.pdf2');
+Route::get('/riwayat/detail2/{id}/export/word2', [SurveiController::class, 'exportWord2'])->name('riwayat.word2');
+Route::get('/riwayat/detail2/{id}/export/excel2', [SurveiController::class, 'exportExcel2'])->name('riwayat.excel2');
+

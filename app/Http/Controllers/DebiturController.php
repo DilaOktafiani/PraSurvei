@@ -26,7 +26,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class DebiturController extends Controller
 {
     // =========================================================================
-    // 1PRA-SURVEI
+    // HALAMAN 1 PRA-SURVEI
     // =========================================================================
 
     public function createStep1(Request $request)
@@ -190,7 +190,7 @@ class DebiturController extends Controller
     }
 
     // ==========================================
-    // TANAH (Step 3-1)
+    // TANAH
     // ==========================================
     public function createStep3_1(Request $request)
     {
@@ -303,7 +303,7 @@ class DebiturController extends Controller
     }
 
     // ==========================================
-    // KENDARAAN (Step 3-2)
+    // KENDARAAN
     // ==========================================
     public function createStep3_2($debitur_id = null)
     {
@@ -342,7 +342,7 @@ class DebiturController extends Controller
     }
 
     // ==========================================
-    // SIMPANAN (Step 3-3)
+    // SIMPANAN
     // ==========================================
     public function createStep3_3($debitur_id = null)
     {
@@ -411,7 +411,7 @@ class DebiturController extends Controller
     }
 
     // ==========================================
-    // LOGAM MULIA (Step 3-4)
+    // LOGAM MULIA
     // ==========================================
     public function createStep3_4($debitur_id = null)
     {
@@ -501,7 +501,7 @@ class DebiturController extends Controller
     }
 
     // ==========================================
-    // JAMINAN LAIN / YANG LAIN (Step 4)
+    // JAMINAN LAIN
     // ==========================================
     public function createStep4()
     {
@@ -521,7 +521,6 @@ class DebiturController extends Controller
 
     public function storeStep4(Request $request)
     {
-        // ... (validasi tetap sama)
 
         DB::beginTransaction();
         try {
@@ -585,7 +584,7 @@ class DebiturController extends Controller
             'berkas_lainnya_detail'    => 'nullable|string',
         ]);
 
-        // Simpan debitur_id ke session agar step berikutnya aman
+        // Simpan debitur_id ke session
         session(['debitur_id' => $request->debitur_id]);
 
         DB::beginTransaction();
@@ -759,9 +758,6 @@ class DebiturController extends Controller
     // CAPITAL
     // ==========================================
 
-    /**
-     * Menampilkan halaman formulir (Capital)
-     */
     public function createStep7($debitur_id = null)
     {
         // Ambil debitur_id dari parameter URL atau dari session
@@ -783,9 +779,6 @@ class DebiturController extends Controller
         return view('7capital', compact('debitur', 'capital'));
     }
 
-    /**
-     * Menyimpan data dari formulir Step 7 (Capital)
-     */
     public function storeStep7(Request $request)
     {
         // Validasi input data dari form
@@ -864,10 +857,7 @@ class DebiturController extends Controller
             );
 
             DB::commit();
-            
-            // ==========================================
-            // LOGIKA Kondisi Redirect Berdasarkan Pilihan
-            // ==========================================
+
             if ($request->apakah_kredit_take_over === 'YA') {
                 // Jika memilih YA, arahkan ke halaman input detail kondisi take-over
                 return redirect()->route('8-2kondisi')->with('success', 'Data take over berhasil disimpan.');
@@ -1073,13 +1063,9 @@ class DebiturController extends Controller
             return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
         }
 
-        // Cek pilihan user di Halaman 9 (apakah_badan_usaha)
         $dataLengkap = DataLengkap::where('debitur_id', $debitur_id)->first();
 
-        // ATUR TOMBOL KEMBALI DI HALAMAN FINAL SECARA DINAMIS:
-        // - Jika di Halaman 9 pilih YA, berarti dia melewati Halaman 10. Tombol kembali harus ke Halaman 10 (10badanusaha).
-        // - Jika di Halaman 9 pilih TIDAK, berarti dia langsung ke Final. Tombol kembali harus langsung ke Halaman 9 (9datalengkap).
-        if ($dataLengkap && $dataLengkap->apakah_badan_usaha === 'YA') {
+         if ($dataLengkap && $dataLengkap->apakah_badan_usaha === 'YA') {
             $backRoute = route('10badanusaha');
         } else {
             $backRoute = route('9datalengkap');
@@ -1129,17 +1115,16 @@ class DebiturController extends Controller
         return view('riwayat', compact('dataDebitur', 'dataSurveiCa'));
     }
 
-    // 6. Detail Riwayat (Menampilkan detail berdasarkan ID)
     public function detailRiwayat($id)
     {
-        // Mencari data debitur berdasarkan ID, jika tidak ketemu akan otomatis memunculkan error 404
+        // Mencari data debitur berdasarkan ID
         $item = Debitur::findOrFail($id);
 
         return view('detail-riwayat', compact('item'));
     }
 
     // ==========================================
-    // DETAIL RIWAYAT (Untuk Tampilan Web Normal)
+    // TAMPILAN DETAIL RIWAYAT
     // ==========================================
     public function show($id)
     {

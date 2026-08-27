@@ -20,7 +20,6 @@ class DataLengkap extends Model
         'apakah_badan_usaha',
     ];
 
-    // Otomatis ubah format JSON dari database menjadi array PHP dan sebaliknya
     protected $casts = [
         'ktp' => 'array',
         'slik' => 'array',
@@ -28,7 +27,6 @@ class DataLengkap extends Model
         'surat_nikah' => 'array',
     ];
 
-    // Relasi ke model Debitur
     public function debitur()
     {
         return $this->belongsTo(Debitur::class);

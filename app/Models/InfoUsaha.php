@@ -23,7 +23,6 @@ class InfoUsaha extends Model
         'kelengkapan_berkas',
     ];
 
-    // Otomatis mengubah tipe data JSON di database menjadi array PHP
     protected $casts = [
         'kelengkapan_berkas' => 'array',
     ];

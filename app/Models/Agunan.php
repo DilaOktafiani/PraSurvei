@@ -12,7 +12,7 @@ class Agunan extends Model
     protected $table = 'agunans';
     protected $guarded = ['id'];
 
-    // Relasi ke Debitur (Asumsi ada model Debitur)
+    // Relasi ke Debitur 
     public function debitur()
     {
         return $this->belongsTo(Debitur::class, 'debitur_id');

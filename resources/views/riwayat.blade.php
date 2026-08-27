@@ -29,21 +29,22 @@
     <!-- Konten Utama -->
     <main class="max-w-6xl mx-auto mt-8 px-4 w-full flex-grow">
         
-        <!-- Tab Navigasi di Atas -->
-        <div class="flex space-x-2 mb-4 border-b border-gray-300 pb-2">
+        <!-- Tab Navigasi di Atas (TIDAK DIUBAH) -->
+        <div class="flex space-x-3 mb-5">
             <button @click="activeTab = 'prasurvei'" 
-                :class="activeTab === 'prasurvei' ? 'bg-[#0A3370] text-white shadow' : 'bg-white text-gray-700 hover:bg-gray-100'"
+                :class="activeTab === 'prasurvei' ? 'bg-[#0A3370] text-white shadow-lg ring-2 ring-[#0A3370]/20' : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'"
                 class="px-5 py-2.5 rounded-lg text-sm font-semibold transition border border-gray-200">
                 Riwayat Pra-Survei AO
             </button>
             <button @click="activeTab = 'surveica'" 
-                :class="activeTab === 'surveica' ? 'bg-[#0A3370] text-white shadow' : 'bg-white text-gray-700 hover:bg-gray-100'"
+                :class="activeTab === 'surveica' ? 'bg-[#0A3370] text-white shadow-lg ring-2 ring-[#0A3370]/20' : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'"
                 class="px-5 py-2.5 rounded-lg text-sm font-semibold transition border border-gray-200">
                 Riwayat Survei CA
             </button>
         </div>
 
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <!-- Kotak Putih Utama -->
+        <div class="bg-white rounded-xl shadow-2xl p-6 mb-8 border border-gray-200/80">
             
             <!-- ===== KONTEN TAB 1: PRA-SURVEI AO ===== -->
             <div x-show="activeTab === 'prasurvei'">
@@ -63,8 +64,8 @@
                     <input type="text" x-model="searchPrasurvei" placeholder="Cari berdasarkan No. Register, atau Nama Nasabah..." class="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border-2 border-[#0A3370] rounded-lg focus:ring-2 focus:ring-[#0082CB] focus:border-[#0082CB] outline-none transition">
                 </div>
 
-                <!-- Tabel Pra-Survei Disamakan & User-Friendly -->
-                <div class="overflow-x-auto border-2 border-[#0A3370] rounded-lg shadow-sm">
+                <!-- Tabel Pra-Survei (Menggunakan inline style agar bayangan tipis langsung aktif) -->
+                <div class="overflow-x-auto border-2 border-[#0A3370] rounded-lg" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-[#0A3370] text-white border-b border-[#0A3370] text-xs uppercase tracking-wider">
@@ -126,8 +127,8 @@
                     <input type="text" x-model="searchCa" placeholder="Cari berdasarkan No. Register, atau Nama Nasabah..." class="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border-2 border-[#0A3370] rounded-lg focus:ring-2 focus:ring-[#0082CB] focus:border-[#0082CB] outline-none transition">
                 </div>
 
-                <!-- Tabel Survei CA -->
-                <div class="overflow-x-auto border-2 border-[#0A3370] rounded-lg shadow-sm">
+                <!-- Tabel Survei CA (Menggunakan inline style agar bayangan tipis langsung aktif) -->
+                <div class="overflow-x-auto border-2 border-[#0A3370] rounded-lg" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-[#0A3370] text-white border-b border-[#0A3370] text-xs uppercase tracking-wider">

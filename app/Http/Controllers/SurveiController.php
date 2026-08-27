@@ -25,6 +25,7 @@ use App\Models\Survei\DataTambahan;
 use App\Models\Survei\Pinjaman;
 use App\Models\Survei\MutasiRekening;
 use App\Models\Survei\MutasiRekening1;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SurveiController extends Controller
 {
@@ -1396,8 +1397,7 @@ class SurveiController extends Controller
             'takeover'
         ])->findOrFail($id);
 
-        // Definisikan variabel pendukung yang tadinya dicari via $agunan
-        $agunan = $data->analisis_jaminan; // atau model terkait
+        $agunan = $data->analisis_jaminan;
 
         return view('riwayat-detail2', compact('data', 'agunan'));
     }
@@ -1405,30 +1405,62 @@ class SurveiController extends Controller
     // ==========================================
     // METHOD CETAK (PRINT LANGSUNG)
     // ==========================================
-    public function printPage($id)
+    public function printPage2($id)
     {
-        // Mengambil data dengan semua relasi yang dibutuhkan
         $data = Debitur::with([
-            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
-            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+            'agunans',            
+            'agunan_kendaraan',
+            'agunan_logam',
+            'agunan_simpanan',
+            'agunan_tanah',
+            'yang_lain',
+            'analisis_jaminan',
+            'badanusaha',
+            'berkas_lengkap',      
+            'capacity',
+            'capital',
+            'dataslik',
+            'data_tambahan',          
+            'kondisi',
+            'mutasi_rekening',
+            'mutasi_rekening1',
+            'pinjaman',
+            'swot',
+            'takeover'
         ])->findOrFail($id);
 
-        // Mengarahkan ke view khusus cetak (riwayat-print.blade.php)
-        return view('riwayat-print', compact('data'));
+        return view('riwayat-print2', compact('data'));
     }            
 
     // ==========================================
     // METHOD EXPORT PDF
     // ==========================================
-    public function exportPdf($id)
+    public function exportPdf2($id)
     {
         $data = Debitur::with([
-            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
-            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+            'agunans',            
+            'agunan_kendaraan',
+            'agunan_logam',
+            'agunan_simpanan',
+            'agunan_tanah',
+            'yang_lain',
+            'analisis_jaminan',
+            'badanusaha',
+            'berkas_lengkap',      
+            'capacity',
+            'capital',
+            'dataslik',
+            'data_tambahan',          
+            'kondisi',
+            'mutasi_rekening',
+            'mutasi_rekening1',
+            'pinjaman',
+            'swot',
+            'takeover'
         ])->findOrFail($id);
 
-        // Menggunakan riwayat-pdf.blade.php
-        $view = view('riwayat-pdf', compact('data'))->render();
+        // Diubah ke riwayat-pdf2
+        $view = view('riwayat-pdf2', compact('data'))->render();
         $pdf = Pdf::loadHtml($view);
         
         return $pdf->download('Data_Debitur_' . $data->nama . '.pdf');
@@ -1437,15 +1469,32 @@ class SurveiController extends Controller
     // ==========================================
     // METHOD EXPORT WORD
     // ==========================================
-    public function exportWord($id)
+    public function exportWord2($id)
     {
         $data = Debitur::with([
-            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
-            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+            'agunans',            
+            'agunan_kendaraan',
+            'agunan_logam',
+            'agunan_simpanan',
+            'agunan_tanah',
+            'yang_lain',
+            'analisis_jaminan',
+            'badanusaha',
+            'berkas_lengkap',      
+            'capacity',
+            'capital',
+            'dataslik',
+            'data_tambahan',          
+            'kondisi',
+            'mutasi_rekening',
+            'mutasi_rekening1',
+            'pinjaman',
+            'swot',
+            'takeover'
         ])->findOrFail($id);
 
-        // Menggunakan riwayat-word.blade.php
-        $view = view('riwayat-word', compact('data'))->render();
+        // Diubah ke riwayat-word2
+        $view = view('riwayat-word2', compact('data'))->render();
 
         return response($view)
             ->header('Content-Type', 'application/vnd.ms-word')
@@ -1455,15 +1504,32 @@ class SurveiController extends Controller
     // ==========================================
     // METHOD EXPORT EXCEL
     // ==========================================
-    public function exportExcel($id)
+    public function exportExcel2($id)
     {
         $data = Debitur::with([
-            'agunan_tanah', 'badanusaha', 'capital', 'datalengkap', 
-            'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
+            'agunans',            
+            'agunan_kendaraan',
+            'agunan_logam',
+            'agunan_simpanan',
+            'agunan_tanah',
+            'yang_lain',
+            'analisis_jaminan',
+            'badanusaha',
+            'berkas_lengkap',      
+            'capacity',
+            'capital',
+            'dataslik',
+            'data_tambahan',          
+            'kondisi',
+            'mutasi_rekening',
+            'mutasi_rekening1',
+            'pinjaman',
+            'swot',
+            'takeover'
         ])->findOrFail($id);
 
-        // Menggunakan riwayat-excel.blade.php
-        $view = view('riwayat-excel', compact('data'))->render();
+        // Diubah ke riwayat-excel2
+        $view = view('riwayat-excel2', compact('data'))->render();
 
         return response($view)
             ->header('Content-Type', 'application/vnd.ms-excel')

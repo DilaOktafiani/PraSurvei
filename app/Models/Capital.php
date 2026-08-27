@@ -20,9 +20,6 @@ class Capital extends Model
         'aset5',
     ];
 
-    /**
-     * Relasi ke tabel Debitur (opsional, jika diperlukan)
-     */
     public function debitur()
     {
         return $this->belongsTo(Debitur::class, 'debitur_id');

@@ -56,9 +56,9 @@
                         <div x-show="open" @click.away="open = false" 
                             class="origin-top-right absolute right-0 mt-2 w-48 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50 rounded-none shadow-lg">
                             <div class="py-1">
-                                <a href="{{ route('riwayat.pdf', $data->id) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📄 Export ke PDF</a>
-                                <a href="{{ route('riwayat.word', $data->id) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📝 Export ke Word</a>
-                                <a href="{{ route('riwayat.excel', $data->id) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📊 Export ke Excel</a>
+                                <a href="{{ route('riwayat.pdf2', $data->id) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📄 Export ke PDF</a>
+                                <a href="{{ route('riwayat.word2', $data->id) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📝 Export ke Word</a>
+                                <a href="{{ route('riwayat.excel2', $data->id) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📊 Export ke Excel</a>
                             </div>
                         </div>
                     </div>
@@ -300,8 +300,7 @@
                     <!-- D.3 Header Tabel Keuangan -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 bg-gray-100 border-b border-gray-300 font-semibold">
                         <div class="p-3.5 bg-gray-50 border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center text-black">D.3</div>
-                        <div class="p-3.5 border-r border-gray-300 sm:col-span-3 text-center flex items-center justify-center">Pengeluaran Rumah Tangga</div>
-                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 text-center flex items-center justify-center">Angsuran Bank Lain</div>
+                        <div class="p-3.5 border-r border-gray-300 sm:col-span-3 text-left flex items-center justify-start">Pengeluaran Rumah Tangga</div><div class="p-3.5 border-r border-gray-300 sm:col-span-4 text-center flex items-center justify-center">Angsuran Bank Lain</div>
                         <div class="p-3.5 sm:col-span-4 text-center flex items-center justify-center">Angsuran BPR</div>
                     </div>
 
@@ -458,7 +457,8 @@
 
 <script>
 function printRiwayat(id) {
-    var urlPrint = "{{ url('/riwayat/detail') }}/" + id + "/print";
+    // Menyesuaikan URL dengan route baru: /riwayat/detail2/{id}/print2
+    var urlPrint = "{{ url('/riwayat/detail2') }}/" + id + "/print2";
     
     var iframe = document.getElementById('iframe-print');
     iframe.src = urlPrint;

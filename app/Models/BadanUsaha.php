@@ -16,12 +16,10 @@ class BadanUsaha extends Model
         'berkas_badan_usaha',
     ];
 
-    // Otomatis ubah format JSON dari database menjadi array PHP dan sebaliknya
     protected $casts = [
         'berkas_badan_usaha' => 'array',
     ];
 
-    // Relasi ke model Debitur
     public function debitur()
     {
         return $this->belongsTo(Debitur::class);
