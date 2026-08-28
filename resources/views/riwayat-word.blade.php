@@ -224,10 +224,10 @@
             <tr>
                 <td class="bg-label-jaminan" style="vertical-align: top;">Denah</td>
                 <td colspan="5" class="cell-jaminan">
-                    @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                        <div style="width: 100%; max-width: 300px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff; padding: 4px;">
-                            <!-- Menggunakan url() agar Word bisa mendownload gambarnya dari web -->
-                            <img src="{{ url('storage/' . $agunan->denah) }}" width="280" height="auto" alt="Denah Lokasi" style="width: 100%; max-width: 280px; height: auto; display: block;">
+                    @if(!empty($agunan->denah_base64))
+                        <!-- text-align diubah jadi left, dan margin di-reset agar rata kiri -->
+                        <div style="width: 230px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff; padding: 4px; text-align: left;">
+                            <img src="{{ $agunan->denah_base64 }}" alt="Denah Lokasi" width="220" style="width: 220px; display: block; margin: 0;">
                         </div>
                     @else
                         <span>-</span>

@@ -536,15 +536,16 @@ class SurveiController extends Controller
 
     public function createAlur5()
     {
-        $debiturId = session('debitur_id'); // atau ambil dari parameter request jika ada
-        $yangLain = null;
+        $debiturId = session('debitur_id'); 
+        $data = null; // Gunakan variabel $data
 
         if ($debiturId) {
-            // Langsung cari berdasarkan debitur_id karena tidak melalui tabel agunan
-            $yangLain = AnalisisJaminan::where('debitur_id', $debiturId)->first();
+            // Ambil langsung baris datanya dari tabel analisis_jaminan
+            $data = AnalisisJaminan::where('debitur_id', $debiturId)->first();
         }
 
-        return view('z5-jaminan-analisis', compact('yangLain')); // Sesuaikan nama view Anda
+        // Kirim sebagai 'data' agar cocok dengan {{ $data->analisis_jaminan }}
+        return view('z5-jaminan-analisis', compact('data')); 
     }
 
     public function storeAlur5(Request $request)
@@ -1041,7 +1042,9 @@ class SurveiController extends Controller
 
         $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
 
-        return view('z14-data-tambahan', compact('takeover', 'debitur'));
+        $backRoute = url()->previous() !== url()->current() ? url()->previous() : route('z13-swot');
+
+        return view('z14-data-tambahan', compact('takeover', 'debitur', 'backRoute'));
     }
 
     public function storeAlur14(Request $request)
@@ -1190,22 +1193,26 @@ class SurveiController extends Controller
         DB::beginTransaction();
         try {
             // 2. Simpan atau perbarui data menggunakan updateOrCreate
-            MutasiRekening::updateOrCreate(
+            $mutasi = MutasiRekening::updateOrCreate(
                 ['debitur_id' => $request->debitur_id],
                 [
                     'detail_mutasi_tabungan' => $request->detail_mutasi_tabungan,
+                    // Jika kolom di database Anda menggunakan 'apakah_badan_usaha', sesuaikan di sini:
+                    'apakah_badan_usaha' => $request->detail_mutasi_tabungan, 
                 ]
             );
 
             DB::commit();
 
-            // 3. Logika Navigasi Kondisional
+            // 3. Logika Navigasi Kondisional yang Lebih Aman
+            // Cek apakah pengguna menekan tombol khusus atau berdasarkan nilai input
             if ($request->detail_mutasi_tabungan === 'YA') {
-                return redirect()->route('z17-mutasi-rekening1') // Sesuaikan route tujuan jika YA
-                                 ->with('success', 'Data mutasi tabungan disimpan. Silakan lanjutkan pengisian.');
+                return redirect()->route('z17-mutasi-rekening1')
+                            ->with('success', 'Data mutasi tabungan disimpan. Silakan lanjutkan pengisian.');
             } else {
-                return redirect()->route('z18-selesai') // Sesuaikan route tujuan jika memilih manual excel
-                                 ->with('success', 'Data mutasi tabungan berhasil disimpan.');
+                // Jika memilih TIDAK, arahkan ke z18-selesai
+                return redirect()->route('z18-selesai')
+                            ->with('success', 'Data mutasi tabungan berhasil disimpan.');
             }
 
         } catch (\Exception $e) {
@@ -1299,14 +1306,8 @@ class SurveiController extends Controller
             return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
         }
 
-        // Cek data Mutasi Rekening dari namespace Survei
-        $dataLengkap = \App\Models\Survei\MutasiRekening::where('debitur_id', $debitur_id)->first();
-
-        if ($dataLengkap && isset($dataLengkap->apakah_badan_usaha) && $dataLengkap->apakah_badan_usaha === 'YA') {
-            $backRoute = route('z17-mutasi-rekening1');
-        } else {
-            $backRoute = route('z16-mutasi-rekening');
-        }
+        // Mengambil URL halaman sebelumnya secara otomatis dari browser
+        $backRoute = url()->previous();
 
         return view('z18-selesai', compact('debitur_id', 'backRoute'));
     }
@@ -1336,7 +1337,7 @@ class SurveiController extends Controller
             session()->forget(['debitur_id']);
 
             // Redirect ke halaman riwayat utama
-            return redirect()->route('riwayat')
+            return redirect()->route('riwayat.detail2')
                              ->with('success', 'Data berhasil disimpan ke Survei CA!');
 
         } catch (\Exception $e) {
@@ -1492,6 +1493,26 @@ class SurveiController extends Controller
             'swot',
             'takeover'
         ])->findOrFail($id);
+
+        // --- UBAH GAMBAR MENJADI BASE64 AGAR MUNCUL DI WORD ---
+        // Asumsi data agunan bisa banyak (relasi), kita looping atau cek satu-satu
+        // Contoh jika mengambil dari relasi agunans atau agunan_tanah (sesuaikan dengan properti denah Anda)
+        foreach ($data->agunans as $agunan) {
+            if (!empty($agunan->denah) && $agunan->denah !== '-') {
+                $pathFisik = storage_path('app/public/' . $agunan->denah);
+                if (file_exists($pathFisik)) {
+                    $type = pathinfo($pathFisik, PATHINFO_EXTENSION);
+                    $imgData = file_get_contents($pathFisik);
+                    // Simpan string base64 sementara ke properti baru di objek agunan
+                    $agunan->denah_base64 = 'data:image/' . $type . ';base64,'. base64_encode($imgData);
+                } else {
+                    $agunan->denah_base64 = null;
+                }
+            } else {
+                $agunan->denah_base64 = null;
+            }
+        }
+        // ----------------------------------------------------
 
         // Diubah ke riwayat-word2
         $view = view('riwayat-word2', compact('data'))->render();

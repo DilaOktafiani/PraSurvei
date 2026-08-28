@@ -55,10 +55,10 @@
                     <label for="analisis_jaminan" class="block text-sm font-medium text-gray-700 mb-1">
                         Analisis Semua Jaminan <span class="text-red-500">*</span>
                     </label>
-                    <!-- Diubah menjadi textarea agar lebih leluasa untuk catatan analisis yang panjang -->
-                    <textarea id="analisis_jaminan" name="analisis_jaminan" rows="3"
-                              placeholder="Masukkan uraian atau hasil analisis dari semua jaminan nasabah"
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB] placeholder-gray-400">{{ old('analisis_jaminan', $yangLain->analisis_jaminan ?? '') }}</textarea>
+                    
+                    <textarea id="analisis_jaminan" name="analisis_jaminan" rows="6"
+                            placeholder="Masukkan uraian atau hasil analisis dari semua jaminan nasabah"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB] placeholder-gray-400">{{ old('analisis_jaminan', $analisis_jaminan->analisis_jaminan ?? '') }}</textarea>
                 </div>
             </div>
 

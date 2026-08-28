@@ -69,7 +69,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Temuan CA <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="temuan_ca" rows="2" placeholder="ex : diisi apabila ada perbedaan data yang ditemukan oleh CA dengan data AO" required
+                    <textarea name="temuan_ca" rows="6" placeholder="ex : diisi apabila ada perbedaan data yang ditemukan oleh CA dengan data AO" required
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('temuan_ca', $debitur->temuan_ca ?? '') }}</textarea>
                 </div>
 

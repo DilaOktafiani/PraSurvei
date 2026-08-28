@@ -31,34 +31,67 @@
         <div id="print-area" class="bg-white shadow-sm p-6 sm:p-8 border border-gray-200 rounded-none">
             
             <!-- JUDUL FORM & TOMBOL AKSI -->
-            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 pb-4 border-b-2 border-[#0A3370] gap-4">
-                <div class="flex flex-wrap items-center gap-4">
-                    <h2 class="text-xl font-bold text-[#0A3370] tracking-wider">FORM PRA SURVEY (MARKETING)</h2>
-                    <a href="{{ route('1pra-survei', ['id' => $data->id]) }}" class="no-print inline-flex items-center gap-2 bg-amber-600 text-white px-3.5 py-1.5 rounded-lg text-sm font-semibold hover:bg-amber-700 transition shadow-sm">
-                        <span>✏️ Edit Data</span>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-gray-200 gap-4">
+                <!-- Judul & Tombol Edit -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <h2 class="text-xl font-bold text-[#0A3370] tracking-wide flex items-center gap-2.5">
+                        <svg class="w-5 h-5 text-[#0A3370]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        FORM PRA SURVEY
+                    </h2>
+                    
+                    <a href="{{ route('1pra-survei', ['id' => $data->id]) }}" class="no-print inline-flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-200 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-amber-100 transition shadow-sm">
+                        <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        <span>Edit</span>
                     </a>
                 </div>
 
-                <div class="no-print flex flex-wrap items-center justify-end gap-3">
-                    <button type="button" onclick="printRiwayat({{ $data->id }})" class="inline-flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition shadow-sm cursor-pointer">
-                        <span>🖨️ Cetak</span>
+                <!-- Tombol Cetak & Export -->
+                <div class="no-print flex flex-wrap items-center justify-end gap-2.5 w-full md:w-auto">
+                    <!-- Tombol Cetak -->
+                    <button type="button" onclick="printRiwayat({{ $data->id }})" class="inline-flex items-center gap-2 bg-white text-gray-900 border border-gray-300 px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-50 transition shadow-sm cursor-pointer active:scale-95">
+                        <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.725 14.406v2.426c0 1.096.892 1.988 1.988 1.988h6.574c1.096 0 1.988-.892 1.988-1.988v-2.426m-10.55 0h10.55m-10.55 0a2.25 2.25 0 01-2.25-2.25v-3.375c0-1.242 1.008-2.25 2.25-2.25h10.55c1.242 0 2.25 1.008 2.25 2.25v3.375a2.25 2.25 0 01-2.25 2.25m-10.55 0V6.75A2.25 2.25 0 018.975 4.5h6.05a2.25 2.25 0 012.25 2.25v5.437"/></svg>
+                        <span>Cetak</span>
                     </button>
 
                     @if(!isset($isExport))
-                    <div class="relative inline-block text-left" x-data="{ open: false }">
-                        <button @click="open = !open" type="button" class="inline-flex items-center gap-2 bg-[#0A3370] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#07224e] transition shadow-sm">
-                            <span>📥 Export Dokumen</span>
-                            <svg class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': open }" viewBox="0 0 20 20" fill="currentColor">
+                    <!-- Dropdown Download/Export Dokumen (Alpine.js) -->
+                    <div class="relative inline-block text-left w-full sm:w-auto" x-data="{ open: false }">
+                        <button @click="open = !open" type="button" style="background-color: #0082CB; border: 1px solid #0A3370;" class="w-full sm:w-auto inline-flex items-center justify-between sm:justify-center gap-5 text-white px-5 py-2 rounded-lg text-xs font-semibold hover:opacity-95 transition shadow-sm active:scale-95">
+                            <span class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-sky-100" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                                <span>Download</span>
+                            </span>
+                            
+                            <svg class="h-3.5 w-3.5 text-sky-100 transition-transform duration-300" :class="{ 'rotate-180': open }" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                             </svg>
                         </button>
 
-                        <div x-show="open" @click.away="open = false" 
-                            class="origin-top-right absolute right-0 mt-2 w-48 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50 rounded-none shadow-lg">
-                            <div class="py-1">
-                                <a href="{{ route('riwayat.pdf', $data->id) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📄 Export ke PDF</a>
-                                <a href="{{ route('riwayat.word', $data->id) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📝 Export ke Word</a>
-                                <a href="{{ route('riwayat.excel', $data->id) }}" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">📊 Export ke Excel</a>
+                        <!-- Dropdown Menu -->
+                        <div x-show="open" 
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
+                            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
+                            @click.away="open = false" 
+                            class="absolute left-0 sm:left-auto sm:right-0 mt-2 w-full bg-white ring-1 ring-black/5 focus:outline-none z-50 rounded-xl shadow-xl overflow-hidden divide-y divide-gray-100">
+                            <div class="p-1.5 space-y-0.5">
+                                <a href="{{ route('riwayat.pdf', $data->id) }}" class="group flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors">
+                                    <svg class="w-4 h-4 text-rose-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                                    <span>PDF</span>
+                                </a>
+                                <a href="{{ route('riwayat.word', $data->id) }}" class="group flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+                                    <svg class="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                                    <span>Word</span>
+                                </a>
+                                <a href="{{ route('riwayat.excel', $data->id) }}" class="group flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-gray-700 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                                    <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                                    <span>Excel</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -293,16 +326,16 @@
                         <tbody>
                             @forelse($data->pinjaman ?? [] as $slik)
                             <tr class="border-b border-gray-200">
-                                <td class="p-3.5 border-r border-gray-300 text-center font-medium">{{ $slik->nama_ljk ?? '-' }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-right">Rp {{ number_format($slik->plafon ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-right">Rp {{ number_format($slik->outstanding ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-center font-bold text-red-600">{{ $slik->kolekbilitas ?? '-' }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-right">Rp {{ number_format($slik->angsuran ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-center">{{ $slik->jkw ?? '-' }}</td>
-                                <td class="p-3.5 text-center">{{ $slik->keterangan ?? '-' }}</td>
+                                <td class="p-3.5 border-r border-gray-300 text-center font-normal">{{ $slik->nama_ljk ?? '-' }}</td>
+                                <td class="p-3.5 border-r border-gray-300 text-right font-normal">Rp {{ number_format($slik->plafon ?? 0, 0, ',', '.') }}</td>
+                                <td class="p-3.5 border-r border-gray-300 text-right font-normal">Rp {{ number_format($slik->outstanding ?? 0, 0, ',', '.') }}</td>
+                                <td class="p-3.5 border-r border-gray-300 text-center font-normal text-black">{{ $slik->kolekbilitas ?? '-' }}</td>
+                                <td class="p-3.5 border-r border-gray-300 text-right font-normal">Rp {{ number_format($slik->angsuran ?? 0, 0, ',', '.') }}</td>
+                                <td class="p-3.5 border-r border-gray-300 text-center font-normal">{{ $slik->jkw ?? '-' }}</td>
+                                <td class="p-3.5 text-center font-normal">{{ $slik->keterangan ?? '-' }}</td>
                             </tr>
                             @empty
-                            <tr><td colspan="7" class="p-4 text-center text-gray-500">Tidak ada data SLIK.</td></tr>
+                            <tr><td colspan="7" class="p-4 text-center text-gray-500 font-normal">Tidak ada data SLIK.</td></tr>
                             @endforelse
                             
                             <!-- BARIS TOTAL -->

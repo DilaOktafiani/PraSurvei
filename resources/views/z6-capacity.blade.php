@@ -54,7 +54,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Deskripsi Usaha <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="deskripsi_usaha" rows="2" placeholder="" required
+                    <textarea name="deskripsi_usaha" rows="6" placeholder="" required
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('deskripsi_usaha', $capacity->deskripsi_usaha ?? '') }}</textarea>
                 </div>
 
@@ -62,7 +62,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Informasi Penghasilan Utama Menurut Nasabah <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="informasi_penghasilan_utama" rows="2" placeholder="" required
+                    <textarea name="informasi_penghasilan_utama" rows="6" placeholder="" required
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('informasi_penghasilan_utama', $capacity->informasi_penghasilan_utama ?? '') }}</textarea>
                 </div>
 
@@ -70,7 +70,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Informasi Penghasilan Pendukung Menurut Nasabah
                     </label>
-                    <textarea name="informasi_penghasilan_pendukung" rows="2" placeholder=""
+                    <textarea name="informasi_penghasilan_pendukung" rows="6" placeholder=""
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('informasi_penghasilan_pendukung', $capacity->informasi_penghasilan_pendukung ?? '') }}</textarea>
                 </div>
 
@@ -102,7 +102,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Analisis Kapasitas oleh CA <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="analisis_kapasitas" rows="2" placeholder="" required
+                    <textarea name="analisis_kapasitas" rows="6" placeholder="" required
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('analisis_kapasitas', $capacity->analisis_kapasitas ?? '') }}</textarea>
                 </div>
 

@@ -311,7 +311,7 @@
                 <td class="section-header">C. Analisis Jaminan</td>
             </tr>
             <tr>
-                <td class="whitespace-pre" style="padding: 6px;">{{ $data->analisis_jaminan ?? '-' }}</td>
+                <td class="whitespace-pre" style="padding: 6px;">{{ $data->analisis_jaminan->analisis_jaminan ?? '-' }}</td>
             </tr>
         </table>
 
@@ -327,39 +327,51 @@
                 <tr>
                     <td class="bg-label text-center" style="width: 8%;">D.1</td>
                     <td colspan="3" class="bg-label" style="width: 25%;">Informasi Penghasilan Utama menurut nasabah</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="width: 67%;">{{ $data->dataslik->penghasilan_utama ?? $data->analisis_slik ?? '-' }}</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium" style="width: 67%;">{{ $data->capacity->informasi_penghasilan_utama ?? '-' }}</td>
                 </tr>
                 <!-- D.2 Penghasilan Pendukung -->
                 <tr>
                     <td class="bg-label text-center">D.2</td>
                     <td colspan="3" class="bg-label">Informasi Penghasilan Pendukung menurut nasabah</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->dataslik->penghasilan_pendukung ?? $data->analisis_slik ?? '-' }}</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->capacity->informasi_penghasilan_pendukung ?? '-' }}</td>
                 </tr>
-                <!-- D.3 Header Data Keuangan -->
+                <!-- D.3 Pengeluaran Rumah Tangga -->
                 <tr>
                     <td class="bg-label text-center">D.3</td>
-                    <td colspan="3" class="bg-label text-center font-semibold">Pengeluaran Rumah Tangga</td>
-                    <td colspan="4" class="bg-label text-center font-semibold">Angsuran Bank Lain</td>
-                    <td colspan="4" class="bg-label text-center font-semibold">Angsuran BPR</td>
+                    <td colspan="3" class="bg-label">Pengeluaran Rumah Tangga</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium">Rp {{ number_format($data->capacity->pengeluaran_rumah_tangga ?? 0, 0, ',', '.') }}</td>
                 </tr>
-                <!-- D.3 Isi Data Keuangan -->
+                <!-- D.3 Angsuran Bank Lain -->
                 <tr>
                     <td class="bg-label text-center"></td>
-                    <td colspan="3" class="text-center font-medium">{{ $data->dataslik->pengeluaran_rumah_tangga ?? '-' }}</td>
-                    <td colspan="4" class="text-center font-medium">{{ $data->dataslik->angsuran_bank_lain ?? '-' }}</td>
-                    <td colspan="4" class="text-center font-medium">{{ $data->dataslik->angsuran_bpr ?? '-' }}</td>
+                    <td colspan="3" class="bg-label">Angsuran Bank Lain</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium">Rp {{ number_format($data->capacity->angsuran_bank_lain ?? 0, 0, ',', '.') }}</td>
+                </tr>
+                <!-- D.3 Angsuran BPR -->
+                <tr>
+                    <td class="bg-label text-center"></td>
+                    <td colspan="3" class="bg-label">Angsuran BPR</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium">Rp {{ number_format($data->capacity->angsuran_bpr ?? 0, 0, ',', '.') }}</td>
                 </tr>
                 <!-- D.4 Analisis Kapasitas CA -->
                 <tr>
                     <td class="bg-label text-center">D.4</td>
                     <td colspan="3" class="bg-label">Analisis Kapasitas CA</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->dataslik->analisis_kapasitas_ca ?? $data->analisis_slik ?? '-' }}</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->capacity->analisis_kapasitas ?? '-' }}</td>
                 </tr>
                 <!-- D.5 Kelengkapan Berkas -->
                 <tr>
                     <td class="bg-label text-center">D.5</td>
                     <td colspan="3" class="bg-label">Kelengkapan Berkas</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->dataslik->kelengkapan_berkas ?? $data->analisis_slik ?? '-' }}</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium">
+                        @if(is_array($data->capacity->kelengkapan_berkas ?? null))
+                            @foreach($data->capacity->kelengkapan_berkas as $item)
+                                <div>{{ $item }}</div>
+                            @endforeach
+                        @else
+                            {{ $data->capacity->kelengkapan_berkas ?? '-' }}
+                        @endif
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -452,7 +464,7 @@
                 </tr>
                 <!-- Isi Kesimpulan -->
                 <tr>
-                    <td colspan="12" class="whitespace-pre-line font-medium" style="padding: 10px 14px;">{{ $data->swot->kesimpulan ?? '-' }}</td>
+                    <td colspan="12" class="whitespace-pre" style="padding: 6px; font-weight: normal; text-align: left;">{{ $data->swot->kesimpulan ?? '-' }}</td>
                 </tr>
             </tbody>
         </table>

@@ -1190,12 +1190,94 @@ class DebiturController extends Controller
             'dataslik', 'infousaha', 'kondisi', 'pinjaman', 'takeover'
         ])->findOrFail($id);
 
+        // --- UBAH GAMBAR DENAH MENJADI BASE64 ---
+        // Karena agunan_tanah bisa berupa relasi (hasMany) atau single (hasOne), 
+        // kita tangani agar aman untuk kedua kondisi:
+        $agunanList = $data->agunan_tanah;
+        
+        if ($agunanList) {
+            // Jika relasinya hasMany (koleksi data)
+            if ($agunanList instanceof \Illuminate\Database\Eloquent\Collection) {
+                foreach ($agunanList as $agunan) {
+                    $this->convertDenahToBase64($agunan);
+                }
+            } 
+            // Jika relasinya hasOne/belongsTo (hanya satu objek)
+            else {
+                $this->convertDenahToBase64($agunanList);
+            }
+        }
+        // ----------------------------------------
+
         // Menggunakan riwayat-word.blade.php
         $view = view('riwayat-word', compact('data'))->render();
 
         return response($view)
             ->header('Content-Type', 'application/vnd.ms-word')
             ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.doc"');
+    }
+
+    // Fungsi pembantu untuk konversi base64 agar kodingan tidak duplikat
+    private function convertDenahToBase64($agunan)
+    {
+        if (!empty($agunan->denah) && $agunan->denah !== '-') {
+            $pathFisik = storage_path('app/public/' . $agunan->denah);
+            if (file_exists($pathFisik)) {
+                $type = pathinfo($pathFisik, PATHINFO_EXTENSION);
+                $type = strtolower($type);
+                
+                list($origWidth, $origHeight) = getimagesize($pathFisik);
+                
+                $maxSize = 450; // Ukuran kotak maksimal
+                
+                if ($origWidth > $origHeight) {
+                    $newWidth = $maxSize;
+                    $newHeight = round($origHeight * ($maxSize / $origWidth));
+                } else {
+                    $newHeight = $maxSize;
+                    $newWidth = round($origWidth * ($maxSize / $origHeight));
+                }
+
+                $imageCreate = match($type) {
+                    'jpg', 'jpeg' => imagecreatefromjpeg($pathFisik),
+                    'png' => imagecreatefrompng($pathFisik),
+                    'webp' => imagecreatefromwebp($pathFisik),
+                    default => null
+                };
+
+                if ($imageCreate) {
+                    $newImage = imagecreatetruecolor($newWidth, $newHeight);
+                    
+                    if ($type == 'png') {
+                        imagealphablending($newImage, false);
+                        imagesavealpha($newImage, true);
+                    }
+
+                    imagecopyresampled($newImage, $imageCreate, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
+
+                    ob_start();
+                    match($type) {
+                        'jpg', 'jpeg' => imagejpeg($newImage, null, 100),
+                        'png' => imagepng($newImage, null, 0),
+                        'webp' => imagewebp($newImage, 100),
+                        default => imagejpeg($newImage, null, 100)
+                    };
+                    $imgData = ob_get_clean();
+
+                    imagedestroy($imageCreate);
+                    imagedestroy($newImage);
+
+                    // PERBAIKAN DI SINI (titik sebelum base64_encode sudah benar)
+                    $agunan->denah_base64 = 'data:image/' . ($type == 'jpg' ? 'jpeg' : $type) . ';base64,' . base64_encode($imgData);
+                } else {
+                    $agunan->denah_base64 = 'data:image/' . $type . ';base64,' . base64_encode(file_get_contents($pathFisik));
+                }
+            } else {
+                $agunan->denah_base64 = null;
+            }
+        } else {
+            $agunan->denah_base64 = null;
+        }
     }
 
     // ==========================================

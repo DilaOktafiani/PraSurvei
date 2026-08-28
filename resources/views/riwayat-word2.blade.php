@@ -237,9 +237,10 @@
             <tr>
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px; vertical-align: top;">Denah</td>
                 <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px;">
-                    @if(!empty($agunan->denah) && $agunan->denah !== '-')
+                    @if(!empty($agunan->denah_base64))
                         <div style="width: 100%; max-width: 250px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff;">
-                            <img src="{{ public_path('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; display: block;">
+                            <!-- Menggunakan Base64 agar langsung tertanam di dalam dokumen Word -->
+                            <img src="{{ $agunan->denah_base64 }}" alt="Denah Lokasi" style="width: 100%; height: auto; display: block;">
                         </div>
                     @else
                         <span>-</span>

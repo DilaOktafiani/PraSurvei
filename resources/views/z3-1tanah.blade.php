@@ -98,7 +98,7 @@
                 <!-- Spesifikasi Jaminan -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Spesifikasi Jaminan <span class="text-red-500">*</span></label>
-                    <textarea name="spesifikasi" rows="5" placeholder="ex : 
+                    <textarea name="spesifikasi" rows="6" placeholder="ex : 
 Lebar Jalan : 6 m, Aspal, jalan utama, hadap timur
 Bentuk Jaminan : persegi (50x50)
 Lingkungan sekitar : daerah niaga, zona merah
@@ -148,7 +148,7 @@ KT : 3 KM : 1 Dapur Gudang Listrik 1300VA Air PDAM Garasi 2 Mobil"
                 <!-- Informasi Harga 1, 2, 3 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Informasi Harga 1 <span class="text-red-500">*</span></label>
-                    <textarea name="info_harga1" rows="5" placeholder="ex :
+                    <textarea name="info_harga1" rows="6" placeholder="ex :
 Transaksi Juni 2025 Rumah LT/LB 50m2/50m2 laku 270jt harga 5,4jt/m
 100 meter kebarat dari jaminan, dijalan yang sama
 pemilik Rudi, pedagang pakaian (0856 1234 5678) pembeli Tri Pedagang Es Teh (0856 5678 1234)
@@ -156,7 +156,7 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Informasi Harga 2 <span class="text-red-500">*</span></label>
-                    <textarea name="info_harga2" rows="5" placeholder="ex :
+                    <textarea name="info_harga2" rows="6" placeholder="ex :
 Transaksi Juni 2025 Rumah LT/LB 50m2/50m2 laku 270jt harga 5,4jt/m
 100 meter kebarat dari jaminan, dijalan yang sama
 pemilik Rudi, pedagang pakaian (0856 1234 5678) pembeli Tri Pedagang Es Teh (0856 5678 1234)
@@ -164,7 +164,7 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Informasi Harga 3</label>
-                    <textarea name="info_harga3" rows="5" placeholder="ex :
+                    <textarea name="info_harga3" rows="6" placeholder="ex :
 Transaksi Juni 2025 Rumah LT/LB 50m2/50m2 laku 270jt harga 5,4jt/m
 100 meter kebarat dari jaminan, dijalan yang sama
 pemilik Rudi, pedagang pakaian (0856 1234 5678) pembeli Tri Pedagang Es Teh (0856 5678 1234)

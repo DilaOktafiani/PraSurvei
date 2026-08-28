@@ -55,7 +55,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Analisis Take Over <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="analisis_take_over" rows="3" placeholder="" required
+                    <textarea name="analisis_take_over" rows="6" placeholder="" required
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('analisis_take_over', $analisisTakeOver->analisis_take_over ?? '') }}</textarea>
                 </div>
             </div>
