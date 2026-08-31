@@ -1177,7 +1177,7 @@ class DebiturController extends Controller
         $view = view('riwayat-pdf', compact('data'))->render();
         $pdf = Pdf::loadHtml($view);
         
-        return $pdf->download('Data_Debitur_' . $data->nama . '.pdf');
+        return $pdf->download('Pra-Survei ' . $data->nama . '.pdf');
     }
 
     // ==========================================
@@ -1214,7 +1214,7 @@ class DebiturController extends Controller
 
         return response($view)
             ->header('Content-Type', 'application/vnd.ms-word')
-            ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.doc"');
+            ->header('Content-Disposition', 'attachment; filename="Pra-Survei ' . $data->nama . '.doc"');
     }
 
     // Fungsi pembantu untuk konversi base64 agar kodingan tidak duplikat
@@ -1295,7 +1295,7 @@ class DebiturController extends Controller
 
         return response($view)
             ->header('Content-Type', 'application/vnd.ms-excel')
-            ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.xls"');
+            ->header('Content-Disposition', 'attachment; filename="Pra-Survei ' . $data->nama . '.xls"');
     }
     
 }

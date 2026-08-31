@@ -101,84 +101,84 @@
 
             <!-- A. DATA DEBITUR -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                     A. Data Debitur
                 </div>
-                <div class="border border-[#0A3370] rounded-none">
+                <div class="border border-[#0A3370] rounded-none text-xs">
                     
                     <!-- Nomor Register & Nama Marketing -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center"></div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Nomor Register</div>
-                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 font-medium flex items-center">{{ $data->no_register ?? '-' }}</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Nama Marketing</div>
-                        <div class="p-3.5 sm:col-span-2 font-medium flex items-center">{{ $data->nama_marketing ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center"></div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Nomor Register</div>
+                        <div class="p-2 border-r border-gray-300 sm:col-span-4 font-medium flex items-center">{{ $data->no_register ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Nama Marketing</div>
+                        <div class="p-2 sm:col-span-2 font-medium flex items-center">{{ $data->nama_marketing ?? '-' }}</div>
                     </div>
 
                     <!-- 1. Nama Debitur & Nama Pasangan -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">1</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Nama Debitur</div>
-                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 font-medium flex items-center">{{ $data->nama ?? '-' }}</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Nama Pasangan</div>
-                        <div class="p-3.5 sm:col-span-2 font-medium flex items-center">{{ $data->nama_pasangan ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">1</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Nama Debitur</div>
+                        <div class="p-2 border-r border-gray-300 sm:col-span-4 font-medium flex items-center">{{ $data->nama ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Nama Pasangan</div>
+                        <div class="p-2 sm:col-span-2 font-medium flex items-center">{{ $data->nama_pasangan ?? '-' }}</div>
                     </div>
 
                     <!-- Usia & Usia Pasangan -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center"></div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Usia</div>
-                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 flex items-center">{{ $data->usia ?? '-' }}</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Usia Pasangan</div>
-                        <div class="p-3.5 sm:col-span-2 flex items-center">{{ $data->usia_pasangan ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center"></div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Usia</div>
+                        <div class="p-2 border-r border-gray-300 sm:col-span-4 flex items-center">{{ $data->usia ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Usia Pasangan</div>
+                        <div class="p-2 sm:col-span-2 flex items-center">{{ $data->usia_pasangan ?? '-' }}</div>
                     </div>
 
                     <!-- 2. Usaha & Lama Usaha -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">2</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Usaha</div>
-                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 flex items-center">{{ $data->usaha ?? '-' }}</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Lama Usaha</div>
-                        <div class="p-3.5 sm:col-span-2 flex items-center">{{ $data->lama_usaha ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">2</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Usaha</div>
+                        <div class="p-2 border-r border-gray-300 sm:col-span-4 flex items-center">{{ $data->usaha ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Lama Usaha</div>
+                        <div class="p-2 sm:col-span-2 flex items-center">{{ $data->lama_usaha ?? '-' }}</div>
                     </div>
                     
                     <!-- 3. Alamat Debitur -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">3</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Alamat Debitur</div>
-                        <div class="p-3.5 sm:col-span-8 font-medium flex items-center">{{ $data->alamat_ktp ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">3</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Alamat Debitur</div>
+                        <div class="p-2 sm:col-span-8 font-normal flex items-center">{{ $data->alamat_ktp ?? '-' }}</div>
                     </div>
 
                     <!-- Alamat Domisili -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center"></div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Alamat Domisili</div>
-                        <div class="p-3.5 sm:col-span-8 font-medium flex items-center">{{ $data->alamat_domisili ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center"></div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Alamat Domisili</div>
+                        <div class="p-2 sm:col-span-8 font-normal flex items-center">{{ $data->alamat_domisili ?? '-' }}</div>
                     </div>
 
                     <!-- 4. Plafon & JKW -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">4</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Plafon</div>
-                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 font-semibold text-emerald-700 flex items-center">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">JKW</div>
-                        <div class="p-3.5 sm:col-span-2 flex items-center">{{ $data->jangka_waktu ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">4</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Plafon</div>
+                        <div class="p-2 border-r border-gray-300 sm:col-span-4 font-bold text-black flex items-center">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">JKW</div>
+                        <div class="p-2 sm:col-span-2 flex items-center">{{ $data->jangka_waktu ?? '-' }}</div>
                     </div>
                     
                     <!-- 5. Tujuan Penggunaan, Angsuran & Type Fasilitas -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">5</div>
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Tujuan Penggunaan</div>
-                        <div class="p-3.5 border-r border-gray-300 sm:col-span-4 whitespace-pre-line flex items-center">{{ $data->tujuan_penggunaan ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 text-center sm:col-span-1 flex items-center justify-center">5</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Tujuan Penggunaan</div>
+                        <div class="p-2 border-r border-gray-300 sm:col-span-4 whitespace-pre-line flex items-center">{{ $data->tujuan_penggunaan ?? '-' }}</div>
                         
                         <div class="sm:col-span-4 flex flex-col">
                             <div class="grid grid-cols-2 border-b border-gray-300">
-                                <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Angsuran</div>
-                                <div class="p-3.5 font-semibold text-emerald-700 flex items-center">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</div>
+                                <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Angsuran</div>
+                                <div class="p-2 font-bold text-black flex items-center">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</div>
                             </div>
                             <div class="grid grid-cols-2">
-                                <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Type Fasilitas</div>
-                                <div class="p-3.5 text-gray-700 font-medium flex items-center">{{ is_array($data->tipe_fasilitas ?? null) ? implode(', ', $data->tipe_fasilitas) : ($data->tipe_fasilitas ?? '-') }}</div>
+                                <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Type Fasilitas</div>
+                                <div class="p-2 text-black font-normal flex items-center">{{ is_array($data->tipe_fasilitas ?? null) ? implode(', ', $data->tipe_fasilitas) : ($data->tipe_fasilitas ?? '-') }}</div>
                             </div>
                         </div>
                     </div>
@@ -191,21 +191,21 @@
                 $agunan = $data->agunan_tanah->first() ?? null;
             @endphp
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                     B. Data Jaminan
                 </div>
-                <div class="border border-[#0A3370] rounded-none">
+                <div class="border border-[#0A3370] rounded-none text-xs">
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Kepemilikan</div>
-                        <div class="p-3.5 sm:col-span-3 font-medium">{{ $agunan->kepemilikan ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Kepemilikan</div>
+                        <div class="p-2 sm:col-span-3 font-medium flex items-center">{{ $agunan->kepemilikan ?? '-' }}</div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Alamat</div>
-                        <div class="p-3.5 sm:col-span-3">{{ $agunan->alamat ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Alamat</div>
+                        <div class="p-2 sm:col-span-3 flex items-center">{{ $agunan->alamat ?? '-' }}</div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Share Loc</div>
-                        <div class="p-3.5 sm:col-span-3">
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Share Loc</div>
+                        <div class="p-2 sm:col-span-3 flex items-center">
                             @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
                                 <a href="{{ $agunan->share_location }}" target="_blank" class="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-800 font-medium underline">
                                     <span>📍 Lihat Lokasi di Peta</span>
@@ -218,66 +218,64 @@
 
                     <!-- Header Tabel Penilaian Jaminan -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 bg-gray-100 border-b border-gray-300 font-semibold">
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300">Uraian</div>
-                        <div class="p-3.5 sm:col-span-1 border-r border-gray-300 text-center">Luas (m2)</div>
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 text-right">Harga</div>
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 text-right">Nilai Pasar</div>
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 text-right">Nilai Taksasi</div>
-                        <div class="p-3.5 sm:col-span-3 text-right">Nilai Likuidasi</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-center">Uraian</div>
+                        <div class="p-2 sm:col-span-1 border-r border-gray-300 text-center">Luas (m2)</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-center">Harga</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-center">Nilai Pasar</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-center">Nilai Taksasi</div>
+                        <div class="p-2 sm:col-span-3 text-center">Nilai Likuidasi</div>
                     </div>
 
                     <!-- Baris Tanah -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-200">
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 font-medium">Tanah</div>
-                        <div class="p-3.5 sm:col-span-1 border-r border-gray-300 text-center">{{ $agunan->luas_tanah ?? '-' }}</div>
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 text-right">Rp {{ number_format($agunan->harga_tanah ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 text-right">Rp {{ number_format($agunan->tanah_pasar ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 text-right">Rp {{ number_format($agunan->tanah_taksasi ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-3.5 sm:col-span-3 text-right">Rp {{ number_format($agunan->tanah_likuidasi ?? 0, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 font-medium flex items-center">Tanah</div>
+                        <div class="p-2 sm:col-span-1 border-r border-gray-300 text-center flex items-center justify-center">{{ $agunan->luas_tanah ?? '-' }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($agunan->harga_tanah ?? 0, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($agunan->tanah_pasar ?? 0, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($agunan->tanah_taksasi ?? 0, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($agunan->tanah_likuidasi ?? 0, 0, ',', '.') }}</div>
                     </div>
 
                     <!-- Baris Bangunan -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-200">
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 font-medium">Bangunan</div>
-                        <div class="p-3.5 sm:col-span-1 border-r border-gray-300 text-center">{{ $agunan->luas_bangunan ?? '-' }}</div>
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 text-right">Rp {{ number_format($agunan->harga_bangunan ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 text-right">Rp {{ number_format($agunan->bangunan_pasar ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 text-right">Rp {{ number_format($agunan->bangunan_taksasi ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-3.5 sm:col-span-3 text-right">Rp {{ number_format($agunan->bangunan_likuidasi ?? 0, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 font-medium flex items-center">Bangunan</div>
+                        <div class="p-2 sm:col-span-1 border-r border-gray-300 text-center flex items-center justify-center">{{ $agunan->luas_bangunan ?? '-' }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($agunan->harga_bangunan ?? 0, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($agunan->bangunan_pasar ?? 0, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($agunan->bangunan_taksasi ?? 0, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($agunan->bangunan_likuidasi ?? 0, 0, ',', '.') }}</div>
                     </div>
 
                     <!-- Baris Total -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 bg-gray-50 font-bold border-b border-gray-300">
-                        <div class="p-3.5 sm:col-span-5 border-r border-gray-300 text-center">Total</div>
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 text-right">Rp {{ number_format(($agunan->tanah_pasar ?? 0) + ($agunan->bangunan_pasar ?? 0), 0, ',', '.') }}</div>
-                        <div class="p-3.5 sm:col-span-2 border-r border-gray-300 text-right">Rp {{ number_format(($agunan->tanah_taksasi ?? 0) + ($agunan->bangunan_taksasi ?? 0), 0, ',', '.') }}</div>
-                        <div class="p-3.5 sm:col-span-3 text-right">Rp {{ number_format(($agunan->tanah_likuidasi ?? 0) + ($agunan->bangunan_likuidasi ?? 0), 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-5 border-r border-gray-300 text-center flex items-center justify-center">Total</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format(($agunan->tanah_pasar ?? 0) + ($agunan->bangunan_pasar ?? 0), 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format(($agunan->tanah_taksasi ?? 0) + ($agunan->bangunan_taksasi ?? 0), 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format(($agunan->tanah_likuidasi ?? 0) + ($agunan->bangunan_likuidasi ?? 0), 0, ',', '.') }}</div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">Spesifikasi Jaminan</div>
-                        <div class="p-3.5 sm:col-span-3 whitespace-pre-line">{{ $agunan->spesifikasi ?? '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Spesifikasi Jaminan</div>
+                        <div class="p-2 sm:col-span-3 whitespace-pre-line flex items-center" style="text-align: justify;">{{ $agunan->spesifikasi ?? '-' }}</div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                    <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Denah</div>
-                    <div class="p-3.5 sm:col-span-3">
-                        @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                            <div class="w-full max-w-sm border border-gray-200 rounded overflow-hidden bg-white shadow-sm">
-                                <!-- Menggunakan asset('storage/...') karena file di-upload dan disimpan di server -->
-                                <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" class="w-full h-auto object-cover max-h-64">
-                            </div>
-                        @else
-                            <span>-</span>
-                        @endif
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Denah</div>
+                        <div class="p-2 sm:col-span-3">
+                            @if(!empty($agunan->denah) && $agunan->denah !== '-')
+                                <div class="w-full max-w-sm border border-gray-200 rounded overflow-hidden bg-white shadow-sm">
+                                    <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" class="w-full h-auto object-cover max-h-48">
+                                </div>
+                            @else
+                                <span>-</span>
+                            @endif
+                        </div>
                     </div>
-                </div>
                     
                     <!-- INFORMASI HARGA -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">
-                        <div class="p-3.5 sm:col-span-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-start">Informasi Harga</div>
+                        <div class="p-2 sm:col-span-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-start">Informasi Harga</div>
                         <div class="sm:col-span-10 divide-y divide-gray-200">
                             @php
-                                // Menggabungkan kolom database terpisah menjadi sebuah array urut
                                 $infoList = [
                                     $agunan->info_harga1 ?? '-',
                                     $agunan->info_harga2 ?? '-',
@@ -287,8 +285,8 @@
 
                             @foreach($infoList as $index => $info)
                                 <div class="grid grid-cols-1 sm:grid-cols-10 {{ $loop->last ? '' : 'border-b border-gray-200' }}">
-                                    <div class="p-3.5 sm:col-span-1 bg-gray-50/50 sm:bg-transparent font-medium border-r border-gray-200 text-center">{{ $index + 1 }}</div>
-                                    <div class="p-3.5 sm:col-span-9 whitespace-pre-line">{{ !empty(trim($info)) ? $info : '-' }}</div>
+                                    <div class="p-2 sm:col-span-1 bg-gray-50/50 sm:bg-transparent font-medium border-r border-gray-200 text-center flex items-center justify-center">{{ $index + 1 }}</div>
+                                    <div class="p-2 sm:col-span-9 whitespace-pre-line flex items-center" style="text-align: justify;">{{ !empty(trim($info)) ? $info : '-' }}</div>
                                 </div>
                             @endforeach
                         </div>
@@ -298,10 +296,10 @@
 
             <!-- C. SLIK -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                     C. SLIK
                 </div>
-                <div class="border border-[#0A3370] rounded-none overflow-x-auto">
+                <div class="border border-[#0A3370] rounded-none overflow-x-auto text-xs">
                     <table class="w-full text-left border-collapse table-fixed">
                         <colgroup>
                             <col style="width: 16.666%;">
@@ -313,40 +311,40 @@
                             <col style="width: 25%;">
                         </colgroup>
                         <thead>
-                            <tr class="bg-gray-100 border-b border-gray-300">
-                                <th class="p-3.5 border-r border-gray-300 text-center">Nama Bank</th>
-                                <th class="p-3.5 border-r border-gray-300 text-center">Plafon</th>
-                                <th class="p-3.5 border-r border-gray-300 text-center">Outstanding</th>
-                                <th class="p-3.5 border-r border-gray-300 text-center">KOL</th>
-                                <th class="p-3.5 border-r border-gray-300 text-center">Angsuran</th>
-                                <th class="p-3.5 border-r border-gray-300 text-center">JKW</th>
-                                <th class="p-3.5 text-center">Keterangan</th>
+                            <tr class="bg-gray-100 border-b border-gray-300 font-semibold">
+                                <th class="p-2 border-r border-gray-300 text-center">Nama Bank</th>
+                                <th class="p-2 border-r border-gray-300 text-center">Plafon</th>
+                                <th class="p-2 border-r border-gray-300 text-center">Outstanding</th>
+                                <th class="p-2 border-r border-gray-300 text-center">KOL</th>
+                                <th class="p-2 border-r border-gray-300 text-center">Angsuran</th>
+                                <th class="p-2 border-r border-gray-300 text-center">JKW</th>
+                                <th class="p-2 text-center">Keterangan</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($data->pinjaman ?? [] as $slik)
                             <tr class="border-b border-gray-200">
-                                <td class="p-3.5 border-r border-gray-300 text-center font-normal">{{ $slik->nama_ljk ?? '-' }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-right font-normal">Rp {{ number_format($slik->plafon ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-right font-normal">Rp {{ number_format($slik->outstanding ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-center font-normal text-black">{{ $slik->kolekbilitas ?? '-' }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-right font-normal">Rp {{ number_format($slik->angsuran ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-center font-normal">{{ $slik->jkw ?? '-' }}</td>
-                                <td class="p-3.5 text-center font-normal">{{ $slik->keterangan ?? '-' }}</td>
+                                <td class="p-2 border-r border-gray-300 text-center font-normal">{{ $slik->nama_ljk ?? '-' }}</td>
+                                <td class="p-2 border-r border-gray-300 text-right font-normal">Rp {{ number_format($slik->plafon ?? 0, 0, ',', '.') }}</td>
+                                <td class="p-2 border-r border-gray-300 text-right font-normal">Rp {{ number_format($slik->outstanding ?? 0, 0, ',', '.') }}</td>
+                                <td class="p-2 border-r border-gray-300 text-center font-normal text-black">{{ $slik->kolekbilitas ?? '-' }}</td>
+                                <td class="p-2 border-r border-gray-300 text-right font-normal">Rp {{ number_format($slik->angsuran ?? 0, 0, ',', '.') }}</td>
+                                <td class="p-2 border-r border-gray-300 text-center font-normal">{{ $slik->jkw ?? '-' }}</td>
+                                <td class="p-2 text-center font-normal" style="text-align: justify;">{{ $slik->keterangan ?? '-' }}</td>
                             </tr>
                             @empty
-                            <tr><td colspan="7" class="p-4 text-center text-gray-500 font-normal">Tidak ada data SLIK.</td></tr>
+                            <tr><td colspan="7" class="p-3 text-center text-gray-500 font-normal">Tidak ada data SLIK.</td></tr>
                             @endforelse
                             
                             <!-- BARIS TOTAL -->
                             <tr class="bg-gray-50 font-bold">
-                                <td class="p-3.5 border-r border-gray-300 text-center">Total</td>
-                                <td class="p-3.5 border-r border-gray-300 text-right">Rp {{ number_format($data->pinjaman->sum('plafon') ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-right">Rp {{ number_format($data->pinjaman->sum('outstanding') ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-center">-</td>
-                                <td class="p-3.5 border-r border-gray-300 text-right">Rp {{ number_format($data->pinjaman->sum('angsuran') ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3.5 border-r border-gray-300 text-center">-</td>
-                                <td class="p-3.5 text-center">-</td>
+                                <td class="p-2 border-r border-gray-300 text-center">Total</td>
+                                <td class="p-2 border-r border-gray-300 text-right">Rp {{ number_format($data->pinjaman->sum('plafon') ?? 0, 0, ',', '.') }}</td>
+                                <td class="p-2 border-r border-gray-300 text-right">Rp {{ number_format($data->pinjaman->sum('outstanding') ?? 0, 0, ',', '.') }}</td>
+                                <td class="p-2 border-r border-gray-300 text-center">-</td>
+                                <td class="p-2 border-r border-gray-300 text-right">Rp {{ number_format($data->pinjaman->sum('angsuran') ?? 0, 0, ',', '.') }}</td>
+                                <td class="p-2 border-r border-gray-300 text-center">-</td>
+                                <td class="p-2 text-center">-</td>
                             </tr>
                         </tbody>
                     </table>
@@ -355,17 +353,17 @@
 
             <!-- D. INFORMASI USAHA -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                     D. Informasi Usaha
                 </div>
-                <div class="border border-[#0A3370] rounded-none">
+                <div class="border border-[#0A3370] rounded-none text-xs">
                     <div class="grid grid-cols-1 sm:grid-cols-12">
                         
                         <!-- Bagian Kiri: Tabel Keuangan (Mengambil 7 kolom) -->
                         <div class="sm:col-span-7 border-r border-gray-300 divide-y divide-gray-200">
                             
                             <!-- 1. Omset Usaha -->
-                            <div class="grid grid-cols-12 p-3.5 items-center">
+                            <div class="grid grid-cols-12 p-2 items-center">
                                 <div class="col-span-1 font-medium">1.</div>
                                 <div class="col-span-6 font-medium">Omset Usaha</div>
                                 <div class="col-span-1 font-medium text-right">Rp</div>
@@ -373,7 +371,7 @@
                             </div>
 
                             <!-- 2. Biaya Operasional -->
-                            <div class="grid grid-cols-12 p-3.5 items-center">
+                            <div class="grid grid-cols-12 p-2 items-center">
                                 <div class="col-span-1 font-medium">2.</div>
                                 <div class="col-span-6 font-medium">Biaya Operasional</div>
                                 <div class="col-span-1 font-medium text-right">Rp</div>
@@ -384,7 +382,7 @@
                             @php
                                 $penghasilanKotor = ($data->infousaha->omset_usaha ?? 0) - ($data->infousaha->biaya_operasional ?? 0);
                             @endphp
-                            <div class="grid grid-cols-12 p-3.5 items-center bg-gray-50">
+                            <div class="grid grid-cols-12 p-2 items-center bg-gray-50">
                                 <div class="col-span-1"></div>
                                 <div class="col-span-6 font-bold">Penghasilan Kotor</div>
                                 <div class="col-span-1 font-bold text-right">Rp</div>
@@ -392,7 +390,7 @@
                             </div>
 
                             <!-- 3. Penghasilan Tambahan -->
-                            <div class="grid grid-cols-12 p-3.5 items-center">
+                            <div class="grid grid-cols-12 p-2 items-center">
                                 <div class="col-span-1 font-medium">3.</div>
                                 <div class="col-span-6 font-medium">Penghasilan Tambahan</div>
                                 <div class="col-span-1 font-medium text-right">Rp</div>
@@ -403,7 +401,7 @@
                             @php
                                 $totalPendapatan = $penghasilanKotor + ($data->infousaha->penghasilan_tambahan ?? 0);
                             @endphp
-                            <div class="grid grid-cols-12 p-3.5 items-center bg-gray-50">
+                            <div class="grid grid-cols-12 p-2 items-center bg-gray-50">
                                 <div class="col-span-1"></div>
                                 <div class="col-span-6 font-bold">Total Pendapatan</div>
                                 <div class="col-span-1 font-bold text-right">Rp</div>
@@ -411,7 +409,7 @@
                             </div>
 
                             <!-- 4. Pengeluaran Rumah Tangga -->
-                            <div class="grid grid-cols-12 p-3.5 items-center">
+                            <div class="grid grid-cols-12 p-2 items-center">
                                 <div class="col-span-1 font-medium">4.</div>
                                 <div class="col-span-6 font-medium">Pengeluaran Rumah Tangga</div>
                                 <div class="col-span-1 font-medium text-right">Rp</div>
@@ -422,15 +420,15 @@
                             @php
                                 $penghasilanBersih = $totalPendapatan - ($data->infousaha->pengeluaran_rumah_tangga ?? 0);
                             @endphp
-                            <div class="grid grid-cols-12 p-3.5 items-center bg-gray-50">
+                            <div class="grid grid-cols-12 p-2 items-center bg-gray-50">
                                 <div class="col-span-1"></div>
                                 <div class="col-span-6 font-bold">Penghasilan Bersih</div>
                                 <div class="col-span-1 font-bold text-right">Rp</div>
-                                <div class="col-span-4 font-bold text-emerald-700 text-right">{{ number_format($penghasilanBersih, 0, ',', '.') }}</div>
+                                <div class="col-span-4 font-bold text-black text-right">{{ number_format($penghasilanBersih, 0, ',', '.') }}</div>
                             </div>
 
                             <!-- 5. Angsuran Bank Lain -->
-                            <div class="grid grid-cols-12 p-3.5 items-center">
+                            <div class="grid grid-cols-12 p-2 items-center">
                                 <div class="col-span-1 font-medium">5.</div>
                                 <div class="col-span-6 font-medium">Angsuran Bank Lain</div>
                                 <div class="col-span-1 font-medium text-right">Rp</div>
@@ -441,7 +439,7 @@
                             @php
                                 $sisaPenghasilan = $penghasilanBersih - ($data->infousaha->angsuran_bank_lain ?? 0);
                             @endphp
-                            <div class="grid grid-cols-12 p-3.5 items-center bg-gray-50">
+                            <div class="grid grid-cols-12 p-2 items-center bg-gray-50">
                                 <div class="col-span-1"></div>
                                 <div class="col-span-6 font-bold">Sisa Penghasilan</div>
                                 <div class="col-span-1 font-bold text-right">Rp</div>
@@ -449,7 +447,7 @@
                             </div>
 
                             <!-- 6. Angsuran BPR -->
-                            <div class="grid grid-cols-12 p-3.5 items-center">
+                            <div class="grid grid-cols-12 p-2 items-center">
                                 <div class="col-span-1 font-medium">6.</div>
                                 <div class="col-span-6 font-medium">Angsuran BPR</div>
                                 <div class="col-span-1 font-medium text-right">Rp</div>
@@ -460,19 +458,19 @@
                             @php
                                 $sisaPenghasilanBersih = $sisaPenghasilan - ($data->infousaha->angsuran_bpr ?? 0);
                             @endphp
-                            <div class="grid grid-cols-12 p-3.5 items-center bg-gray-50">
+                            <div class="grid grid-cols-12 p-2 items-center bg-gray-50">
                                 <div class="col-span-1"></div>
                                 <div class="col-span-6 font-bold">Sisa Penghasilan Bersih</div>
                                 <div class="col-span-1 font-bold text-right">Rp</div>
-                                <div class="col-span-4 font-bold text-emerald-700 text-right">{{ number_format($sisaPenghasilanBersih, 0, ',', '.') }}</div>
+                                <div class="col-span-4 font-bold text-black text-right">{{ number_format($sisaPenghasilanBersih, 0, ',', '.') }}</div>
                             </div>
 
                         </div>
 
                         <!-- Bagian Kanan: Deskripsi Usaha (Mengambil 5 kolom sisa) -->
-                        <div class="sm:col-span-5 p-3.5 bg-white flex flex-col">
-                            <span class="font-bold text-gray-800 mb-2">Deskripsi Usaha :</span>
-                            <div class="flex-grow p-2 text-gray-700 whitespace-pre-line">
+                        <div class="sm:col-span-5 p-2 bg-white flex flex-col">
+                            <span class="font-bold text-gray-800 mb-1">Deskripsi Usaha :</span>
+                            <div class="flex-grow p-1 text-gray-700 whitespace-pre-line text-justify">
                                 {{ $data->infousaha->deskripsi_usaha ?? '-' }}
                             </div>
                         </div>
@@ -484,19 +482,19 @@
             <!-- E. LEGALITAS -->
             @forelse($data->agunan_tanah ?? [] as $tanah)
                 <div class="mb-6">
-                    <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                    <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                         E. Legalitas
                     </div>
-                    <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
+                    <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
                         {{ $tanah->kepemilikan ?? '-' }}
                     </div>
                 </div>
             @empty
                 <div class="mb-6">
-                    <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                    <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                         E. Legalitas
                     </div>
-                    <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
+                    <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
                         -
                     </div>
                 </div>
@@ -504,10 +502,10 @@
 
             <!-- F. CAPITAL / ASET YANG DIMILIKI -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                     F. Capital / Aset Yang Dimiliki
                 </div>
-                <div class="border border-[#0A3370] rounded-none">
+                <div class="border border-[#0A3370] rounded-none text-xs">
                     @php 
                         $capital = $data->capital;
                         $asets = [
@@ -521,8 +519,8 @@
 
                     @foreach($asets as $index => $aset)
                     <div class="grid grid-cols-1 sm:grid-cols-4 {{ !$loop->last ? 'border-b border-gray-300' : '' }}">
-                        <div class="p-3.5 bg-gray-50 font-semibold border-r border-gray-300">ASET {{ $index + 1 }}</div>
-                        <div class="p-3.5 sm:col-span-3 whitespace-pre-line">{{ !empty(trim($aset)) ? $aset : '-' }}</div>
+                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">ASET {{ $index + 1 }}</div>
+                        <div class="p-2 sm:col-span-3 whitespace-pre-line flex items-center" style="text-align: justify;">{{ !empty(trim($aset)) ? $aset : '-' }}</div>
                     </div>
                     @endforeach
                 </div>
@@ -530,10 +528,10 @@
 
             <!-- G. KELENGKAPAN BERKAS TAKE OVER -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                     G. Kelengkapan Berkas Take Over
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
+                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
                     @php $val = $data->kondisi->berkas_take_over ?? null; @endphp
                     {{ is_array($val) ? implode(', ', $val) : ($val ?? '-') }}
                 </div>
@@ -541,10 +539,10 @@
 
             <!-- H. KELENGKAPAN DATA KTP -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                     H. Kelengkapan Data KTP
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
+                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
                     @php $val = $data->datalengkap->ktp ?? null; @endphp
                     {{ is_array($val) ? implode(', ', $val) : ($val ?? '-') }}
                 </div>
@@ -552,10 +550,10 @@
 
             <!-- I. KELENGKAPAN DATA SLIK -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                     I. Kelengkapan Data SLIK
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
+                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
                     @php 
                         $val = $data->datalengkap->slik ?? null; 
                         
@@ -573,10 +571,10 @@
 
             <!-- J. KELENGKAPAN DATA KARTU KELUARGA -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                     J. Kelengkapan Data Kartu Keluarga
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
+                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
                     @php $val = $data->datalengkap->kk ?? null; @endphp
                     {{ is_array($val) ? implode(', ', $val) : ($val ?? '-') }}
                 </div>
@@ -584,10 +582,10 @@
 
             <!-- K. KELENGKAPAN DATA SURAT NIKAH -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                     K. Kelengkapan Data Surat Nikah
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
+                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
                     @php $val = $data->datalengkap->surat_nikah ?? null; @endphp
                     {{ is_array($val) ? implode(', ', $val) : ($val ?? '-') }}
                 </div>
@@ -595,10 +593,10 @@
 
             <!-- L. KELENGKAPAN DATA BADAN USAHA -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3.5 py-2 font-bold text-sm uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
                     L. Kelengkapan Data Badan Usaha
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-3.5 bg-white whitespace-pre-line">
+                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
                     @php $val = $data->badanusaha->berkas_badan_usaha ?? null; @endphp
                     {{ is_array($val) ? implode(', ', $val) : ($val ?? '-') }}
                 </div>

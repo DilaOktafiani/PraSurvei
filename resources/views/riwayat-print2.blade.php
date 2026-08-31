@@ -117,7 +117,7 @@
 <body onload="window.print()">
 
     <div class="page-container">
-        <h2 class="main-title">FORM CREDIT ANALYSIS</h2>
+        <h2 class="main-title">FORM SURVEY</h2>
 
         <!-- A. DATA DEBITUR -->
         <table class="export-table" style="table-layout: fixed;">
@@ -151,9 +151,9 @@
                 <tr>
                     <td class="bg-label text-center">2</td>
                     <td colspan="3" class="bg-label">Plafon</td>
-                    <td colspan="4" class="text-emerald font-bold">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</td>
+                    <td colspan="4" class="font-bold" style="color: #000000;">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</td>
                     <td colspan="2" class="bg-label">JKW</td>
-                    <td colspan="2" class="font-bold">{{ $data->jangka_waktu ?? '-' }}</td>
+                    <td colspan="2" class="font-normal">{{ $data->jangka_waktu ?? '-' }}</td>
                 </tr>
                 <!-- Tujuan Penggunaan -->
                 <tr>
@@ -165,7 +165,7 @@
                 <tr>
                     <td class="bg-label text-center">4</td>
                     <td colspan="3" class="bg-label">Estimasi Kewajiban</td>
-                    <td colspan="8">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</td>
+                    <td colspan="8" class="font-bold" style="color: #000000;">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</td>
                 </tr>
                 <!-- Type Fasilitas -->
                 <tr>
@@ -179,7 +179,7 @@
                 <tr>
                     <td class="bg-label text-center">6</td>
                     <td colspan="3" class="bg-label">Temuan CA</td>
-                    <td colspan="8">{{ $data->temuan_ca ?? '-' }}</td>
+                    <td colspan="8" style="text-align: justify;">{{ $data->temuan_ca ?? '-' }}</td>
                 </tr>
             </tbody>
         </table>
@@ -280,7 +280,7 @@
                 <!-- Spesifikasi Jaminan -->
                 <tr>
                     <td colspan="3" class="bg-label">Spesifikasi Jaminan</td>
-                    <td colspan="9" class="whitespace-pre-line font-medium">{{ $agunan->spesifikasi ?? '-' }}</td>
+                    <td colspan="9" class="whitespace-pre-line font-medium" style="text-align: justify;">{{ $agunan->spesifikasi ?? '-' }}</td>
                 </tr>
 
                 <!-- Sub Header INFORMASI HARGA -->
@@ -290,17 +290,17 @@
                 <!-- Informasi Harga 1 -->
                 <tr>
                     <td class="bg-label text-center" style="width: 8%;">1</td>
-                    <td colspan="11" class="whitespace-pre-line font-medium">{{ $agunan->info_harga1 ?? '-' }}</td>
+                    <td colspan="11" class="whitespace-pre-line font-medium" style="text-align: justify;">{{ $agunan->info_harga1 ?? '-' }}</td>
                 </tr>
                 <!-- Informasi Harga 2 -->
                 <tr>
                     <td class="bg-label text-center">2</td>
-                    <td colspan="11" class="whitespace-pre-line font-medium">{{ $agunan->info_harga2 ?? '-' }}</td>
+                    <td colspan="11" class="whitespace-pre-line font-medium" style="text-align: justify;">{{ $agunan->info_harga2 ?? '-' }}</td>
                 </tr>
                 <!-- Informasi Harga 3 -->
                 <tr>
                     <td class="bg-label text-center">3</td>
-                    <td colspan="11" class="whitespace-pre-line font-medium">{{ $agunan->info_harga3 ?? '-' }}</td>
+                    <td colspan="11" class="whitespace-pre-line font-medium" style="text-align: justify;">{{ $agunan->info_harga3 ?? '-' }}</td>
                 </tr>
             </tbody>
         </table>
@@ -311,7 +311,7 @@
                 <td class="section-header">C. Analisis Jaminan</td>
             </tr>
             <tr>
-                <td class="whitespace-pre" style="padding: 6px;">{{ $data->analisis_jaminan->analisis_jaminan ?? '-' }}</td>
+                <td class="whitespace-pre" style="padding: 6px; text-align: justify;">{{ $data->analisis_jaminan->analisis_jaminan ?? '-' }}</td>
             </tr>
         </table>
 
@@ -327,13 +327,13 @@
                 <tr>
                     <td class="bg-label text-center" style="width: 8%;">D.1</td>
                     <td colspan="3" class="bg-label" style="width: 25%;">Informasi Penghasilan Utama menurut nasabah</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="width: 67%;">{{ $data->capacity->informasi_penghasilan_utama ?? '-' }}</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium" style="width: 67%; text-align: justify;">{{ $data->capacity->informasi_penghasilan_utama ?? '-' }}</td>
                 </tr>
                 <!-- D.2 Penghasilan Pendukung -->
                 <tr>
                     <td class="bg-label text-center">D.2</td>
                     <td colspan="3" class="bg-label">Informasi Penghasilan Pendukung menurut nasabah</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->capacity->informasi_penghasilan_pendukung ?? '-' }}</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium" style="text-align: justify;">{{ $data->capacity->informasi_penghasilan_pendukung ?? '-' }}</td>
                 </tr>
                 <!-- D.3 Pengeluaran Rumah Tangga -->
                 <tr>
@@ -357,7 +357,7 @@
                 <tr>
                     <td class="bg-label text-center">D.4</td>
                     <td colspan="3" class="bg-label">Analisis Kapasitas CA</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->capacity->analisis_kapasitas ?? '-' }}</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium" style="text-align: justify;">{{ $data->capacity->analisis_kapasitas ?? '-' }}</td>
                 </tr>
                 <!-- D.5 Kelengkapan Berkas -->
                 <tr>
@@ -382,7 +382,7 @@
                 <td class="section-header">E. Deskripsi Usaha</td>
             </tr>
             <tr>
-                <td class="whitespace-pre" style="padding: 6px;">{{ $data->capacity->deskripsi_usaha ?? '-' }}</td>
+                <td class="whitespace-pre" style="padding: 6px; text-align: justify;">{{ $data->capacity->deskripsi_usaha ?? '-' }}</td>
             </tr>
         </table>
 
@@ -392,7 +392,7 @@
                 <td class="section-header">F. Analisis Capital</td>
             </tr>
             <tr>
-                <td class="whitespace-pre" style="padding: 6px;">{{ $data->capital->analisis_aset ?? '-' }}</td>
+                <td class="whitespace-pre" style="padding: 6px; text-align: justify;">{{ $data->capital->analisis_aset ?? '-' }}</td>
             </tr>
         </table>
 
@@ -402,7 +402,7 @@
                 <td class="section-header">G. Analisis Take Over</td>
             </tr>
             <tr>
-                <td class="whitespace-pre" style="padding: 6px;">{{ $data->kondisi->analisis_take_over ?? '-' }}</td>
+                <td class="whitespace-pre" style="padding: 6px; text-align: justify;">{{ $data->kondisi->analisis_take_over ?? '-' }}</td>
             </tr>
         </table>
 
@@ -412,7 +412,7 @@
                 <td class="section-header">H. Analisis Kelengkapan Berkas</td>
             </tr>
             <tr>
-                <td class="whitespace-pre" style="padding: 6px;">{{ $data->berkas_lengkap->analisis_kelengkapan_berkas ?? '-' }}</td>
+                <td class="whitespace-pre" style="padding: 6px; text-align: justify;">{{ $data->berkas_lengkap->analisis_kelengkapan_berkas ?? '-' }}</td>
             </tr>
         </table>
 
@@ -422,7 +422,7 @@
                 <td class="section-header">I. Analisis Badan Usaha</td>
             </tr>
             <tr>
-                <td class="whitespace-pre" style="padding: 6px;">{{ $data->badanusaha->analisa_badan_usaha ?? '-' }}</td>
+                <td class="whitespace-pre" style="padding: 6px; text-align: justify;">{{ $data->badanusaha->analisa_badan_usaha ?? '-' }}</td>
             </tr>
         </table>
 
@@ -438,25 +438,25 @@
                 <tr>
                     <td class="bg-label text-center" style="width: 8%;">J.1</td>
                     <td colspan="3" class="bg-label" style="width: 25%;">Strengths (Kekuatan)</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="width: 67%;">{{ $data->swot->kekuatan ?? '-' }}</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium" style="width: 67%; text-align: justify;">{{ $data->swot->kekuatan ?? '-' }}</td>
                 </tr>
                 <!-- J.2 Weaknesses (Kelemahan) dan Mitigasi -->
                 <tr>
                     <td class="bg-label text-center">J.2</td>
                     <td colspan="3" class="bg-label">Weaknesses (Kelemahan) dan Mitigasi</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->swot->kelemahan ?? '-' }}</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium" style="text-align: justify;">{{ $data->swot->kelemahan ?? '-' }}</td>
                 </tr>
                 <!-- J.3 Opportunities (Peluang) -->
                 <tr>
                     <td class="bg-label text-center">J.3</td>
                     <td colspan="3" class="bg-label">Opportunities (Peluang)</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->swot->peluang ?? '-' }}</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium" style="text-align: justify;">{{ $data->swot->peluang ?? '-' }}</td>
                 </tr>
                 <!-- J.4 Threats (Ancaman) -->
                 <tr>
                     <td class="bg-label text-center">J.4</td>
                     <td colspan="3" class="bg-label">Threats (Ancaman)</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->swot->ancaman ?? '-' }}</td>
+                    <td colspan="8" class="whitespace-pre-line font-medium" style="text-align: justify;">{{ $data->swot->ancaman ?? '-' }}</td>
                 </tr>
                 <!-- Sub Header Kesimpulan -->
                 <tr>
@@ -464,7 +464,7 @@
                 </tr>
                 <!-- Isi Kesimpulan -->
                 <tr>
-                    <td colspan="12" class="whitespace-pre" style="padding: 6px; font-weight: normal; text-align: left;">{{ $data->swot->kesimpulan ?? '-' }}</td>
+                    <td colspan="12" class="whitespace-pre" style="padding: 6px; font-weight: normal; text-align: justify;">{{ $data->swot->kesimpulan ?? '-' }}</td>
                 </tr>
             </tbody>
         </table>
@@ -475,7 +475,7 @@
                 <td class="section-header">K. Rekomendasi</td>
             </tr>
             <tr>
-                <td class="whitespace-pre" style="padding: 6px;">{{ $data->swot->rekomendasi ?? '-' }}</td>
+                <td class="whitespace-pre" style="padding: 6px; text-align: justify;">{{ $data->swot->rekomendasi ?? '-' }}</td>
             </tr>
         </table>
 
@@ -485,7 +485,7 @@
                 <td class="section-header">L. Syarat dan Catatan Lainnya</td>
             </tr>
             <tr>
-                <td class="whitespace-pre" style="padding: 6px;">{{ $data->swot->syarat_catatan ?? '-' }}</td>
+                <td class="whitespace-pre" style="padding: 6px; text-align: justify;">{{ $data->swot->syarat_catatan ?? '-' }}</td>
             </tr>
         </table>
 

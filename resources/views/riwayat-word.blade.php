@@ -87,7 +87,7 @@
 <body>
 
     <div class="page-container">
-        <h2>FORM PRA SURVEY (MARKETING)</h2>
+        <h2>FORM PRA SURVEY</h2>
 
         <!-- A. DATA DEBITUR -->
         <table class="export-table">
@@ -95,7 +95,6 @@
                 <td colspan="4" style="background-color: #0A3370; color: #FFFFFF; font-weight: bold; padding: 5px 8px; text-transform: uppercase;">A. DATA DEBITUR</td>
             </tr>
             <tr>
-                <!-- Ditambahkan padding-left: 16px di sini -->
                 <td class="bg-label" style="width: 20%; padding-left: 16px;">Nomor Register</td>
                 <td style="width: 30%; font-weight: bold;">{{ $data->no_register ?? '-' }}</td>
                 <td class="bg-label" style="width: 20%;">Nama Marketing</td>
@@ -105,7 +104,7 @@
                 <td class="bg-label">1. Nama Debitur</td>
                 <td class="font-bold">{{ $data->nama ?? '-' }}</td>
                 <td class="bg-label">Nama Pasangan</td>
-                <td>{{ $data->nama_pasangan ?? '-' }}</td>
+                <td class="font-bold">{{ $data->nama_pasangan ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label" style="padding-left: 16px;">Usia</td>
@@ -121,24 +120,22 @@
             </tr>
             <tr>
                 <td class="bg-label">3. Alamat Debitur</td>
-                <td colspan="3" class="font-bold">{{ $data->alamat_ktp ?? '-' }}</td>
+                <td colspan="3" class="font-normal">{{ $data->alamat_ktp ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label" style="padding-left: 15px;">Alamat Domisili</td>
-                <td colspan="3" class="font-bold">{{ $data->alamat_domisili ?? '-' }}</td>
+                <td colspan="3" class="font-normal">{{ $data->alamat_domisili ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label">4. Plafon</td>
-                <td class="text-emerald">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</td>
-                <td class="bg-label">JKW</td>
+                <td class="font-bold text-black">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</td><td class="bg-label">JKW</td>
                 <td>{{ $data->jangka_waktu ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label" rowspan="2">5. Tujuan Penggunaan</td>
                 <td rowspan="2" style="vertical-align: top;">{{ $data->tujuan_penggunaan ?? '-' }}</td>
                 <td class="bg-label">Angsuran</td>
-                <td class="text-emerald">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</td>
-            </tr>
+                <td class="font-bold text-black">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</td></tr>
             <tr>
                 <td class="bg-label">Type Fasilitas</td>
                 <td>{{ is_array($data->tipe_fasilitas ?? null) ? implode(', ', $data->tipe_fasilitas) : ($data->tipe_fasilitas ?? '-') }}</td>
@@ -194,24 +191,24 @@
             <tr>
                 <td class="bg-label-jaminan" style="text-align: left; padding-left: 8px;">Tanah</td>
                 <td class="cell-jaminan text-center" style="text-align: center;">{{ $agunan->luas_tanah ?? '-' }}</td>
-                <td class="cell-jaminan text-right">Rp {{ number_format($agunan->harga_tanah ?? 0, 0, ',', '.') }}</td>
-                <td class="cell-jaminan text-right">Rp {{ number_format($agunan->tanah_pasar ?? 0, 0, ',', '.') }}</td>
-                <td class="cell-jaminan text-right">Rp {{ number_format($agunan->tanah_taksasi ?? 0, 0, ',', '.') }}</td>
-                <td class="cell-jaminan text-right">Rp {{ number_format($agunan->tanah_likuidasi ?? 0, 0, ',', '.') }}</td>
+                <td class="cell-jaminan" style="text-align: right; padding-right: 8px;">Rp {{ number_format($agunan->harga_tanah ?? 0, 0, ',', '.') }}</td>
+                <td class="cell-jaminan" style="text-align: right; padding-right: 8px;">Rp {{ number_format($agunan->tanah_pasar ?? 0, 0, ',', '.') }}</td>
+                <td class="cell-jaminan" style="text-align: right; padding-right: 8px;">Rp {{ number_format($agunan->tanah_taksasi ?? 0, 0, ',', '.') }}</td>
+                <td class="cell-jaminan" style="text-align: right; padding-right: 8px;">Rp {{ number_format($agunan->tanah_likuidasi ?? 0, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td class="bg-label-jaminan" style="text-align: left; padding-left: 8px;">Bangunan</td>
                 <td class="cell-jaminan text-center" style="text-align: center;">{{ $agunan->luas_bangunan ?? '-' }}</td>
-                <td class="cell-jaminan text-right">Rp {{ number_format($agunan->harga_bangunan ?? 0, 0, ',', '.') }}</td>
-                <td class="cell-jaminan text-right">Rp {{ number_format($agunan->bangunan_pasar ?? 0, 0, ',', '.') }}</td>
-                <td class="cell-jaminan text-right">Rp {{ number_format($agunan->bangunan_taksasi ?? 0, 0, ',', '.') }}</td>
-                <td class="cell-jaminan text-right">Rp {{ number_format($agunan->bangunan_likuidasi ?? 0, 0, ',', '.') }}</td>
+                <td class="cell-jaminan" style="text-align: right; padding-right: 8px;">Rp {{ number_format($agunan->harga_bangunan ?? 0, 0, ',', '.') }}</td>
+                <td class="cell-jaminan" style="text-align: right; padding-right: 8px;">Rp {{ number_format($agunan->bangunan_pasar ?? 0, 0, ',', '.') }}</td>
+                <td class="cell-jaminan" style="text-align: right; padding-right: 8px;">Rp {{ number_format($agunan->bangunan_taksasi ?? 0, 0, ',', '.') }}</td>
+                <td class="cell-jaminan" style="text-align: right; padding-right: 8px;">Rp {{ number_format($agunan->bangunan_likuidasi ?? 0, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td colspan="3" class="bg-label-jaminan" style="text-align: center; font-weight: bold;">TOTAL</td>
-                <td class="bg-label-jaminan text-right">Rp {{ number_format(($agunan->tanah_pasar ?? 0) + ($agunan->bangunan_pasar ?? 0), 0, ',', '.') }}</td>
-                <td class="bg-label-jaminan text-right">Rp {{ number_format(($agunan->tanah_taksasi ?? 0) + ($agunan->bangunan_taksasi ?? 0), 0, ',', '.') }}</td>
-                <td class="bg-label-jaminan text-right">Rp {{ number_format(($agunan->tanah_likuidasi ?? 0) + ($agunan->bangunan_likuidasi ?? 0), 0, ',', '.') }}</td>
+                <td class="bg-label-jaminan" style="text-align: right; padding-right: 8px; font-weight: bold;">Rp {{ number_format(($agunan->tanah_pasar ?? 0) + ($agunan->bangunan_pasar ?? 0), 0, ',', '.') }}</td>
+                <td class="bg-label-jaminan" style="text-align: right; padding-right: 8px; font-weight: bold;">Rp {{ number_format(($agunan->tanah_taksasi ?? 0) + ($agunan->bangunan_taksasi ?? 0), 0, ',', '.') }}</td>
+                <td class="bg-label-jaminan" style="text-align: right; padding-right: 8px; font-weight: bold;">Rp {{ number_format(($agunan->tanah_likuidasi ?? 0) + ($agunan->bangunan_likuidasi ?? 0), 0, ',', '.') }}</td>
             </tr>
 
             <!-- Spesifikasi Jaminan -->
@@ -259,40 +256,40 @@
         </table>
 
         <!-- C. SLIK -->
-        <table class="export-table" style="margin-top: 8px; width: 100%; border-collapse: collapse;">
+        <table class="export-table" style="margin-top: 8px; table-layout: fixed; width: 100%;">
             <tr>
                 <td colspan="7" style="background-color: #0A3370; color: #FFFFFF; font-weight: bold; padding: 5px 8px; text-transform: uppercase;">C. SLIK</td>
             </tr>
             <tr class="bg-label text-center">
-                <td style="text-align: center; font-weight: bold;">Nama Bank</td>
-                <td style="text-align: center; font-weight: bold;">Plafon</td>
-                <td style="text-align: center; font-weight: bold;">Outstanding</td>
-                <td style="text-align: center; font-weight: bold;">KOL</td>
-                <td style="text-align: center; font-weight: bold;">Angsuran</td>
-                <td style="text-align: center; font-weight: bold;">JKW</td>
-                <td style="text-align: center; font-weight: bold;">Keterangan</td>
+                <td style="width: 21%; text-align: center;">Nama Bank</td>
+                <td style="width: 11%; text-align: center;">Plafon</td>
+                <td style="width: 11%; text-align: center;">Outstanding</td>
+                <td style="width: 5%; text-align: center;">KOL</td>
+                <td style="width: 11%; text-align: center;">Angsuran</td>
+                <td style="width: 4%; text-align: center;">JKW</td>
+                <td style="width: 36%; text-align: center;">Keterangan</td>
             </tr>
             @forelse($data->pinjaman ?? [] as $slik)
             <tr>
-                <td class="text-center" style="text-align: center;">{{ $slik->nama_ljk ?? '-' }}</td>
-                <td class="text-right" style="text-align: right;">Rp {{ number_format($slik->plafon ?? 0, 0, ',', '.') }}</td>
-                <td class="text-right" style="text-align: right;">Rp {{ number_format($slik->outstanding ?? 0, 0, ',', '.') }}</td>
-                <td class="text-center" style="text-align: center;">{{ $slik->kolekbilitas ?? $slik->kolektibilitas ?? '-' }}</td>
-                <td class="text-right" style="text-align: right;">Rp {{ number_format($slik->angsuran ?? 0, 0, ',', '.') }}</td>
-                <td class="text-center" style="text-align: center;">{{ $slik->jkw ?? '-' }}</td>
-                <td class="text-center" style="text-align: center;">{{ $slik->keterangan ?? '-' }}</td>
+                <td class="text-center" style="word-wrap: break-word;">{{ $slik->nama_ljk ?? '-' }}</td>
+                <td class="text-right">Rp {{ number_format($slik->plafon ?? 0, 0, ',', '.') }}</td>
+                <td class="text-right">Rp {{ number_format($slik->outstanding ?? 0, 0, ',', '.') }}</td>
+                <td class="text-center">{{ $slik->kolekbilitas ?? $slik->kolektibilitas ?? '-' }}</td>
+                <td class="text-right">Rp {{ number_format($slik->angsuran ?? 0, 0, ',', '.') }}</td>
+                <td class="text-center">{{ $slik->jkw ?? '-' }}</td>
+                <td class="text-center" style="word-wrap: break-word;">{{ $slik->keterangan ?? '-' }}</td>
             </tr>
             @empty
-            <tr><td colspan="7" class="text-center" style="text-align: center;">Tidak ada data SLIK.</td></tr>
+            <tr><td colspan="7" class="text-center">Tidak ada data SLIK.</td></tr>
             @endforelse
             <tr class="font-bold bg-label">
-                <td class="text-center" style="text-align: center;">TOTAL</td>
-                <td class="text-right" style="text-align: right;">Rp {{ number_format($data->pinjaman->sum('plafon') ?? 0, 0, ',', '.') }}</td>
-                <td class="text-right" style="text-align: right;">Rp {{ number_format($data->pinjaman->sum('outstanding') ?? 0, 0, ',', '.') }}</td>
-                <td class="text-center" style="text-align: center;">-</td>
-                <td class="text-right" style="text-align: right;">Rp {{ number_format($data->pinjaman->sum('angsuran') ?? 0, 0, ',', '.') }}</td>
-                <td class="text-center" style="text-align: center;">-</td>
-                <td class="text-center" style="text-align: center;">-</td>
+                <td class="text-center">TOTAL</td>
+                <td class="text-right">Rp {{ number_format($data->pinjaman->sum('plafon') ?? 0, 0, ',', '.') }}</td>
+                <td class="text-right">Rp {{ number_format($data->pinjaman->sum('outstanding') ?? 0, 0, ',', '.') }}</td>
+                <td class="text-center">-</td>
+                <td class="text-right">Rp {{ number_format($data->pinjaman->sum('angsuran') ?? 0, 0, ',', '.') }}</td>
+                <td class="text-center">-</td>
+                <td class="text-center">-</td>
             </tr>
         </table>
 
@@ -317,24 +314,74 @@
             </tr>
             <tr>
                 <td style="width: 4%; text-align: center;">1.</td>
-                <td style="width: 31%;">Omset Usaha</td>
-                <td style="width: 5%; border-right: none;">Rp</td>
-                <td style="width: 20%; text-align: right; font-weight: bold; border-left: none;">{{ number_format($omset, 0, ',', '.') }}</td>
+                <td style="width: 31%; font-weight: normal;">Omset Usaha</td>
+                <td style="width: 5%; border-right: none; font-weight: normal;">Rp</td>
+                <td style="width: 20%; text-align: right; font-weight: normal; border-left: none;">{{ number_format($omset, 0, ',', '.') }}</td>
                 <td colspan="2" rowspan="11" style="vertical-align: top; width: 40%; background: #fff;">
-                    <div class="font-bold" style="border-bottom: 1px solid #0A3370; padding-bottom: 2px; margin-bottom: 3px;">Deskripsi Usaha :</div>
-                    <div style="white-space: pre-line; font-size: 7.5pt;">{{ optional($data->infousaha)->deskripsi_usaha ?? '-' }}</div>
+                    <div class="font-bold" style="padding-bottom: 2px; margin-bottom: 6px; padding-top: 4px;">Deskripsi Usaha :</div>
+                    <div style="white-space: pre-line; font-size: 8pt; text-align: justify;">{{ optional($data->infousaha)->deskripsi_usaha ?? '-' }}</div>
                 </td>
             </tr>
-            <tr><td style="text-align: center;">2.</td><td>Biaya Operasional</td><td style="border-right: none;">Rp</td><td style="text-align: right; font-weight: bold; border-left: none;">{{ number_format($biaya, 0, ',', '.') }}</td></tr>
-            <tr class="bg-label font-bold"><td></td><td>Penghasilan Kotor</td><td style="border-right: none;">Rp</td><td style="text-align: right; border-left: none;">{{ number_format($penghasilanKotor, 0, ',', '.') }}</td></tr>
-            <tr><td style="text-align: center;">3.</td><td>Penghasilan Tambahan</td><td style="border-right: none;">Rp</td><td style="text-align: right; font-weight: bold; border-left: none;">{{ number_format($tambahan, 0, ',', '.') }}</td></tr>
-            <tr class="bg-label font-bold"><td></td><td>Total Pendapatan</td><td style="border-right: none;">Rp</td><td style="text-align: right; border-left: none;">{{ number_format($totalPendapatan, 0, ',', '.') }}</td></tr>
-            <tr><td style="text-align: center;">4.</td><td>Pengeluaran Rumah Tangga</td><td style="border-right: none;">Rp</td><td style="text-align: right; font-weight: bold; border-left: none;">{{ number_format($pengeluaranRT, 0, ',', '.') }}</td></tr>
-            <tr class="bg-label font-bold"><td></td><td>Penghasilan Bersih</td><td style="border-right: none;">Rp</td><td class="text-emerald" style="text-align: right; border-left: none;">{{ number_format($penghasilanBersih, 0, ',', '.') }}</td></tr>
-            <tr><td style="text-align: center;">5.</td><td>Angsuran Bank Lain</td><td style="border-right: none;">Rp</td><td style="text-align: right; font-weight: bold; border-left: none;">{{ number_format($angsuranBankLain, 0, ',', '.') }}</td></tr>
-            <tr class="bg-label font-bold"><td></td><td>Sisa Penghasilan</td><td style="border-right: none;">Rp</td><td style="text-align: right; border-left: none;">{{ number_format($sisaPenghasilan, 0, ',', '.') }}</td></tr>
-            <tr><td style="text-align: center;">6.</td><td>Angsuran BPR</td><td style="border-right: none;">Rp</td><td style="text-align: right; font-weight: bold; border-left: none;">{{ number_format($angsuranBpr, 0, ',', '.') }}</td></tr>
-            <tr class="bg-label font-bold"><td></td><td>Sisa Penghasilan Bersih</td><td style="border-right: none;">Rp</td><td class="text-emerald" style="text-align: right; border-left: none;">{{ number_format($sisaPenghasilanBersih, 0, ',', '.') }}</td></tr>
+            <tr>
+                <td style="text-align: center; font-weight: normal;">2.</td>
+                <td style="font-weight: normal;">Biaya Operasional</td>
+                <td style="border-right: none; font-weight: normal;">Rp</td>
+                <td style="text-align: right; font-weight: normal; border-left: none;">{{ number_format($biaya, 0, ',', '.') }}</td>
+            </tr>
+            <tr class="bg-label">
+                <td style="font-weight: normal;"></td>
+                <td class="text-black font-bold">Penghasilan Kotor</td>
+                <td style="border-right: none;" class="text-black font-bold">Rp</td>
+                <td style="text-align: right; border-left: none;" class="text-black font-bold">{{ number_format($penghasilanKotor, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: center; font-weight: normal;">3.</td>
+                <td style="font-weight: normal;">Penghasilan Tambahan</td>
+                <td style="border-right: none; font-weight: normal;">Rp</td>
+                <td style="text-align: right; font-weight: normal; border-left: none;">{{ number_format($tambahan, 0, ',', '.') }}</td>
+            </tr>
+            <tr class="bg-label">
+                <td style="font-weight: normal;"></td>
+                <td class="text-black font-bold">Total Pendapatan</td>
+                <td style="border-right: none;" class="text-black font-bold">Rp</td>
+                <td style="text-align: right; border-left: none;" class="text-black font-bold">{{ number_format($totalPendapatan, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: center; font-weight: normal;">4.</td>
+                <td style="font-weight: normal;">Pengeluaran Rumah Tangga</td>
+                <td style="border-right: none; font-weight: normal;">Rp</td>
+                <td style="text-align: right; font-weight: normal; border-left: none;">{{ number_format($pengeluaranRT, 0, ',', '.') }}</td>
+            </tr>
+            <tr class="bg-label">
+                <td style="font-weight: normal;"></td>
+                <td class="text-black font-bold">Penghasilan Bersih</td>
+                <td style="border-right: none;" class="text-black font-bold">Rp</td>
+                <td style="text-align: right; border-left: none;" class="text-black font-bold">{{ number_format($penghasilanBersih, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: center; font-weight: normal;">5.</td>
+                <td style="font-weight: normal;">Angsuran Bank Lain</td>
+                <td style="border-right: none; font-weight: normal;">Rp</td>
+                <td style="text-align: right; font-weight: normal; border-left: none;">{{ number_format($angsuranBankLain, 0, ',', '.') }}</td>
+            </tr>
+            <tr class="bg-label">
+                <td style="font-weight: normal;"></td>
+                <td class="text-black font-bold">Sisa Penghasilan</td>
+                <td style="border-right: none;" class="text-black font-bold">Rp</td>
+                <td style="text-align: right; border-left: none;" class="text-black font-bold">{{ number_format($sisaPenghasilan, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: center; font-weight: normal;">6.</td>
+                <td style="font-weight: normal;">Angsuran BPR</td>
+                <td style="border-right: none; font-weight: normal;">Rp</td>
+                <td style="text-align: right; font-weight: normal; border-left: none;">{{ number_format($angsuranBpr, 0, ',', '.') }}</td>
+            </tr>
+            <tr class="bg-label">
+                <td style="font-weight: normal;"></td>
+                <td class="text-black font-bold">Sisa Penghasilan Bersih</td>
+                <td style="border-right: none;" class="text-black font-bold">Rp</td>
+                <td style="text-align: right; border-left: none;" class="text-black font-bold">{{ number_format($sisaPenghasilanBersih, 0, ',', '.') }}</td>
+            </tr>
         </table>
 
         <!-- E. LEGALITAS -->

@@ -1464,7 +1464,7 @@ class SurveiController extends Controller
         $view = view('riwayat-pdf2', compact('data'))->render();
         $pdf = Pdf::loadHtml($view);
         
-        return $pdf->download('Data_Debitur_' . $data->nama . '.pdf');
+        return $pdf->download('Survei ' . $data->nama . '.pdf');
     }
 
     // ==========================================
@@ -1519,7 +1519,7 @@ class SurveiController extends Controller
 
         return response($view)
             ->header('Content-Type', 'application/vnd.ms-word')
-            ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.doc"');
+            ->header('Content-Disposition', 'attachment; filename="Survei ' . $data->nama . '.doc"');
     }
 
     // ==========================================
@@ -1554,6 +1554,6 @@ class SurveiController extends Controller
 
         return response($view)
             ->header('Content-Type', 'application/vnd.ms-excel')
-            ->header('Content-Disposition', 'attachment; filename="Data_Debitur_' . $data->nama . '.xls"');
+            ->header('Content-Disposition', 'attachment; filename="Survei ' . $data->nama . '.xls"');
     }
 }
