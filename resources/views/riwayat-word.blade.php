@@ -213,8 +213,8 @@
 
             <!-- Spesifikasi Jaminan -->
             <tr>
-                <td class="bg-label-jaminan" style="vertical-align: top;">Spesifikasi Jaminan</td>
-                <td colspan="5" class="cell-jaminan" style="white-space: pre-line;">{{ $agunan->spesifikasi ?? '-' }}</td>
+                <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px; vertical-align: top;">Spesifikasi Jaminan</td>
+                <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px; white-space: pre-line; text-align: justify; text-justify: inter-word;">{{ $agunan->spesifikasi ?? '-' }}</td>
             </tr>
 
             <!-- Denah -->
@@ -222,9 +222,9 @@
                 <td class="bg-label-jaminan" style="vertical-align: top;">Denah</td>
                 <td colspan="5" class="cell-jaminan">
                     @if(!empty($agunan->denah_base64))
-                        <!-- text-align diubah jadi left, dan margin di-reset agar rata kiri -->
-                        <div style="width: 230px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff; padding: 4px; text-align: left;">
-                            <img src="{{ $agunan->denah_base64 }}" alt="Denah Lokasi" width="220" style="width: 220px; display: block; margin: 0;">
+                        <!-- Gunakan max-width dan height: auto agar aspek rasio asli terjaga -->
+                        <div style="max-width: 230px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff; padding: 4px; text-align: left;">
+                            <img src="{{ $agunan->denah_base64 }}" alt="Denah Lokasi" style="max-width: 100%; height: auto; display: block; margin: 0;">
                         </div>
                     @else
                         <span>-</span>
@@ -234,7 +234,7 @@
 
             <!-- Informasi Harga -->
             <tr>
-                <td class="bg-label-jaminan" style="vertical-align: top;">Informasi Harga</td>
+                <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px; vertical-align: top;">Informasi Harga</td>
                 <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 0 !important;">
                     @php
                         $infoList = [
@@ -246,8 +246,8 @@
                     <table style="width: 100%; border-collapse: collapse; border: none !important;">
                         @foreach($infoList as $index => $info)
                             <tr>
-                                <td style="width: 10%; border-top: {{ $loop->first ? '1px solid #0A3370' : 'none' }}; border-bottom: {{ !$loop->last ? '1px solid #d1d5db' : 'none' }}; border-right: 1px solid #d1d5db; border-left: none; text-align: center; padding: 8px; background-color: #f9fafb; font-weight: 500; vertical-align: middle;">{{ $index + 1 }}</td>
-                                <td style="width: 90%; border-top: {{ $loop->first ? '1px solid #0A3370' : 'none' }}; border-bottom: {{ !$loop->last ? '1px solid #d1d5db' : 'none' }}; border-right: none; border-left: none; padding: 8px; white-space: pre-line; vertical-align: middle;">{{ !empty(trim($info)) ? $info : '-' }}</td>
+                                <td style="width: 10%; border-top: {{ $loop->first ? 'none' : '1px solid #d1d5db' }}; border-bottom: {{ $loop->last ? 'none' : '1px solid #d1d5db' }}; border-right: 1px solid #d1d5db; border-left: none; text-align: center; padding: 8px; background-color: #f9fafb; font-weight: 500;">{{ $index + 1 }}</td>
+                                <td style="width: 90%; border-top: {{ $loop->first ? 'none' : '1px solid #d1d5db' }}; border-bottom: {{ $loop->last ? 'none' : '1px solid #d1d5db' }}; border-right: none; border-left: none; padding: 8px; white-space: pre-line; text-align: justify; text-justify: inter-word;">{{ !empty(trim($info)) ? $info : '-' }}</td>
                             </tr>
                         @endforeach
                     </table>
@@ -414,7 +414,7 @@
             @foreach($asets as $index => $aset)
             <tr>
                 <td class="bg-label" style="width: 20%;">ASET {{ $index + 1 }}</td>
-                <td style="white-space: pre-line; padding: 4px 6px;">{{ trim($aset) !== '' ? $aset : '-' }}</td>
+                <td style="white-space: pre-line; padding: 4px 6px; text-align: justify; text-justify: inter-word;">{{ trim($aset) !== '' ? $aset : '-' }}</td>
             </tr>
             @endforeach
         </table>

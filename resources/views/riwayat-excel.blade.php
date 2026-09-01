@@ -153,7 +153,7 @@
         </tr>
         <tr>
             <td class="bg-label">Spesifikasi Jaminan</td>
-            <td colspan="5" style="white-space: pre-line;">{{ $agunan->spesifikasi ?? '-' }}</td>
+            <td colspan="5" style="white-space: pre-line; text-align: justify; mso-element-para-indent-alt: 0;">{{ $agunan->spesifikasi ?? '-' }}</td>
         </tr>
 
         <!-- Denah -->
@@ -174,15 +174,15 @@
         <tr>
             <td class="bg-label" rowspan="3" style="background-color: #f2f2f2 !important; border: 1px solid #d9d9d9 !important; font-weight: bold; padding: 5px 8px; vertical-align: top; width: 22%;">Informasi Harga</td>
             <td style="width: 8%; border: 1px solid #d9d9d9 !important; text-align: center; font-weight: bold; background-color: #f2f2f2; vertical-align: top; padding: 5px 8px;">1</td>
-            <td colspan="4" style="border: 1px solid #d9d9d9 !important; padding: 5px 8px; vertical-align: top; word-break: break-word;">{{ !empty(trim($agunan->info_harga1)) ? $agunan->info_harga1 : '-' }}</td>
+            <td colspan="4" style="border: 1px solid #d9d9d9 !important; padding: 5px 8px; vertical-align: top; word-break: break-word; text-align: justify; mso-element-para-indent-alt: 0;">{{ !empty(trim($agunan->info_harga1)) ? $agunan->info_harga1 : '-' }}</td>
         </tr>
         <tr>
             <td style="border: 1px solid #d9d9d9 !important; text-align: center; font-weight: bold; background-color: #f2f2f2; vertical-align: top; padding: 5px 8px;">2</td>
-            <td colspan="4" style="border: 1px solid #d9d9d9 !important; padding: 5px 8px; vertical-align: top; word-break: break-word;">{{ !empty(trim($agunan->info_harga2)) ? $agunan->info_harga2 : '-' }}</td>
+            <td colspan="4" style="border: 1px solid #d9d9d9 !important; padding: 5px 8px; vertical-align: top; word-break: break-word; text-align: justify; mso-element-para-indent-alt: 0;">{{ !empty(trim($agunan->info_harga2)) ? $agunan->info_harga2 : '-' }}</td>
         </tr>
         <tr>
             <td style="border: 1px solid #d9d9d9 !important; text-align: center; font-weight: bold; background-color: #f2f2f2; vertical-align: top; padding: 5px 8px;">3</td>
-            <td colspan="4" style="border: 1px solid #d9d9d9 !important; padding: 5px 8px; vertical-align: top; word-break: break-word;">{{ !empty(trim($agunan->info_harga3)) ? $agunan->info_harga3 : '-' }}</td>
+            <td colspan="4" style="border: 1px solid #d9d9d9 !important; padding: 5px 8px; vertical-align: top; word-break: break-word; text-align: justify; mso-element-para-indent-alt: 0;">{{ !empty(trim($agunan->info_harga3)) ? $agunan->info_harga3 : '-' }}</td>
         </tr>
 
         <!-- C. SLIK -->
@@ -298,7 +298,7 @@
         @foreach($asets as $index => $aset)
         <tr>
             <td class="bg-label">ASET {{ $index + 1 }}</td>
-            <td colspan="5" style="white-space: pre-line;">{{ trim($aset) !== '' ? $aset : '-' }}</td>
+            <td colspan="5" style="white-space: pre-line; text-align: justify; mso-element-para-indent-alt: 0;">{{ trim($aset) !== '' ? $aset : '-' }}</td>
         </tr>
         @endforeach
 

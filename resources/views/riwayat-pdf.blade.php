@@ -189,7 +189,7 @@
             <!-- Spesifikasi Jaminan -->
             <tr>
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px; vertical-align: top;">Spesifikasi Jaminan</td>
-                <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px; white-space: pre-line;">{{ $agunan->spesifikasi ?? '-' }}</td>
+                <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px; white-space: pre-line; text-align: justify; text-justify: inter-word;">{{ $agunan->spesifikasi ?? '-' }}</td>
             </tr>
 
             <!-- Denah -->
@@ -197,8 +197,8 @@
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px; vertical-align: top;">Denah</td>
                 <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px;">
                     @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                        <div style="width: 100%; max-width: 250px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff;">
-                            <!-- Menggunakan public_path agar terbaca sempurna di PDF generator -->
+                        <!-- Ubah max-width menjadi lebih besar, misalnya 400px atau 100% agar menyesuaikan lebar sel tabel -->
+                        <div style="width: 100%; max-width: 400px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff;">
                             <img src="{{ public_path('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; display: block;">
                         </div>
                     @else
@@ -222,7 +222,7 @@
                         @foreach($infoList as $index => $info)
                             <tr>
                                 <td style="width: 10%; border-top: {{ $loop->first ? 'none' : '1px solid #d1d5db' }}; border-bottom: {{ $loop->last ? 'none' : '1px solid #d1d5db' }}; border-right: 1px solid #d1d5db; border-left: none; text-align: center; padding: 8px; background-color: #f9fafb; font-weight: 500;">{{ $index + 1 }}</td>
-                                <td style="width: 90%; border-top: {{ $loop->first ? 'none' : '1px solid #d1d5db' }}; border-bottom: {{ $loop->last ? 'none' : '1px solid #d1d5db' }}; border-right: none; border-left: none; padding: 8px; white-space: pre-line;">{{ !empty(trim($info)) ? $info : '-' }}</td>
+                                <td style="width: 90%; border-top: {{ $loop->first ? 'none' : '1px solid #d1d5db' }}; border-bottom: {{ $loop->last ? 'none' : '1px solid #d1d5db' }}; border-right: none; border-left: none; padding: 8px; white-space: pre-line; text-align: justify; text-justify: inter-word;">{{ !empty(trim($info)) ? $info : '-' }}</td>
                             </tr>
                         @endforeach
                     </table>
@@ -389,7 +389,7 @@
             @foreach($asets as $index => $aset)
             <tr>
                 <td class="bg-label" style="width: 20%;">ASET {{ $index + 1 }}</td>
-                <td style="white-space: pre-line; padding: 4px 6px;">{{ trim($aset) !== '' ? $aset : '-' }}</td>
+                <td style="white-space: pre-line; padding: 4px 6px; text-align: justify; text-justify: inter-word;">{{ trim($aset) !== '' ? $aset : '-' }}</td>
             </tr>
             @endforeach
         </table>

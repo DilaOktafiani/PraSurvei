@@ -1495,21 +1495,27 @@ class SurveiController extends Controller
         ])->findOrFail($id);
 
         // --- UBAH GAMBAR MENJADI BASE64 AGAR MUNCUL DI WORD ---
-        // Asumsi data agunan bisa banyak (relasi), kita looping atau cek satu-satu
-        // Contoh jika mengambil dari relasi agunans atau agunan_tanah (sesuaikan dengan properti denah Anda)
-        foreach ($data->agunans as $agunan) {
-            if (!empty($agunan->denah) && $agunan->denah !== '-') {
-                $pathFisik = storage_path('app/public/' . $agunan->denah);
-                if (file_exists($pathFisik)) {
-                    $type = pathinfo($pathFisik, PATHINFO_EXTENSION);
-                    $imgData = file_get_contents($pathFisik);
-                    // Simpan string base64 sementara ke properti baru di objek agunan
-                    $agunan->denah_base64 = 'data:image/' . $type . ';base64,'. base64_encode($imgData);
-                } else {
-                    $agunan->denah_base64 = null;
+        // Proses agunan_tanah (karena ini yang dipakai pada Blade agunan)
+        $agunanTanahList = $data->agunan_tanah;
+        if ($agunanTanahList) {
+            if ($agunanTanahList instanceof \Illuminate\Database\Eloquent\Collection) {
+                foreach ($agunanTanahList as $agunan) {
+                    $this->convertDenahToBase64($agunan);
                 }
             } else {
-                $agunan->denah_base64 = null;
+                $this->convertDenahToBase64($agunanTanahList);
+            }
+        }
+
+        // Proses juga agunans untuk mengantisipasi bagian lain
+        $agunanList = $data->agunans;
+        if ($agunanList) {
+            if ($agunanList instanceof \Illuminate\Database\Eloquent\Collection) {
+                foreach ($agunanList as $agunan) {
+                    $this->convertDenahToBase64($agunan);
+                }
+            } else {
+                $this->convertDenahToBase64($agunanList);
             }
         }
         // ----------------------------------------------------
@@ -1520,6 +1526,68 @@ class SurveiController extends Controller
         return response($view)
             ->header('Content-Type', 'application/vnd.ms-word')
             ->header('Content-Disposition', 'attachment; filename="Survei ' . $data->nama . '.doc"');
+    }
+
+    // Fungsi pembantu untuk konversi base64 agar kodingan tidak duplikat
+    private function convertDenahToBase64($agunan)
+    {
+        if (!empty($agunan->denah) && $agunan->denah !== '-') {
+            $pathFisik = storage_path('app/public/' . $agunan->denah);
+            if (file_exists($pathFisik)) {
+                $type = pathinfo($pathFisik, PATHINFO_EXTENSION);
+                $type = strtolower($type);
+                
+                list($origWidth, $origHeight) = getimagesize($pathFisik);
+                
+                $maxSize = 450; // Ukuran kotak maksimal
+                
+                if ($origWidth > $origHeight) {
+                    $newWidth = $maxSize;
+                    $newHeight = round($origHeight * ($maxSize / $origWidth));
+                } else {
+                    $newHeight = $maxSize;
+                    $newWidth = round($origWidth * ($maxSize / $origHeight));
+                }
+
+                $imageCreate = match($type) {
+                    'jpg', 'jpeg' => imagecreatefromjpeg($pathFisik),
+                    'png' => imagecreatefrompng($pathFisik),
+                    'webp' => imagecreatefromwebp($pathFisik),
+                    default => null
+                };
+
+                if ($imageCreate) {
+                    $newImage = imagecreatetruecolor($newWidth, $newHeight);
+                    
+                    if ($type == 'png') {
+                        imagealphablending($newImage, false);
+                        imagesavealpha($newImage, true);
+                    }
+
+                    imagecopyresampled($newImage, $imageCreate, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
+
+                    ob_start();
+                    match($type) {
+                        'jpg', 'jpeg' => imagejpeg($newImage, null, 100),
+                        'png' => imagepng($newImage, null, 0),
+                        'webp' => imagewebp($newImage, 100),
+                        default => imagejpeg($newImage, null, 100)
+                    };
+                    $imgData = ob_get_clean();
+
+                    imagedestroy($imageCreate);
+                    imagedestroy($newImage);
+
+                    $agunan->denah_base64 = 'data:image/' . ($type == 'jpg' ? 'jpeg' : $type) . ';base64,' . base64_encode($imgData);
+                } else {
+                    $agunan->denah_base64 = 'data:image/' . $type . ';base64,' . base64_encode(file_get_contents($pathFisik));
+                }
+            } else {
+                $agunan->denah_base64 = null;
+            }
+        } else {
+            $agunan->denah_base64 = null;
+        }
     }
 
     // ==========================================

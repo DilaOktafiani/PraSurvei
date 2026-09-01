@@ -139,13 +139,13 @@
                     <td colspan="3" class="bg-label">Nama Debitur</td>
                     <td colspan="4" class="font-bold">{{ $data->nama ?? '-' }}</td>
                     <td colspan="2" class="bg-label">Nama Marketing</td>
-                    <td colspan="2" class="font-bold">{{ $data->nama_marketing ?? '-' }}</td>
+                    <td colspan="2" style="font-weight: normal;">{{ $data->nama_marketing ?? '-' }}</td>
                 </tr>
                 <!-- Tanggal OTS -->
                 <tr>
                     <td class="bg-label text-center"></td>
                     <td colspan="3" class="bg-label">Tanggal OTS</td>
-                    <td colspan="8">{{ $data->tanggal_ots ?? '-' }}</td>
+                    <td colspan="8" style="font-weight: normal;">{{ $data->tanggal_ots ?? '-' }}</td>
                 </tr>
                 <!-- Plafon & JKW -->
                 <tr>
@@ -228,13 +228,13 @@
                     <td colspan="12" class="sub-header" style="text-align: left; background-color: #f3f4f6; color: #0A3370; font-weight: bold; text-transform: uppercase;">Collateral</td>
                 </tr>
                 <!-- Header Kolom Collateral -->
-                <tr class="sub-header" style="text-align: center; background-color: #f9fafb;">
-                    <td colspan="2" style="font-weight: bold;">Uraian</td>
-                    <td colspan="1" style="font-weight: bold;">Luas (m2)</td>
-                    <td colspan="2" style="font-weight: bold; text-align: right;">Harga</td>
-                    <td colspan="2" style="font-weight: bold; text-align: right;">Nilai Pasar</td>
-                    <td colspan="2" style="font-weight: bold; text-align: right;">Nilai Taksasi</td>
-                    <td colspan="3" style="font-weight: bold; text-align: right;">Nilai Likuidasi</td>
+                <tr class="sub-header" style="text-align: center; background-color: #f9fafb; color: #000000;">
+                    <td colspan="2" style="font-weight: bold; color: #000000;">Uraian</td>
+                    <td colspan="1" style="font-weight: bold; color: #000000;">Luas (m2)</td>
+                    <td colspan="2" style="font-weight: bold; text-align: right; color: #000000;">Harga</td>
+                    <td colspan="2" style="font-weight: bold; text-align: right; color: #000000;">Nilai Pasar</td>
+                    <td colspan="2" style="font-weight: bold; text-align: right; color: #000000;">Nilai Taksasi</td>
+                    <td colspan="3" style="font-weight: bold; text-align: right; color: #000000;">Nilai Likuidasi</td>
                 </tr>
                 <!-- Baris Tanah -->
                 <tr>
@@ -256,9 +256,8 @@
                 </tr>
                 <!-- Total Collateral -->
                 <tr class="font-bold bg-label">
-                    <td colspan="3" class="text-center">Total</td>
-                    <td colspan="2" class="text-right">-</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format(($agunan->tanah_pasar ?? 0) + ($agunan->bangunan_pasar ?? 0), 0, ',', '.') }}</td>
+                    <td colspan="5" style="text-align: center; border-right: none;">Total</td>
+                    <td colspan="2" class="text-right" style="border-left: 1px solid #000000; border-top: 1px solid #000000; border-bottom: 1px solid #000000;">Rp {{ number_format(($agunan->tanah_pasar ?? 0) + ($agunan->bangunan_pasar ?? 0), 0, ',', '.') }}</td>
                     <td colspan="2" class="text-right">Rp {{ number_format(($agunan->tanah_taksasi ?? 0) + ($agunan->bangunan_taksasi ?? 0), 0, ',', '.') }}</td>
                     <td colspan="3" class="text-right">Rp {{ number_format(($agunan->tanah_likuidasi ?? 0) + ($agunan->bangunan_likuidasi ?? 0), 0, ',', '.') }}</td>
                 </tr>
@@ -268,8 +267,8 @@
                     <td colspan="3" class="bg-label" style="vertical-align: middle;">Denah</td>
                     <td colspan="9" style="padding: 8px;">
                         @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                            <div style="max-width: 250px; border: 1px solid #d1d5db; padding: 4px; background: #fff;">
-                                <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; display: block; max-height: 200px; object-fit: contain;">
+                            <div style="width: 100%; max-width: 380px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff;">
+                                <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; display: block;">
                             </div>
                         @else
                             <span>-</span>

@@ -262,8 +262,8 @@
                         <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Denah</div>
                         <div class="p-2 sm:col-span-3">
                             @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                                <div class="w-full max-w-sm border border-gray-200 rounded overflow-hidden bg-white shadow-sm">
-                                    <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" class="w-full h-auto object-cover max-h-48">
+                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                    <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 480px; height: auto;" class="block">
                                 </div>
                             @else
                                 <span>-</span>

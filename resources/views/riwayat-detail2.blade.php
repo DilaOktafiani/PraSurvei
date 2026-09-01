@@ -254,10 +254,10 @@
                     <!-- Denah -->
                     <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
                         <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Denah</div>
-                        <div class="p-2 sm:col-span-3 flex items-center">
+                        <div class="p-2 sm:col-span-3">
                             @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                                <div class="w-full max-w-sm border border-gray-200 rounded overflow-hidden bg-white shadow-sm">
-                                    <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" class="w-full h-auto object-cover max-h-64">
+                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                    <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 480px; height: auto;" class="block">
                                 </div>
                             @else
                                 <span>-</span>
@@ -464,10 +464,10 @@
                     </div>
 
                     <!-- Kesimpulan -->
-                    <div class="grid grid-cols-1">
-                        <div class="p-2 bg-gray-100 font-bold uppercase text-[#0A3370] border-b border-gray-300">Kesimpulan</div>
-                        <div class="p-2 font-normal whitespace-pre-line" style="padding-left: 16px; padding-right: 16px; text-align: justify;">{{ $data->swot->kesimpulan ?? '-' }}</div>
-                    </div>
+<div class="grid grid-cols-1">
+    <div class="p-2 bg-gray-100 font-bold uppercase text-[#0A3370] border-b border-gray-300" style="padding-left: 16px; padding-right: 16px;">Kesimpulan</div>
+    <div class="p-2 font-normal whitespace-pre-line" style="padding-left: 16px; padding-right: 16px; text-align: justify;">{{ $data->swot->kesimpulan ?? '-' }}</div>
+</div>
 
                 </div>
             </div>

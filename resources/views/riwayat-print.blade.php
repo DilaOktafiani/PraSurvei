@@ -93,7 +93,7 @@
 <body onload="window.print()">
 
     <div class="page-container" style="margin-top: 0; padding-top: 0;">
-        <h2 style="margin-top: 0; margin-bottom: 20px;">FORM PRA SURVEY (MARKETING)</h2>
+        <h2 style="margin-top: 0; margin-bottom: 20px;">FORM PRA SURVEY</h2>
 
         <!-- A. DATA DEBITUR -->
         <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important;">
@@ -237,8 +237,8 @@
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px; vertical-align: top;">Denah</td>
                 <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px;">
                     @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                        <div style="width: 100%; max-width: 300px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff;">
-                            <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; max-height: 250px; object-fit: cover;">
+                        <div style="width: 100%; max-width: 380px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff;">
+                            <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; display: block;">
                         </div>
                     @else
                         <span>-</span>
