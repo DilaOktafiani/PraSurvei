@@ -223,6 +223,22 @@
                     </td>
                 </tr>
 
+                @php
+                    // Perhitungan Tanah
+                    $luasTanah = $agunan->luas_tanah ?? 0;
+                    $hargaTanah = $agunan->harga_tanah ?? 0;
+                    $tanahPasar = $luasTanah * $hargaTanah;
+                    $tanahTaksasi = $tanahPasar * 0.70;
+                    $tanahLikuidasi = $tanahPasar * 0.50;
+
+                    // Perhitungan Bangunan
+                    $luasBangunan = $agunan->luas_bangunan ?? 0;
+                    $hargaBangunan = $agunan->harga_bangunan ?? 0;
+                    $bangunanPasar = $luasBangunan * $hargaBangunan;
+                    $bangunanTaksasi = $bangunanPasar * 0.70;
+                    $bangunanLikuidasi = $bangunanPasar * 0.50;
+                @endphp
+
                 <!-- Sub Header COLLATERAL -->
                 <tr>
                     <td colspan="12" class="sub-header" style="text-align: left; background-color: #f3f4f6; color: #0A3370; font-weight: bold; text-transform: uppercase;">Collateral</td>
@@ -240,26 +256,26 @@
                 <tr>
                     <td colspan="2" class="bg-label font-bold">Tanah</td>
                     <td colspan="1" class="text-center">{{ $agunan->luas_tanah ?? '-' }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format($agunan->harga_tanah ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format($agunan->tanah_pasar ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format($agunan->tanah_taksasi ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="3" class="text-right">Rp {{ number_format($agunan->tanah_likuidasi ?? 0, 0, ',', '.') }}</td>
+                    <td colspan="2" class="text-right">Rp {{ number_format($hargaTanah, 0, ',', '.') }}</td>
+                    <td colspan="2" class="text-right">Rp {{ number_format($tanahPasar, 0, ',', '.') }}</td>
+                    <td colspan="2" class="text-right">Rp {{ number_format($tanahTaksasi, 0, ',', '.') }}</td>
+                    <td colspan="3" class="text-right">Rp {{ number_format($tanahLikuidasi, 0, ',', '.') }}</td>
                 </tr>
                 <!-- Baris Bangunan -->
                 <tr>
                     <td colspan="2" class="bg-label font-bold">Bangunan</td>
                     <td colspan="1" class="text-center">{{ $agunan->luas_bangunan ?? '-' }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format($agunan->harga_bangunan ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format($agunan->bangunan_pasar ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format($agunan->bangunan_taksasi ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="3" class="text-right">Rp {{ number_format($agunan->bangunan_likuidasi ?? 0, 0, ',', '.') }}</td>
+                    <td colspan="2" class="text-right">Rp {{ number_format($hargaBangunan, 0, ',', '.') }}</td>
+                    <td colspan="2" class="text-right">Rp {{ number_format($bangunanPasar, 0, ',', '.') }}</td>
+                    <td colspan="2" class="text-right">Rp {{ number_format($bangunanTaksasi, 0, ',', '.') }}</td>
+                    <td colspan="3" class="text-right">Rp {{ number_format($bangunanLikuidasi, 0, ',', '.') }}</td>
                 </tr>
                 <!-- Total Collateral -->
                 <tr class="font-bold bg-label">
                     <td colspan="5" style="text-align: center; border-right: none;">Total</td>
-                    <td colspan="2" class="text-right" style="border-left: 1px solid #000000; border-top: 1px solid #000000; border-bottom: 1px solid #000000;">Rp {{ number_format(($agunan->tanah_pasar ?? 0) + ($agunan->bangunan_pasar ?? 0), 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format(($agunan->tanah_taksasi ?? 0) + ($agunan->bangunan_taksasi ?? 0), 0, ',', '.') }}</td>
-                    <td colspan="3" class="text-right">Rp {{ number_format(($agunan->tanah_likuidasi ?? 0) + ($agunan->bangunan_likuidasi ?? 0), 0, ',', '.') }}</td>
+                    <td colspan="2" class="text-right" style="border-left: 1px solid #000000; border-top: 1px solid #000000; border-bottom: 1px solid #000000;">Rp {{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</td>
+                    <td colspan="2" class="text-right">Rp {{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</td>
+                    <td colspan="3" class="text-right">Rp {{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</td>
                 </tr>
 
                 <!-- Denah -->

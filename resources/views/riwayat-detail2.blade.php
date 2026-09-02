@@ -224,31 +224,45 @@
                     </div>
 
                     <!-- Baris Tanah -->
+                    @php
+                        $luasTanah = $agunan->luas_tanah ?? 0;
+                        $hargaTanah = $agunan->harga_tanah ?? 0;
+                        $tanahPasar = $luasTanah * $hargaTanah;
+                        $tanahTaksasi = $tanahPasar * 0.70;
+                        $tanahLikuidasi = $tanahPasar * 0.50;
+                    @endphp
                     <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-200">
                         <div class="p-2 sm:col-span-2 border-r border-gray-300 font-medium flex items-center">Tanah</div>
                         <div class="p-2 sm:col-span-1 border-r border-gray-300 text-center flex items-center justify-center">{{ $agunan->luas_tanah ?? '-' }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($agunan->harga_tanah ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($agunan->tanah_pasar ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($agunan->tanah_taksasi ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($agunan->tanah_likuidasi ?? 0, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($hargaTanah, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($tanahPasar, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($tanahTaksasi, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($tanahLikuidasi, 0, ',', '.') }}</div>
                     </div>
 
                     <!-- Baris Bangunan -->
+                    @php
+                        $luasBangunan = $agunan->luas_bangunan ?? 0;
+                        $hargaBangunan = $agunan->harga_bangunan ?? 0;
+                        $bangunanPasar = $luasBangunan * $hargaBangunan;
+                        $bangunanTaksasi = $bangunanPasar * 0.70;
+                        $bangunanLikuidasi = $bangunanPasar * 0.50;
+                    @endphp
                     <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-200">
                         <div class="p-2 sm:col-span-2 border-r border-gray-300 font-medium flex items-center">Bangunan</div>
                         <div class="p-2 sm:col-span-1 border-r border-gray-300 text-center flex items-center justify-center">{{ $agunan->luas_bangunan ?? '-' }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($agunan->harga_bangunan ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($agunan->bangunan_pasar ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($agunan->bangunan_taksasi ?? 0, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($agunan->bangunan_likuidasi ?? 0, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($hargaBangunan, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($bangunanPasar, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($bangunanTaksasi, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($bangunanLikuidasi, 0, ',', '.') }}</div>
                     </div>
 
                     <!-- Baris Total -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 bg-gray-50 font-bold border-b border-gray-300">
                         <div class="p-2 sm:col-span-5 border-r border-gray-300 text-center flex items-center justify-center">Total</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format(($agunan->tanah_pasar ?? 0) + ($agunan->bangunan_pasar ?? 0), 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format(($agunan->tanah_taksasi ?? 0) + ($agunan->bangunan_taksasi ?? 0), 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format(($agunan->tanah_likuidasi ?? 0) + ($agunan->bangunan_likuidasi ?? 0), 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</div>
+                        <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</div>
                     </div>
 
                     <!-- Denah -->
@@ -464,10 +478,10 @@
                     </div>
 
                     <!-- Kesimpulan -->
-<div class="grid grid-cols-1">
-    <div class="p-2 bg-gray-100 font-bold uppercase text-[#0A3370] border-b border-gray-300" style="padding-left: 16px; padding-right: 16px;">Kesimpulan</div>
-    <div class="p-2 font-normal whitespace-pre-line" style="padding-left: 16px; padding-right: 16px; text-align: justify;">{{ $data->swot->kesimpulan ?? '-' }}</div>
-</div>
+                    <div class="grid grid-cols-1">
+                        <div class="p-2 bg-gray-100 font-bold uppercase text-[#0A3370] border-b border-gray-300" style="padding-left: 16px; padding-right: 16px;">Kesimpulan</div>
+                        <div class="p-2 font-normal whitespace-pre-line" style="padding-left: 16px; padding-right: 16px; text-align: justify;">{{ $data->swot->kesimpulan ?? '-' }}</div>
+                    </div>
 
                 </div>
             </div>

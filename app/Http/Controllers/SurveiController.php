@@ -333,19 +333,20 @@ class SurveiController extends Controller
 
     public function createAlur3_3($debitur_id = null)
     {
-        // Ambil debitur_id dari parameter URL atau dari session
+        // Ambil debitur_id dari parameter URL atau dari session (tanpa redirect paksa)
         $debitur_id = $debitur_id ?? session('debitur_id');
 
-        if (!$debitur_id) {
-            return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
+        if ($debitur_id) {
+            session(['debitur_id' => $debitur_id]);
         }
 
-        // Simpan juga ke session agar aman saat perpindahan halaman
-        session(['debitur_id' => $debitur_id]);
+        $agunan = null;
+        $data = null;
 
-        // Ambil data agunan simpanan yang sudah pernah disimpan sebelumnya (jika ada)
-        $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'simpanan')->first();
-        $data = $agunan ? $agunan->simpanan : null; // Asumsi relasi di model Agunan bernama 'simpanan'
+        if ($debitur_id) {
+            $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'simpanan')->first();
+            $data = $agunan ? $agunan->simpanan : null;
+        }
 
         return view('z3-3simpanan', compact('debitur_id', 'data'));
     }
@@ -406,31 +407,29 @@ class SurveiController extends Controller
         // Ambil debitur_id dari parameter URL atau dari session
         $debitur_id = $debitur_id ?? session('debitur_id');
 
-        if (!$debitur_id) {
-            return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
+        if ($debitur_id) {
+            session(['debitur_id' => $debitur_id]);
         }
 
-        // Simpan juga ke session agar aman saat perpindahan halaman
-        session(['debitur_id' => $debitur_id]);
-
-        // Ambil data agunan logam mulia yang sudah pernah disimpan sebelumnya (jika ada)
-        $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'logam_mulia')->first();
-        $data = $agunan ? $agunan->logamMulia : null; 
-
-        // Daftar opsi standar logam mulia yang ada di dropdown HTML Anda
-        $opsiStandar = ['Antam', 'UBS', 'Lotus Archi', 'Goldber']; // Sesuaikan dengan <option> di Blade Anda
-
-        $isLainnya = false;
+        $agunan = null;
+        $data = null;
+        $opsiStandar = ['Antam', 'UBS', 'Lotus Archi', 'Goldber'];
         $jenisLogamVal = '';
         $jenisLogamLainVal = '';
 
-        if ($data) {
-            if (in_array($data->jenis_logam, $opsiStandar)) {
-                $jenisLogamVal = $data->jenis_logam;
-            } else {
-                // Jika tidak ada di opsi standar, berarti itu dulunya "yang_lain"
-                $jenisLogamVal = 'yang_lain';
-                $jenisLogamLainVal = $data->jenis_logam;
+        if ($debitur_id) {
+            // Ambil data agunan logam mulia yang sudah pernah disimpan sebelumnya (jika ada)
+            $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'logam_mulia')->first();
+            $data = $agunan ? $agunan->logamMulia : null; 
+
+            if ($data) {
+                if (in_array($data->jenis_logam, $opsiStandar)) {
+                    $jenisLogamVal = $data->jenis_logam;
+                } else {
+                    // Jika tidak ada di opsi standar, berarti itu dulunya "yang_lain"
+                    $jenisLogamVal = 'yang_lain';
+                    $jenisLogamLainVal = $data->jenis_logam;
+                }
             }
         }
 
@@ -1302,10 +1301,6 @@ class SurveiController extends Controller
     {
         $debitur_id = session('debitur_id');
 
-        if (!$debitur_id) {
-            return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
-        }
-
         // Mengambil URL halaman sebelumnya secara otomatis dari browser
         $backRoute = url()->previous();
 
@@ -1320,14 +1315,12 @@ class SurveiController extends Controller
 
         $debiturId = $request->debitur_id;
         
-        // Mengambil data debitur dari model Survei CA atau model utama menggunakan path lengkap
-        $debitur = \App\Models\Survei\Debitur::find($debiturId) ?? \App\Models\Debitur::find($debiturId);
+        $debitur = \App\Models\Debitur::find($debiturId);
 
         DB::beginTransaction();
         try {
-            // Proses simpan atau update status akhir jika ada
             if ($debitur) {
-                // Contoh: $debitur->status = 'selesai';
+                // $debitur->status = 'selesai';
                 // $debitur->save();
             }
 
@@ -1336,8 +1329,8 @@ class SurveiController extends Controller
             // Hapus session formulir setelah sukses
             session()->forget(['debitur_id']);
 
-            // Redirect ke halaman riwayat utama
-            return redirect()->route('riwayat.detail2')
+            // Redirect ke route riwayat.detail2 dengan menyertakan parameter ID
+            return redirect()->route('riwayat.detail2', ['id' => $debiturId])
                              ->with('success', 'Data berhasil disimpan ke Survei CA!');
 
         } catch (\Exception $e) {

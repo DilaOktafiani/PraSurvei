@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Form Credit Analysis - {{ $data->nama ?? '-' }}</title>
     <style>
-        /* Mengatur agar tabel benar-benar mirip grid Excel */
         body {
             background-color: #ffffff;
             margin: 0;
@@ -19,7 +18,7 @@
             margin: 0 auto;
         }
         .main-title {
-            font-size: 14pt;
+            font-size: 12pt;
             font-weight: bold;
             text-align: center;
             margin-bottom: 15px;
@@ -32,22 +31,24 @@
             background-color: #ffffff;
             margin-bottom: 15px;
             table-layout: fixed;
+            font-size: 10pt;
         }
-        /* Border garis tipis ala Excel di setiap sel */
         table.export-table th, 
         table.export-table td {
             border: 1px solid #d9d9d9 !important;
             padding: 5px 8px;
             vertical-align: middle;
+            font-size: 10pt;
         }
         .section-header {
-            background-color: #0A3370 !important; /* Warna biru gelap ala Excel header */
+            background-color: #0A3370 !important;
             color: #FFFFFF !important;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 11pt;
+            font-size: 10pt;
             padding: 6px 8px;
             border: 1px solid #0A3370 !important;
+            text-align: left;
         }
         .sub-header {
             background-color: #f3f4f6 !important;
@@ -55,7 +56,7 @@
             font-weight: bold;
         }
         .bg-label {
-            background-color: #f2f2f2 !important; /* Abu-abu terang header kolom Excel */
+            background-color: #f2f2f2 !important;
             font-weight: bold;
             color: #333333;
         }
@@ -80,61 +81,53 @@
 <body>
 
     <div class="page-container">
-        <h2 class="main-title">FORM CREDIT ANALYSIS</h2>
+        <h2 class="main-title">FORM SURVEY</h2>
 
         <!-- A. DATA DEBITUR -->
         <table class="export-table">
             <thead>
-                <tr>
-                    <th colspan="12" class="section-header">A. Data Debitur</th>
+                <tr style="text-align: left;">
+                    <th colspan="7" class="section-header" style="text-align: left;">A. DATA DEBITUR</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class="bg-label text-center" style="width: 6%;"></td>
-                    <td colspan="3" class="bg-label" style="width: 24%;">Nomor Register</td>
-                    <td colspan="8" class="font-bold" style="width: 70%;">{{ $data->no_register ?? '-' }}</td>
+                    <td colspan="2" class="bg-label" style="width: 30%;">Nomor Register</td>
+                    <td colspan="5" class="font-bold" style="width: 70%;">{{ $data->no_register ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">1</td>
-                    <td colspan="3" class="bg-label">Nama Debitur</td>
-                    <td colspan="4" class="font-bold">{{ $data->nama ?? '-' }}</td>
-                    <td colspan="2" class="bg-label">Nama Marketing</td>
+                    <td colspan="2" class="bg-label">1. Nama Debitur</td>
+                    <td colspan="2" class="font-bold">{{ $data->nama ?? '-' }}</td>
+                    <td colspan="1" class="bg-label">Nama Marketing</td>
                     <td colspan="2" class="font-bold">{{ $data->nama_marketing ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center"></td>
-                    <td colspan="3" class="bg-label">Tanggal OTS</td>
-                    <td colspan="8">{{ $data->tanggal_ots ?? '-' }}</td>
+                    <td colspan="2" class="bg-label">Tanggal OTS</td>
+                    <td colspan="5">{{ $data->tanggal_ots ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">2</td>
-                    <td colspan="3" class="bg-label">Plafon</td>
-                    <td colspan="4" class="text-emerald font-bold">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="2" class="bg-label">JKW</td>
-                    <td colspan="2" class="font-bold">{{ $data->jangka_waktu ?? '-' }}</td>
+                    <td colspan="2" class="bg-label">2. Plafon</td>
+                    <td colspan="2" class="text-emerald font-bold" style="font-weight: bold; color: black;">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</td>
+                    <td colspan="1" class="bg-label">JKW</td>
+                    <td colspan="2" class="whitespace-pre-line">{{ $data->jangka_waktu ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">3</td>
-                    <td colspan="3" class="bg-label">Tujuan Penggunaan</td>
-                    <td colspan="8" class="whitespace-pre-line">{{ $data->tujuan_penggunaan ?? '-' }}</td>
+                    <td colspan="2" class="bg-label">3. Tujuan Penggunaan</td>
+                    <td colspan="5" class="whitespace-pre-line">{{ $data->tujuan_penggunaan ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">4</td>
-                    <td colspan="3" class="bg-label">Estimasi Kewajiban</td>
-                    <td colspan="8">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</td>
+                    <td colspan="2" class="bg-label">4. Estimasi Kewajiban</td>
+                    <td colspan="5" style="font-weight: bold;">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">5</td>
-                    <td colspan="3" class="bg-label">Type Fasilitas</td>
-                    <td colspan="8">
+                    <td colspan="2" class="bg-label">5. Type Fasilitas</td>
+                    <td colspan="5">
                         {{ is_array($data->tipe_fasilitas ?? null) ? implode(', ', $data->tipe_fasilitas) : ($data->tipe_fasilitas ?? '-') }}
                     </td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">6</td>
-                    <td colspan="3" class="bg-label">Temuan CA</td>
-                    <td colspan="8" class="whitespace-pre-line">{{ $data->temuan_ca ?? '-' }}</td>
+                    <td colspan="2" class="bg-label">6. Temuan CA</td>
+                    <td colspan="5" class="whitespace-pre-line text-justify">{{ $data->temuan_ca ?? '-' }}</td>
                 </tr>
             </tbody>
         </table>
@@ -145,28 +138,28 @@
         @endphp
         <table class="export-table">
             <thead>
-                <tr>
-                    <th colspan="12" class="section-header">B. Agunan</th>
+                <tr style="text-align: left;">
+                    <th colspan="7" class="section-header" style="text-align: left;">B. AGUNAN</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td colspan="12" class="sub-header">Jaminan</td>
+                    <td colspan="7" class="sub-header">JAMINAN</td>
                 </tr>
                 <tr>
-                    <td colspan="3" class="bg-label" style="width: 25%;">Kepemilikan</td>
-                    <td colspan="9" class="font-bold" style="width: 75%;">{{ $agunan->kepemilikan ?? '-' }}</td>
+                    <td colspan="2" class="bg-label" style="width: 30%;">Kepemilikan</td>
+                    <td colspan="5" class="font-bold" style="width: 70%;">{{ $agunan->kepemilikan ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td colspan="3" class="bg-label">Alamat</td>
-                    <td colspan="9" class="whitespace-pre-line">{{ $agunan->alamat ?? '-' }}</td>
+                    <td colspan="2" class="bg-label">Alamat</td>
+                    <td colspan="5" class="whitespace-pre-line">{{ $agunan->alamat ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td colspan="3" class="bg-label">Share Loc</td>
-                    <td colspan="9">
+                    <td colspan="2" class="bg-label">Share Loc</td>
+                    <td colspan="5" style="padding: 5px 8px;">
                         @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
-                            <a href="{{ $agunan->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline;">
-                                📍 Lihat Lokasi di Peta
+                            <a href="{{ $agunan->share_location }}" target="_blank" style="font-size: 10pt; color: #000000; text-decoration: none;">
+                                {{ $agunan->share_location }}
                             </a>
                         @else
                             <span>-</span>
@@ -174,234 +167,306 @@
                     </td>
                 </tr>
 
+                @php
+                    // Perhitungan Tanah
+                    $luasTanah = $agunan->luas_tanah ?? 0;
+                    $hargaTanah = $agunan->harga_tanah ?? 0;
+                    $tanahPasar = $luasTanah * $hargaTanah;
+                    $tanahTaksasi = $tanahPasar * 0.70;
+                    $tanahLikuidasi = $tanahPasar * 0.50;
+
+                    // Perhitungan Bangunan
+                    $luasBangunan = $agunan->luas_bangunan ?? 0;
+                    $hargaBangunan = $agunan->harga_bangunan ?? 0;
+                    $bangunanPasar = $luasBangunan * $hargaBangunan;
+                    $bangunanTaksasi = $bangunanPasar * 0.70;
+                    $bangunanLikuidasi = $bangunanPasar * 0.50;
+                @endphp
+
                 <tr>
-                    <td colspan="12" class="sub-header">Collateral</td>
+                    <td colspan="7" class="sub-header">COLLATERAL</td>
                 </tr>
-                <tr class="sub-header text-center" style="background-color: #f9fafb;">
-                    <td colspan="2" class="font-bold">Uraian</td>
-                    <td colspan="1" class="font-bold">Luas (m2)</td>
-                    <td colspan="2" class="font-bold text-right">Harga</td>
-                    <td colspan="2" class="font-bold text-right">Nilai Pasar</td>
-                    <td colspan="2" class="font-bold text-right">Nilai Taksasi</td>
-                    <td colspan="3" class="font-bold text-right">Nilai Likuidasi</td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="bg-label font-bold">Tanah</td>
-                    <td colspan="1" class="text-center">{{ $agunan->luas_tanah ?? '-' }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format($agunan->harga_tanah ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format($agunan->tanah_pasar ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format($agunan->tanah_taksasi ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="3" class="text-right">Rp {{ number_format($agunan->tanah_likuidasi ?? 0, 0, ',', '.') }}</td>
+                <tr class="sub-header" style="background-color: #f9fafb; text-align: center; color: #000000;">
+                    <td colspan="2" style="font-weight: bold; color: #000000; text-align: center; vertical-align: middle;" class="font-bold text-center align-middle">Uraian</td>
+                    <td colspan="1" style="font-weight: bold; color: #000000; text-align: center; vertical-align: middle;" class="font-bold text-center align-middle">Luas (m2)</td>
+                    <td colspan="1" style="font-weight: bold; color: #000000; text-align: center; vertical-align: middle;" class="font-bold text-center align-middle">Harga</td>
+                    <td colspan="1" style="font-weight: bold; color: #000000; text-align: center; vertical-align: middle;" class="font-bold text-center align-middle">Nilai Pasar</td>
+                    <td colspan="1" style="font-weight: bold; color: #000000; text-align: center; vertical-align: middle;" class="font-bold text-center align-middle">Nilai Taksasi</td>
+                    <td colspan="1" style="font-weight: bold; color: #000000; text-align: center; vertical-align: middle;" class="font-bold text-center align-middle">Nilai Likuidasi</td>
                 </tr>
                 <tr>
-                    <td colspan="2" class="bg-label font-bold">Bangunan</td>
-                    <td colspan="1" class="text-center">{{ $agunan->luas_bangunan ?? '-' }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format($agunan->harga_bangunan ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format($agunan->bangunan_pasar ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format($agunan->bangunan_taksasi ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="3" class="text-right">Rp {{ number_format($agunan->bangunan_likuidasi ?? 0, 0, ',', '.') }}</td>
+                    <td colspan="2" class="bg-label font-bold" style="font-weight: bold; color: #000000; vertical-align: middle;">Tanah</td>
+                    <td colspan="1" class="text-center align-middle" style="vertical-align: middle;">{{ $agunan->luas_tanah ?? '-' }}</td>
+                    <td colspan="1" class="text-right align-middle" style="vertical-align: middle;">Rp {{ number_format($hargaTanah, 0, ',', '.') }}</td>
+                    <td colspan="1" class="text-right align-middle" style="vertical-align: middle;">Rp {{ number_format($tanahPasar, 0, ',', '.') }}</td>
+                    <td colspan="1" class="text-right align-middle" style="vertical-align: middle;">Rp {{ number_format($tanahTaksasi, 0, ',', '.') }}</td>
+                    <td colspan="1" class="text-right align-middle" style="vertical-align: middle;">Rp {{ number_format($tanahLikuidasi, 0, ',', '.') }}</td>
                 </tr>
-                <tr class="font-bold bg-label">
-                    <td colspan="3" class="text-center">Total</td>
-                    <td colspan="2" class="text-right">-</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format(($agunan->tanah_pasar ?? 0) + ($agunan->bangunan_pasar ?? 0), 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right">Rp {{ number_format(($agunan->tanah_taksasi ?? 0) + ($agunan->bangunan_taksasi ?? 0), 0, ',', '.') }}</td>
-                    <td colspan="3" class="text-right">Rp {{ number_format(($agunan->tanah_likuidasi ?? 0) + ($agunan->bangunan_likuidasi ?? 0), 0, ',', '.') }}</td>
+                <tr>
+                    <td colspan="2" class="bg-label font-bold" style="font-weight: bold; color: #000000; vertical-align: middle;">Bangunan</td>
+                    <td colspan="1" class="text-center align-middle" style="vertical-align: middle;">{{ $agunan->luas_bangunan ?? '-' }}</td>
+                    <td colspan="1" class="text-right align-middle" style="vertical-align: middle;">Rp {{ number_format($hargaBangunan, 0, ',', '.') }}</td>
+                    <td colspan="1" class="text-right align-middle" style="vertical-align: middle;">Rp {{ number_format($bangunanPasar, 0, ',', '.') }}</td>
+                    <td colspan="1" class="text-right align-middle" style="vertical-align: middle;">Rp {{ number_format($bangunanTaksasi, 0, ',', '.') }}</td>
+                    <td colspan="1" class="text-right align-middle" style="vertical-align: middle;">Rp {{ number_format($bangunanLikuidasi, 0, ',', '.') }}</td>
+                </tr>
+                <tr class="font-bold bg-label" style="font-weight: bold;">
+                    <td colspan="4" class="text-center font-bold" style="font-weight: bold; text-align: center; vertical-align: middle;">TOTAL</td>
+                    <td colspan="1" class="text-right font-bold" style="font-weight: bold; text-align: right; vertical-align: middle;">Rp {{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</td>
+                    <td colspan="1" class="text-right font-bold" style="font-weight: bold; text-align: right; vertical-align: middle;">Rp {{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</td>
+                    <td colspan="1" class="text-right font-bold" style="font-weight: bold; text-align: right; vertical-align: middle;">Rp {{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</td>
                 </tr>
 
                 <tr>
-                    <td colspan="3" class="bg-label">Denah</td>
-                    <td colspan="9" style="padding: 8px;">
+                    <td colspan="2" class="bg-label font-bold" style="font-weight: bold; color: #000000; vertical-align: middle;">Denah</td>
+                    <td colspan="5" style="padding: 5px 8px; vertical-align: middle;">
                         @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                            <div style="max-width: 250px; border: 1px solid #d1d5db; padding: 4px; background: #fff;">
-                                <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; display: block; max-height: 200px; object-fit: contain;">
-                            </div>
+                            <a href="{{ asset('storage/' . $agunan->denah) }}" target="_blank" style="font-size: 10pt; color: #000000; text-decoration: none;">
+                                {{ asset('storage/' . $agunan->denah) }}
+                            </a>
                         @else
                             <span>-</span>
                         @endif
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" class="bg-label">Spesifikasi Jaminan</td>
-                    <td colspan="9" class="whitespace-pre-line font-medium">{{ $agunan->spesifikasi ?? '-' }}</td>
-                </tr>
+                    <td colspan="2" class="bg-label font-bold" style="font-weight: bold; color: #000000; vertical-align: middle;">Spesifikasi Jaminan</td>
+                    <td colspan="5" class="whitespace-pre-line font-medium text-justify" style="vertical-align: middle;">{{ $agunan->spesifikasi ?? '-' }}</td>
+                </tr> 
 
                 <tr>
-                    <td colspan="12" class="sub-header">Informasi Harga</td>
+                    <td colspan="7" class="sub-header">INFORMASI HARGA</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center" style="width: 6%;">1</td>
-                    <td colspan="11" class="whitespace-pre-line font-medium">{{ $agunan->info_harga1 ?? '-' }}</td>
+                    <td colspan="1" class="bg-label text-center align-middle" style="width: 10%; font-weight: bold; color: #000000;">1</td>
+                    <td colspan="6" class="whitespace-pre-line font-medium text-justify">{{ $agunan->info_harga1 ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">2</td>
-                    <td colspan="11" class="whitespace-pre-line font-medium">{{ $agunan->info_harga2 ?? '-' }}</td>
+                    <td colspan="1" class="bg-label text-center align-middle" style="font-weight: bold; color: #000000;">2</td>
+                    <td colspan="6" class="whitespace-pre-line font-medium text-justify">{{ $agunan->info_harga2 ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">3</td>
-                    <td colspan="11" class="whitespace-pre-line font-medium">{{ $agunan->info_harga3 ?? '-' }}</td>
+                    <td colspan="1" class="bg-label text-center align-middle" style="font-weight: bold; color: #000000;">3</td>
+                    <td colspan="6" class="whitespace-pre-line font-medium text-justify">{{ $agunan->info_harga3 ?? '-' }}</td>
                 </tr>
             </tbody>
         </table>
 
         <!-- C. ANALISIS JAMINAN -->
         <table class="export-table">
-            <tr>
-                <th colspan="12" class="section-header">C. Analisis Jaminan</th>
-            </tr>
-            <tr>
-                <td colspan="12" class="whitespace-pre-line" style="padding: 8px;">{{ $data->analisis_jaminan ?? '-' }}</td>
-            </tr>
-        </table>
-
-        <!-- D. ANALISIS SLIK -->
-        <table class="export-table">
             <thead>
-                <tr>
-                    <th colspan="12" class="section-header">D. Analisis SLIK</th>
+                <tr style="text-align: left;">
+                    <th colspan="7" class="section-header" style="text-align: left;">C. ANALISIS JAMINAN</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class="bg-label text-center" style="width: 6%;">D.1</td>
-                    <td colspan="3" class="bg-label" style="width: 24%;">Informasi Penghasilan Utama menurut nasabah</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="width: 70%;">{{ $data->dataslik->penghasilan_utama ?? $data->analisis_slik ?? '-' }}</td>
+                    <td colspan="7" class="whitespace-pre-line text-justify" style="padding: 8px;">{{ $data->analisis_jaminan->analisis_jaminan ?? '-' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- D. ANALISIS SLIK -->
+        @php
+            $capacity = $data->capacity ?? $data->dataslik ?? null;
+        @endphp
+        <table class="export-table">
+            <thead>
+                <tr style="text-align: left;">
+                    <th colspan="7" class="section-header" style="text-align: left; font-weight: bold; color: #000000;">D. ANALISIS SLIK</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="1" class="bg-label text-center align-middle" style="width: 10%; font-weight: bold; color: #000000;">D.1</td>
+                    <td colspan="2" class="bg-label align-middle" style="width: 30%; font-weight: bold; color: #000000;">Informasi Penghasilan Utama menurut nasabah</td>
+                    <td colspan="4" class="whitespace-pre-line font-medium text-justify align-middle" style="width: 60%;">{{ $capacity->informasi_penghasilan_utama ?? $capacity->penghasilan_utama ?? $data->analisis_slik ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">D.2</td>
-                    <td colspan="3" class="bg-label">Informasi Penghasilan Pendukung menurut nasabah</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->dataslik->penghasilan_pendukung ?? $data->analisis_slik ?? '-' }}</td>
+                    <td colspan="1" class="bg-label text-center align-middle" style="font-weight: bold; color: #000000;">D.2</td>
+                    <td colspan="2" class="bg-label align-middle" style="font-weight: bold; color: #000000;">Informasi Penghasilan Pendukung menurut nasabah</td>
+                    <td colspan="4" class="whitespace-pre-line font-medium text-justify align-middle">{{ $capacity->informasi_penghasilan_pendukung ?? $capacity->penghasilan_pendukung ?? $data->analisis_slik ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">D.3</td>
-                    <td colspan="3" class="bg-label text-center font-bold">Pengeluaran Rumah Tangga</td>
-                    <td colspan="4" class="bg-label text-center font-bold">Angsuran Bank Lain</td>
-                    <td colspan="4" class="bg-label text-center font-bold">Angsuran BPR</td>
+                    <td colspan="1" rowspan="3" class="bg-label text-center align-middle" style="font-weight: bold; color: #000000;">D.3</td>
+                    <td colspan="2" class="bg-label align-middle" style="font-weight: bold; color: #000000;">Pengeluaran Rumah Tangga</td>
+                    <td colspan="4" class="font-medium align-middle">
+                        @php $valD3 = $capacity->pengeluaran_rumah_tangga ?? 0; @endphp
+                        Rp {{ is_numeric($valD3) ? number_format($valD3, 0, ',', '.') : $valD3 }}
+                    </td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center"></td>
-                    <td colspan="3" class="text-center font-medium">{{ $data->dataslik->pengeluaran_rumah_tangga ?? '-' }}</td>
-                    <td colspan="4" class="text-center font-medium">{{ $data->dataslik->angsuran_bank_lain ?? '-' }}</td>
-                    <td colspan="4" class="text-center font-medium">{{ $data->dataslik->angsuran_bpr ?? '-' }}</td>
+                    <td colspan="2" class="bg-label align-middle" style="font-weight: bold; color: #000000;">Angsuran Bank Lain</td>
+                    <td colspan="4" class="font-medium align-middle">
+                        @php $valBankLain = $capacity->angsuran_bank_lain ?? 0; @endphp
+                        Rp {{ is_numeric($valBankLain) ? number_format($valBankLain, 0, ',', '.') : $valBankLain }}
+                    </td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">D.4</td>
-                    <td colspan="3" class="bg-label">Analisis Kapasitas CA</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->dataslik->analisis_kapasitas_ca ?? $data->analisis_slik ?? '-' }}</td>
+                    <td colspan="2" class="bg-label align-middle" style="font-weight: bold; color: #000000;">Angsuran BPR</td>
+                    <td colspan="4" class="font-medium align-middle">
+                        @php $valBPR = $capacity->angsuran_bpr ?? 0; @endphp
+                        Rp {{ is_numeric($valBPR) ? number_format($valBPR, 0, ',', '.') : $valBPR }}
+                    </td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">D.5</td>
-                    <td colspan="3" class="bg-label">Kelengkapan Berkas</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->dataslik->kelengkapan_berkas ?? $data->analisis_slik ?? '-' }}</td>
+                    <td colspan="1" class="bg-label text-center align-middle" style="font-weight: bold; color: #000000;">D.4</td>
+                    <td colspan="2" class="bg-label align-middle" style="font-weight: bold; color: #000000;">Analisis Kapasitas CA</td>
+                    <td colspan="4" class="whitespace-pre-line font-medium text-justify align-middle">{{ $capacity->analisis_kapasitas ?? $capacity->analisis_kapasitas_ca ?? $data->analisis_slik ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="bg-label text-center align-middle" style="font-weight: bold; color: #000000;">D.5</td>
+                    <td colspan="2" class="bg-label align-middle" style="font-weight: bold; color: #000000;">Kelengkapan Berkas</td>
+                    <td colspan="4" class="whitespace-pre-line font-medium align-middle">
+                        @if(!empty($capacity->kelengkapan_berkas))
+                            @if(is_array($capacity->kelengkapan_berkas))
+                                @foreach($capacity->kelengkapan_berkas as $item)
+                                    <div>{{ $item }}</div>
+                                @endforeach
+                            @else
+                                {{ $capacity->kelengkapan_berkas }}
+                            @endif
+                        @else
+                            {{ $data->analisis_slik ?? '-' }}
+                        @endif
+                    </td>
                 </tr>
             </tbody>
         </table>
 
         <!-- E. DESKRIPSI USAHA -->
         <table class="export-table">
-            <tr>
-                <th colspan="12" class="section-header">E. Deskripsi Usaha</th>
-            </tr>
-            <tr>
-                <td colspan="12" class="whitespace-pre-line" style="padding: 8px;">{{ $data->capacity->deskripsi_usaha ?? '-' }}</td>
-            </tr>
+            <thead>
+                <tr style="text-align: left;">
+                    <th colspan="7" class="section-header" style="text-align: left;">E. DESKRIPSI USAHA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7" class="whitespace-pre-line text-justify font-medium" style="padding: 8px;">{{ $data->capacity->deskripsi_usaha ?? '-' }}</td>
+                </tr>
+            </tbody>
         </table>
 
         <!-- F. ANALISIS CAPITAL -->
         <table class="export-table">
-            <tr>
-                <th colspan="12" class="section-header">F. Analisis Capital</th>
-            </tr>
-            <tr>
-                <td colspan="12" class="whitespace-pre-line" style="padding: 8px;">{{ $data->capital->analisis_aset ?? '-' }}</td>
-            </tr>
+            <thead>
+                <tr style="text-align: left;">
+                    <th colspan="7" class="section-header" style="text-align: left;">F. ANALISIS CAPITAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7" class="whitespace-pre-line text-justify font-medium" style="padding: 8px;">{{ $data->capital->analisis_aset ?? '-' }}</td>
+                </tr>
+            </tbody>
         </table>
 
         <!-- G. ANALISIS TAKE OVER -->
         <table class="export-table">
-            <tr>
-                <th colspan="12" class="section-header">G. Analisis Take Over</th>
-            </tr>
-            <tr>
-                <td colspan="12" class="whitespace-pre-line" style="padding: 8px;">{{ $data->kondisi->analisis_take_over ?? '-' }}</td>
-            </tr>
+            <thead>
+                <tr style="text-align: left;">
+                    <th colspan="7" class="section-header" style="text-align: left;">G. ANALISIS TAKE OVER</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7" class="whitespace-pre-line text-justify font-medium" style="padding: 8px;">{{ $data->kondisi->analisis_take_over ?? '-' }}</td>
+                </tr>
+            </tbody>
         </table>
 
         <!-- H. ANALISIS KELENGKAPAN BERKAS -->
         <table class="export-table">
-            <tr>
-                <th colspan="12" class="section-header">H. Analisis Kelengkapan Berkas</th>
-            </tr>
-            <tr>
-                <td colspan="12" class="whitespace-pre-line" style="padding: 8px;">{{ $data->berkas_lengkap->analisis_kelengkapan_berkas ?? '-' }}</td>
-            </tr>
+            <thead>
+                <tr style="text-align: left;">
+                    <th colspan="7" class="section-header" style="text-align: left;">H. ANALISIS KELENGKAPAN BERKAS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7" class="whitespace-pre-line text-justify font-medium" style="padding: 8px;">{{ $data->berkas_lengkap->analisis_kelengkapan_berkas ?? '-' }}</td>
+                </tr>
+            </tbody>
         </table>
 
         <!-- I. ANALISIS BADAN USAHA -->
         <table class="export-table">
-            <tr>
-                <th colspan="12" class="section-header">I. Analisis Badan Usaha</th>
-            </tr>
-            <tr>
-                <td colspan="12" class="whitespace-pre-line" style="padding: 8px;">{{ $data->badanusaha->analisa_badan_usaha ?? '-' }}</td>
-            </tr>
+            <thead>
+                <tr style="text-align: left;">
+                    <th colspan="7" class="section-header" style="text-align: left;">I. ANALISIS BADAN USAHA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7" class="whitespace-pre-line text-justify font-medium" style="padding: 8px;">{{ $data->badanusaha->analisa_badan_usaha ?? '-' }}</td>
+                </tr>
+            </tbody>
         </table>
 
         <!-- J. ANALISIS SWOT -->
         <table class="export-table">
             <thead>
-                <tr>
-                    <th colspan="12" class="section-header">J. Analisis SWOT</th>
+                <tr style="text-align: left;">
+                    <th colspan="7" class="section-header" style="text-align: left;">J. ANALISIS SWOT</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class="bg-label text-center" style="width: 6%;">J.1</td>
-                    <td colspan="3" class="bg-label" style="width: 24%;">Strengths (Kekuatan)</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="width: 70%;">{{ $data->swot->kekuatan ?? '-' }}</td>
+                    <td colspan="1" class="bg-label text-center align-middle" style="width: 10%; font-weight: bold; color: #000000;">J.1</td>
+                    <td colspan="2" class="bg-label align-middle" style="width: 30%; font-weight: bold; color: #000000;">Strengths (Kekuatan)</td>
+                    <td colspan="4" class="whitespace-pre-line font-medium text-justify align-middle" style="width: 60%;">{{ $data->swot->kekuatan ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">J.2</td>
-                    <td colspan="3" class="bg-label">Weaknesses (Kelemahan) dan Mitigasi</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->swot->kelemahan ?? '-' }}</td>
+                    <td colspan="1" class="bg-label text-center align-middle" style="font-weight: bold; color: #000000;">J.2</td>
+                    <td colspan="2" class="bg-label align-middle" style="font-weight: bold; color: #000000;">Weaknesses (Kelemahan) dan Mitigasi</td>
+                    <td colspan="4" class="whitespace-pre-line font-medium text-justify align-middle">{{ $data->swot->kelemahan ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">J.3</td>
-                    <td colspan="3" class="bg-label">Opportunities (Peluang)</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->swot->peluang ?? '-' }}</td>
+                    <td colspan="1" class="bg-label text-center align-middle" style="font-weight: bold; color: #000000;">J.3</td>
+                    <td colspan="2" class="bg-label align-middle" style="font-weight: bold; color: #000000;">Opportunities (Peluang)</td>
+                    <td colspan="4" class="whitespace-pre-line font-medium text-justify align-middle">{{ $data->swot->peluang ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="bg-label text-center">J.4</td>
-                    <td colspan="3" class="bg-label">Threats (Ancaman)</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium">{{ $data->swot->ancaman ?? '-' }}</td>
+                    <td colspan="1" class="bg-label text-center align-middle" style="font-weight: bold; color: #000000;">J.4</td>
+                    <td colspan="2" class="bg-label align-middle" style="font-weight: bold; color: #000000;">Threats (Ancaman)</td>
+                    <td colspan="4" class="whitespace-pre-line font-medium text-justify align-middle">{{ $data->swot->ancaman ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td colspan="12" class="sub-header">Kesimpulan</td>
+                    <td colspan="7" class="sub-header">KESIMPULAN</td>
                 </tr>
                 <tr>
-                    <td colspan="12" class="whitespace-pre-line font-medium" style="padding: 8px;">{{ $data->swot->kesimpulan ?? '-' }}</td>
+                    <td colspan="7" class="whitespace-pre-line font-medium text-justify" style="padding: 8px;">{{ $data->swot->kesimpulan ?? '-' }}</td>
                 </tr>
             </tbody>
         </table>
 
         <!-- K. REKOMENDASI -->
         <table class="export-table">
-            <tr>
-                <th colspan="12" class="section-header">K. Rekomendasi</th>
-            </tr>
-            <tr>
-                <td colspan="12" class="whitespace-pre-line" style="padding: 8px;">{{ $data->swot->rekomendasi ?? '-' }}</td>
-            </tr>
+            <thead>
+                <tr style="text-align: left;">
+                    <th colspan="7" class="section-header" style="text-align: left;">K. REKOMENDASI</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7" class="whitespace-pre-line text-justify font-medium" style="padding: 8px;">{{ $data->swot->rekomendasi ?? '-' }}</td>
+                </tr>
+            </tbody>
         </table>
 
         <!-- L. SYARAT DAN CATATAN LAINNYA -->
         <table class="export-table">
-            <tr>
-                <th colspan="12" class="section-header">L. Syarat dan Catatan Lainnya</th>
-            </tr>
-            <tr>
-                <td colspan="12" class="whitespace-pre-line" style="padding: 8px;">{{ $data->swot->syarat_catatan ?? '-' }}</td>
-            </tr>
+            <thead>
+                <tr style="text-align: left;">
+                    <th colspan="7" class="section-header" style="text-align: left;">L. SYARAT DAN CATATAN LAINNYA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7" class="whitespace-pre-line text-justify font-medium" style="padding: 8px;">{{ $data->swot->syarat_catatan ?? '-' }}</td>
+                </tr>
+            </tbody>
         </table>
 
     </div>

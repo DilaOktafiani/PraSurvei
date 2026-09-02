@@ -8,8 +8,14 @@
     <!-- Alpine.js untuk interaksi Tab & Search -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-gray-100 font-sans min-h-screen flex flex-col justify-between" x-data="{ activeTab: 'prasurvei', searchPrasurvei: '', searchCa: '' }">
-
+<body class="bg-gray-100 font-sans min-h-screen flex flex-col justify-between" 
+      x-data="{ 
+          activeTab: localStorage.getItem('activeRiwayatTab') || 'prasurvei', 
+          searchPrasurvei: '', 
+          searchCa: '' 
+      }"
+      x-init="$watch('activeTab', val => localStorage.setItem('activeRiwayatTab', val))">
+      
     <!-- HEADER -->
     <header class="bg-[#0A3370] text-white shadow-md py-4 border-b-4 border-[#0082CB] sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">

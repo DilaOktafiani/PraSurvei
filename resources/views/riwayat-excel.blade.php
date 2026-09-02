@@ -58,7 +58,7 @@
 
     <table>
         <tr>
-            <th colspan="6" class="header-section header-center" style="font-size: 12pt; padding: 8px;">FORM PRA SURVEY (MARKETING)</th>
+            <th colspan="6" class="header-section header-center" style="font-size: 12pt; padding: 8px;">FORM PRA SURVEY</th>
         </tr>
 
         <!-- A. DATA DEBITUR -->
@@ -121,7 +121,24 @@
         <tr><td class="bg-label"><b>Kepemilikan</b></td><td colspan="5"><b>{{ $agunan->kepemilikan ?? '-' }}</b></td></tr>
         <tr><td class="bg-label">Alamat</td><td colspan="5">{{ $agunan->alamat ?? '-' }}</td></tr>
         <tr><td class="bg-label">Share Loc</td><td colspan="5">{{ $agunan->share_location ?? '-' }}</td></tr>
-        <tr class="bg-label" style="text-align: center;">
+        @php
+            // Perhitungan Tanah
+            $luasTanah = $agunan->luas_tanah ?? 0;
+            $hargaTanah = $agunan->harga_tanah ?? 0;
+            $tanahPasar = $luasTanah * $hargaTanah;
+            $tanahTaksasi = $tanahPasar * 0.70;
+            $tanahLikuidasi = $tanahPasar * 0.50;
+
+            // Perhitungan Bangunan
+            $luasBangunan = $agunan->luas_bangunan ?? 0;
+            $hargaBangunan = $agunan->harga_bangunan ?? 0;
+            $bangunanPasar = $luasBangunan * $hargaBangunan;
+            $bangunanTaksasi = $bangunanPasar * 0.70;
+            $bangunanLikuidasi = $bangunanPasar * 0.50;
+        @endphp
+
+        <!-- TABEL RINCIAN NILAI JAMINAN -->
+        <tr class="bg-label text-center">
             <td style="width: 15%; text-align: center; font-weight: bold;">Uraian</td>
             <td style="width: 10%; text-align: center; font-weight: bold;">Luas (m2)</td>
             <td style="width: 15%; text-align: center; font-weight: bold;">Harga</td>
@@ -132,24 +149,24 @@
         <tr>
             <td class="bg-label" style="width: 15%; text-align: left; padding-left: 8px;">Tanah</td>
             <td class="text-center" style="width: 10%;">{{ $agunan->luas_tanah ?? '-' }}</td>
-            <td class="text-right" style="width: 15%; padding-right: 8px;">Rp {{ number_format($agunan->harga_tanah ?? 0, 0, ',', '.') }}</td>
-            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($agunan->tanah_pasar ?? 0, 0, ',', '.') }}</td>
-            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($agunan->tanah_taksasi ?? 0, 0, ',', '.') }}</td>
-            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($agunan->tanah_likuidasi ?? 0, 0, ',', '.') }}</td>
+            <td class="text-right" style="width: 15%; padding-right: 8px;">Rp {{ number_format($hargaTanah, 0, ',', '.') }}</td>
+            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($tanahPasar, 0, ',', '.') }}</td>
+            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($tanahTaksasi, 0, ',', '.') }}</td>
+            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($tanahLikuidasi, 0, ',', '.') }}</td>
         </tr>
         <tr>
             <td class="bg-label" style="width: 15%; text-align: left; padding-left: 8px;">Bangunan</td>
             <td class="text-center" style="width: 10%;">{{ $agunan->luas_bangunan ?? '-' }}</td>
-            <td class="text-right" style="width: 15%; padding-right: 8px;">Rp {{ number_format($agunan->harga_bangunan ?? 0, 0, ',', '.') }}</td>
-            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($agunan->bangunan_pasar ?? 0, 0, ',', '.') }}</td>
-            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($agunan->bangunan_taksasi ?? 0, 0, ',', '.') }}</td>
-            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($agunan->bangunan_likuidasi ?? 0, 0, ',', '.') }}</td>
+            <td class="text-right" style="width: 15%; padding-right: 8px;">Rp {{ number_format($hargaBangunan, 0, ',', '.') }}</td>
+            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($bangunanPasar, 0, ',', '.') }}</td>
+            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($bangunanTaksasi, 0, ',', '.') }}</td>
+            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($bangunanLikuidasi, 0, ',', '.') }}</td>
         </tr>
         <tr style="font-weight: bold;" class="bg-label">
             <td colspan="3" class="text-center" style="text-align: center; width: 40%;">TOTAL</td>
-            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format(($agunan->tanah_pasar ?? 0) + ($agunan->bangunan_pasar ?? 0), 0, ',', '.') }}</td>
-            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format(($agunan->tanah_taksasi ?? 0) + ($agunan->bangunan_taksasi ?? 0), 0, ',', '.') }}</td>
-            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format(($agunan->tanah_likuidasi ?? 0) + ($agunan->bangunan_likuidasi ?? 0), 0, ',', '.') }}</td>
+            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</td>
+            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</td>
+            <td class="text-right" style="width: 20%; padding-right: 8px;">Rp {{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</td>
         </tr>
         <tr>
             <td class="bg-label">Spesifikasi Jaminan</td>

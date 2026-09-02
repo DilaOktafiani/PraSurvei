@@ -85,7 +85,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Tujuan Penggunaan <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="tujuan_penggunaan" rows="2" placeholder="ex : Take over BCA 300jt, tambah stok 500jt, membeli mobil 200jt" required
+                    <textarea name="tujuan_penggunaan" rows="3" placeholder="ex : Take over BCA 300jt, tambah stok 500jt, membeli mobil 200jt" required
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('tujuan_penggunaan', $debitur->tujuan_penggunaan ?? '') }}</textarea>
                 </div>
 

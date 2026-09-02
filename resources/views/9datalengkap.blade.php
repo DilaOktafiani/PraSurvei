@@ -148,20 +148,20 @@
             </div>
 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
                         Apakah Badan Usaha <span class="text-red-500">*</span>
                     </label>
                     <div class="space-y-3 text-sm text-gray-700">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="apakah_badan_usaha" value="YA" 
-                                   {{ (old('apakah_badan_usaha', $takeover->apakah_badan_usaha ?? '') == 'YA') ? 'checked' : '' }} 
-                                   class="accent-[#0082CB]" required>
+                                {{ (old('apakah_badan_usaha', $dataLengkap->apakah_badan_usaha ?? '') == 'YA') ? 'checked' : '' }} 
+                                class="accent-[#0082CB]" required>
                             <span>YA</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="apakah_badan_usaha" value="TIDAK" 
-                                   {{ (old('apakah_badan_usaha', $takeover->apakah_badan_usaha ?? '') == 'TIDAK') ? 'checked' : '' }} 
-                                   class="accent-[#0082CB]" required>
+                                {{ (old('apakah_badan_usaha', $dataLengkap->apakah_badan_usaha ?? '') == 'TIDAK') ? 'checked' : '' }} 
+                                class="accent-[#0082CB]" required>
                             <span>TIDAK</span>
                         </label>
                     </div>

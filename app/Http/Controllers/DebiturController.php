@@ -33,18 +33,20 @@ class DebiturController extends Controller
     {
         $debitur = null;
 
-        // 1. KALO ADA ID (Artinya user klik tombol EDIT)
-        if ($request->has('id')) {
-            // Simpan ID baru ini ke session, dan ambil datanya
-            session(['debitur_id' => $request->id]);
-            $debitur = Debitur::find($request->id);
-        } 
-        // 2. KALO TIDAK ADA ID (Artinya user klik tombol ISI BARU dari menu utama)
-        else {
-            // HAPUS session lama! Supaya memori data sebelumnya hilang
+        // 1. Cek apakah ada parameter 'id' di URL (saat klik EDIT)
+        $debiturId = $request->input('id');
+
+        // 2. Jika tidak ada di URL, cek apakah ada di SESSION (saat kembali dari Step 2)
+        if (!$debiturId) {
+            $debiturId = session('debitur_id');
+        }
+
+        // 3. Ambil data dari database jika ID ditemukan
+        if ($debiturId) {
+            session(['debitur_id' => $debiturId]);
+            $debitur = Debitur::find($debiturId);
+        } else {
             session()->forget('debitur_id');
-            
-            // $debitur dibiarkan NULL, jadi form otomatis KOSONG dari awal
             $debitur = null;
         }
 
@@ -129,7 +131,6 @@ class DebiturController extends Controller
         }
 
         // Cari data agunan berdasarkan debitur_id langsung dari database
-        // (Lebih aman dan tidak bergantung pada session yang kadang bisa terhapus)
         $data = \App\Models\Agunan::where('debitur_id', $debiturId)->first();
 
         // Jika datanya ada, simpan juga ID-nya ke session agar sinkron
@@ -137,7 +138,10 @@ class DebiturController extends Controller
             session(['agunan_id' => $data->id]);
         }
 
-        return view('2pra-survei', compact('debiturId', 'data'));
+        // Tentukan route tombol kembali ke halaman 1pra-survei
+        $backRoute = route('1pra-survei');
+
+        return view('2pra-survei', compact('debiturId', 'data', 'backRoute'));
     }
 
     // 2. Simpan / Update Data Step 2
@@ -200,18 +204,29 @@ class DebiturController extends Controller
             return redirect()->route('1pra-survei')->with('error', 'Sesi telah berakhir. Silakan isi dari awal.');
         }
 
-        $urutan = $request->query('urutan', 1);
+        $urutan = (int) $request->query('urutan', 1);
+        if ($urutan < 1) {
+            $urutan = 1;
+        }
+
+        // Tentukan arah tombol kembali
+        if ($urutan > 1) {
+            // Jika urutan lebih dari 1, kembali ke form tanah urutan sebelumnya
+            $backRoute = route('3-1tanah', ['urutan' => $urutan - 1]);
+        } else {
+            // Jika urutan 1, kembali ke halaman awal sebelum tanah (misal: 2pra-survei)
+            $backRoute = route('2pra-survei'); // Sesuaikan dengan nama route halaman sebelum tanah
+        }
 
         // Cari data agunan tanah berdasarkan debitur
         $agunan = Agunan::where('debitur_id', $debiturId)->where('jenis_agunan', 'tanah')->first();
         
         $tanah = null;
         if ($agunan) {
-            // Ambil data berdasarkan urutan jaminan yang sedang dibuka
             $tanah = AgunanTanah::where('agunan_id', $agunan->id)->where('urutan', $urutan)->first();
         }
 
-        return view('3-1tanah', compact('debiturId', 'urutan', 'tanah')); 
+        return view('3-1tanah', compact('debiturId', 'urutan', 'tanah', 'backRoute')); 
     }
 
     public function storeStep3_1(Request $request)
@@ -505,18 +520,28 @@ class DebiturController extends Controller
     // ==========================================
     public function createStep4()
     {
-        $debiturId = session('debitur_id'); // Sesuaikan dengan cara Anda menyimpan session
+        $debiturId = session('debitur_id');
         $yangLain = null;
 
         if ($debiturId) {
-            // Cari agunan dengan jenis 'lainnya' untuk debitur ini
             $agunan = Agunan::where('debitur_id', $debiturId)->where('jenis_agunan', 'lainnya')->first();
             if ($agunan) {
                 $yangLain = YangLain::where('agunan_id', $agunan->id)->first();
             }
         }
 
-        return view('4jaminan', compact('yangLain'));
+        // Deteksi halaman asal dari riwayat URL sebelumnya
+        $previousUrl = url()->previous();
+        if (str_contains($previousUrl, '2pra-survei')) {
+            session(['jaminan_lain_back' => route('2pra-survei')]); // Sesuaikan nama route 2pra-survei Anda
+        } elseif (str_contains($previousUrl, '3-4logam') || str_contains($previousUrl, 'logam')) {
+            session(['jaminan_lain_back' => route('3-4logam')]); // Sesuaikan nama route 3-4logam Anda
+        }
+
+        // Fallback default ke 2pra-survei jika belum ada session
+        $backRoute = session('jaminan_lain_back', route('2pra-survei'));
+
+        return view('4jaminan', compact('yangLain', 'backRoute'));
     }
 
     public function storeStep4(Request $request)
@@ -546,15 +571,12 @@ class DebiturController extends Controller
     // ==========================================
     public function createStep5(Request $request, $debitur_id = null)
     {
-        // Ambil debitur_id dari parameter URL, atau dari session
         $debitur_id = $debitur_id ?? $request->input('debitur_id') ?? session('debitur_id');
 
-        // Jika tidak ada debitur_id sama sekali, berarti sesi baru/sudah direset
         if (!$debitur_id) {
             return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
         }
 
-        // Amankan kembali ke session
         session(['debitur_id' => $debitur_id]);
 
         $debitur = Debitur::find($debitur_id);
@@ -562,11 +584,21 @@ class DebiturController extends Controller
         if (!$debitur) {
             return redirect()->route('step1')->with('error', 'Data debitur tidak ditemukan.');
         }
+
+        // Deteksi halaman asal dari riwayat URL sebelumnya
+        $previousUrl = url()->previous();
+        if (str_contains($previousUrl, '3-1tanah')) {
+            session(['info_usaha_back' => route('3-1tanah')]);
+        } elseif (str_contains($previousUrl, '4jaminan')) {
+            session(['info_usaha_back' => route('4jaminan')]);
+        }
+
+        // Fallback default ke route '4jaminan' jika session belum ada
+        $backRoute = session('info_usaha_back', route('4jaminan'));
         
-        // Ambil data info usaha (jika sedang dalam proses edit sebelum disubmit total)
         $infoUsaha = InfoUsaha::where('debitur_id', $debitur_id)->first();
 
-        return view('5infousaha', compact('debitur', 'infoUsaha'));
+        return view('5infousaha', compact('debitur', 'infoUsaha', 'backRoute'));
     }
 
     public function storeStep5(Request $request)
