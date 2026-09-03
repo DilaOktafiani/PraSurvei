@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Form Pra Survey - {{ $data->nama ?? '-' }}</title>
+    <title>Form Pra Survei - {{ $data->nama ?? '-' }}</title>
     <style>
         /* Mengatur agar halaman cetak fleksibel dengan margin atas 1 inci */
         @page {
@@ -93,7 +93,7 @@
 <body onload="window.print()">
 
     <div class="page-container" style="margin-top: 0; padding-top: 0;">
-        <h2 style="margin-top: 0; margin-bottom: 20px;">FORM PRA SURVEY</h2>
+        <h2 style="margin-top: 0; margin-bottom: 20px;">FORM PRA-SURVEI</h2>
 
         <!-- A. DATA DEBITUR -->
         <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important;">

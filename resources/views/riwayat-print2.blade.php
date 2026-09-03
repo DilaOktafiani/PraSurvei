@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Cetak Form Credit Analysis - {{ $data->nama ?? '-' }}</title>
+    <title>Form Survei - {{ $data->nama ?? '-' }}</title>
     <style>
         @page {
             size: auto;
@@ -117,7 +117,7 @@
 <body onload="window.print()">
 
     <div class="page-container">
-        <h2 class="main-title">FORM SURVEY</h2>
+        <h2 class="main-title">FORM SURVEI</h2>
 
         <!-- A. DATA DEBITUR -->
         <table class="export-table" style="table-layout: fixed;">

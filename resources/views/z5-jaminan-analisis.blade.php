@@ -15,7 +15,6 @@
                 <img src="{{ asset('images/logo.png') }}" alt="Logo BPR Adipura Santosa" class="h-9 w-auto bg-white p-1 rounded object-contain">
                 <h1 class="text-xl font-bold tracking-wide">BPR ADIPURA SANTOSA</h1>
             </div>
-            <!-- Menggunakan link langsung ke beranda -->
             <a href="/" class="inline-flex items-center justify-center gap-2 text-sm text-white font-medium px-4 py-1.5 rounded-full border-2 border-white hover:bg-white/10 transition"> 
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"> 
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /> 
@@ -40,12 +39,23 @@
             </p>
         </div>
 
+        <!-- TAMPILKAN PESAN ERROR JIKA VALIDASI GAGAL -->
+        @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-sm">
+                <ul class="list-disc pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <!-- FORM UTAMA -->
         <form id="formPraSurvei" action="{{ route('storeAlur5') }}" method="POST" class="space-y-6">
             @csrf 
 
             <!-- PENTING: Hidden input untuk mengirim debitur_id -->
-            <input type="hidden" name="debitur_id" value="{{ $debitur->id ?? session('debitur_id') }}">
+            <input type="hidden" name="debitur_id" value="{{ session('debitur_id') }}">
 
             <!-- ANALISIS JAMINAN -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
@@ -56,9 +66,10 @@
                         Analisis Semua Jaminan <span class="text-red-500">*</span>
                     </label>
                     
-                    <textarea id="analisis_jaminan" name="analisis_jaminan" rows="6"
+                    <!-- PERBAIKAN: Menggunakan $data->analisis_jaminan sesuai compact di controller -->
+                    <textarea id="analisis_jaminan" name="analisis_jaminan" rows="6" required
                             placeholder="Masukkan uraian atau hasil analisis dari semua jaminan nasabah"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB] placeholder-gray-400">{{ old('analisis_jaminan', $analisis_jaminan->analisis_jaminan ?? '') }}</textarea>
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB] placeholder-gray-400">{{ old('analisis_jaminan', $data->analisis_jaminan ?? '') }}</textarea>
                 </div>
             </div>
 
@@ -68,10 +79,10 @@
                     Kosongkan Form
                 </button>
                 <div class="flex items-center gap-3">  
-                    <button type="button" onclick="window.history.back()"
+                    <a href="{{ $backRoute }}" 
                             class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                         Kembali
-                    </button>
+                    </a>
                     <button type="submit" 
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         Berikutnya

@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Form Pra Survey - {{ $data->nama ?? '-' }}</title>
+    <title>Form Pra Survei - {{ $data->nama ?? '-' }}</title>
     <style>
     @page {
         size: A4;
@@ -87,7 +87,7 @@
 <body>
 
     <div class="page-container">
-        <h2>FORM PRA SURVEY</h2>
+        <h2>FORM PRA-SURVEI</h2>
 
         <!-- A. DATA DEBITUR -->
         <table class="export-table">

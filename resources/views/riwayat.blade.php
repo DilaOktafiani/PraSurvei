@@ -35,15 +35,15 @@
     <!-- Konten Utama -->
     <main class="max-w-6xl mx-auto mt-8 px-4 w-full flex-grow">
         
-        <!-- Tab Navigasi di Atas (TIDAK DIUBAH) -->
+        <!-- Tab Navigasi di Atas -->
         <div class="flex space-x-3 mb-5">
             <button @click="activeTab = 'prasurvei'" 
-                :class="activeTab === 'prasurvei' ? 'bg-[#0A3370] text-white shadow-lg ring-2 ring-[#0A3370]/20' : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'"
+                :class="activeTab === 'prasurvei' ? 'bg-[#0082CB] text-white shadow-lg ring-2 ring-[#0A3370]/20' : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'"
                 class="px-5 py-2.5 rounded-lg text-sm font-semibold transition border border-gray-200">
                 Riwayat Pra-Survei AO
             </button>
             <button @click="activeTab = 'surveica'" 
-                :class="activeTab === 'surveica' ? 'bg-[#0A3370] text-white shadow-lg ring-2 ring-[#0A3370]/20' : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'"
+                :class="activeTab === 'surveica' ? 'bg-[#0082CB] text-white shadow-lg ring-2 ring-[#0A3370]/20' : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'"
                 class="px-5 py-2.5 rounded-lg text-sm font-semibold transition border border-gray-200">
                 Riwayat Survei CA
             </button>

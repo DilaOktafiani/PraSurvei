@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Form Pra Survey - {{ $data->nama ?? '-' }}</title>
+    <title>Form Pra Survei - {{ $data->nama ?? '-' }}</title>
     <style>
         /* Mengatur agar tabel benar-benar mirip grid Excel */
         body {
@@ -58,7 +58,7 @@
 
     <table>
         <tr>
-            <th colspan="6" class="header-section header-center" style="font-size: 12pt; padding: 8px;">FORM PRA SURVEY</th>
+            <th colspan="6" class="header-section header-center" style="font-size: 12pt; padding: 8px;">FORM PRA-SURVEI</th>
         </tr>
 
         <!-- A. DATA DEBITUR -->
@@ -120,7 +120,18 @@
         <tr><th colspan="6" class="header-section" style="background-color: #0A3370; color: #FFFFFF; font-weight: bold; padding: 5px 8px; text-transform: uppercase;">B. DATA JAMINAN</th></tr>
         <tr><td class="bg-label"><b>Kepemilikan</b></td><td colspan="5"><b>{{ $agunan->kepemilikan ?? '-' }}</b></td></tr>
         <tr><td class="bg-label">Alamat</td><td colspan="5">{{ $agunan->alamat ?? '-' }}</td></tr>
-        <tr><td class="bg-label">Share Loc</td><td colspan="5">{{ $agunan->share_location ?? '-' }}</td></tr>
+        <tr>
+            <td class="bg-label">Share Loc</td>
+            <td colspan="5" style="padding: 5px 8px;">
+                @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
+                    <a href="{{ $agunan->share_location }}" target="_blank" style="font-size: 10pt; color: #007bff; text-decoration: underline;">
+                        {{ $agunan->share_location }}
+                    </a>
+                @else
+                    <span>-</span>
+                @endif
+            </td>
+        </tr>
         @php
             // Perhitungan Tanah
             $luasTanah = $agunan->luas_tanah ?? 0;

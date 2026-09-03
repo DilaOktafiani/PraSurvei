@@ -33,21 +33,20 @@ class DebiturController extends Controller
     {
         $debitur = null;
 
-        // 1. Cek apakah ada parameter 'id' di URL (saat klik EDIT)
-        $debiturId = $request->input('id');
-
-        // 2. Jika tidak ada di URL, cek apakah ada di SESSION (saat kembali dari Step 2)
-        if (!$debiturId) {
-            $debiturId = session('debitur_id');
+        // KASUS A: Jika diakses dari Dashboard (URL bersih tanpa parameter ?id=...)
+        // Kita wajib membersihkan session 'debitur_id' agar form kembali KOSONG.
+        if (!$request->has('id') && !$request->isMethod('post')) {
+            session()->forget('debitur_id');
         }
 
-        // 3. Ambil data dari database jika ID ditemukan
-        if ($debiturId) {
-            session(['debitur_id' => $debiturId]);
-            $debitur = Debitur::find($debiturId);
-        } else {
-            session()->forget('debitur_id');
-            $debitur = null;
+        // KASUS B: Jika ada parameter ID yang dikirim (artinya dari tombol EDIT di riwayat)
+        if ($request->has('id')) {
+            session(['debitur_id' => $request->id]);
+        }
+
+        // AMAN: Ambil data jika session 'debitur_id' tersedia (misal saat kembali dari step 2)
+        if (session()->has('debitur_id')) {
+            $debitur = Debitur::find(session('debitur_id'));
         }
 
         return view('1pra-survei', compact('debitur'));
