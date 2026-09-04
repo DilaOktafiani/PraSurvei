@@ -33,18 +33,17 @@ class DebiturController extends Controller
     {
         $debitur = null;
 
-        // KASUS A: Jika diakses dari Dashboard (URL bersih tanpa parameter ?id=...)
-        // Kita wajib membersihkan session 'debitur_id' agar form kembali KOSONG.
-        if (!$request->has('id') && !$request->isMethod('post')) {
+        // Jika ada parameter 'new=true' (artinya diklik murni dari Dashboard menu utama)
+        if ($request->has('new') && $request->new == 'true') {
             session()->forget('debitur_id');
         }
 
-        // KASUS B: Jika ada parameter ID yang dikirim (artinya dari tombol EDIT di riwayat)
+        // Jika ada parameter 'id' (artinya diklik dari tombol Edit riwayat)
         if ($request->has('id')) {
             session(['debitur_id' => $request->id]);
         }
 
-        // AMAN: Ambil data jika session 'debitur_id' tersedia (misal saat kembali dari step 2)
+        // Jika session 'debitur_id' ada (baik dari Edit maupun sisa dari Step 2), ambil datanya
         if (session()->has('debitur_id')) {
             $debitur = Debitur::find(session('debitur_id'));
         }
@@ -120,7 +119,6 @@ class DebiturController extends Controller
     // JAMINAN / COLLATERAL
     // =========================================================================
 
-    // 1. Tampilkan Halaman Step 2
     public function createStep2()
     {
         $debiturId = session('debitur_id');
@@ -129,15 +127,45 @@ class DebiturController extends Controller
             return redirect()->route('1pra-survei')->with('error', 'Sesi telah berakhir. Silakan isi dari awal.');
         }
 
-        // Cari data agunan berdasarkan debitur_id langsung dari database
-        $data = \App\Models\Agunan::where('debitur_id', $debiturId)->first();
+        $agunanId = session('agunan_id');
+        $data = null;
 
-        // Jika datanya ada, simpan juga ID-nya ke session agar sinkron
-        if ($data) {
-            session(['agunan_id' => $data->id]);
+        if ($agunanId) {
+            $data = \App\Models\Agunan::where('id', $agunanId)
+                                      ->where('debitur_id', $debiturId)
+                                      ->first();
         }
 
-        // Tentukan route tombol kembali ke halaman 1pra-survei
+        if (!$data) {
+            $data = \App\Models\Agunan::where('debitur_id', $debiturId)
+                                      ->latest('updated_at')
+                                      ->first();
+            if ($data) {
+                session(['agunan_id' => $data->id]);
+            }
+        }
+
+        // =========================================================================
+        // TAMBAHAN LOGIKA KHUSUS "YANG LAIN"
+        // =========================================================================
+        // Jika data yang tersimpan di database bukan bagian dari pilihan standar,
+        // kita bungkus sementara agar Blade tahu itu adalah isi untuk opsi "Yang Lain".
+        $standarOpsi = [
+            'tanah_sawah', 
+            'tanah_pekarangan_kosong', 
+            'tanah_pekarangan_bangunan', 
+            'kendaraan_bermotor', 
+            'simpanan', 
+            'logam_mulia'
+        ];
+
+        if ($data && !in_array($data->jenis_agunan, $standarOpsi)) {
+            // Simpan teks custom ke variabel terpisah untuk input text
+            $data->jenis_agunan_lainnya = $data->jenis_agunan;
+            // Ubah nilai jenis_agunan menjadi 'yang_lain' agar radio button tercentang
+            $data->jenis_agunan = 'yang_lain';
+        }
+
         $backRoute = route('1pra-survei');
 
         return view('2pra-survei', compact('debiturId', 'data', 'backRoute'));
@@ -152,23 +180,27 @@ class DebiturController extends Controller
         ]);
 
         $debiturId = session('debitur_id');
-        $agunanId = session('agunan_id'); 
 
-        // Update jika sudah ada, Create jika belum berdasarkan debitur_id
+        $jenisAgunanVal = $request->jenis_agunan;
+        if ($request->jenis_agunan === 'yang_lain') {
+            $jenisAgunanVal = $request->jenis_agunan_lainnya ?? 'Lainnya';
+        }
+
+        // BENAR: Update atau Create dengan mencocokkan debitur_id DAN jenis_agunan sekaligus
         $agunan = \App\Models\Agunan::updateOrCreate(
             [
-                'debitur_id' => $debiturId // Kunci pencarian utama
+                'debitur_id' => $debiturId,
+                'jenis_agunan' => $jenisAgunanVal // Kunci ganda agar tidak saling menimpa!
             ],
             [
-                'jenis_agunan' => $request->jenis_agunan,
-                'jenis_agunan_lainnya' => $request->jenis_agunan == 'yang_lain' ? $request->jenis_agunan_lainnya : null,
+                'updated_at' => now()
             ]
         );
 
-        // Simpan konsisten menggunakan 'agunan_id'
+        // Simpan ID agunan spesifik ini ke session
         session(['agunan_id' => $agunan->id]);
 
-        // Logika Percabangan Route
+        // Logika Percabangan Route tetap sama
         switch ($request->jenis_agunan) {
             case 'tanah_sawah':
             case 'tanah_pekarangan_kosong':
@@ -322,10 +354,29 @@ class DebiturController extends Controller
     public function createStep3_2($debitur_id = null)
     {
         $debitur_id = $debitur_id ?? session('debitur_id');
-        $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'kendaraan')->first();
-        $data = $agunan ? $agunan->kendaraan : null; // Asumsi ada relasi 'kendaraan' di model Agunan
 
-        return view('3-2kendaraan', compact('debitur_id', 'data'));
+        if (!$debitur_id) {
+            return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
+        }
+
+        session(['debitur_id' => $debitur_id]);
+
+        $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'kendaraan')->first();
+        $data = $agunan ? $agunan->kendaraan : null; 
+
+        // Deteksi halaman asal dari riwayat URL sebelumnya untuk tombol Kembali
+        $previousUrl = url()->previous();
+        if (str_contains($previousUrl, '2pra-survei')) {
+            session(['kendaraan_back' => route('2pra-survei')]);
+        } elseif (str_contains($previousUrl, '3-1tanah')) {
+            // AMBIL URL SEBELUMNYA SECARA UTUH (termasuk ?urutan=3 nya)
+            session(['kendaraan_back' => $previousUrl]);
+        }
+
+        // Fallback default ke tanah urutan 3 (atau sesuaikan dengan alur terakhir tanah) jika session belum terekam
+        $backRoute = session('kendaraan_back', route('3-1tanah', ['urutan' => 3]));
+
+        return view('3-2kendaraan', compact('debitur_id', 'data', 'backRoute'));
     }
 
     public function storeStep3_2(Request $request)
@@ -358,35 +409,49 @@ class DebiturController extends Controller
     // ==========================================
     // SIMPANAN
     // ==========================================
-    public function createStep3_3($debitur_id = null)
+    public function createStep3_3(Request $request)
     {
-        // Ambil debitur_id dari parameter URL atau dari session
-        $debitur_id = $debitur_id ?? session('debitur_id');
+        // 1. Ambil debitur_id dari session (sama persis seperti di Tanah)
+        $debitur_id = session('debitur_id');
 
         if (!$debitur_id) {
-            return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
+            return redirect()->route('1pra-survei')->with('error', 'Sesi telah berakhir. Silakan isi dari awal.');
         }
 
-        // Simpan juga ke session agar aman saat perpindahan halaman
-        session(['debitur_id' => $debitur_id]);
+        // 2. Cari data agunan utama simpanan berdasarkan debitur
+        $agunan = Agunan::where('debitur_id', $debitur_id)
+                        ->where('jenis_agunan', 'simpanan')
+                        ->first();
 
-        // Ambil data agunan simpanan yang sudah pernah disimpan sebelumnya (jika ada)
-        $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'simpanan')->first();
-        $data = $agunan ? $agunan->simpanan : null; // Asumsi relasi di model Agunan bernama 'simpanan'
+        // 3. Ambil data detail simpanan jika ada
+        $data = null;
+        if ($agunan) {
+            $data = AgunanSimpanan::where('agunan_id', $agunan->id)->first();
+        }
 
-        return view('3-3simpanan', compact('debitur_id', 'data'));
+        // 4. Tentukan arah tombol Kembali secara dinamis (deteksi URL sebelumnya)
+        $previousUrl = url()->previous();
+        if (str_contains($previousUrl, '2pra-survei')) {
+            session(['simpanan_back' => route('2pra-survei')]);
+        } elseif (str_contains($previousUrl, '3-2kendaraan') || str_contains($previousUrl, 'kendaraan')) {
+            session(['simpanan_back' => route('3-2kendaraan')]);
+        }
+
+        // Fallback default ke 3-2kendaraan jika session belum ada
+        $backRoute = session('simpanan_back', route('3-2kendaraan'));
+
+        return view('3-3simpanan', compact('debitur_id', 'data', 'backRoute'));
     }
 
     public function storeStep3_3(Request $request)
     {
         $request->validate([
-            'debitur_id' => 'required|exists:debiturs,id',
-            'jenis_simpanan' => 'required|string',
+            'debitur_id'             => 'required|exists:debiturs,id',
+            'jenis_simpanan'         => 'required|string',
             'jenis_simpanan_lainnya' => 'nullable|string',
-            'nilai_simpanan' => 'required|numeric',
+            'nilai_simpanan'         => 'required|numeric',
         ]);
 
-        // Tangani jika user memilih "yang_lain"
         $jenisSimpananFinal = $request->jenis_simpanan;
         if ($request->jenis_simpanan === 'yang_lain') {
             $jenisSimpananFinal = $request->jenis_simpanan_lainnya ?? 'Lainnya';
@@ -394,18 +459,13 @@ class DebiturController extends Controller
 
         DB::beginTransaction();
         try {
-            // Gunakan updateOrCreate untuk agunan utama
-            $agunan = Agunan::updateOrCreate(
-                [
-                    'debitur_id' => $request->debitur_id, 
-                    'jenis_agunan' => 'simpanan'
-                ],
-                [
-                    'updated_at' => now()
-                ]
-            );
+            // Gunakan firstOrCreate seperti pada method Tanah Anda agar konsisten
+            $agunan = Agunan::firstOrCreate([
+                'debitur_id'   => $request->debitur_id,
+                'jenis_agunan' => 'simpanan'
+            ]);
 
-            // Gunakan updateOrCreate untuk detail agunan simpanan
+            // Simpan atau update detail simpanan
             AgunanSimpanan::updateOrCreate(
                 [
                     'agunan_id' => $agunan->id
@@ -417,7 +477,11 @@ class DebiturController extends Controller
             );
 
             DB::commit();
-            return redirect()->route('3-4logam')->with('success', 'Data agunan simpanan berhasil disimpan.');
+
+            // Lanjut ke step berikutnya (Logam Mulia / Sesuai alur Anda)
+            return redirect()->route('3-4logam')
+                             ->with('success', 'Data agunan simpanan berhasil disimpan.');
+
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
@@ -439,14 +503,18 @@ class DebiturController extends Controller
         // Simpan juga ke session agar aman saat perpindahan halaman
         session(['debitur_id' => $debitur_id]);
 
-        // Ambil data agunan logam mulia yang sudah pernah disimpan sebelumnya (jika ada)
+        // Ambil data agunan logam mulia utama
         $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'logam_mulia')->first();
-        $data = $agunan ? $agunan->logamMulia : null; 
+        
+        // AMBIL DATA DETAIL SECARA LANGSUNG (Aman meskipun relasi model belum diatur)
+        $data = null;
+        if ($agunan) {
+            $data = AgunanLogam::where('agunan_id', $agunan->id)->first();
+        } 
 
         // Daftar opsi standar logam mulia yang ada di dropdown HTML Anda
-        $opsiStandar = ['Antam', 'UBS', 'Lotus Archi', 'Goldber']; // Sesuaikan dengan <option> di Blade Anda
+        $opsiStandar = ['Antam', 'UBS', 'Lotus Archi', 'Goldbar']; // Sesuaikan 'Goldbar' jika sebelumnya 'Goldber'
 
-        $isLainnya = false;
         $jenisLogamVal = '';
         $jenisLogamLainVal = '';
 
@@ -454,13 +522,23 @@ class DebiturController extends Controller
             if (in_array($data->jenis_logam, $opsiStandar)) {
                 $jenisLogamVal = $data->jenis_logam;
             } else {
-                // Jika tidak ada di opsi standar, berarti itu dulunya "yang_lain"
                 $jenisLogamVal = 'yang_lain';
                 $jenisLogamLainVal = $data->jenis_logam;
             }
         }
 
-        return view('3-4logam', compact('debitur_id', 'data', 'jenisLogamVal', 'jenisLogamLainVal'));
+        // Deteksi halaman asal dari riwayat URL sebelumnya untuk tombol Kembali
+        $previousUrl = url()->previous();
+        if (str_contains($previousUrl, '2pra-survei')) {
+            session(['logam_mulia_back' => route('2pra-survei')]);
+        } elseif (str_contains($previousUrl, '3-3simpanan') || str_contains($previousUrl, 'simpanan')) {
+            session(['logam_mulia_back' => route('3-3simpanan')]);
+        }
+
+        // Fallback default ke 2pra-survei jika session belum terekam
+        $backRoute = session('logam_mulia_back', route('2pra-survei'));
+
+        return view('3-4logam', compact('debitur_id', 'data', 'jenisLogamVal', 'jenisLogamLainVal', 'backRoute'));
     }
 
     public function storeStep3_4(Request $request)
@@ -584,10 +662,11 @@ class DebiturController extends Controller
             return redirect()->route('step1')->with('error', 'Data debitur tidak ditemukan.');
         }
 
-        // Deteksi halaman asal dari riwayat URL sebelumnya
+        // Deteksi halaman asal dari riwayat URL sebelumnya secara utuh
         $previousUrl = url()->previous();
         if (str_contains($previousUrl, '3-1tanah')) {
-            session(['info_usaha_back' => route('3-1tanah')]);
+            // SIMPAN URL LENGKAPNYA (Membawa ?urutan=1 atau ?urutan=2 secara presisi)
+            session(['info_usaha_back' => $previousUrl]);
         } elseif (str_contains($previousUrl, '4jaminan')) {
             session(['info_usaha_back' => route('4jaminan')]);
         }

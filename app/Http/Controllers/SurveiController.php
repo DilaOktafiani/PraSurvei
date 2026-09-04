@@ -37,18 +37,17 @@ class SurveiController extends Controller
     {
         $debitur = null;
 
-        // KASUS A: Jika diakses dari Dashboard (biasanya URL-nya bersih tanpa parameter ?id=...)
-        // Kita wajib membersihkan session 'debitur_id' agar form kembali KOSONG.
-        if (!$request->has('id') && !$request->isMethod('post')) {
+        // Jika ada parameter 'new=true' (artinya diklik murni dari Dashboard menu utama)
+        if ($request->has('new') && $request->new == 'true') {
             session()->forget('debitur_id');
         }
 
-        // KASUS B: Jika ada parameter ID yang dikirim (artinya dari tombol EDIT di riwayat)
+        // Jika ada parameter 'id' (artinya diklik dari tombol Edit di riwayat)
         if ($request->has('id')) {
             session(['debitur_id' => $request->id]);
         }
 
-        // AMAN: Ambil data jika session 'debitur_id' tersedia
+        // Ambil data jika session 'debitur_id' tersedia (baik dari Edit maupun sisa dari Alur 2)
         if (session()->has('debitur_id')) {
             $debitur = Debitur::find(session('debitur_id'));
         }
@@ -112,7 +111,7 @@ class SurveiController extends Controller
     }
 
     // =========================================================================
-    // JAMINAN / COLLATERAL
+    // JAMINAN / COLLATERAL (ALUR 2)
     // =========================================================================
 
     public function createAlur2()
@@ -120,18 +119,46 @@ class SurveiController extends Controller
         $debiturId = session('debitur_id');
 
         if (!$debiturId) {
-            // Ubah arah redirect jika sesi habis agar kembali ke survei CA, bukan ke pra-survei
             return redirect()->route('z1-surveica')->with('error', 'Sesi telah berakhir. Silakan isi dari awal.');
         }
 
-        // PERBAIKAN: Gunakan model dari folder Survei\Agunan
-        $data = Agunan::where('debitur_id', $debiturId)->first();
+        $agunanId = session('agunan_id');
+        $data = null;
 
-        if ($data) {
-            session(['agunan_id' => $data->id]);
+        if ($agunanId) {
+            $data = Agunan::where('id', $agunanId)
+                          ->where('debitur_id', $debiturId)
+                          ->first();
         }
 
-        // Tentukan rute tombol kembali ke Halaman 1 Survei
+        if (!$data) {
+            $data = Agunan::where('debitur_id', $debiturId)
+                          ->latest('updated_at')
+                          ->first();
+            if ($data) {
+                session(['agunan_id' => $data->id]);
+            }
+        }
+
+        // =========================================================================
+        // TAMBAHAN LOGIKA KHUSUS "YANG LAIN"
+        // =========================================================================
+        $standarOpsi = [
+            'tanah_sawah', 
+            'tanah_pekarangan_kosong', 
+            'tanah_pekarangan_bangunan', 
+            'kendaraan_bermotor', 
+            'simpanan', 
+            'logam_mulia'
+        ];
+
+        if ($data && !in_array($data->jenis_agunan, $standarOpsi)) {
+            // Simpan teks custom ke properti sementara untuk input text di Blade
+            $data->jenis_agunan_lainnya = $data->jenis_agunan;
+            // Ubah nilai jenis_agunan menjadi 'yang_lain' agar radio button-nya tercentang
+            $data->jenis_agunan = 'yang_lain';
+        }
+
         $backRoute = route('z1-surveica');
 
         return view('z2-surveica', compact('debiturId', 'data', 'backRoute'));
@@ -145,19 +172,24 @@ class SurveiController extends Controller
         ]);
 
         $debiturId = session('debitur_id');
-        $agunanId = session('agunan_id'); 
 
-        // PERBAIKAN: Gunakan model dari folder Survei\Agunan
+        $jenisAgunanVal = $request->jenis_agunan;
+        if ($request->jenis_agunan === 'yang_lain') {
+            $jenisAgunanVal = $request->jenis_agunan_lainnya ?? 'Lainnya';
+        }
+
+        // Gunakan kunci ganda (debitur_id & jenis_agunan) agar tidak saling menimpa data yang berbeda
         $agunan = Agunan::updateOrCreate(
             [
-                'debitur_id' => $debiturId
+                'debitur_id' => $debiturId,
+                'jenis_agunan' => $jenisAgunanVal
             ],
             [
-                'jenis_agunan' => $request->jenis_agunan,
-                'jenis_agunan_lainnya' => $request->jenis_agunan == 'yang_lain' ? $request->jenis_agunan_lainnya : null,
+                'updated_at' => now()
             ]
         );
 
+        // Simpan ID agunan spesifik ke session
         session(['agunan_id' => $agunan->id]);
 
         switch ($request->jenis_agunan) {
@@ -313,23 +345,27 @@ class SurveiController extends Controller
     public function createAlur3_2($debitur_id = null)
     {
         $debitur_id = $debitur_id ?? session('debitur_id');
-        $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'kendaraan')->first();
-        $data = $agunan ? $agunan->kendaraan : null; // Asumsi ada relasi 'kendaraan' di model Agunan
 
-        // Tentukan rute tombol kembali secara dinamis
-        $previousUrl = url()->previous();
-
-        if (str_contains($previousUrl, 'z3-1tanah')) {
-            // Jika pengguna datang dari halaman Tanah (misal urutan 3 atau lainnya)
-            // Kita bisa arahkan kembali ke tanah urutan 3 atau mempertahankan URL sebelumnya
-            $backRoute = $previousUrl; 
-        } elseif (str_contains($previousUrl, 'z2-surveica')) {
-            // Jika pengguna datang dari Halaman 2 Survei
-            $backRoute = route('z2-surveica');
-        } else {
-            // Fallback default jika diakses langsung (misal diarahkan dari tanah urutan >= 3)
-            $backRoute = route('z3-1tanah', ['urutan' => 3]); 
+        if (!$debitur_id) {
+            return redirect()->route('z2-surveica')->with('error', 'Silakan isi data debitur terlebih dahulu.');
         }
+
+        session(['debitur_id' => $debitur_id]);
+
+        $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'kendaraan')->first();
+        $data = $agunan ? $agunan->kendaraan : null; 
+
+        // Deteksi halaman asal dari riwayat URL sebelumnya untuk tombol Kembali
+        $previousUrl = url()->previous();
+        if (str_contains($previousUrl, 'z2-surveica')) {
+            session(['kendaraan_back' => route('z2-surveica')]);
+        } elseif (str_contains($previousUrl, 'z3-1tanah')) {
+            // Ambil URL sebelumnya secara utuh (termasuk query parameter seperti ?urutan=3)
+            session(['kendaraan_back' => $previousUrl]);
+        }
+
+        // Fallback default ke z3-1tanah (atau z2-surveica) jika session belum terekam
+        $backRoute = session('kendaraan_back', route('z3-1tanah', ['urutan' => 3]));
 
         return view('z3-2kendaraan', compact('debitur_id', 'data', 'backRoute'));
     }
@@ -454,45 +490,47 @@ class SurveiController extends Controller
         // Ambil debitur_id dari parameter URL atau dari session
         $debitur_id = $debitur_id ?? session('debitur_id');
 
-        if ($debitur_id) {
-            session(['debitur_id' => $debitur_id]);
+        if (!$debitur_id) {
+            return redirect()->route('z2-surveica')->with('error', 'Silakan isi data debitur terlebih dahulu.');
         }
+
+        session(['debitur_id' => $debitur_id]);
 
         $agunan = null;
         $data = null;
-        $opsiStandar = ['Antam', 'UBS', 'Lotus Archi', 'Goldber'];
+        $opsiStandar = ['Antam', 'UBS', 'Lotus Archi', 'Goldber', 'Goldbar'];
         $jenisLogamVal = '';
         $jenisLogamLainVal = '';
 
-        if ($debitur_id) {
-            // Ambil data agunan logam mulia yang sudah pernah disimpan sebelumnya (jika ada)
-            $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'logam_mulia')->first();
-            $data = $agunan ? $agunan->logamMulia : null; 
+        // Ambil data agunan logam mulia utama
+        $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'logam_mulia')->first();
+        
+        // Ambil data detail secara langsung agar data yang sudah tersimpan tampil kembali
+        if ($agunan) {
+            $data = AgunanLogam::where('agunan_id', $agunan->id)->first(); 
+        }
 
-            if ($data) {
-                if (in_array($data->jenis_logam, $opsiStandar)) {
-                    $jenisLogamVal = $data->jenis_logam;
-                } else {
-                    // Jika tidak ada di opsi standar, berarti itu dulunya "yang_lain"
-                    $jenisLogamVal = 'yang_lain';
-                    $jenisLogamLainVal = $data->jenis_logam;
-                }
+        if ($data) {
+            if (in_array($data->jenis_logam, $opsiStandar)) {
+                $jenisLogamVal = $data->jenis_logam;
+            } else {
+                // Jika tidak ada di opsi standar, berarti itu dulunya "yang_lain"
+                $jenisLogamVal = 'yang_lain';
+                $jenisLogamLainVal = $data->jenis_logam;
             }
         }
 
         // Tentukan rute tombol kembali secara dinamis
         $previousUrl = url()->previous();
 
-        if (str_contains($previousUrl, 'z3-3simpanan')) {
-            // Jika pengguna datang dari halaman Simpanan
-            $backRoute = route('z3-3simpanan');
+        if (str_contains($previousUrl, 'z3-3simpanan') || str_contains($previousUrl, 'simpanan')) {
+            session(['logam_mulia_back' => route('z3-3simpanan')]);
         } elseif (str_contains($previousUrl, 'z2-surveica')) {
-            // Jika pengguna datang dari Halaman 2 Survei
-            $backRoute = route('z2-surveica');
-        } else {
-            // Fallback default jika diakses langsung atau dari rute lain
-            $backRoute = route('z2-surveica'); 
+            session(['logam_mulia_back' => route('z2-surveica')]);
         }
+
+        // Fallback default jika session belum terekam
+        $backRoute = session('logam_mulia_back', route('z2-surveica'));
 
         return view('z3-4logam', compact('debitur_id', 'data', 'jenisLogamVal', 'jenisLogamLainVal', 'backRoute'));
     }
@@ -660,42 +698,35 @@ class SurveiController extends Controller
     // ANALISIS CAPACITY
     // ==========================================
 
-    public function createAlur6()
+    public function createAlur6(Request $request, $debitur_id = null)
     {
-        $debiturId = session('debitur_id'); 
-        $capacity = null;
+        $debiturId = $debitur_id ?? $request->input('debitur_id') ?? session('debitur_id');
 
-        if ($debiturId) {
-            $capacity = Capacity::where('debitur_id', $debiturId)->first();
+        if (!$debiturId) {
+            return redirect()->route('step1')->with('error', 'Silakan isi data debitur terlebih dahulu.');
         }
 
-        $debitur = $debiturId ? \App\Models\Debitur::find($debiturId) : null;
+        session(['debitur_id' => $debiturId]);
+
+        $capacity = Capacity::where('debitur_id', $debiturId)->first();
+        $debitur = Debitur::find($debiturId);
         $infoUsaha = null;
         $tanah = null;
 
-        // LOGIKA PENENTUAN TOMBOL KEMBALI YANG AKURAT:
-        $hasAnalisisJaminan = false;
-        $lastTanahUrutan = 1;
-
-        if ($debiturId) {
-            $hasAnalisisJaminan = AnalisisJaminan::where('debitur_id', $debiturId)->exists();
-
-            if (!$hasAnalisisJaminan) {
-                $agunanTanah = Agunan::where('debitur_id', $debiturId)->where('jenis_agunan', 'tanah')->first();
-                if ($agunanTanah) {
-                    $maxUrutan = AgunanTanah::where('agunan_id', $agunanTanah->id)->max('urutan');
-                    if ($maxUrutan) {
-                        $lastTanahUrutan = $maxUrutan;
-                    }
-                }
-            }
+        // Deteksi halaman asal dari riwayat URL sebelumnya secara utuh untuk tombol Kembali
+        $previousUrl = url()->previous();
+        if (str_contains($previousUrl, 'z5-jaminan-analisis')) {
+            session(['capacity_back' => route('z5-jaminan-analisis')]);
+        } elseif (str_contains($previousUrl, 'z3-1tanah')) {
+            // SIMPAN URL LENGKAPNYA (Membawa ?urutan=1 atau ?urutan=2 secara presisi)
+            session(['capacity_back' => $previousUrl]);
         }
 
-        if ($hasAnalisisJaminan) {
-            $backRoute = route('z5-jaminan-analisis');
-        } else {
-            $backRoute = route('z3-1tanah', ['urutan' => $lastTanahUrutan]);
-        }
+        // Fallback default jika session belum terekam (cek apakah ada analisis jaminan atau fallback ke tanah urutan 1)
+        $hasAnalisisJaminan = AnalisisJaminan::where('debitur_id', $debiturId)->exists();
+        $defaultBack = $hasAnalisisJaminan ? route('z5-jaminan-analisis') : route('z3-1tanah', ['urutan' => 1]);
+
+        $backRoute = session('capacity_back', $defaultBack);
 
         return view('z6-capacity', compact('capacity', 'debitur', 'infoUsaha', 'tanah', 'backRoute')); 
     }
@@ -704,6 +735,9 @@ class SurveiController extends Controller
     {
         // PENGAMAN: Jika debitur_id dari form kosong, ambil dari session. Jika session kosong, paksa ke ID 1.
         $debiturId = $request->debitur_id ?? session('debitur_id', 1);
+
+        // Simpan debitur_id ke session
+        session(['debitur_id' => $debiturId]);
 
         // 1. Validasi input (DIAMANKAN: Hapus 'exists:debiturs,id' & ubah numeric ke string agar bebas dari error titik/koma format rupiah)
         $request->validate([
@@ -742,9 +776,14 @@ class SurveiController extends Controller
             }
 
             // 5. Bersihkan format angka (hapus titik/koma rupiah sebelum masuk database)
-            $pengeluaran = str_replace(['.', ','], ['', '.'], $request->pengeluaran_rumah_tangga);
-            $angsuranLain = str_replace(['.', ','], ['', '.'], $request->angsuran_bank_lain);
-            $angsuranBpr = str_replace(['.', ','], ['', '.'], $request->angsuran_bpr);
+            $cleanNumber = function($value) {
+                $clean = preg_replace('/[^\d]/', '', $value);
+                return $clean === '' ? 0 : $clean;
+            };
+
+            $pengeluaran = $cleanNumber($request->pengeluaran_rumah_tangga);
+            $angsuranLain = $cleanNumber($request->angsuran_bank_lain);
+            $angsuranBpr = $cleanNumber($request->angsuran_bpr);
 
             // 6. Simpan atau perbarui data menggunakan updateOrCreate
             Capacity::updateOrCreate(
@@ -753,9 +792,9 @@ class SurveiController extends Controller
                     'deskripsi_usaha' => $request->deskripsi_usaha,
                     'informasi_penghasilan_utama' => $request->informasi_penghasilan_utama,
                     'informasi_penghasilan_pendukung' => $request->informasi_penghasilan_pendukung,
-                    'pengeluaran_rumah_tangga' => is_numeric($pengeluaran) ? $pengeluaran : 0,
-                    'angsuran_bank_lain' => is_numeric($angsuranLain) ? $angsuranLain : 0,
-                    'angsuran_bpr' => is_numeric($angsuranBpr) ? $angsuranBpr : 0,
+                    'pengeluaran_rumah_tangga' => $pengeluaran,
+                    'angsuran_bank_lain' => $angsuranLain,
+                    'angsuran_bpr' => $angsuranBpr,
                     'analisis_kapasitas' => $request->analisis_kapasital ?? $request->analisis_kapasitas,
                     'mutasi_rekening' => $filePath, 
                     'kelengkapan_berkas' => $berkas,

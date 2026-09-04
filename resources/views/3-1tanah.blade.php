@@ -36,19 +36,14 @@
             </p>
         </div>
 
-        <!-- NOTIFIKASI ERROR -->
+        <!-- TAMPILKAN PESAN ERROR JIKA VALIDASI GAGAL -->
         @if ($errors->any())
-            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md">
-                <div class="flex">
-                    <div class="ml-3">
-                        <p class="text-sm text-red-700 font-bold">Terjadi kesalahan pengisian form:</p>
-                        <ul class="list-disc list-inside text-sm text-red-600 mt-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-sm">
+                <ul class="list-disc pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
         @endif
 

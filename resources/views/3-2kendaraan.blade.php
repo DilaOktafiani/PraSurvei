@@ -39,6 +39,17 @@
             </p>
         </div>
 
+        <!-- TAMPILKAN PESAN ERROR JIKA VALIDASI GAGAL -->
+        @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-sm">
+                <ul class="list-disc pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <!-- FORM UTAMA -->
         <form id="formPraSurvei" action="{{ route('storeStep3-2') }}" method="POST" class="space-y-6">
             @csrf <!-- Security Token Laravel -->
@@ -134,10 +145,10 @@
                 </button>
 
                 <div class="flex items-center gap-3">  
-                    <button type="button" onclick="window.history.back()"
-                            class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
+                    <a href="{{ $backRoute }}"
+                        class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                         Kembali
-                    </button>
+                    </a>
 
                     <button type="button" onclick="validateAndSubmit()" 
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">

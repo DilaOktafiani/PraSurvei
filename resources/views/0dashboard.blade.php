@@ -78,7 +78,7 @@
                     </div>
                     <p class="text-gray-500 text-sm mb-6">Input data awal dan pengecekan komitmen calon nasabah langsung dari lokasi kunjungan.</p>
                 </div>
-                <a href="/1pra-survei" class="block text-center bg-[#0082CB] text-white font-semibold py-2.5 rounded-lg hover:bg-[#006FB0] transition shadow-md text-sm">
+                <a href="{{ route('1pra-survei', ['new' => 'true']) }}" class="block text-center bg-[#0082CB] text-white font-semibold py-2.5 rounded-lg hover:bg-[#006FB0] transition shadow-md text-sm">
                     Isi Formulir Pra-Survei
                 </a>
             </div>
@@ -96,9 +96,9 @@
                     </div>
                     <p class="text-gray-500 text-sm mb-6">Analisis kelayakan kredit mendalam dan verifikasi data lanjutan oleh Credit Analyst.</p>
                 </div>
-                <a href="/z1-surveica" class="block text-center bg-[#0A3370] text-white font-semibold py-2.5 rounded-lg hover:bg-[#062452] transition shadow-md text-sm">
-                    Isi Formulir Survei
-                </a>
+                <a href="{{ route('z1-surveica', ['new' => 'true']) }}" class="block text-center bg-[#0A3370] text-white font-semibold py-2.5 rounded-lg hover:bg-[#062452] transition shadow-md text-sm">
+    Isi Formulir Survei
+</a>
             </div>
 
             <!-- Tombol 3: Riwayat Pengajuan -->
