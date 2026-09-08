@@ -6,6 +6,8 @@
     <title>Formulir Pra-Survei - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -41,7 +43,7 @@
         </div>
 
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeStep5') }}" method="POST" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeStep5') }}" method="POST" class="space-y-6" novalidate>
             @csrf <!-- Security Token Laravel -->
 
             <!-- PENTING: Tambahkan debitur_id (sesuaikan nilainya dari controller/variabel Anda) -->
@@ -202,7 +204,7 @@
                         Kembali
                     </a>
 
-                    <button type="button" onclick="validateAndSubmit()" 
+                    <button type="submit" 
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         Berikutnya
                     </button>
@@ -215,42 +217,105 @@
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
 
-    <!-- SCRIPT TAMBAHAN -->
-    <script>
-        const inputLainnya = document.getElementById('input_lainnya');
-        const checkboxLainnya = document.getElementById('checkbox_lainnya');
+<script>
+    const inputLainnya = document.getElementById('input_lainnya');
+    const checkboxLainnya = document.getElementById('checkbox_lainnya');
+    const formPraSurvei = document.getElementById('formPraSurvei');
 
-        // Otomatis mencentang kotak "Yang Lain" saat pengguna mengetik di input teks
-        inputLainnya.addEventListener('input', function() {
-            if (this.value.trim() !== '') {
-                checkboxLainnya.checked = true; 
-            } else {
-                checkboxLainnya.checked = false; 
-            }
-        });
+    // Jika user mengetik, otomatis centang checkbox "Yang Lain"
+    inputLainnya.addEventListener('input', function() {
+        if (this.value.trim() !== '') {
+            checkboxLainnya.checked = true;
+        }
+    });
 
-        function validateAndSubmit() {
-            const formPraSurvei = document.getElementById('formPraSurvei');
-            const requiredInputs = formPraSurvei.querySelectorAll('[required]');
-            let isValid = true;
+    formPraSurvei.addEventListener('submit', function(event) {
+        // Dicocokkan dengan nama name="..." di form sesuai Controller storeStep5
+        const omsetUsaha = formPraSurvei.querySelector('input[name="omset_usaha"]');
+        const biayaOperasional = formPraSurvei.querySelector('input[name="biaya_operasional"]');
+        const penghasilanTambahan = formPraSurvei.querySelector('input[name="penghasilan_tambahan"]');
+        const pengeluaranRT = formPraSurvei.querySelector('input[name="pengeluaran_rumah_tangga"]');
+        const angsuranBank = formPraSurvei.querySelector('input[name="angsuran_bank_lain"]');
+        const angsuranBPR = formPraSurvei.querySelector('input[name="angsuran_bpr"]');
+        const deskripsiUsaha = formPraSurvei.querySelector('textarea[name="deskripsi_usaha"]');
 
-            requiredInputs.forEach(input => {
-                if (!input.value.trim()) {
-                    isValid = false;
+        let isValid = true;
+        let errorMessage = 'Mohon lengkapi semua field yang wajib diisi!';
+
+        // Validasi elemen form utama
+        if (!omsetUsaha || !omsetUsaha.value.trim() || 
+            !biayaOperasional || !biayaOperasional.value.trim() || 
+            !penghasilanTambahan || !penghasilanTambahan.value.trim() || 
+            !pengeluaranRT || !pengeluaranRT.value.trim() || 
+            !angsuranBank || !angsuranBank.value.trim() || 
+            !angsuranBPR || !angsuranBPR.value.trim() || 
+            !deskripsiUsaha || !deskripsiUsaha.value.trim()) {
+            isValid = false;
+        }
+        // Validasi detail berkas lainnya jika dicentang tapi teksnya kosong
+        else if (checkboxLainnya && checkboxLainnya.checked && inputLainnya.value.trim() === '') {
+            isValid = false;
+            errorMessage = 'Mohon isi detail untuk berkas lainnya';
+        }
+
+        if (!isValid) {
+            event.preventDefault(); // Mencegah form tersubmit jika belum lengkap
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: errorMessage,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#0082CB',
+                heightAuto: false,
+                customClass: {
+                    popup: 'swal2-tight-popup',
+                    confirmButton: 'swal2-tight-btn'
                 }
             });
-
-            // Validasi khusus: Jika checkbox "Yang Lain" dicentang, pastikan kotak teksnya tidak kosong
-            if (checkboxLainnya.checked && inputLainnya.value.trim() === '') {
-                isValid = false;
-            }
-
-            if (!isValid) {
-                alert('Pertanyaan dengan tanda (*) wajib untuk diisi!');
-            } else {
-                formPraSurvei.submit(); 
-            }
         }
-    </script>
+    });
+</script>
+
+<style>
+    .swal2-popup.swal2-tight-popup {
+        font-size: 0.65rem !important;
+        width: 21rem !important;
+        padding: 1rem 1.2rem !important;
+        border-radius: 0.85rem !important;
+        background: #ffffff !important;
+        box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-icon {
+        margin: 0.6rem auto -0.2rem !important; 
+        transform: scale(0.85);
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-title {
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        color: #1f2937 !important;
+        margin: 0 0 0.15rem !important;
+        padding-top: 0 !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-html-container {
+        font-size: 0.95rem !important;
+        color: #4b5563 !important;
+        margin: 0.15rem 0 0.8rem !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-actions {
+        margin: 0.3rem auto 0 !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-tight-btn {
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        padding: 0.4rem 1.4rem !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
 </body>
 </html>

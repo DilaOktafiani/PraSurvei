@@ -39,9 +39,7 @@
         <!-- FORM UTAMA -->
         <form id="formPraSurvei" action="{{ route('storeStep4') }}" method="POST" class="space-y-6">
             @csrf 
-
-            <!-- PENTING: Hidden input untuk mengirim debitur_id -->
-            <!-- Sesuaikan sumber nilainya dari controller Anda ($debitur->id atau session) -->
+            
             <input type="hidden" name="debitur_id" value="{{ $debitur->id ?? session('debitur_id') }}">
 
             <!-- JAMINAN LAINNYA -->

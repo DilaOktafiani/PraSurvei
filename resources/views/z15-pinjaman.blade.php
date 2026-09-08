@@ -6,6 +6,8 @@
     <title>Form Credit Analys - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -38,17 +40,6 @@
                 <span>*</span> Menunjukkan pertanyaan yang wajib diisi
             </p>
         </div>
-
-        <!-- TAMPILKAN PESAN ERROR JIKA VALIDASI GAGAL -->
-        @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-sm">
-                <ul class="list-disc pl-5">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
 
         <!-- FORM UTAMA -->
         <form id="formPraSurvei" action="{{ route('storeAlur15') }}" method="POST" class="space-y-6">

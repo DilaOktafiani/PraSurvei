@@ -6,6 +6,8 @@
     <title>Form Credit Analys - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -46,18 +48,6 @@
             
             <!-- HIDDEN INPUT UNTUK DEBITUR ID -->
             <input type="hidden" name="debitur_id" value="{{ $debitur_id ?? old('debitur_id') }}">
-
-            <!-- TAMPILKAN ERROR VALIDASI JIKA ADA -->
-            @if ($errors->any())
-                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded text-sm text-red-700">
-                    <p class="font-bold">Terjadi Kesalahan Validasi:</p>
-                    <ul class="list-disc list-inside mt-1">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
             <!-- CEK DATA LAMA / OLD -->
             @php
@@ -118,7 +108,7 @@
                             class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                         Kembali
                     </a>
-                    <button type="button" onclick="validateAndSubmit()" 
+                    <button type="submit" 
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         Berikutnya
                     </button>
@@ -131,36 +121,96 @@
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
 
-    <script>
-        const inputLainnya = document.getElementById('input_lainnya');
-        const radioLainnya = document.getElementById('radio_lainnya');
+<script>
+    const inputLainnya = document.getElementById('input_lainnya');
+    const radioLainnya = document.getElementById('radio_lainnya');
+    const nilaiSimpanan = document.getElementById('nilai_simpanan');
 
-        // Jika user mengetik, otomatis pilih radio "Yang Lain"
-        inputLainnya.addEventListener('input', function() {
-            if (this.value.trim() !== '') {
-                radioLainnya.checked = true;
-            }
-        });
-
-        function validateAndSubmit() {
-            const form = document.getElementById('formPraSurvei');
-            const selectedSimpanan = form.querySelector('input[name="jenis_simpanan"]:checked');
-            
-            // 1. Validasi Radio terpilih
-            if (!selectedSimpanan) {
-                alert('Silakan pilih jenis simpanan!');
-                return;
-            }
-
-            // 2. Validasi "Yang Lain"
-            if (selectedSimpanan.value === 'yang_lain' && inputLainnya.value.trim() === '') {
-                alert('Silakan isi keterangan jenis simpanan lainnya!');
-                inputLainnya.focus();
-                return;
-            }
-
-            form.submit();
+    // Jika user mengetik, otomatis pilih radio "Yang Lain"
+    inputLainnya.addEventListener('input', function() {
+        if (this.value.trim() !== '') {
+            radioLainnya.checked = true;
         }
-    </script>
+    });
+
+    const formPraSurvei = document.getElementById('formPraSurvei');
+    formPraSurvei.addEventListener('submit', function(event) {
+        const selectedSimpanan = formPraSurvei.querySelector('input[name="jenis_simpanan"]:checked');
+        let isValid = true;
+        let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
+        // 1. Validasi Radio terpilih
+        if (!selectedSimpanan) {
+            isValid = false;
+        }
+        // 2. Validasi "Yang Lain" jika radio terpilih tapi input teks kosong
+        else if (selectedSimpanan.value === 'yang_lain' && inputLainnya.value.trim() === '') {
+            isValid = false;
+        }
+        // 3. Validasi Nilai Simpanan kosong
+        else if (!nilaiSimpanan.value.trim()) {
+            isValid = false;
+        }
+
+        if (!isValid) {
+            event.preventDefault(); // Batalkan submit form agar popup muncul
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: errorMessage,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#0082CB',
+                heightAuto: false,
+                customClass: {
+                    popup: 'swal2-tight-popup',
+                    confirmButton: 'swal2-tight-btn'
+                }
+            });
+        }
+        // Jika valid, biarkan form melakukan submit secara normal tanpa preventDefault()
+    });
+</script>
+
+<style>
+    .swal2-popup.swal2-tight-popup {
+        font-size: 0.65rem !important;
+        width: 21rem !important;
+        padding: 1rem 1.2rem !important;
+        border-radius: 0.85rem !important;
+        background: #ffffff !important;
+        box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-icon {
+        margin: 0.6rem auto -0.2rem !important; 
+        transform: scale(0.85);
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-title {
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        color: #1f2937 !important;
+        margin: 0 0 0.15rem !important;
+        padding-top: 0 !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-html-container {
+        font-size: 0.95rem !important;
+        color: #4b5563 !important;
+        margin: 0.15rem 0 0.8rem !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-actions {
+        margin: 0.3rem auto 0 !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-tight-btn {
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        padding: 0.4rem 1.4rem !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
 </body>
 </html>

@@ -97,8 +97,8 @@
                     <p class="text-gray-500 text-sm mb-6">Analisis kelayakan kredit mendalam dan verifikasi data lanjutan oleh Credit Analyst.</p>
                 </div>
                 <a href="{{ route('z1-surveica', ['new' => 'true']) }}" class="block text-center bg-[#0A3370] text-white font-semibold py-2.5 rounded-lg hover:bg-[#062452] transition shadow-md text-sm">
-    Isi Formulir Survei
-</a>
+                    Isi Formulir Survei
+                </a>
             </div>
 
             <!-- Tombol 3: Riwayat Pengajuan -->

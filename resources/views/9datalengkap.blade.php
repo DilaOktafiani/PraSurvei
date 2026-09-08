@@ -6,6 +6,8 @@
     <title>Formulir Kelengkapan Data - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -36,22 +38,6 @@
             </div>
         </div>
 
-        <!-- NOTIFIKASI ERROR VALIDASI -->
-        @if ($errors->any())
-            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md">
-                <div class="flex">
-                    <div class="ml-3">
-                        <p class="text-sm text-red-700 font-bold">Terjadi kesalahan pengisian form:</p>
-                        <ul class="list-disc list-inside text-sm text-red-600 mt-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        @endif
-
         @php
             // Helper untuk mengambil data array dari database atau old input
             $getSavedArray = function($fieldName) use ($dataLengkap) {
@@ -76,7 +62,7 @@
         @endphp
 
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeStep9') }}" method="POST" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeStep9') }}" method="POST" class="space-y-6" novalidate onsubmit="prepareAndSubmit(event)">
             @csrf 
             
             <!-- HIDDEN INPUT DEBITUR ID -->
@@ -176,7 +162,8 @@
                     <button type="button" onclick="window.history.back()" class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                         Kembali
                     </button>
-                    <button type="button" onclick="prepareAndSubmit()" class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
+                    <button type="submit" 
+                            class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         Berikutnya
                     </button>
                 </div>
@@ -188,7 +175,7 @@
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
 
-    <!-- JAVASCRIPT UNTUK MENGGABUNGKAN INPUT LAINNYA KE DALAM ARRAY SURAT_NIKAH -->
+    <!-- JAVASCRIPT UNTUK MENGGABUNGKAN INPUT LAINNYA & VALIDASI SWEETALERT -->
     <script>
         const inputLainnya = document.getElementById('input_lainnya');
         const checkboxLainnya = document.getElementById('checkbox_lainnya');
@@ -201,8 +188,27 @@
             }
         });
 
-        function prepareAndSubmit() {
+        function prepareAndSubmit(event) {
+            event.preventDefault();
             const form = document.getElementById('formPraSurvei');
+
+            // Validasi radio button "Apakah Badan Usaha"
+            const selectedBadanUsaha = form.querySelector('input[name="apakah_badan_usaha"]:checked');
+            if (!selectedBadanUsaha) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan',
+                    text: 'Mohon lengkapi semua pertanyaan yang bertanda (*)',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#0082CB',
+                    heightAuto: false,
+                    customClass: {
+                        popup: 'swal2-tight-popup',
+                        confirmButton: 'swal2-tight-btn'
+                    }
+                });
+                return;
+            }
 
             // Hapus hidden input dynamic sebelumnya agar tidak double saat klik berulang
             document.querySelectorAll('.dynamic-surat-nikah').forEach(el => el.remove());
@@ -231,5 +237,47 @@
             form.submit();
         }
     </script>
+
+<style>
+    .swal2-popup.swal2-tight-popup {
+        font-size: 0.65rem !important;
+        width: 21rem !important;
+        padding: 1rem 1.2rem !important;
+        border-radius: 0.85rem !important;
+        background: #ffffff !important;
+        box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-icon {
+        margin: 0.6rem auto -0.2rem !important; 
+        transform: scale(0.85);
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-title {
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        color: #1f2937 !important;
+        margin: 0 0 0.15rem !important;
+        padding-top: 0 !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-html-container {
+        font-size: 0.95rem !important;
+        color: #4b5563 !important;
+        margin: 0.15rem 0 0.8rem !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-actions {
+        margin: 0.3rem auto 0 !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-tight-btn {
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        padding: 0.4rem 1.4rem !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
 </body>
 </html>

@@ -6,6 +6,8 @@
     <title>Formulir Pra-Survei - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -40,24 +42,8 @@
             </p>
         </div>
 
-        <!-- TAMPILKAN PESAN ERROR VALIDASI -->
-        @if ($errors->any())
-            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm">
-                <div class="flex items-center">
-                    <div class="text-red-700 text-sm font-medium">
-                        <p class="font-bold mb-1">Terjadi Kesalahan Pengisian Form:</p>
-                        <ul class="list-disc list-inside space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        @endif
-
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeStep8-1') }}" method="POST" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeStep8-1') }}" method="POST" class="space-y-6" novalidate>
             @csrf <!-- Security Token Laravel -->
 
             <!-- Hidden Input Debitur ID (Wajib agar terhubung dengan tabel debitur) -->
@@ -113,5 +99,78 @@
     <footer class="text-center text-xs text-gray-500 pb-6">
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
+
+<script>
+    const formPraSurvei = document.getElementById('formPraSurvei');
+    
+    formPraSurvei.addEventListener('submit', function(event) {
+        const selectedTakeOver = formPraSurvei.querySelector('input[name="apakah_kredit_take_over"]:checked');
+        let isValid = true;
+        let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
+        // Validasi radio button "Apakah kredit take over"
+        if (!selectedTakeOver) {
+            isValid = false;
+        }
+
+        if (!isValid) {
+            event.preventDefault(); // Batalkan submit form agar popup muncul
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: errorMessage,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#0082CB',
+                heightAuto: false,
+                customClass: {
+                    popup: 'swal2-tight-popup',
+                    confirmButton: 'swal2-tight-btn'
+                }
+            });
+        }
+    });
+</script>
+
+<style>
+    .swal2-popup.swal2-tight-popup {
+        font-size: 0.65rem !important;
+        width: 21rem !important;
+        padding: 1rem 1.2rem !important;
+        border-radius: 0.85rem !important;
+        background: #ffffff !important;
+        box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-icon {
+        margin: 0.6rem auto -0.2rem !important; 
+        transform: scale(0.85);
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-title {
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        color: #1f2937 !important;
+        margin: 0 0 0.15rem !important;
+        padding-top: 0 !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-html-container {
+        font-size: 0.95rem !important;
+        color: #4b5563 !important;
+        margin: 0.15rem 0 0.8rem !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-actions {
+        margin: 0.3rem auto 0 !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-tight-btn {
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        padding: 0.4rem 1.4rem !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
 </body>
 </html>

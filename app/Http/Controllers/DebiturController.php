@@ -383,6 +383,9 @@ class DebiturController extends Controller
     {
         $request->validate([
             'debitur_id' => 'required|exists:debiturs,id',
+            'spesifikasi' => 'required',
+            'status_kepemilikan' => 'required',
+            'harga_taksasi' => 'required',
             // ... validasi lainnya
         ]);
 
@@ -399,13 +402,13 @@ class DebiturController extends Controller
                 'spesifikasi' => $request->spesifikasi,
                 'status_kepemilikan' => ($request->status_kepemilikan === 'yang_lain') ? $request->status_kepemilikan_lainnya : $request->status_kepemilikan,
                 'harga_taksasi' => $request->harga_taksasi,
-                'harga_taksasi_sumber_lain' => $request->harga_taksasi_sumber_lain,
+                'harga_taksasi_sumber_lain' => $request->harga_taksasi_sumber_lain ?? '',
             ]
         );
 
         return redirect()->route('3-3simpanan')->with('success', 'Data tersimpan.');
     }
-
+    
     // ==========================================
     // SIMPANAN
     // ==========================================
@@ -512,8 +515,7 @@ class DebiturController extends Controller
             $data = AgunanLogam::where('agunan_id', $agunan->id)->first();
         } 
 
-        // Daftar opsi standar logam mulia yang ada di dropdown HTML Anda
-        $opsiStandar = ['Antam', 'UBS', 'Lotus Archi', 'Goldbar']; // Sesuaikan 'Goldbar' jika sebelumnya 'Goldber'
+        $opsiStandar = ['emas_antam', 'emas_non_antam', 'emas_lokal', 'emas_perhiasan'];
 
         $jenisLogamVal = '';
         $jenisLogamLainVal = '';

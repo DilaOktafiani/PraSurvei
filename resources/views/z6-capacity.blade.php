@@ -6,6 +6,8 @@
     <title>Form Credit Analys - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -39,17 +41,6 @@
             </p>
         </div>
 
-        <!-- TAMPILKAN PESAN ERROR JIKA VALIDASI GAGAL -->
-        @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-sm">
-                <ul class="list-disc pl-5">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <!-- FORM UTAMA -->
         <form id="formPraSurvei" action="{{ route('storeAlur6') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
@@ -65,7 +56,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Deskripsi Usaha <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="deskripsi_usaha" rows="6" placeholder="" required
+                    <textarea name="deskripsi_usaha" rows="6" placeholder="" required data-required="true"
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('deskripsi_usaha', $capacity->deskripsi_usaha ?? '') }}</textarea>
                 </div>
 
@@ -73,7 +64,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Informasi Penghasilan Utama Menurut Nasabah <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="informasi_penghasilan_utama" rows="6" placeholder="" required
+                    <textarea name="informasi_penghasilan_utama" rows="6" placeholder="" required data-required="true"
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('informasi_penghasilan_utama', $capacity->informasi_penghasilan_utama ?? '') }}</textarea>
                 </div>
 
@@ -89,7 +80,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Pengeluaran Rumah Tangga <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="pengeluaran_rumah_tangga" value="{{ old('pengeluaran_rumah_tangga', $capacity->pengeluaran_rumah_tangga ?? '') }}" placeholder="ex : 2000000" required
+                    <input type="number" name="pengeluaran_rumah_tangga" value="{{ old('pengeluaran_rumah_tangga', $capacity->pengeluaran_rumah_tangga ?? '') }}" placeholder="ex : 2000000" required data-required="true"
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 
@@ -97,7 +88,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Angsuran Bank Lain <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="angsuran_bank_lain" value="{{ old('angsuran_bank_lain', $capacity->angsuran_bank_lain ?? '') }}" placeholder="ex : 1000000" required
+                    <input type="number" name="angsuran_bank_lain" value="{{ old('angsuran_bank_lain', $capacity->angsuran_bank_lain ?? '') }}" placeholder="ex : 1000000" required data-required="true"
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 
@@ -105,7 +96,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Angsuran BPR <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="angsuran_bpr" value="{{ old('angsuran_bpr', $capacity->angsuran_bpr ?? '') }}" placeholder="ex : 2000000" required
+                    <input type="number" name="angsuran_bpr" value="{{ old('angsuran_bpr', $capacity->angsuran_bpr ?? '') }}" placeholder="ex : 2000000" required data-required="true"
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 
@@ -113,13 +104,13 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Analisis Kapasitas oleh CA <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="analisis_kapasitas" rows="6" placeholder="" required
+                    <textarea name="analisis_kapasitas" rows="6" placeholder="" required data-required="true"
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('analisis_kapasitas', $capacity->analisis_kapasitas ?? '') }}</textarea>
                 </div>
 
                 <!-- Upload Mutasi Rekening -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Upload Mutasi Rekening <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Upload Mutasi Rekening <span class="text-red-500"></span></label>
                     <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung. Maks 10 MB.</p>
                         <input type="file" id="file_mutasi_rekening" name="file_mutasi_rekening" accept=".pdf, .jpg, .jpeg, .png" class="hidden" onchange="handleFileSelect(this)">
@@ -237,7 +228,6 @@
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
 
-    <!-- SCRIPT JAVASCRIPT UNTUK PREVIEW FILE & SUBMIT -->
     <script>
         function handleFileSelect(input) {
             if (input.files && input.files[0]) {
@@ -264,14 +254,93 @@
             btnText.textContent = 'Tambahkan file';
         }
 
+        const inputLainnya = document.getElementById('input_lainnya');
+        const checkboxLainnya = document.getElementById('checkbox_lainnya');
+
+        // Jika user mengetik, otomatis centang checkbox "Yang Lain"
+        inputLainnya.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                checkboxLainnya.checked = true;
+            }
+        });
+
         function validateAndSubmit() {
             const form = document.getElementById('formPraSurvei');
-            if (form.checkValidity()) {
-                form.submit();
+            let isValid = true;
+            let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
+            // Hanya memvalidasi field yang diberi atribut data-required="true" (yang memiliki tanda bintang *)
+            const requiredFields = form.querySelectorAll('[data-required="true"]');
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                  isValid = false;
+              }
+            });
+
+            // Validasi tambahan jika checkbox "Yang Lain" pada kelengkapan berkas dicentang tapi input detailnya kosong
+            if (checkboxLainnya.checked && inputLainnya.value.trim() === '') {
+                isValid = false;
+            }
+
+            if (!isValid) {
+                Swal.fire({
+                  icon: 'warning',
+                  title: 'Peringatan',
+                  text: errorMessage,
+                  confirmButtonText: 'OK',
+                  confirmButtonColor: '#0082CB',
+                  heightAuto: false,
+                  customClass: {
+                    popup: 'swal2-tight-popup',
+                    confirmButton: 'swal2-tight-btn'
+                  }
+              });
             } else {
-                form.reportValidity();
+                form.submit();
             }
         }
     </script>
+
+<style>
+    .swal2-popup.swal2-tight-popup {
+        font-size: 0.65rem !important;
+        width: 21rem !important;
+        padding: 1rem 1.2rem !important;
+        border-radius: 0.85rem !important;
+        background: #ffffff !important;
+        box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-icon {
+        margin: 0.6rem auto -0.2rem !important; 
+        transform: scale(0.85);
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-title {
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        color: #1f2937 !important;
+        margin: 0 0 0.15rem !important;
+        padding-top: 0 !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-html-container {
+        font-size: 0.95rem !important;
+        color: #4b5563 !important;
+        margin: 0.15rem 0 0.8rem !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-actions {
+        margin: 0.3rem auto 0 !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-tight-btn {
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        padding: 0.4rem 1.4rem !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
 </body>
 </html>

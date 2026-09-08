@@ -6,6 +6,8 @@
     <title>Formulir Pra-Survei - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -40,24 +42,8 @@
             </p>
         </div>
 
-        <!-- TAMPILKAN PESAN ERROR VALIDASI -->
-        @if ($errors->any())
-            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm">
-                <div class="flex items-center">
-                    <div class="text-red-700 text-sm font-medium">
-                        <p class="font-bold mb-1">Terjadi Kesalahan Pengisian Form:</p>
-                        <ul class="list-disc list-inside space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        @endif
-
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeStep7') }}" method="POST" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeStep7') }}" method="POST" class="space-y-6" novalidate>
             @csrf <!-- Security Token Laravel -->
             
             <!-- Hidden Input Debitur ID (Penting agar data terhubung dengan benar) -->
@@ -73,7 +59,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Aset 1 <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="aset1" rows="2" required placeholder="ex : Jalan Bhayangkara no 78 Types Solo, Luas 96 m2 Lebar Depan 8m dan Panjang Belakang 12m, diperoleh tahun 2020 dengan transaksi jual beli, saat ini digunakan untuk usaha toko kelontong"
+                    <textarea id="aset1" name="aset1" rows="2" placeholder="ex : Jalan Bhayangkara no 78 Types Solo, Luas 96 m2 Lebar Depan 8m dan Panjang Belakang 12m, diperoleh tahun 2020 dengan transaksi jual beli, saat ini digunakan untuk usaha toko kelontong"
                     class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ $capital->aset1 ?? old('aset1') }}</textarea>
                 </div>
 
@@ -137,5 +123,78 @@
     <footer class="text-center text-xs text-gray-500 pb-6">
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
+
+<script>
+    const formPraSurvei = document.getElementById('formPraSurvei');
+    const aset1 = document.getElementById('aset1');
+
+    formPraSurvei.addEventListener('submit', function(event) {
+        let isValid = true;
+        let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
+        // Validasi Aset 1 (Wajib)
+        if (!aset1.value.trim()) {
+            isValid = false;
+        }
+
+        if (!isValid) {
+            event.preventDefault(); // Batalkan submit form agar popup muncul
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: errorMessage,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#0082CB',
+                heightAuto: false,
+                customClass: {
+                    popup: 'swal2-tight-popup',
+                    confirmButton: 'swal2-tight-btn'
+                }
+            });
+        }
+    });
+</script>
+
+<style>
+    .swal2-popup.swal2-tight-popup {
+        font-size: 0.65rem !important;
+        width: 21rem !important;
+        padding: 1rem 1.2rem !important;
+        border-radius: 0.85rem !important;
+        background: #ffffff !important;
+        box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-icon {
+        margin: 0.6rem auto -0.2rem !important; 
+        transform: scale(0.85);
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-title {
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        color: #1f2937 !important;
+        margin: 0 0 0.15rem !important;
+        padding-top: 0 !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-html-container {
+        font-size: 0.95rem !important;
+        color: #4b5563 !important;
+        margin: 0.15rem 0 0.8rem !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-actions {
+        margin: 0.3rem auto 0 !important;
+    }
+
+    .swal2-popup.swal2-tight-popup .swal2-tight-btn {
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        padding: 0.4rem 1.4rem !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
 </body>
 </html>
