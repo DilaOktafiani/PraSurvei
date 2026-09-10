@@ -176,15 +176,23 @@
     const formPraSurvei = document.getElementById('formPraSurvei');
     formPraSurvei.addEventListener('submit', function(event) {
         const selectedLogam = formPraSurvei.querySelector('input[name="jenis_logam"]:checked');
+        const berat = document.getElementById('berat').value.trim();
+        const hargaBeli = document.getElementById('harga_beli_tahun_perolehan').value.trim();
+        const hargaSaatIni = document.getElementById('harga_saatini').value.trim();
+
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
-        // 1. Validasi Radio terpilih
+        // 1. Validasi Radio Logam terpilih
         if (!selectedLogam) {
             isValid = false;
         }
         // 2. Validasi "Yang Lain" jika radio terpilih tapi input teks kosong
         else if (selectedLogam.value === 'yang_lain' && inputLainnya.value.trim() === '') {
+            isValid = false;
+        }
+        // 3. Validasi Input Teks Wajib (Berat, Harga Beli, Harga Saat Ini)
+        else if (berat === '' || hargaBeli === '' || hargaSaatIni === '') {
             isValid = false;
         }
 
@@ -203,7 +211,7 @@
                 }
             });
         }
-        // Jika valid, biarkan form melakukan submit secara normal tanpa preventDefault()
+        // Jika semua sudah terisi lengkap, form akan lanjut tersubmit secara normal
     });
 </script>
 

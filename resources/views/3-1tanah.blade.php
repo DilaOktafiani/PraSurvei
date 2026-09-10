@@ -6,6 +6,8 @@
     <title>Formulir Pra-Survei - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -37,7 +39,7 @@
         </div>
 
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeStep3-1') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeStep3-1') }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>
             @csrf 
             <input type="hidden" name="debitur_id" value="{{ $debiturId ?? session('debitur_id') }}">
             
@@ -239,28 +241,114 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
         // Fungsi untuk mengosongkan form secara total tanpa pop-up
         function clearForm() {
             const form = document.getElementById('formPraSurvei');
-            
-            // 1. Reset form standar (mengosongkan text, textarea, number, radio, dll)
             form.reset();
-
-            // 2. Kosongkan paksa semua input teks, textarea, dan number agar bersih dari sisa value database/old
+            
             const inputs = form.querySelectorAll('input[type="text"], input[type="url"], input[type="number"], textarea');
             inputs.forEach(input => {
-                // Kecuali input hidden seperti debitur_id dan urutan agar tidak terhapus sistem
                 if (input.name !== 'debitur_id' && input.name !== 'urutan') {
                     input.value = '';
                 }
             });
 
-            // 3. Bersihkan pilihan Radio Button (Jaminan Lain)
             const radios = form.querySelectorAll('input[type="radio"]');
             radios.forEach(radio => {
                 radio.checked = false;
             });
 
-            // 4. Bersihkan komponen file upload dan pratinjaunya
             removeFile();
         }
+
+        // Penyesuaian Validasi & Pop-up Submit
+        const formPraSurvei = document.getElementById('formPraSurvei');
+        formPraSurvei.addEventListener('submit', function(event) {
+            let isValid = true;
+            let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
+            // 1. Validasi Input Wajib (Required Fields)
+            const requiredFields = formPraSurvei.querySelectorAll('[required]');
+            requiredFields.forEach(field => {
+                if (!field.value || field.value.trim() === '') {
+                    isValid = false;
+                }
+            });
+
+            // 2. Validasi File Upload (Denah) jika belum ada file baru maupun database lama
+            const fileInput = document.getElementById('file_denah');
+            const filePreview = document.getElementById('file_preview');
+            const hasExistingFile = filePreview && !filePreview.classList.contains('hidden');
+            if ((!fileInput.files || fileInput.files.length === 0) && !hasExistingFile) {
+                isValid = false;
+            }
+
+            // 3. Validasi Radio Button (Jaminan Lain) jika elemennya ada di halaman
+            const wrapperJaminanLain = document.getElementById('wrapper_jaminan_lain');
+            if (wrapperJaminanLain) {
+                const selectedRadio = formPraSurvei.querySelector('input[name="jaminan_lain_input"]:checked');
+                if (!selectedRadio) {
+                    isValid = false;
+                }
+            }
+
+            if (!isValid) {
+                event.preventDefault(); // Mencegah submit form jika validasi gagal
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan',
+                    text: errorMessage,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#0082CB',
+                    heightAuto: false,
+                    customClass: {
+                        popup: 'swal2-tight-popup',
+                        confirmButton: 'swal2-tight-btn'
+                    }
+                });
+            } else {
+                // Biarkan form melakukan submit secara normal tanpa preventDefault
+            }
+        });
     </script>
+
+    <style>
+        .swal2-popup.swal2-tight-popup {
+            font-size: 0.65rem !important;
+            width: 21rem !important;
+            padding: 1rem 1.2rem !important;
+            border-radius: 0.85rem !important;
+            background: #ffffff !important;
+            box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .swal2-popup.swal2-tight-popup .swal2-icon {
+            margin: 0.6rem auto -0.2rem !important; 
+            transform: scale(0.85);
+        }
+        
+        .swal2-popup.swal2-tight-popup .swal2-title {
+            font-size: 1.25rem !important;
+            font-weight: 700 !important;
+            color: #1f2937 !important;
+            margin: 0 0 0.15rem !important;
+            padding-top: 0 !important;
+        }
+        
+        .swal2-popup.swal2-tight-popup .swal2-html-container {
+            font-size: 0.95rem !important;
+            color: #4b5563 !important;
+            margin: 0.15rem 0 0.8rem !important;
+        }
+        
+        .swal2-popup.swal2-tight-popup .swal2-actions {
+            margin: 0.3rem auto 0 !important;
+        }
+        
+        .swal2-popup.swal2-tight-popup .swal2-tight-btn {
+            font-size: 0.9rem !important;
+            font-weight: 600 !important;
+            padding: 0.4rem 1.4rem !important;
+            border-radius: 0.5rem !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+        }
+    </style>
 </body>
 </html>

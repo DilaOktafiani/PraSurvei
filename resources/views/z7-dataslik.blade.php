@@ -42,7 +42,7 @@
         </div>
 
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeAlur7') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeAlur7') }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>    
             @csrf
 
             <!-- Input tersembunyi untuk debitur_id -->
@@ -55,7 +55,7 @@
 
                 <!-- Upload Data SLIK -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Upload Data SLIK <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Upload Data SLIK <span class="text-red-500"></span></label>
                     <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
                         <input type="file" id="file_slik" name="file_slik" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this)">
@@ -138,5 +138,80 @@
             btnText.textContent = 'Tambahkan file';
         }
     </script>
+
+    <script>
+    // Ubah event tombol submit form khusus untuk form SLIK ini
+    const formPraSurvei = document.getElementById('formPraSurvei');
+    formPraSurvei.addEventListener('submit', function(event) {
+        const analisisSlikInput = formPraSurvei.querySelector('textarea[name="analisis_slik"]');
+        
+        let isValid = true;
+        let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
+        // Hanya validasi kolom Analisis SLIK saja yang wajib diisi
+        if (analisisSlikInput.value.trim() === '') {
+            isValid = false;
+        }
+
+        if (!isValid) {
+            event.preventDefault(); // Mencegah form submit jika tidak valid
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: errorMessage,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#0082CB',
+                heightAuto: false,
+                customClass: {
+                    popup: 'swal2-tight-popup',
+                    confirmButton: 'swal2-tight-btn'
+                }
+            });
+        }
+        // Jika valid, form akan langsung melakukan submit secara normal ke server meskipun file kosong
+    });
+</script>
+
+<style>
+    .swal2-popup.swal2-tight-popup {
+        font-size: 0.65rem !important;
+        width: 21rem !important;
+        padding: 1rem 1.2rem !important;
+        border-radius: 0.85rem !important;
+        background: #ffffff !important;
+        box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-icon {
+        margin: 0.6rem auto -0.2rem !important; 
+        transform: scale(0.85);
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-title {
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        color: #1f2937 !important;
+        margin: 0 0 0.15rem !important;
+        padding-top: 0 !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-html-container {
+        font-size: 0.95rem !important;
+        color: #4b5563 !important;
+        margin: 0.15rem 0 0.8rem !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-actions {
+        margin: 0.3rem auto 0 !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-tight-btn {
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        padding: 0.4rem 1.4rem !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
 </body>
 </html>

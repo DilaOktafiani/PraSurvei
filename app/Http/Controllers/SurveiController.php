@@ -252,8 +252,9 @@ class SurveiController extends Controller
 
     public function storeAlur3_1(Request $request)
     {
+
         $request->validate([
-            'debitur_id'         => 'required|exists:debiturs,id',
+            'debitur_id'         => 'required|exists:survei.debiturs,id',
             'urutan'             => 'required|integer', 
             'kepemilikan'        => 'nullable|string|max:500',
             'alamat'             => 'nullable|string|max:500',
@@ -372,24 +373,31 @@ class SurveiController extends Controller
 
     public function storeAlur3_2(Request $request)
     {
+        // 1. Lengkapi validasi agar aman dari input kosong yang tidak diinginkan
         $request->validate([
-            'debitur_id' => 'required|exists:debiturs,id',
+            'debitur_id'                 => 'required|exists:survei.debiturs,id',
+            'spesifikasi'                => 'nullable|string',
+            'status_kepemilikan'         => 'nullable|string',
+            'status_kepemilikan_lainnya' => 'nullable|string',
+            'harga_taksasi'              => 'nullable|numeric',
+            'harga_taksasi_sumber_lain'  => 'nullable|string',
         ]);
 
-        // Ambil atau buat agunan
+        // 2. Ambil atau buat agunan
         $agunan = Agunan::updateOrCreate(
             ['debitur_id' => $request->debitur_id, 'jenis_agunan' => 'kendaraan'],
             ['updated_at' => now()]
         );
 
-        // Update atau buat detail kendaraan
+        // 3. Update atau buat detail kendaraan
+        // Gunakan operator `??` untuk mencegah nilai null masuk ke database jika kolomnya wajib (NOT NULL)
         AgunanKendaraan::updateOrCreate(
             ['agunan_id' => $agunan->id],
             [
                 'spesifikasi' => $request->spesifikasi,
                 'status_kepemilikan' => ($request->status_kepemilikan === 'yang_lain') ? $request->status_kepemilikan_lainnya : $request->status_kepemilikan,
                 'harga_taksasi' => $request->harga_taksasi,
-                'harga_taksasi_sumber_lain' => $request->harga_taksasi_sumber_lain,
+                'harga_taksasi_sumber_lain' => $request->harga_taksasi_sumber_lain ?? '',
             ]
         );
 
@@ -402,34 +410,27 @@ class SurveiController extends Controller
 
     public function createAlur3_3($debitur_id = null)
     {
-        // Ambil debitur_id dari parameter URL atau dari session (tanpa redirect paksa)
         $debitur_id = $debitur_id ?? session('debitur_id');
 
-        if ($debitur_id) {
-            session(['debitur_id' => $debitur_id]);
+        if (!$debitur_id) {
+            return redirect()->route('z2-surveica')->with('error', 'Silakan isi data debitur terlebih dahulu.');
         }
 
-        $agunan = null;
-        $data = null;
+        session(['debitur_id' => $debitur_id]);
 
-        if ($debitur_id) {
-            $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'simpanan')->first();
-            $data = $agunan ? $agunan->simpanan : null;
-        }
+        $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'simpanan')->first();
+        $data = $agunan ? $agunan->simpanan : null;
 
-        // Tentukan rute tombol kembali secara dinamis
+        // Deteksi halaman asal dari riwayat URL sebelumnya untuk tombol Kembali (Pola yang sama seperti kendaraan)
         $previousUrl = url()->previous();
-
         if (str_contains($previousUrl, 'z3-2kendaraan')) {
-            // Jika pengguna datang dari halaman Kendaraan
-            $backRoute = route('z3-2kendaraan');
+            session(['simpanan_back' => route('z3-2kendaraan')]);
         } elseif (str_contains($previousUrl, 'z2-surveica')) {
-            // Jika pengguna datang dari Halaman 2 Survei
-            $backRoute = route('z2-surveica');
-        } else {
-            // Fallback default jika diakses langsung atau dari rute lain
-            $backRoute = route('z2-surveica'); 
+            session(['simpanan_back' => route('z2-surveica')]);
         }
+
+        // Fallback default ke z3-2kendaraan karena sebelum simpanan pastinya adalah kendaraan
+        $backRoute = session('simpanan_back', route('z3-2kendaraan'));
 
         return view('z3-3simpanan', compact('debitur_id', 'data', 'backRoute'));
     }
@@ -437,10 +438,10 @@ class SurveiController extends Controller
     public function storeAlur3_3(Request $request)
     {
         $request->validate([
-            'debitur_id' => 'required|exists:debiturs,id',
-            'jenis_simpanan' => 'required|string',
+            'debitur_id'             => 'required|exists:survei.debiturs,id',
+            'jenis_simpanan'         => 'required|string',
             'jenis_simpanan_lainnya' => 'nullable|string',
-            'nilai_simpanan' => 'required|numeric',
+            'nilai_simpanan'         => 'required|numeric',
         ]);
 
         // Tangani jika user memilih "yang_lain"
@@ -498,7 +499,7 @@ class SurveiController extends Controller
 
         $agunan = null;
         $data = null;
-        $opsiStandar = ['Antam', 'UBS', 'Lotus Archi', 'Goldber', 'Goldbar'];
+        $opsiStandar = ['emas_antam', 'emas_non_antam', 'emas_lokal', 'emas_perhiasan'];
         $jenisLogamVal = '';
         $jenisLogamLainVal = '';
 
@@ -538,7 +539,7 @@ class SurveiController extends Controller
     public function storeAlur3_4(Request $request)
     {
         $request->validate([
-            'debitur_id' => 'required|exists:debiturs,id',
+            'debitur_id' => 'required|exists:survei.debiturs,id',
             'jenis_logam' => 'required|string',
             'jenis_logam_lain' => 'nullable|string',
             'berat' => 'required|numeric',
@@ -605,16 +606,16 @@ class SurveiController extends Controller
             }
         }
 
-        // Tentukan rute tombol kembali secara dinamis berdasarkan halaman sebelumnya
+        // Deteksi halaman asal menggunakan session (lebih aman dan tidak mudah meleset)
         $previousUrl = url()->previous();
-
         if (str_contains($previousUrl, 'z3-4logam')) {
-            // Jika pengguna datang dari halaman Logam Mulia
-            $backRoute = route('z3-4logam');
-        } else {
-            // Default kembali ke Halaman 2 Survei (tempat pemilihan jenis agunan)
-            $backRoute = route('z2-surveica');
+            session(['jaminan_lain_back' => route('z3-4logam')]);
+        } elseif (str_contains($previousUrl, 'z2-surveica')) {
+            session(['jaminan_lain_back' => route('z2-surveica')]);
         }
+
+        // Fallback default ke z3-4logam (karena alur normal sebelum jaminan lain adalah logam mulia)
+        $backRoute = session('jaminan_lain_back', route('z3-4logam'));
 
         return view('z4-jaminan', compact('yangLain', 'backRoute'));
     }
@@ -622,7 +623,7 @@ class SurveiController extends Controller
     public function storeAlur4(Request $request)
     {
         $request->validate([
-            'jaminan_lainnya_jikaada' => 'required|string',
+            'jaminan_lainnya_jikaada' => 'nullable|string',
         ]);
 
         $debiturId = session('debitur_id');
@@ -1230,7 +1231,7 @@ class SurveiController extends Controller
             'ancaman' => 'required|string',
             'kesimpulan' => 'required|string',
             'rekomendasi' => 'required|in:Disetujui,Disetujui dengan syarat,Ditolak',
-            'syarat_catatan' => 'required|string',
+            'syarat_catatan' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -1245,7 +1246,7 @@ class SurveiController extends Controller
                     'ancaman' => $request->ancaman,
                     'kesimpulan' => $request->kesimpulan,
                     'rekomendasi' => $request->rekomendasi,
-                    'syarat_catatan' => $request->syarat_catatan,
+                    'syarat_catatan' => $request->syarat_catatan ?? '',
                 ]
             );
 
@@ -1254,6 +1255,7 @@ class SurveiController extends Controller
             return redirect()->route('z14-data-tambahan')->with('success', 'Analisis SWOT berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e->getMessage());
             return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
         }
     }

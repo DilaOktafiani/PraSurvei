@@ -42,7 +42,7 @@
         </div>
 
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeAlur10') }}" method="POST" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeAlur10') }}" method="POST" class="space-y-6" novalidate>    
             @csrf
 
             <!-- Input tersembunyi untuk debitur_id (PENTING AGAR TIDAK ERROR VALIDASI) -->
@@ -85,5 +85,80 @@
     <footer class="text-center text-xs text-gray-500 pb-6">
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
+
+<script>
+    // Validasi form khusus halaman Analisis Take Over
+    const formPraSurvei = document.getElementById('formPraSurvei');
+    formPraSurvei.addEventListener('submit', function(event) {
+        const analisisTakeOver = formPraSurvei.querySelector('textarea[name="analisis_take_over"]');
+        let isValid = true;
+        let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
+        // Validasi textarea analisis_take_over
+        if (!analisisTakeOver || analisisTakeOver.value.trim() === '') {
+            isValid = false;
+        }
+
+        if (!isValid) {
+            event.preventDefault(); // Mencegah form langsung submit
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: errorMessage,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#0082CB',
+                heightAuto: false,
+                customClass: {
+                    popup: 'swal2-tight-popup',
+                    confirmButton: 'swal2-tight-btn'
+                }
+            });
+        } else {
+            formPraSurvei.submit(); 
+        }
+    });
+</script>
+
+<style>
+    .swal2-popup.swal2-tight-popup {
+        font-size: 0.65rem !important;
+        width: 21rem !important;
+        padding: 1rem 1.2rem !important;
+        border-radius: 0.85rem !important;
+        background: #ffffff !important;
+        box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-icon {
+        margin: 0.6rem auto -0.2rem !important; 
+        transform: scale(0.85);
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-title {
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        color: #1f2937 !important;
+        margin: 0 0 0.15rem !important;
+        padding-top: 0 !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-html-container {
+        font-size: 0.95rem !important;
+        color: #4b5563 !important;
+        margin: 0.15rem 0 0.8rem !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-actions {
+        margin: 0.3rem auto 0 !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-tight-btn {
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        padding: 0.4rem 1.4rem !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
 </body>
 </html>

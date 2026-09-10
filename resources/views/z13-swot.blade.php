@@ -41,7 +41,7 @@
             </p>
         </div>
 
-        <form id="formPraSurvei" action="{{ route('storeAlur13') }}" method="POST" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeAlur13') }}" method="POST" class="space-y-6" novalidate>
             @csrf
 
             <!-- Hidden Input Debitur ID -->
@@ -126,12 +126,12 @@
                 <!-- Syarat dan Catatan Lainnya -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Syarat dan Catatan Lainnya <span class="text-red-500">*</span>
+                        Syarat dan Catatan Lainnya
                     </label>
-                    <textarea name="syarat_catatan" rows="6" placeholder="" required
+                    <textarea name="syarat_catatan" rows="6" placeholder=""
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('syarat_catatan', $swot->syarat_catatan ?? '') }}</textarea>
                 </div>
-            </div> <!-- Penutup div card container input SWOT -->
+            </div>
 
             <!-- TOMBOL AKSI NAVIGASI -->
             <div class="flex justify-between items-center pt-2">
@@ -156,5 +156,96 @@
     <footer class="text-center text-xs text-gray-500 pb-6">
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
+
+<script>
+    // Validasi form khusus halaman Analisis SWOT yang aman dari konflik DOM
+    const formPraSurvei = document.getElementById('formPraSurvei');
+    
+    if (formPraSurvei) {
+        formPraSurvei.addEventListener('submit', function(event) {
+            event.preventDefault(); // Mencegah form langsung submit
+            
+            const kekuatan = formPraSurvei.querySelector('textarea[name="kekuatan"]');
+            const kelemahan = formPraSurvei.querySelector('textarea[name="kelemahan"]');
+            const peluang = formPraSurvei.querySelector('textarea[name="peluang"]');
+            const ancaman = formPraSurvei.querySelector('textarea[name="ancaman"]');
+            const kesimpulan = formPraSurvei.querySelector('textarea[name="kesimpulan"]');
+            const selectedRekomendasi = formPraSurvei.querySelector('input[name="rekomendasi"]:checked');
+
+            let isValid = true;
+            let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
+            // Validasi kelengkapan field wajib pada Analisis SWOT
+            if (!kekuatan || kekuatan.value.trim() === '' ||
+                !kelemahan || kelemahan.value.trim() === '' ||
+                !peluang || peluang.value.trim() === '' ||
+                !ancaman || ancaman.value.trim() === '' ||
+                !kesimpulan || kesimpulan.value.trim() === '' ||
+                !selectedRekomendasi) {
+                isValid = false;
+            }
+
+            if (!isValid) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan',
+                    text: errorMessage,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#0082CB',
+                    heightAuto: false,
+                    customClass: {
+                        popup: 'swal2-tight-popup',
+                        confirmButton: 'swal2-tight-btn'
+                    }
+                });
+            } else {
+                // Menggunakan protokol native submit agar tidak bentrok dengan elemen form
+                HTMLFormElement.prototype.submit.call(formPraSurvei);
+            }
+        });
+    }
+</script>
+
+<style>
+    .swal2-popup.swal2-tight-popup {
+        font-size: 0.65rem !important;
+        width: 21rem !important;
+        padding: 1rem 1.2rem !important;
+        border-radius: 0.85rem !important;
+        background: #ffffff !important;
+        box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-icon {
+        margin: 0.6rem auto -0.2rem !important; 
+        transform: scale(0.85);
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-title {
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        color: #1f2937 !important;
+        margin: 0 0 0.15rem !important;
+        padding-top: 0 !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-html-container {
+        font-size: 0.95rem !important;
+        color: #4b5563 !important;
+        margin: 0.15rem 0 0.8rem !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-actions {
+        margin: 0.3rem auto 0 !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-tight-btn {
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        padding: 0.4rem 1.4rem !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
 </body>
 </html>

@@ -6,6 +6,8 @@
     <title>Form Credit Analys - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -40,8 +42,19 @@
             </p>
         </div>
 
+        @if ($errors->any())
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4 rounded-r-lg text-sm text-red-700">
+                <p class="font-bold mb-1">Gagal Menyimpan Data:</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeAlur3-1') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeAlur3-1') }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>
             @csrf 
             <input type="hidden" name="debitur_id" value="{{ $debiturId ?? session('debitur_id') }}">
             
@@ -78,14 +91,14 @@
                         Share Location <span class="text-red-500">*</span>
                     </label>
                     <input type="url" name="share_location" value="{{ old('share_location', $tanah->share_location ?? '') }}" placeholder="ex : https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
                 </div>
 
                 <!-- Luas Tanah -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Luas Tanah (dalam m2) <span class="text-red-500">*</span></label>
                     <input type="number" name="luas_tanah" value="{{ old('luas_tanah', $tanah->luas_tanah ?? '') }}" placeholder="ex : 250"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
                 </div>
 
                 <!-- Luas Bangunan -->
@@ -103,12 +116,12 @@ Lebar Jalan : 6 m, Aspal, jalan utama, hadap timur
 Bentuk Jaminan : persegi (50x50)
 Lingkungan sekitar : daerah niaga, zona merah
 KT : 3 KM : 1 Dapur Gudang Listrik 1300VA Air PDAM Garasi 2 Mobil"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('spesifikasi', $tanah->spesifikasi ?? '') }}</textarea>
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>{{ old('spesifikasi', $tanah->spesifikasi ?? '') }}</textarea>
                 </div>
 
                 <!-- Denah -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Denah <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Denah <span class="text-red-500"></span></label>
                     <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
                         <input type="file" id="file_denah" name="file_denah" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this)">
@@ -135,7 +148,7 @@ KT : 3 KM : 1 Dapur Gudang Listrik 1300VA Air PDAM Garasi 2 Mobil"
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Harga Tanah (Rp /m2) <span class="text-red-500">*</span></label>
                     <input type="number" name="harga_tanah" value="{{ old('harga_tanah', $tanah->harga_tanah ?? '') }}" placeholder="ex : 3500000"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
                 </div>
 
                 <!-- Harga Bangunan -->
@@ -152,7 +165,7 @@ KT : 3 KM : 1 Dapur Gudang Listrik 1300VA Air PDAM Garasi 2 Mobil"
 Transaksi Juni 2025 Rumah LT/LB 50m2/50m2 laku 270jt harga 5,4jt/m
 100 meter kebarat dari jaminan, dijalan yang sama
 pemilik Rudi, pedagang pakaian (0856 1234 5678) pembeli Tri Pedagang Es Teh (0856 5678 1234)
-https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('info_harga1', $tanah->info_harga1 ?? '') }}</textarea>
+https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>{{ old('info_harga1', $tanah->info_harga1 ?? '') }}</textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Informasi Harga 2 <span class="text-red-500">*</span></label>
@@ -160,7 +173,7 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
 Transaksi Juni 2025 Rumah LT/LB 50m2/50m2 laku 270jt harga 5,4jt/m
 100 meter kebarat dari jaminan, dijalan yang sama
 pemilik Rudi, pedagang pakaian (0856 1234 5678) pembeli Tri Pedagang Es Teh (0856 5678 1234)
-https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('info_harga2', $tanah->info_harga2 ?? '') }}</textarea>
+https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>{{ old('info_harga2', $tanah->info_harga2 ?? '') }}</textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Informasi Harga 3</label>
@@ -234,36 +247,117 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
 
         function removeFile() {
             const input = document.getElementById('file_denah');
-            input.value = '';
-            document.getElementById('file_preview').classList.add('hidden');
-            document.getElementById('txt_btn_upload').textContent = 'Tambahkan file';
+            if(input) input.value = '';
+            const preview = document.getElementById('file_preview');
+            if(preview) preview.classList.add('hidden');
+            const txtUpload = document.getElementById('txt_btn_upload');
+            if(txtUpload) txtUpload.textContent = 'Tambahkan file';
         }
 
-        // Fungsi untuk mengosongkan form secara total tanpa pop-up
         function clearForm() {
             const form = document.getElementById('formPraSurvei');
-            
-            // 1. Reset form standar (mengosongkan text, textarea, number, radio, dll)
-            form.reset();
+            if(form) form.reset();
 
-            // 2. Kosongkan paksa semua input teks, textarea, dan number agar bersih dari sisa value database/old
             const inputs = form.querySelectorAll('input[type="text"], input[type="url"], input[type="number"], textarea');
             inputs.forEach(input => {
-                // Kecuali input hidden seperti debitur_id dan urutan agar tidak terhapus sistem
                 if (input.name !== 'debitur_id' && input.name !== 'urutan') {
                     input.value = '';
                 }
             });
 
-            // 3. Bersihkan pilihan Radio Button (Jaminan Lain)
             const radios = form.querySelectorAll('input[type="radio"]');
             radios.forEach(radio => {
                 radio.checked = false;
             });
 
-            // 4. Bersihkan komponen file upload dan pratinjaunya
             removeFile();
         }
+
+        // Validasi Aman dengan SweetAlert2
+        const formPraSurvei = document.getElementById('formPraSurvei');
+        if (formPraSurvei) {
+            formPraSurvei.addEventListener('submit', function(event) {
+                let isValid = true;
+                let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
+                // Validasi Input bertanda required
+                const requiredFields = formPraSurvei.querySelectorAll('[required]');
+                requiredFields.forEach(field => {
+                    if (!field.value || field.value.trim() === '') {
+                        isValid = false;
+                    }
+                });
+
+                // Validasi Radio Group (Jaminan Lain jika ada)
+                const wrapperJaminanLain = document.getElementById('wrapper_jaminan_lain');
+                if (wrapperJaminanLain) {
+                    const selectedRadio = formPraSurvei.querySelector('input[name="jaminan_lain_input"]:checked');
+                    if (!selectedRadio) {
+                        isValid = false;
+                    }
+                }
+
+                if (!isValid) {
+                    event.preventDefault(); // Mencegah submit jika masih kosong
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Peringatan',
+                        text: errorMessage,
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#0082CB',
+                        heightAuto: false,
+                        customClass: {
+                            popup: 'swal2-tight-popup',
+                            confirmButton: 'swal2-tight-btn'
+                        }
+                    });
+                } else {
+                    // Biarkan form melakukan submit ke Laravel secara normal
+                }
+            });
+        }
     </script>
+
+<style>
+    .swal2-popup.swal2-tight-popup {
+        font-size: 0.65rem !important;
+        width: 21rem !important;
+        padding: 1rem 1.2rem !important;
+        border-radius: 0.85rem !important;
+        background: #ffffff !important;
+        box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-icon {
+        margin: 0.6rem auto -0.2rem !important; 
+        transform: scale(0.85);
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-title {
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        color: #1f2937 !important;
+        margin: 0 0 0.15rem !important;
+        padding-top: 0 !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-html-container {
+        font-size: 0.95rem !important;
+        color: #4b5563 !important;
+        margin: 0.15rem 0 0.8rem !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-actions {
+        margin: 0.3rem auto 0 !important;
+    }
+    
+    .swal2-popup.swal2-tight-popup .swal2-tight-btn {
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        padding: 0.4rem 1.4rem !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
 </body>
 </html>
