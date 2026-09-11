@@ -47,7 +47,7 @@
             </button>
             <button @click="activeTab = 'surveica'" 
                 :class="activeTab === 'surveica' ? 'bg-gradient-to-r from-[#0A3370] via-[#0082CB] to-[#38BDF8] text-white shadow-lg ring-2 ring-[#0A3370]/25' : 'bg-white text-gray-700 hover:bg-sky-50/60 hover:text-[#0A3370] shadow-md'"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition border border-gray-200">
+                class="hidden inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition border border-gray-200">
                 <svg class="w-4 h-4 opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2m-6 9l2 2 4-4"/>
                 </svg>
@@ -122,7 +122,7 @@
             </div>
 
             <!-- ===== KONTEN TAB 2: SURVEI CA ===== -->
-            <div x-show="activeTab === 'surveica'" style="display: none;">
+            <div x-show="activeTab === 'surveica'" class="hidden" style="display: none;">
                 <div class="mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-bold text-[#0A3370]">Riwayat Analisis Survei CA</h2>

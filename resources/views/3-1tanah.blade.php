@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @vite(['resources/js/rupiah-formatter.js'])
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -76,14 +78,14 @@
                         Share Location <span class="text-red-500">*</span>
                     </label>
                     <input type="url" name="share_location" value="{{ old('share_location', $tanah->share_location ?? '') }}" placeholder="ex : https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
                 </div>
 
                 <!-- Luas Tanah -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Luas Tanah (dalam m2) <span class="text-red-500">*</span></label>
                     <input type="number" name="luas_tanah" value="{{ old('luas_tanah', $tanah->luas_tanah ?? '') }}" placeholder="ex : 250"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
                 </div>
 
                 <!-- Luas Bangunan -->
@@ -101,13 +103,13 @@ Lebar Jalan : 6 m, Aspal, jalan utama, hadap timur
 Bentuk Jaminan : persegi (50x50)
 Lingkungan sekitar : daerah niaga, zona merah
 KT : 3 KM : 1 Dapur Gudang Listrik 1300VA Air PDAM Garasi 2 Mobil"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('spesifikasi', $tanah->spesifikasi ?? '') }}</textarea>
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>{{ old('spesifikasi', $tanah->spesifikasi ?? '') }}</textarea>
                 </div>
 
                 <!-- Denah -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Denah <span class="text-red-500">*</span></label>
-                    <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
+                    <div id="container_file_denah" class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
                         <input type="file" id="file_denah" name="file_denah" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this)">
                         <button type="button" onclick="document.getElementById('file_denah').click()" 
@@ -131,16 +133,33 @@ KT : 3 KM : 1 Dapur Gudang Listrik 1300VA Air PDAM Garasi 2 Mobil"
 
                 <!-- Harga Tanah -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga Tanah (Rp /m2) <span class="text-red-500">*</span></label>
-                    <input type="number" name="harga_tanah" value="{{ old('harga_tanah', $tanah->harga_tanah ?? '') }}" placeholder="ex : 3500000"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Harga Tanah (Rp /m2) <span class="text-red-500">*</span>
+                    </label>
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="ex : 3500000" 
+                        value="{{ old('harga_tanah', isset($tanah->harga_tanah) ? number_format($tanah->harga_tanah, 0, ',', '.') : '') }}" 
+                        required>
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="harga_tanah" value="{{ old('harga_tanah', $tanah->harga_tanah ?? '') }}">
                 </div>
 
                 <!-- Harga Bangunan -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga Bangunan (Rp /m2)</label>
-                    <input type="number" name="harga_bangunan" value="{{ old('harga_bangunan', $tanah->harga_bangunan ?? '') }}" placeholder="ex : 1000000"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Harga Bangunan (Rp /m2)
+                    </label>
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="ex : 1000000" 
+                        value="{{ old('harga_bangunan', isset($tanah->harga_bangunan) ? number_format($tanah->harga_bangunan, 0, ',', '.') : '') }}">
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="harga_bangunan" value="{{ old('harga_bangunan', $tanah->harga_bangunan ?? '') }}">
                 </div>
 
                 <!-- Informasi Harga 1, 2, 3 -->
@@ -150,7 +169,7 @@ KT : 3 KM : 1 Dapur Gudang Listrik 1300VA Air PDAM Garasi 2 Mobil"
 Transaksi Juni 2025 Rumah LT/LB 50m2/50m2 laku 270jt harga 5,4jt/m
 100 meter kebarat dari jaminan, dijalan yang sama
 pemilik Rudi, pedagang pakaian (0856 1234 5678) pembeli Tri Pedagang Es Teh (0856 5678 1234)
-https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('info_harga1', $tanah->info_harga1 ?? '') }}</textarea>
+https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>{{ old('info_harga1', $tanah->info_harga1 ?? '') }}</textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Informasi Harga 2 <span class="text-red-500">*</span></label>
@@ -158,7 +177,7 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
 Transaksi Juni 2025 Rumah LT/LB 50m2/50m2 laku 270jt harga 5,4jt/m
 100 meter kebarat dari jaminan, dijalan yang sama
 pemilik Rudi, pedagang pakaian (0856 1234 5678) pembeli Tri Pedagang Es Teh (0856 5678 1234)
-https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('info_harga2', $tanah->info_harga2 ?? '') }}</textarea>
+https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>{{ old('info_harga2', $tanah->info_harga2 ?? '') }}</textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Informasi Harga 3</label>
@@ -228,6 +247,9 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
                 document.getElementById('file_name').textContent = input.files[0].name;
                 document.getElementById('file_preview').classList.remove('hidden');
                 document.getElementById('txt_btn_upload').textContent = 'Ganti file';
+                
+                const containerFile = document.getElementById('container_file_denah');
+                if (containerFile) containerFile.style.border = '';
             }
         }
 
@@ -247,6 +269,7 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
             inputs.forEach(input => {
                 if (input.name !== 'debitur_id' && input.name !== 'urutan') {
                     input.value = '';
+                    input.style.borderColor = '';
                 }
             });
 
@@ -255,22 +278,80 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
                 radio.checked = false;
             });
 
+            const wrapperJaminanLain = document.getElementById('wrapper_jaminan_lain');
+            if (wrapperJaminanLain) wrapperJaminanLain.style.border = '';
+
             removeFile();
         }
 
         // Penyesuaian Validasi & Pop-up Submit
         const formPraSurvei = document.getElementById('formPraSurvei');
+        
+        formPraSurvei.querySelectorAll('[required]').forEach(field => {
+            field.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    this.style.borderColor = '';
+                }
+            });
+            field.addEventListener('change', function() {
+                if (this.value !== '') {
+                    this.style.borderColor = '';
+                }
+            });
+        });
+
         formPraSurvei.addEventListener('submit', function(event) {
             let isValid = true;
             let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
+            // Reset semua border merah terlebih dahulu
+            formPraSurvei.querySelectorAll('[required]').forEach(field => {
+                field.style.borderColor = '';
+            });
+
+            const wrapperJaminanLain = document.getElementById('wrapper_jaminan_lain');
+            if (wrapperJaminanLain) {
+                wrapperJaminanLain.style.border = '';
+                wrapperJaminanLain.style.padding = '';
+            }
+
+            const containerFile = document.getElementById('container_file_denah');
+            if (containerFile) {
+                containerFile.style.border = '';
+                containerFile.style.padding = '';
+            }
 
             // 1. Validasi Input Wajib (Required Fields)
             const requiredFields = formPraSurvei.querySelectorAll('[required]');
             requiredFields.forEach(field => {
                 if (!field.value || field.value.trim() === '') {
                     isValid = false;
+                    field.style.borderColor = 'red';
                 }
             });
+
+            // 1.1 Validasi Khusus Share Loc (harus berupa link URL Google Maps / http / https)
+            const shareLocInput = formPraSurvei.querySelector('input[name="share_loc"]') || document.getElementById('share_loc');
+            if (shareLocInput) {
+                // Hapus border merah seketika saat user mengetik
+                shareLocInput.addEventListener('input', function() {
+                    const val = this.value.trim();
+                    if (val !== '' && (val.includes('http://') || val.includes('https://') || val.includes('maps'))) {
+                        this.style.borderColor = '';
+                    }
+                });
+
+                const valLoc = shareLocInput.value.trim();
+                // Jika input tidak kosong tapi bukan link (tidak ada http/https atau kata maps) ATAU jika kosong tapi wajib
+                if (valLoc !== '' && !valLoc.startsWith('http://') && !valLoc.startsWith('https://') && !valLoc.includes('maps')) {
+                    isValid = false;
+                    shareLocInput.style.borderColor = 'red';
+                    errorMessage = 'Share loc harus diisi dengan link/URL Google Maps yang valid';
+                } else if (valLoc === '' && shareLocInput.hasAttribute('required')) {
+                    isValid = false;
+                    shareLocInput.style.borderColor = 'red';
+                }
+            }
 
             // 2. Validasi File Upload (Denah) jika belum ada file baru maupun database lama
             const fileInput = document.getElementById('file_denah');
@@ -278,19 +359,26 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
             const hasExistingFile = filePreview && !filePreview.classList.contains('hidden');
             if ((!fileInput.files || fileInput.files.length === 0) && !hasExistingFile) {
                 isValid = false;
+                if (containerFile) {
+                    containerFile.style.border = '1px solid red';
+                    containerFile.style.borderRadius = '4px';
+                    containerFile.style.padding = '8px';
+                }
             }
 
             // 3. Validasi Radio Button (Jaminan Lain) jika elemennya ada di halaman
-            const wrapperJaminanLain = document.getElementById('wrapper_jaminan_lain');
             if (wrapperJaminanLain) {
                 const selectedRadio = formPraSurvei.querySelector('input[name="jaminan_lain_input"]:checked');
                 if (!selectedRadio) {
                     isValid = false;
+                    wrapperJaminanLain.style.border = '1px solid red';
+                    wrapperJaminanLain.style.borderRadius = '4px';
+                    wrapperJaminanLain.style.padding = '8px';
                 }
             }
 
             if (!isValid) {
-                event.preventDefault(); // Mencegah submit form jika validasi gagal
+                event.preventDefault();
                 Swal.fire({
                     icon: 'warning',
                     title: 'Peringatan',

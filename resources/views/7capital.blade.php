@@ -128,13 +128,35 @@
     const formPraSurvei = document.getElementById('formPraSurvei');
     const aset1 = document.getElementById('aset1');
 
+    // Hapus border merah secara real-time saat aset1 mulai diketik/diisi
+    if (aset1) {
+        aset1.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                this.style.borderColor = '';
+            }
+        });
+        aset1.addEventListener('change', function() {
+            if (this.value.trim() !== '') {
+                this.style.borderColor = '';
+            }
+        });
+    }
+
     formPraSurvei.addEventListener('submit', function(event) {
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
-        // Validasi Aset 1 (Wajib)
-        if (!aset1.value.trim()) {
+        // Reset border merah terlebih dahulu
+        if (aset1) {
+            aset1.style.borderColor = '';
+        }
+
+        // Validasi Aset 1 (Wajib diisi)
+        if (!aset1 || !aset1.value.trim()) {
             isValid = false;
+            if (aset1) {
+                aset1.style.borderColor = 'red';
+            }
         }
 
         if (!isValid) {

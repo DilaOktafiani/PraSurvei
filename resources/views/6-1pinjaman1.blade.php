@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @vite(['resources/js/rupiah-formatter.js'])
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -61,22 +63,36 @@
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
                 </div>
 
-                <!-- Plafon (step="any" dan float) -->
+                <!-- Plafon -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Plafon <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" step="any" min="0" name="plafon" value="{{ old('plafon', isset($pinjaman) ? (float)$pinjaman->plafon : '') }}"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="" 
+                        value="{{ old('plafon', isset($pinjaman->plafon) ? number_format($pinjaman->plafon, 0, ',', '.') : '') }}" 
+                        required>
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="plafon" value="{{ old('plafon', $pinjaman->plafon ?? '') }}">
                 </div>
 
-                <!-- Outstanding (step="any" dan float) -->
+                <!-- Outstanding -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Outstanding <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" step="any" min="0" name="outstanding" value="{{ old('outstanding', isset($pinjaman) ? (float)$pinjaman->outstanding : '') }}"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="" 
+                        value="{{ old('outstanding', isset($pinjaman->outstanding) ? number_format($pinjaman->outstanding, 0, ',', '.') : '') }}" 
+                        required>
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="outstanding" value="{{ old('outstanding', $pinjaman->outstanding ?? '') }}">
                 </div>
 
                 <!-- Kolekbilitas -->
@@ -88,13 +104,20 @@
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
                 </div>
 
-                <!-- Angsuran (step="any" dan float) -->
+                <!-- Angsuran -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Angsuran <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" step="any" min="0" name="angsuran" value="{{ old('angsuran', isset($pinjaman) ? (float)$pinjaman->angsuran : '') }}"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="" 
+                        value="{{ old('angsuran', isset($pinjaman->angsuran) ? number_format($pinjaman->angsuran, 0, ',', '.') : '') }}" 
+                        required>
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="angsuran" value="{{ old('angsuran', $pinjaman->angsuran ?? '') }}">
                 </div>
 
                 <!-- JKW -->
@@ -161,68 +184,131 @@
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
 
-    <script>
-        const currentUrutan = {{ $urutan }};
+<script>
+    const currentUrutan = {{ $urutan }};
 
-        function keHalamanSebelumnya() {
-            if (currentUrutan > 1) {
-                window.location.href = "{{ route('6-1pinjaman1') }}?urutan=" + (currentUrutan - 1);
-            } else {
-                window.location.href = "{{ route('6-1dataslik') }}";
+    function keHalamanSebelumnya() {
+        if (currentUrutan > 1) {
+            window.location.href = "{{ route('6-1pinjaman1') }}?urutan=" + (currentUrutan - 1);
+        } else {
+            window.location.href = "{{ route('6-1dataslik') }}";
+        }
+    }
+
+    function prosesKosongkanForm() {
+        const form = document.getElementById('formPraSurvei');
+        form.querySelectorAll('input[type="text"]').forEach(input => {
+            input.value = '';
+            input.style.borderColor = '';
+        });
+        form.querySelectorAll('input[type="number"]').forEach(input => {
+            input.value = '';
+            input.style.borderColor = '';
+        });
+        form.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+        form.querySelectorAll('textarea').forEach(textarea => {
+            textarea.value = '';
+            textarea.style.borderColor = '';
+        });
+        const containerOpsiLanjut = document.getElementById('containerOpsiLanjut');
+        if (containerOpsiLanjut) {
+            const wrapperRadio = containerOpsiLanjut.querySelector('input[name="apakah_ada_pinjaman_dibank_lain"]')?.closest('div.border, div[class*="border"], div');
+            if (wrapperRadio) {
+                wrapperRadio.style.border = '';
+                wrapperRadio.style.padding = '';
+                wrapperRadio.style.borderRadius = '';
             }
         }
+    }
+    
+    // Validasi Custom SweetAlert2 dan Penanganan Submit dengan Border Merah Real-time
+    const formPraSurvei = document.getElementById('formPraSurvei');
+    const radiosBankLain = formPraSurvei.querySelectorAll('input[name="apakah_ada_pinjaman_dibank_lain"]');
+    
+    // Ambil elemen pembungkus (box) khusus yang melingkari pilihan YA & TIDAK saja
+    const wrapperRadioBankLain = radiosBankLain[0] ? radiosBankLain[0].closest('div.border, div[class*="border"], div') : null;
 
-        function prosesKosongkanForm() {
-            const form = document.getElementById('formPraSurvei');
-            form.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-            form.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
-            form.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
-            form.querySelectorAll('textarea').forEach(textarea => textarea.value = '');
-        }
-        
-        // Validasi Custom SweetAlert2 dan Penanganan Submit
-        const formPraSurvei = document.getElementById('formPraSurvei');
-        formPraSurvei.addEventListener('submit', function(event) {
-            event.preventDefault(); // Mencegah form langsung submit bawaan browser
-
-            let isValid = true;
-            let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
-
-            // 1. Validasi semua input dan textarea ber-atribut required
-            const requiredFields = formPraSurvei.querySelectorAll('[required]');
-            requiredFields.forEach(field => {
-                if (!field.value || field.value.trim() === '') {
-                    isValid = false;
-                }
-            });
-
-            // 2. Validasi khusus untuk Radio Button Bank Lain (jika elemennya aktif/tidak hidden)
-            const containerOpsiLanjut = document.getElementById('containerOpsiLanjut');
-            if (containerOpsiLanjut && !containerOpsiLanjut.classList.contains('hidden')) {
-                const selectedRadio = formPraSurvei.querySelector('input[name="apakah_ada_pinjaman_dibank_lain"]:checked');
-                if (!selectedRadio) {
-                    isValid = false;
-                }
-            }
-
-            if (!isValid) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Peringatan',
-                    text: errorMessage,
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#0082CB',
-                    heightAuto: false,
-                    customClass: {
-                        popup: 'swal2-tight-popup',
-                        confirmButton: 'swal2-tight-btn'
-                    }
-                });
-            } else {
-                formPraSurvei.submit(); 
+    // Tambahkan event listener change agar border merah langsung hilang saat salah satu dipilih
+    radiosBankLain.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (wrapperRadioBankLain) {
+                wrapperRadioBankLain.style.border = '';
+                wrapperRadioBankLain.style.padding = '';
+                wrapperRadioBankLain.style.borderRadius = '';
             }
         });
-    </script>
+    });
+
+    formPraSurvei.addEventListener('submit', function(event) {
+        event.preventDefault(); // Mencegah form langsung submit bawaan browser
+
+        let isValid = true;
+        let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
+        // 1. Ambil semua input/textarea wajib diisi
+        const requiredFields = formPraSurvei.querySelectorAll('[required]');
+
+        // Reset semua border merah terlebih dahulu
+        requiredFields.forEach(field => {
+            field.style.borderColor = '';
+            field.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    this.style.borderColor = '';
+                }
+            });
+            field.addEventListener('change', function() {
+                if (this.value.trim() !== '') {
+                    this.style.borderColor = '';
+                }
+            });
+        });
+
+        if (wrapperRadioBankLain) {
+            wrapperRadioBankLain.style.border = '';
+            wrapperRadioBankLain.style.padding = '';
+            wrapperRadioBankLain.style.borderRadius = '';
+        }
+
+        // 2. Validasi input/textarea ber-atribut required
+        requiredFields.forEach(field => {
+            if (!field.value || field.value.trim() === '') {
+                isValid = false;
+                field.style.borderColor = 'red';
+            }
+        });
+
+        // 3. Validasi khusus untuk Radio Button Bank Lain (memberikan border merah hanya pada kotak Ya & Tidak seperti di gambar)
+        const containerOpsiLanjut = document.getElementById('containerOpsiLanjut');
+        if (containerOpsiLanjut && !containerOpsiLanjut.classList.contains('hidden')) {
+            const selectedRadio = formPraSurvei.querySelector('input[name="apakah_ada_pinjaman_dibank_lain"]:checked');
+            if (!selectedRadio) {
+                isValid = false;
+                if (wrapperRadioBankLain) {
+                    wrapperRadioBankLain.style.border = '1px solid red';
+                    wrapperRadioBankLain.style.borderRadius = '4px';
+                    wrapperRadioBankLain.style.padding = '8px';
+                }
+            }
+        }
+
+        if (!isValid) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: errorMessage,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#0082CB',
+                heightAuto: false,
+                customClass: {
+                    popup: 'swal2-tight-popup',
+                    confirmButton: 'swal2-tight-btn'
+                }
+            });
+        } else {
+            formPraSurvei.submit(); 
+        }
+    });
+</script>
 
 <style>
     .swal2-popup.swal2-tight-popup {

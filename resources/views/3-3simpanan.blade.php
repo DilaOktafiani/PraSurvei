@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @vite(['resources/js/rupiah-formatter.js'])
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -42,7 +44,7 @@
         </div>
 
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeStep3-3') }}" method="POST" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeStep3-3') }}" method="POST" class="space-y-6" novalidate>
             @csrf <!-- Security Token Laravel -->
             
             <!-- HIDDEN INPUT UNTUK DEBITUR ID -->
@@ -62,7 +64,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Jenis Simpanan <span class="text-red-500">*</span>
                     </label>
-                    <div class="space-y-3 text-sm text-gray-700">
+                    <div id="container_jenis_simpanan" class="space-y-3 text-sm text-gray-700 transition-all">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="jenis_simpanan" value="deposito" class="accent-[#0082CB]" {{ $valSimpanan == 'deposito' ? 'checked' : '' }}>
                             <span>Deposito</span>
@@ -91,8 +93,14 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Nilai Simpanan <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="nilai_simpanan" id="nilai_simpanan" value="{{ $data->nilai_simpanan ?? old('nilai_simpanan') }}" placeholder="ex : 1100000000"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" id="nilai_simpanan"
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="ex : 1100000000" 
+                        value="{{ old('nilai_simpanan', isset($data->nilai_simpanan) && is_numeric($data->nilai_simpanan) ? number_format($data->nilai_simpanan, 0, ',', '.') : '') }}">
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="nilai_simpanan" value="{{ old('nilai_simpanan', $data->nilai_simpanan ?? '') }}">
                 </div>
             </div>
 
@@ -109,7 +117,7 @@
                         Kembali
                     </a>
 
-                    <button type="submit" 
+                    <button type="button" onclick="validateAndSubmit()"
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         Berikutnya
                     </button>
@@ -126,35 +134,71 @@
     const inputLainnya = document.getElementById('input_lainnya');
     const radioLainnya = document.getElementById('radio_lainnya');
     const nilaiSimpanan = document.getElementById('nilai_simpanan');
+    const containerSimpanan = document.getElementById('container_jenis_simpanan');
 
-    // Jika user mengetik, otomatis pilih radio "Yang Lain"
+    // Jika user mengetik, otomatis pilih radio "Yang Lain" dan hilangkan warna merah
     inputLainnya.addEventListener('input', function() {
         if (this.value.trim() !== '') {
             radioLainnya.checked = true;
+            this.style.borderColor = '';
         }
     });
 
-    const formPraSurvei = document.getElementById('formPraSurvei');
-    formPraSurvei.addEventListener('submit', function(event) {
+    // Menghilangkan warna merah saat input nilai simpanan diketik
+    nilaiSimpanan.addEventListener('input', function() {
+        if (this.value.trim() !== '') {
+            this.style.borderColor = '';
+        }
+    });
+
+    // Menghilangkan warna merah pada jenis simpanan saat radio dipilih
+    const radiosSimpanan = document.querySelectorAll('input[name="jenis_simpanan"]');
+    radiosSimpanan.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (containerSimpanan) {
+                containerSimpanan.style.border = '';
+                containerSimpanan.style.padding = '';
+            }
+        });
+    });
+
+    function validateAndSubmit() {
+        const formPraSurvei = document.getElementById('formPraSurvei');
         const selectedSimpanan = formPraSurvei.querySelector('input[name="jenis_simpanan"]:checked');
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
-        // 1. Validasi Radio terpilih
+        // Reset semua border merah sebelum validasi ulang
+        inputLainnya.style.borderColor = '';
+        nilaiSimpanan.style.borderColor = '';
+        if (containerSimpanan) {
+            containerSimpanan.style.border = '';
+            containerSimpanan.style.padding = '';
+        }
+
+        // 1. Validasi Radio terpilih (Wajib)
         if (!selectedSimpanan) {
             isValid = false;
-        }
+            if (containerSimpanan) {
+                containerSimpanan.style.border = '1px solid red';
+                containerSimpanan.style.borderRadius = '4px';
+                containerSimpanan.style.padding = '5px';
+            }
+        } 
+        
         // 2. Validasi "Yang Lain" jika radio terpilih tapi input teks kosong
-        else if (selectedSimpanan.value === 'yang_lain' && inputLainnya.value.trim() === '') {
+        if (selectedSimpanan && selectedSimpanan.value === 'yang_lain' && inputLainnya.value.trim() === '') {
             isValid = false;
+            inputLainnya.style.borderColor = 'red';
         }
-        // 3. Validasi Nilai Simpanan kosong
-        else if (!nilaiSimpanan.value.trim()) {
+
+        // 3. Validasi Nilai Simpanan kosong (Wajib)
+        if (!nilaiSimpanan.value.trim()) {
             isValid = false;
+            nilaiSimpanan.style.borderColor = 'red';
         }
 
         if (!isValid) {
-            event.preventDefault(); // Batalkan submit form agar popup muncul
             Swal.fire({
                 icon: 'warning',
                 title: 'Peringatan',
@@ -167,9 +211,10 @@
                     confirmButton: 'swal2-tight-btn'
                 }
             });
+        } else {
+            formPraSurvei.submit(); 
         }
-        // Jika valid, biarkan form melakukan submit secara normal tanpa preventDefault()
-    });
+    }
 </script>
 
 <style>

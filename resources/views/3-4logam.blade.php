@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @vite(['resources/js/rupiah-formatter.js'])
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -50,7 +52,7 @@
         @endphp
 
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeStep3-4') }}" method="POST" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeStep3-4') }}" method="POST" class="space-y-6" novalidate>
             @csrf <!-- Security Token Laravel -->
             
             <!-- Hidden input untuk debitur_id agar data terkirim ke database -->
@@ -64,7 +66,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Jenis Logam <span class="text-red-500">*</span>
                     </label>
-                    <div class="space-y-3 text-sm text-gray-700">
+                    <div id="container_jenis_logam" class="space-y-3 text-sm text-gray-700 transition-all">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="jenis_logam" value="emas_antam" class="accent-[#0082CB]" {{ $valLogam == 'emas_antam' ? 'checked' : '' }}>
                             <span>Emas Batangan (Antam)</span>
@@ -125,7 +127,7 @@
                         
                         <!-- Link Acuan Harga -->
                         <a href="https://www.logammulia.com" target="_blank" rel="noopener noreferrer" 
-                           class="text-xs text-[#0082CB] hover:underline font-medium flex items-center gap-1">
+                        class="text-xs text-[#0082CB] hover:underline font-medium flex items-center gap-1">
                             <span>Cek www.logammulia.com</span>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -133,8 +135,14 @@
                         </a>
                     </div>
                     
-                    <input type="text" name="harga_saatini" id="harga_saatini" value="{{ $data->harga_saatini ?? old('harga_saatini') }}" placeholder="Berdasarkan harga www.logammulia.com"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB] placeholder-gray-400">
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" id="harga_saatini"
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB] placeholder-gray-400" 
+                        placeholder="Berdasarkan harga www.logammulia.com" 
+                        value="{{ old('harga_saatini', isset($data->harga_saatini) && is_numeric($data->harga_saatini) ? number_format($data->harga_saatini, 0, ',', '.') : '') }}">
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="harga_saatini" value="{{ old('harga_saatini', $data->harga_saatini ?? '') }}">
                 </div>
             </div>
 
@@ -150,7 +158,7 @@
                             class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                         Kembali
                     </a>
-                    <button type="submit" 
+                    <button type="button" onclick="validateAndSubmit()"
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         Berikutnya
                     </button>
@@ -166,31 +174,92 @@
 <script>
     const inputLainnya = document.getElementById('jenis_logam_lain');
     const radioLainnya = document.getElementById('radio_lainnya');
+    const inputBerat = document.getElementById('berat');
+    const inputHargaBeli = document.getElementById('harga_beli_tahun_perolehan');
+    const inputHargaSaatIni = document.getElementById('harga_saatini');
+    const containerLogam = document.getElementById('container_jenis_logam');
 
-    // Jika user mengetik, otomatis pilih radio "Yang Lain"
+    // Jika user mengetik, otomatis pilih radio "Yang Lain" dan hilangkan warna merah
     inputLainnya.addEventListener('input', function() {
         if (this.value.trim() !== '') {
             radioLainnya.checked = true;
+            this.style.borderColor = '';
         }
     });
 
-    const formPraSurvei = document.getElementById('formPraSurvei');
-    formPraSurvei.addEventListener('submit', function(event) {
+    // Menghilangkan warna merah saat input teks diketik
+    [inputBerat, inputHargaBeli, inputHargaSaatIni].forEach(input => {
+        if (input) {
+            input.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    this.style.borderColor = '';
+                }
+            });
+        }
+    });
+
+    // Menghilangkan warna merah pada jenis logam saat radio dipilih
+    const radiosLogam = document.querySelectorAll('input[name="jenis_logam"]');
+    radiosLogam.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (containerLogam) {
+                containerLogam.style.border = '';
+                containerLogam.style.padding = '';
+            }
+        });
+    });
+
+    function validateAndSubmit() {
+        const formPraSurvei = document.getElementById('formPraSurvei');
         const selectedLogam = formPraSurvei.querySelector('input[name="jenis_logam"]:checked');
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
-        // 1. Validasi Radio terpilih
+        // Reset semua border merah sebelum validasi ulang
+        inputLainnya.style.borderColor = '';
+        if (inputBerat) inputBerat.style.borderColor = '';
+        if (inputHargaBeli) inputHargaBeli.style.borderColor = '';
+        if (inputHargaSaatIni) inputHargaSaatIni.style.borderColor = '';
+        if (containerLogam) {
+            containerLogam.style.border = '';
+            containerLogam.style.padding = '';
+        }
+
+        // 1. Validasi Radio Logam terpilih (Wajib)
         if (!selectedLogam) {
             isValid = false;
-        }
+            if (containerLogam) {
+                containerLogam.style.border = '1px solid red';
+                containerLogam.style.borderRadius = '4px';
+                containerLogam.style.padding = '5px';
+            }
+        } 
+        
         // 2. Validasi "Yang Lain" jika radio terpilih tapi input teks kosong
-        else if (selectedLogam.value === 'yang_lain' && inputLainnya.value.trim() === '') {
+        if (selectedLogam && selectedLogam.value === 'yang_lain' && inputLainnya.value.trim() === '') {
             isValid = false;
+            inputLainnya.style.borderColor = 'red';
+        }
+
+        // 3. Validasi Input Berat (Wajib)
+        if (!inputBerat || !inputBerat.value.trim()) {
+            isValid = false;
+            if (inputBerat) inputBerat.style.borderColor = 'red';
+        }
+
+        // 4. Validasi Harga Beli / Tahun Perolehan (Wajib)
+        if (!inputHargaBeli || !inputHargaBeli.value.trim()) {
+            isValid = false;
+            if (inputHargaBeli) inputHargaBeli.style.borderColor = 'red';
+        }
+
+        // 5. Validasi Harga Saat Ini (Wajib)
+        if (!inputHargaSaatIni || !inputHargaSaatIni.value.trim()) {
+            isValid = false;
+            if (inputHargaSaatIni) inputHargaSaatIni.style.borderColor = 'red';
         }
 
         if (!isValid) {
-            event.preventDefault(); // Batalkan submit form agar popup muncul
             Swal.fire({
                 icon: 'warning',
                 title: 'Peringatan',
@@ -203,9 +272,10 @@
                     confirmButton: 'swal2-tight-btn'
                 }
             });
+        } else {
+            formPraSurvei.submit(); 
         }
-        // Jika valid, biarkan form melakukan submit secara normal tanpa preventDefault()
-    });
+    }
 </script>
 
 <style>

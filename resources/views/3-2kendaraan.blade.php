@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @vite(['resources/js/rupiah-formatter.js'])
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -42,7 +44,7 @@
         </div>
 
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeStep3-2') }}" method="POST" class="space-y-6">
+        <form id="formPraSurvei" action="{{ route('storeStep3-2') }}" method="POST" class="space-y-6" novalidate>
             @csrf <!-- Security Token Laravel -->
             
             <!-- INPUT HIDDEN UNTUK DEBITUR_ID -->
@@ -71,7 +73,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Status Kepemilikan <span class="text-red-500">*</span>
                     </label>
-                    <div class="space-y-3 text-sm text-gray-700">
+                    <div id="container_status_kepemilikan" class="space-y-3 text-sm text-gray-700 transition-all">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="status_kepemilikan" value="miliksendiri" {{ $valStatus == 'miliksendiri' ? 'checked' : '' }} class="accent-[#0082CB]">
                             <span>Milik Sendiri</span>
@@ -99,12 +101,19 @@
 
             <!-- BLOK PUTIH 3: HARGA TAKSASI -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
+                <!-- Harga Taksasi -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Harga Taksasi <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="harga_taksasi" id="harga_taksasi" value="{{ $data->harga_taksasi ?? old('harga_taksasi') }}" placeholder="ex : 100000000"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB] transition">
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" id="harga_taksasi"
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB] transition" 
+                        placeholder="ex : 100000000" 
+                        value="{{ old('harga_taksasi', isset($data->harga_taksasi) && is_numeric($data->harga_taksasi) ? number_format($data->harga_taksasi, 0, ',', '.') : '') }}">
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="harga_taksasi" value="{{ old('harga_taksasi', $data->harga_taksasi ?? '') }}">
                 </div>
 
                 <div>
@@ -129,7 +138,7 @@
                         Kembali
                     </a>
 
-                    <button type="submit" 
+                    <button type="button" onclick="validateAndSubmit()"
                             class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
                         Berikutnya
                     </button>
@@ -147,39 +156,84 @@
     const radioLainnya = document.getElementById('radio_lainnya');
     const spesifikasi = document.getElementById('spesifikasi');
     const hargaTaksasi = document.getElementById('harga_taksasi');
+    const containerStatus = document.getElementById('container_status_kepemilikan'); 
 
-    // Jika user mengetik, otomatis pilih radio "Yang Lain"
+    // Jika user mengetik di input lainnya, otomatis pilih radio "Yang Lain" dan hilangkan warna merah
     inputLainnya.addEventListener('input', function() {
         if (this.value.trim() !== '') {
             radioLainnya.checked = true;
+            this.style.borderColor = '';
         }
     });
 
-    const formPraSurvei = document.getElementById('formPraSurvei');
-    formPraSurvei.addEventListener('submit', function(event) {
+    // Menghilangkan warna merah saat input spesifikasi diketik
+    spesifikasi.addEventListener('input', function() {
+        if (this.value.trim() !== '') {
+            this.style.borderColor = '';
+        }
+    });
+
+    // Menghilangkan warna merah saat input harga taksasi diketik
+    hargaTaksasi.addEventListener('input', function() {
+        if (this.value.trim() !== '') {
+            this.style.borderColor = '';
+        }
+    });
+
+    // Menghilangkan warna merah pada status kepemilikan saat radio dipilih
+    const radiosStatus = document.querySelectorAll('input[name="status_kepemilikan"]');
+    radiosStatus.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (containerStatus) {
+                containerStatus.style.border = '';
+                containerStatus.style.padding = '';
+            }
+        });
+    });
+
+    function validateAndSubmit() {
+        const formPraSurvei = document.getElementById('formPraSurvei');
         const selectedStatus = formPraSurvei.querySelector('input[name="status_kepemilikan"]:checked');
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
+        // Reset semua border merah sebelum validasi ulang
+        spesifikasi.style.borderColor = '';
+        inputLainnya.style.borderColor = '';
+        hargaTaksasi.style.borderColor = '';
+        if (containerStatus) {
+            containerStatus.style.border = '';
+            containerStatus.style.padding = '';
+        }
+
         // 1. Validasi Spesifikasi (Wajib)
         if (!spesifikasi.value.trim()) {
             isValid = false;
+            spesifikasi.style.borderColor = 'red';
         }
+
         // 2. Validasi Status Kepemilikan Radio terpilih (Wajib)
-        else if (!selectedStatus) {
+        if (!selectedStatus) {
             isValid = false;
-        }
+            if (containerStatus) {
+                containerStatus.style.border = '1px solid red';
+                containerStatus.style.borderRadius = '4px';
+                containerStatus.style.padding = '5px';
+            }
+        } 
         // 3. Validasi "Yang Lain" jika radio terpilih tapi input teks kosong
         else if (selectedStatus.value === 'yang_lain' && inputLainnya.value.trim() === '') {
             isValid = false;
+            inputLainnya.style.borderColor = 'red';
         }
+
         // 4. Validasi Harga Taksasi (Wajib)
-        else if (!hargaTaksasi.value.trim()) {
+        if (!hargaTaksasi.value.trim()) {
             isValid = false;
+            hargaTaksasi.style.borderColor = 'red';
         }
 
         if (!isValid) {
-            event.preventDefault(); // Batalkan submit form agar popup muncul
             Swal.fire({
                 icon: 'warning',
                 title: 'Peringatan',
@@ -192,9 +246,10 @@
                     confirmButton: 'swal2-tight-btn'
                 }
             });
+        } else {
+            formPraSurvei.submit(); 
         }
-        // Jika valid, biarkan form melakukan submit secara normal tanpa preventDefault()
-    });
+    }
 </script>
 
 <style>

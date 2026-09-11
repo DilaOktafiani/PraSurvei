@@ -97,14 +97,40 @@
 <script>
     const formPraSurvei = document.getElementById('formPraSurvei');
     
+    // Tambahkan event listener untuk menghapus border merah secara real-time saat salah satu radio dipilih
+    const radioPinjaman = formPraSurvei.querySelectorAll('input[name="apakah_debitur_memiliki_pinjaman"]');
+    const containerPinjaman = formPraSurvei.querySelector('input[name="apakah_debitur_memiliki_pinjaman"]')?.closest('.mb-4, .form-group, div');
+
+    radioPinjaman.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (containerPinjaman) {
+                containerPinjaman.style.border = '';
+                containerPinjaman.style.padding = '';
+                containerPinjaman.style.borderRadius = '';
+            }
+        });
+    });
+
     formPraSurvei.addEventListener('submit', function(event) {
         const selectedPinjaman = formPraSurvei.querySelector('input[name="apakah_debitur_memiliki_pinjaman"]:checked');
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
+        // Reset border merah container terlebih dahulu
+        if (containerPinjaman) {
+            containerPinjaman.style.border = '';
+            containerPinjaman.style.padding = '';
+            containerPinjaman.style.borderRadius = '';
+        }
+
         // Validasi radio button "Apakah Debitur Memiliki Pinjaman"
         if (!selectedPinjaman) {
             isValid = false;
+            if (containerPinjaman) {
+                containerPinjaman.style.border = '1px solid red';
+                containerPinjaman.style.borderRadius = '4px';
+                containerPinjaman.style.padding = '8px';
+            }
         }
 
         if (!isValid) {

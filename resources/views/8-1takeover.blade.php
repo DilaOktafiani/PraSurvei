@@ -103,14 +103,40 @@
 <script>
     const formPraSurvei = document.getElementById('formPraSurvei');
     
+    // Tambahkan event listener untuk menghapus border merah secara real-time saat salah satu radio dipilih
+    const radioTakeOver = formPraSurvei.querySelectorAll('input[name="apakah_kredit_take_over"]');
+    const containerTakeOver = formPraSurvei.querySelector('input[name="apakah_kredit_take_over"]')?.closest('.mb-4, .form-group, div');
+
+    radioTakeOver.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (containerTakeOver) {
+                containerTakeOver.style.border = '';
+                containerTakeOver.style.padding = '';
+                containerTakeOver.style.borderRadius = '';
+            }
+        });
+    });
+
     formPraSurvei.addEventListener('submit', function(event) {
         const selectedTakeOver = formPraSurvei.querySelector('input[name="apakah_kredit_take_over"]:checked');
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
+        // Reset border merah container terlebih dahulu
+        if (containerTakeOver) {
+            containerTakeOver.style.border = '';
+            containerTakeOver.style.padding = '';
+            containerTakeOver.style.borderRadius = '';
+        }
+
         // Validasi radio button "Apakah kredit take over"
         if (!selectedTakeOver) {
             isValid = false;
+            if (containerTakeOver) {
+                containerTakeOver.style.border = '1px solid red';
+                containerTakeOver.style.borderRadius = '4px';
+                containerTakeOver.style.padding = '8px';
+            }
         }
 
         if (!isValid) {

@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @vite(['resources/js/rupiah-formatter.js'])
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -127,8 +129,15 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Plafon <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="plafon" value="{{ old('plafon', $debitur->plafon ?? '') }}" placeholder="ex : 10000000000" required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="ex : 10000000000" 
+                        value="{{ old('plafon', isset($debitur->plafon) ? number_format($debitur->plafon, 0, ',', '.') : '') }}" 
+                        required>
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="plafon" value="{{ old('plafon', $debitur->plafon ?? '') }}">
                 </div>
 
                 <div>
@@ -159,8 +168,15 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Estimasi Kewajiban <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="estimasi_kewajiban" value="{{ old('estimasi_kewajiban', $debitur->estimasi_kewajiban ?? '') }}" placeholder="Total angsuran perbulan" required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="Total angsuran perbulan" 
+                        value="{{ old('estimasi_kewajiban', isset($debitur->estimasi_kewajiban) ? number_format($debitur->estimasi_kewajiban, 0, ',', '.') : '') }}" 
+                        required>
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="estimasi_kewajiban" value="{{ old('estimasi_kewajiban', $debitur->estimasi_kewajiban ?? '') }}">
                 </div>
 
                 <!-- Tipe Fasilitas -->
@@ -235,14 +251,29 @@
     const inputLainnya = document.getElementById('input_lainnya');
     const checkboxLainnya = document.getElementById('checkbox_lainnya');
 
-    // Mengontrol status centang dan value secara dinamis
+    // Mengontrol status centang dan menghilangkan warna merah saat mulai diketik
     inputLainnya.addEventListener('input', function() {
         if (this.value.trim() !== '') {
             checkboxLainnya.checked = true; 
+            this.style.borderColor = ''; // Menghilangkan warna merah saat diisi
         } else {
             checkboxLainnya.checked = false; 
             checkboxLainnya.value = 'Yang Lain';
         }
+    });
+
+    // Menghilangkan warna merah pada wadah fasilitas saat salah satu checkbox dicentang
+    const checkboxesFasilitas = document.querySelectorAll('input[name="tipe_fasilitas[]"]');
+    const containerFasilitas = document.getElementById('container_fasilitas'); // Pastikan ID ini ada di HTML pembungkusnya
+
+    checkboxesFasilitas.forEach(cb => {
+        cb.addEventListener('change', function() {
+            const checkedFasilitas = document.querySelectorAll('input[name="tipe_fasilitas[]"]:checked');
+            if (checkedFasilitas.length > 0 && containerFasilitas) {
+                containerFasilitas.style.border = ''; // Menghilangkan merah jika sudah dicentang
+                containerFasilitas.style.padding = '';
+            }
+        });
     });
 
     function validateAndSubmit() {
@@ -250,21 +281,43 @@
         const requiredInputs = formPraSurvei.querySelectorAll('[required]');
         let isValid = true;
 
+        // Reset semua border merah terlebih dahulu sebelum validasi ulang
+        requiredInputs.forEach(input => {
+            input.style.borderColor = '';
+            // Event listener tambahan agar input biasa langsung hilang merahnya saat diketik
+            input.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    this.style.borderColor = '';
+                }
+            });
+        });
+        inputLainnya.style.borderColor = '';
+
+        // Cek input required biasa
         requiredInputs.forEach(input => {
             if (!input.value.trim()) {
                 isValid = false;
+                input.style.borderColor = 'red';
             }
         });
 
         // Validasi khusus: Jika checkbox "Yang Lain" dicentang, pastikan kotak teksnya tidak kosong
         if (checkboxLainnya.checked && inputLainnya.value.trim() === '') {
             isValid = false;
+            inputLainnya.style.borderColor = 'red';
         }
 
         // Mengecek apakah minimal ada 1 tipe fasilitas yang dicentang
-        const checkedFasilitas = formPraSurvei.querySelectorAll('input[name="tipe_fasilitas[]"]:checked');
+        const checkedFasilitas = document.querySelectorAll('input[name="tipe_fasilitas[]"]:checked');
         if (checkedFasilitas.length === 0) {
             isValid = false;
+            if (containerFasilitas) {
+                containerFasilitas.style.border = '1px solid red';
+                containerFasilitas.style.borderRadius = '4px';
+                containerFasilitas.style.padding = '5px';
+            }
+        } else {
+            if (containerFasilitas) containerFasilitas.style.border = '';
         }
 
         if (!isValid) {

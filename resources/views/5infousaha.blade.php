@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @vite(['resources/js/rupiah-formatter.js'])
 </head>
 <body class="bg-[#F8FAFC] font-sans min-h-screen flex flex-col">
     <!-- HEADER -->
@@ -58,9 +60,15 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Omset Usaha <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="omset_usaha" required placeholder="ex : 200000000"
-                        value="{{ old('omset_usaha', isset($infoUsaha->omset_usaha) ? number_format($infoUsaha->omset_usaha, 0, '', '') : '') }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="ex : 200000000" 
+                        value="{{ old('omset_usaha', isset($infoUsaha->omset_usaha) ? number_format($infoUsaha->omset_usaha, 0, ',', '.') : '') }}" 
+                        required>
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="omset_usaha" value="{{ old('omset_usaha', $infoUsaha->omset_usaha ?? '') }}">
                 </div>
 
                 <!-- Biaya Operasional -->
@@ -68,9 +76,15 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Biaya Operasional <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="biaya_operasional" required placeholder="ex : 100000000"
-                        value="{{ old('biaya_operasional', isset($infoUsaha->biaya_operasional) ? number_format($infoUsaha->biaya_operasional, 0, '', '') : '') }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="ex : 100000000" 
+                        value="{{ old('biaya_operasional', isset($infoUsaha->biaya_operasional) ? number_format($infoUsaha->biaya_operasional, 0, ',', '.') : '') }}" 
+                        required>
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="biaya_operasional" value="{{ old('biaya_operasional', $infoUsaha->biaya_operasional ?? '') }}">
                 </div>
 
                 <!-- Penghasilan Tambahan -->
@@ -78,9 +92,15 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Penghasilan Tambahan <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="penghasilan_tambahan" required placeholder="ex : 25000000"
-                        value="{{ old('penghasilan_tambahan', isset($infoUsaha->penghasilan_tambahan) ? number_format($infoUsaha->penghasilan_tambahan, 0, '', '') : '') }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="ex : 25000000" 
+                        value="{{ old('penghasilan_tambahan', isset($infoUsaha->penghasilan_tambahan) ? number_format($infoUsaha->penghasilan_tambahan, 0, ',', '.') : '') }}" 
+                        required>
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="penghasilan_tambahan" value="{{ old('penghasilan_tambahan', $infoUsaha->penghasilan_tambahan ?? '') }}">
                 </div>
 
                 <!-- Pengeluaran Rumah Tangga -->
@@ -88,9 +108,15 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Pengeluaran Rumah Tangga <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="pengeluaran_rumah_tangga" required placeholder="ex : 20000000"
-                        value="{{ old('pengeluaran_rumah_tangga', isset($infoUsaha->pengeluaran_rumah_tangga) ? number_format($infoUsaha->pengeluaran_rumah_tangga, 0, '', '') : '') }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="ex : 20000000" 
+                        value="{{ old('pengeluaran_rumah_tangga', isset($infoUsaha->pengeluaran_rumah_tangga) ? number_format($infoUsaha->pengeluaran_rumah_tangga, 0, ',', '.') : '') }}" 
+                        required>
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="pengeluaran_rumah_tangga" value="{{ old('pengeluaran_rumah_tangga', $infoUsaha->pengeluaran_rumah_tangga ?? '') }}">
                 </div>
 
                 <!-- Angsuran Bank Lain -->
@@ -98,9 +124,15 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Angsuran Bank Lain <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="angsuran_bank_lain" required placeholder="ex : 100000000"
-                        value="{{ old('angsuran_bank_lain', isset($infoUsaha->angsuran_bank_lain) ? number_format($infoUsaha->angsuran_bank_lain, 0, '', '') : '') }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="ex : 100000000" 
+                        value="{{ old('angsuran_bank_lain', isset($infoUsaha->angsuran_bank_lain) ? number_format($infoUsaha->angsuran_bank_lain, 0, ',', '.') : '') }}" 
+                        required>
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="angsuran_bank_lain" value="{{ old('angsuran_bank_lain', $infoUsaha->angsuran_bank_lain ?? '') }}">
                 </div>
 
                 <!-- Angsuran BPR -->
@@ -108,9 +140,15 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Angsuran BPR <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="angsuran_bpr" required placeholder="ex : 20000000"
-                        value="{{ old('angsuran_bpr', isset($infoUsaha->angsuran_bpr) ? number_format($infoUsaha->angsuran_bpr, 0, '', '') : '') }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <!-- Input teks untuk tampilan berformat titik otomatis -->
+                    <input type="text" 
+                        class="input-rupiah w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" 
+                        placeholder="ex : 20000000" 
+                        value="{{ old('angsuran_bpr', isset($infoUsaha->angsuran_bpr) ? number_format($infoUsaha->angsuran_bpr, 0, ',', '.') : '') }}" 
+                        required>
+                    
+                    <!-- Input hidden untuk dikirim angka murninya ke database -->
+                    <input type="hidden" name="angsuran_bpr" value="{{ old('angsuran_bpr', $infoUsaha->angsuran_bpr ?? '') }}">
                 </div>
 
                 <!-- Deskripsi Usaha -->
@@ -222,44 +260,73 @@
     const checkboxLainnya = document.getElementById('checkbox_lainnya');
     const formPraSurvei = document.getElementById('formPraSurvei');
 
-    // Jika user mengetik, otomatis centang checkbox "Yang Lain"
+    // Jika user mengetik, otomatis centang checkbox "Yang Lain" dan hilangkan border merahnya
     inputLainnya.addEventListener('input', function() {
         if (this.value.trim() !== '') {
             checkboxLainnya.checked = true;
+            this.style.borderColor = '';
+        } else {
+            checkboxLainnya.checked = false;
         }
     });
 
     formPraSurvei.addEventListener('submit', function(event) {
-        // Dicocokkan dengan nama name="..." di form sesuai Controller storeStep5
-        const omsetUsaha = formPraSurvei.querySelector('input[name="omset_usaha"]');
-        const biayaOperasional = formPraSurvei.querySelector('input[name="biaya_operasional"]');
-        const penghasilanTambahan = formPraSurvei.querySelector('input[name="penghasilan_tambahan"]');
-        const pengeluaranRT = formPraSurvei.querySelector('input[name="pengeluaran_rumah_tangga"]');
-        const angsuranBank = formPraSurvei.querySelector('input[name="angsuran_bank_lain"]');
-        const angsuranBPR = formPraSurvei.querySelector('input[name="angsuran_bpr"]');
+        // Ambil elemen input teks yang terlihat di layar untuk validasi border merah
+        const omsetUsaha = formPraSurvei.querySelector('input.input-rupiah[value*="omset_usaha"]') || formPraSurvei.querySelectorAll('input.input-rupiah')[0];
+        const biayaOperasional = formPraSurvei.querySelectorAll('input.input-rupiah')[1];
+        const penghasilanTambahan = formPraSurvei.querySelectorAll('input.input-rupiah')[2];
+        const pengeluaranRT = formPraSurvei.querySelectorAll('input.input-rupiah')[3];
+        const angsuranBank = formPraSurvei.querySelectorAll('input.input-rupiah')[4];
+        const angsuranBPR = formPraSurvei.querySelectorAll('input.input-rupiah')[5];
         const deskripsiUsaha = formPraSurvei.querySelector('textarea[name="deskripsi_usaha"]');
 
         let isValid = true;
-        let errorMessage = 'Mohon lengkapi semua field yang wajib diisi!';
+        let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
-        // Validasi elemen form utama
-        if (!omsetUsaha || !omsetUsaha.value.trim() || 
-            !biayaOperasional || !biayaOperasional.value.trim() || 
-            !penghasilanTambahan || !penghasilanTambahan.value.trim() || 
-            !pengeluaranRT || !pengeluaranRT.value.trim() || 
-            !angsuranBank || !angsuranBank.value.trim() || 
-            !angsuranBPR || !angsuranBPR.value.trim() || 
-            !deskripsiUsaha || !deskripsiUsaha.value.trim()) {
+        // Kumpulkan semua field wajib ke dalam array
+        const requiredInputs = [omsetUsaha, biayaOperasional, penghasilanTambahan, pengeluaranRT, angsuranBank, angsuranBPR, deskripsiUsaha];
+
+        // Reset semua border merah terlebih dahulu
+        requiredInputs.forEach(el => {
+            if (el) el.style.borderColor = '';
+        });
+        if (inputLainnya) inputLainnya.style.borderColor = '';
+
+        // Tambahkan event listener real-time agar border merah hilang saat mulai diketik/diisi
+        requiredInputs.forEach(el => {
+            if (el) {
+                el.addEventListener('input', function() {
+                    if (this.value.trim() !== '') {
+                        this.style.borderColor = '';
+                    }
+                });
+                // Untuk textarea atau input teks biasa
+                el.addEventListener('change', function() {
+                    if (this.value.trim() !== '') {
+                        this.style.borderColor = '';
+                    }
+                });
+            }
+        });
+
+        // 1. Validasi field utama yang wajib diisi
+        requiredInputs.forEach(el => {
+            if (!el || !el.value.trim()) {
+                isValid = false;
+                if (el) el.style.borderColor = 'red';
+            }
+        });
+
+        // 2. Validasi khusus: Jika checkbox "Yang Lain" dicentang, pastikan kotak teksnya tidak kosong
+        if (checkboxLainnya && checkboxLainnya.checked && inputLainnya.value.trim() === '') {
             isValid = false;
-        }
-        // Validasi detail berkas lainnya jika dicentang tapi teksnya kosong
-        else if (checkboxLainnya && checkboxLainnya.checked && inputLainnya.value.trim() === '') {
-            isValid = false;
-            errorMessage = 'Mohon isi detail untuk berkas lainnya';
+            inputLainnya.style.borderColor = 'red';
+            errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
         }
 
+        // Jika ada yang belum valid, cegah submit dan tampilkan SweetAlert
         if (!isValid) {
-            event.preventDefault(); // Mencegah form tersubmit jika belum lengkap
+            event.preventDefault(); 
             Swal.fire({
                 icon: 'warning',
                 title: 'Peringatan',

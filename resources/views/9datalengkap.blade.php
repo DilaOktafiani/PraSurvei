@@ -175,11 +175,13 @@
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
 
-    <!-- JAVASCRIPT UNTUK MENGGABUNGKAN INPUT LAINNYA & VALIDASI SWEETALERT -->
-    <script>
-        const inputLainnya = document.getElementById('input_lainnya');
-        const checkboxLainnya = document.getElementById('checkbox_lainnya');
+<!-- JAVASCRIPT UNTUK MENGGABUNGKAN INPUT LAINNYA & VALIDASI SWEETALERT -->
+<script>
+    const inputLainnya = document.getElementById('input_lainnya');
+    const checkboxLainnya = document.getElementById('checkbox_lainnya');
+    const formPraSurvei = document.getElementById('formPraSurvei');
 
+    if (inputLainnya && checkboxLainnya) {
         inputLainnya.addEventListener('input', function() {
             if (this.value.trim() !== '') {
                 checkboxLainnya.checked = true;
@@ -187,56 +189,71 @@
                 checkboxLainnya.checked = false;
             }
         });
+    }
 
-        function prepareAndSubmit(event) {
-            event.preventDefault();
-            const form = document.getElementById('formPraSurvei');
+    function prepareAndSubmit(event) {
+        event.preventDefault();
 
-            // Validasi radio button "Apakah Badan Usaha"
-            const selectedBadanUsaha = form.querySelector('input[name="apakah_badan_usaha"]:checked');
-            if (!selectedBadanUsaha) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Peringatan',
-                    text: 'Mohon lengkapi semua pertanyaan yang bertanda (*)',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#0082CB',
-                    heightAuto: false,
-                    customClass: {
-                        popup: 'swal2-tight-popup',
-                        confirmButton: 'swal2-tight-btn'
-                    }
-                });
-                return;
+        // Validasi radio button "Apakah Badan Usaha" (Wajib)
+        const selectedBadanUsaha = formPraSurvei.querySelector('input[name="apakah_badan_usaha"]:checked');
+        
+        // Ambil elemen wrapper atau container pertanyaan radio untuk diberi border merah jika belum dipilih
+        const radioContainer = formPraSurvei.querySelector('input[name="apakah_badan_usaha"]')?.closest('.mb-4, .form-group, div');
+
+        if (!selectedBadanUsaha) {
+            if (radioContainer) {
+                radioContainer.style.border = '1px solid red';
+                radioContainer.style.borderRadius = '4px';
+                radioContainer.style.padding = '8px';
             }
 
-            // Hapus hidden input dynamic sebelumnya agar tidak double saat klik berulang
-            document.querySelectorAll('.dynamic-surat-nikah').forEach(el => el.remove());
-
-            // 1. Masukkan checkbox surat nikah standar yang dicentang
-            const checkedBoxes = document.querySelectorAll('.surat-nikah-opsi:checked');
-            checkedBoxes.forEach(cb => {
-                let hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = 'surat_nikah[]';
-                hiddenInput.value = cb.value;
-                hiddenInput.className = 'dynamic-surat-nikah';
-                form.appendChild(hiddenInput);
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Mohon lengkapi semua pertanyaan yang bertanda (*)',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#0082CB',
+                heightAuto: false,
+                customClass: {
+                    popup: 'swal2-tight-popup',
+                    confirmButton: 'swal2-tight-btn'
+                }
             });
-
-            // 2. Jika input "Yang Lain" terisi dan dicentang, masukkan nilainya ke dalam array surat_nikah[]
-            if (checkboxLainnya.checked && inputLainnya.value.trim() !== '') {
-                let hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = 'surat_nikah[]';
-                hiddenInput.value = inputLainnya.value.trim();
-                hiddenInput.className = 'dynamic-surat-nikah';
-                form.appendChild(hiddenInput);
+            return;
+        } else {
+            if (radioContainer) {
+                radioContainer.style.border = '';
+                radioContainer.style.padding = '';
             }
-
-            form.submit();
         }
-    </script>
+
+        // Hapus hidden input dynamic sebelumnya agar tidak double saat klik berulang
+        document.querySelectorAll('.dynamic-surat-nikah').forEach(el => el.remove());
+
+        // 1. Masukkan checkbox surat nikah standar yang dicentang
+        const checkedBoxes = document.querySelectorAll('.surat-nikah-opsi:checked');
+        checkedBoxes.forEach(cb => {
+            let hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'surat_nikah[]';
+            hiddenInput.value = cb.value;
+            hiddenInput.className = 'dynamic-surat-nikah';
+            formPraSurvei.appendChild(hiddenInput);
+        });
+
+        // 2. Jika input "Yang Lain" terisi dan dicentang, masukkan nilainya ke dalam array surat_nikah[]
+        if (checkboxLainnya && checkboxLainnya.checked && inputLainnya && inputLainnya.value.trim() !== '') {
+            let hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'surat_nikah[]';
+            hiddenInput.value = inputLainnya.value.trim();
+            hiddenInput.className = 'dynamic-surat-nikah';
+            formPraSurvei.appendChild(hiddenInput);
+        }
+
+        formPraSurvei.submit();
+    }
+</script>
 
 <style>
     .swal2-popup.swal2-tight-popup {

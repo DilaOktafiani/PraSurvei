@@ -198,126 +198,137 @@
             </div>
 
             <!-- B. DATA JAMINAN -->
-            @php
-                $agunan = $data->agunan_tanah->first() ?? null;
-            @endphp
-            <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
-                    B. Data Jaminan
-                </div>
-                <div class="border border-[#0A3370] rounded-none text-xs">
-                    <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Kepemilikan</div>
-                        <div class="p-2 sm:col-span-3 font-medium flex items-center">{{ $agunan->kepemilikan ?? '-' }}</div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Alamat</div>
-                        <div class="p-2 sm:col-span-3 flex items-center">{{ $agunan->alamat ?? '-' }}</div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Share Loc</div>
-                        <div class="p-2 sm:col-span-3 flex items-center">
-                            @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
-                                <a href="{{ $agunan->share_location }}" target="_blank" class="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-800 font-medium underline">
-                                    <span>📍 Lihat Lokasi di Peta</span>
-                                </a>
-                            @else
-                                <span>-</span>
-                            @endif
-                        </div>
+            @if(isset($data->agunan_tanah) && $data->agunan_tanah->count() > 0)
+                <div class="mb-6">
+                    <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
+                        B. Data Jaminan
                     </div>
 
-                    <!-- Header Tabel Penilaian Jaminan -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 bg-gray-100 border-b border-gray-300 font-semibold">
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-center">Uraian</div>
-                        <div class="p-2 sm:col-span-1 border-r border-gray-300 text-center">Luas (m2)</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-center">Harga</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-center">Nilai Pasar</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-center">Nilai Taksasi</div>
-                        <div class="p-2 sm:col-span-3 text-center">Nilai Likuidasi</div>
-                    </div>
+                    @foreach($data->agunan_tanah as $index => $agunan)
+                        @php
+                            $urutanJaminan = $index + 1;
+                        @endphp
 
-                    <!-- Baris Tanah -->
-                    @php
-                        $luasTanah = $agunan->luas_tanah ?? 0;
-                        $hargaTanah = $agunan->harga_tanah ?? 0;
-                        $tanahPasar = $luasTanah * $hargaTanah;
-                        $tanahTaksasi = $tanahPasar * 0.70;
-                        $tanahLikuidasi = $tanahPasar * 0.50;
-                    @endphp
-                    <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-200">
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 font-medium flex items-center">Tanah</div>
-                        <div class="p-2 sm:col-span-1 border-r border-gray-300 text-center flex items-center justify-center">{{ $agunan->luas_tanah ?? '-' }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($hargaTanah, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($tanahPasar, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($tanahTaksasi, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($tanahLikuidasi, 0, ',', '.') }}</div>
-                    </div>
+                        <div class="border border-[#0A3370] {{ !$loop->last ? 'mb-4' : '' }} rounded-none text-xs">
+                            <!-- Header Sub-Jaminan jika lebih dari 1 -->
+                            <div class="bg-gray-100 px-3 py-1.5 font-bold text-[#0A3370] border-b border-gray-300">
+                                Jaminan {{ $urutanJaminan }}
+                            </div>
 
-                    <!-- Baris Bangunan -->
-                    @php
-                        $luasBangunan = $agunan->luas_bangunan ?? 0;
-                        $hargaBangunan = $agunan->harga_bangunan ?? 0;
-                        $bangunanPasar = $luasBangunan * $hargaBangunan;
-                        $bangunanTaksasi = $bangunanPasar * 0.70;
-                        $bangunanLikuidasi = $bangunanPasar * 0.50;
-                    @endphp
-                    <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-200">
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 font-medium flex items-center">Bangunan</div>
-                        <div class="p-2 sm:col-span-1 border-r border-gray-300 text-center flex items-center justify-center">{{ $agunan->luas_bangunan ?? '-' }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($hargaBangunan, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($bangunanPasar, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($bangunanTaksasi, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($bangunanLikuidasi, 0, ',', '.') }}</div>
-                    </div>
-
-                    <!-- Baris Total -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 bg-gray-50 font-bold border-b border-gray-300">
-                        <div class="p-2 sm:col-span-5 border-r border-gray-300 text-center flex items-center justify-center">Total</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</div>
-                        <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Spesifikasi Jaminan</div>
-                        <div class="p-2 sm:col-span-3 whitespace-pre-line flex items-center" style="text-align: justify;">{{ $agunan->spesifikasi ?? '-' }}</div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
-                        <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Denah</div>
-                        <div class="p-2 sm:col-span-3">
-                            @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
-                                    <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 480px; height: auto;" class="block">
+                            <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
+                                <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Kepemilikan</div>
+                                <div class="p-2 sm:col-span-3 font-medium flex items-center">{{ $agunan->kepemilikan ?? '-' }}</div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
+                                <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Alamat</div>
+                                <div class="p-2 sm:col-span-3 flex items-center">{{ $agunan->alamat ?? '-' }}</div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
+                                <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Share Loc</div>
+                                <div class="p-2 sm:col-span-3 flex items-center">
+                                    @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
+                                        <a href="{{ $agunan->share_location }}" target="_blank" class="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-800 font-medium underline">
+                                            <span>📍 Lihat Lokasi di Peta</span>
+                                        </a>
+                                    @else
+                                        <span>-</span>
+                                    @endif
                                 </div>
-                            @else
-                                <span>-</span>
-                            @endif
-                        </div>
-                    </div>
-                    
-                    <!-- INFORMASI HARGA -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12">
-                        <div class="p-2 sm:col-span-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-start">Informasi Harga</div>
-                        <div class="sm:col-span-10 divide-y divide-gray-200">
+                            </div>
+
+                            <!-- Header Tabel Penilaian Jaminan -->
+                            <div class="grid grid-cols-1 sm:grid-cols-12 bg-gray-100 border-b border-gray-300 font-semibold">
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 text-center">Uraian</div>
+                                <div class="p-2 sm:col-span-1 border-r border-gray-300 text-center">Luas (m2)</div>
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 text-center">Harga</div>
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 text-center">Nilai Pasar</div>
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 text-center">Nilai Taksasi</div>
+                                <div class="p-2 sm:col-span-3 text-center">Nilai Likuidasi</div>
+                            </div>
+
+                            <!-- Baris Tanah -->
                             @php
-                                $infoList = [
-                                    $agunan->info_harga1 ?? '-',
-                                    $agunan->info_harga2 ?? '-',
-                                    $agunan->info_harga3 ?? '-',
-                                ];
+                                $luasTanah = $agunan->luas_tanah ?? 0;
+                                $hargaTanah = $agunan->harga_tanah ?? 0;
+                                $tanahPasar = $luasTanah * $hargaTanah;
+                                $tanahTaksasi = $tanahPasar * 0.70;
+                                $tanahLikuidasi = $tanahPasar * 0.50;
                             @endphp
+                            <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-200">
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 font-medium flex items-center">Tanah</div>
+                                <div class="p-2 sm:col-span-1 border-r border-gray-300 text-center flex items-center justify-center">{{ $agunan->luas_tanah ?? '-' }}</div>
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($hargaTanah, 0, ',', '.') }}</div>
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($tanahPasar, 0, ',', '.') }}</div>
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($tanahTaksasi, 0, ',', '.') }}</div>
+                                <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($tanahLikuidasi, 0, ',', '.') }}</div>
+                            </div>
 
-                            @foreach($infoList as $index => $info)
-                                <div class="grid grid-cols-1 sm:grid-cols-10 {{ $loop->last ? '' : 'border-b border-gray-200' }}">
-                                    <div class="p-2 sm:col-span-1 bg-gray-50/50 sm:bg-transparent font-medium border-r border-gray-200 text-center flex items-center justify-center">{{ $index + 1 }}</div>
-                                    <div class="p-2 sm:col-span-9 whitespace-pre-line flex items-center" style="text-align: justify;">{{ !empty(trim($info)) ? $info : '-' }}</div>
+                            <!-- Baris Bangunan -->
+                            @php
+                                $luasBangunan = $agunan->luas_bangunan ?? 0;
+                                $hargaBangunan = $agunan->harga_bangunan ?? 0;
+                                $bangunanPasar = $luasBangunan * $hargaBangunan;
+                                $bangunanTaksasi = $bangunanPasar * 0.70;
+                                $bangunanLikuidasi = $bangunanPasar * 0.50;
+                            @endphp
+                            <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-200">
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 font-medium flex items-center">Bangunan</div>
+                                <div class="p-2 sm:col-span-1 border-r border-gray-300 text-center flex items-center justify-center">{{ $agunan->luas_bangunan ?? '-' }}</div>
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($hargaBangunan, 0, ',', '.') }}</div>
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($bangunanPasar, 0, ',', '.') }}</div>
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($bangunanTaksasi, 0, ',', '.') }}</div>
+                                <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($bangunanLikuidasi, 0, ',', '.') }}</div>
+                            </div>
+
+                            <!-- Baris Total -->
+                            <div class="grid grid-cols-1 sm:grid-cols-12 bg-gray-50 font-bold border-b border-gray-300">
+                                <div class="p-2 sm:col-span-5 border-r border-gray-300 text-center flex items-center justify-center">Total</div>
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</div>
+                                <div class="p-2 sm:col-span-2 border-r border-gray-300 text-right flex items-center justify-end">Rp {{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</div>
+                                <div class="p-2 sm:col-span-3 text-right flex items-center justify-end">Rp {{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
+                                <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Spesifikasi Jaminan</div>
+                                <div class="p-2 sm:col-span-3 whitespace-pre-line flex items-center" style="text-align: justify;">{{ $agunan->spesifikasi ?? '-' }}</div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
+                                <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Denah</div>
+                                <div class="p-2 sm:col-span-3">
+                                    @if(!empty($agunan->denah) && $agunan->denah !== '-')
+                                        <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                            <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 480px; height: auto;" class="block">
+                                        </div>
+                                    @else
+                                        <span>-</span>
+                                    @endif
                                 </div>
-                            @endforeach
+                            </div>
+                            
+                            <!-- INFORMASI HARGA -->
+                            <div class="grid grid-cols-1 sm:grid-cols-12">
+                                <div class="p-2 sm:col-span-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-start">Informasi Harga</div>
+                                <div class="sm:col-span-10 divide-y divide-gray-200">
+                                    @php
+                                        $infoList = [
+                                            $agunan->info_harga1 ?? '-',
+                                            $agunan->info_harga2 ?? '-',
+                                            $agunan->info_harga3 ?? '-',
+                                        ];
+                                    @endphp
+
+                                    @foreach($infoList as $infoIndex => $info)
+                                        <div class="grid grid-cols-1 sm:grid-cols-10 {{ $loop->last ? '' : 'border-b border-gray-200' }}">
+                                            <div class="p-2 sm:col-span-1 bg-gray-50/50 sm:bg-transparent font-medium border-r border-gray-200 text-center flex items-center justify-center">{{ $infoIndex + 1 }}</div>
+                                            <div class="p-2 sm:col-span-9 whitespace-pre-line flex items-center" style="text-align: justify;">{{ !empty(trim($info)) ? $info : '-' }}</div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
-            </div>
+            @endif
 
             <!-- C. SLIK -->
             <div class="mb-6">

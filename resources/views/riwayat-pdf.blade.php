@@ -120,131 +120,136 @@
         @php $agunan = $data->agunan_tanah->first() ?? null; @endphp
 
         <!-- B. DATA JAMINAN -->
-        <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 5px;">
-            <!-- Header Utama -->
-            <tr>
-                <td colspan="6" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; padding: 6px 10px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
-                    B. DATA JAMINAN
-                </td>
-            </tr>
-            
-            <!-- Kepemilikan -->
-            <tr>
-                <td class="bg-label" style="width: 20%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Kepemilikan</td>
-                <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px; font-weight: bold;">{{ $agunan->kepemilikan ?? '-' }}</td>
-            </tr>
-            
-            <!-- Alamat -->
-            <tr>
-                <td class="bg-label" style="width: 20%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Alamat</td>
-                <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px;">{{ $agunan->alamat ?? '-' }}</td>
-            </tr>
-            
-            <!-- Share Loc -->
-            <tr>
-                <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Share Loc</td>
-                <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px;">
-                    @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
-                        <a href="{{ $agunan->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; font-weight: 500;">
-                            📍 Lihat Lokasi di Peta
-                        </a>
-                    @else
-                        <span>-</span>
-                    @endif
-                </td>
-            </tr>
+        @if(isset($data->agunan_tanah) && $data->agunan_tanah->count() > 0)
+            @foreach($data->agunan_tanah as $index => $agunan)
+                @php
+                    $urutanJaminan = $index + 1;
 
-            @php
-                // Perhitungan Tanah
-                $luasTanah = $agunan->luas_tanah ?? 0;
-                $hargaTanah = $agunan->harga_tanah ?? 0;
-                $tanahPasar = $luasTanah * $hargaTanah;
-                $tanahTaksasi = $tanahPasar * 0.70;
-                $tanahLikuidasi = $tanahPasar * 0.50;
+                    // Perhitungan Tanah
+                    $luasTanah = $agunan->luas_tanah ?? 0;
+                    $hargaTanah = $agunan->harga_tanah ?? 0;
+                    $tanahPasar = $luasTanah * $hargaTanah;
+                    $tanahTaksasi = $tanahPasar * 0.70;
+                    $tanahLikuidasi = $tanahPasar * 0.50;
 
-                // Perhitungan Bangunan
-                $luasBangunan = $agunan->luas_bangunan ?? 0;
-                $hargaBangunan = $agunan->harga_bangunan ?? 0;
-                $bangunanPasar = $luasBangunan * $hargaBangunan;
-                $bangunanTaksasi = $bangunanPasar * 0.70;
-                $bangunanLikuidasi = $bangunanPasar * 0.50;
-            @endphp
+                    // Perhitungan Bangunan
+                    $luasBangunan = $agunan->luas_bangunan ?? 0;
+                    $hargaBangunan = $agunan->harga_bangunan ?? 0;
+                    $bangunanPasar = $luasBangunan * $hargaBangunan;
+                    $bangunanTaksasi = $bangunanPasar * 0.70;
+                    $bangunanLikuidasi = $bangunanPasar * 0.50;
+                @endphp
 
-            <!-- TABEL RINCIAN NILAI JAMINAN -->
-            <tr class="bg-label text-center">
-                <td style="width: 20%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Uraian</td>
-                <td style="width: 10%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Luas (m2)</td>
-                <td style="width: 14%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Harga</td>
-                <td style="width: 18%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Nilai Pasar</td>
-                <td style="width: 19%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Nilai Taksasi</td>
-                <td style="width: 19%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Nilai Likuidasi</td>
-            </tr>
-            <tr>
-                <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Tanah</td>
-                <td class="text-center" style="border: 1px solid #0A3370 !important; text-align: center; padding: 8px;">{{ $agunan->luas_tanah ?? '-' }}</td>
-                <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($hargaTanah, 0, ',', '.') }}</td>
-                <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($tanahPasar, 0, ',', '.') }}</td>
-                <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($tanahTaksasi, 0, ',', '.') }}</td>
-                <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($tanahLikuidasi, 0, ',', '.') }}</td>
-            </tr>
-            <tr>
-                <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Bangunan</td>
-                <td class="text-center" style="border: 1px solid #0A3370 !important; text-align: center; padding: 8px;">{{ $agunan->luas_bangunan ?? '-' }}</td>
-                <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($hargaBangunan, 0, ',', '.') }}</td>
-                <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($bangunanPasar, 0, ',', '.') }}</td>
-                <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($bangunanTaksasi, 0, ',', '.') }}</td>
-                <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($bangunanLikuidasi, 0, ',', '.') }}</td>
-            </tr>
-            <tr class="font-bold bg-label">
-                <td colspan="3" class="text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">TOTAL</td>
-                <td class="text-right" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Rp {{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</td>
-                <td class="text-right" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Rp {{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</td>
-                <td class="text-right" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Rp {{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</td>
-            </tr>
+                <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 15px;">
+                    <!-- Header Utama / Nomor Jaminan -->
+                    <tr>
+                        <td colspan="6" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; padding: 6px 10px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
+                            B. DATA {{ $data->agunan_tanah->count() > 1 ? 'JAMINAN KE-' . $urutanJaminan : '' }}
+                        </td>
+                    </tr>
+                    
+                    <!-- Kepemilikan -->
+                    <tr>
+                        <td class="bg-label" style="width: 20%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Kepemilikan</td>
+                        <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px; font-weight: bold;">{{ $agunan->kepemilikan ?? '-' }}</td>
+                    </tr>
+                    
+                    <!-- Alamat -->
+                    <tr>
+                        <td class="bg-label" style="width: 20%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Alamat</td>
+                        <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px;">{{ $agunan->alamat ?? '-' }}</td>
+                    </tr>
+                    
+                    <!-- Share Loc -->
+                    <tr>
+                        <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Share Loc</td>
+                        <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px;">
+                            @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
+                                <a href="{{ $agunan->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; font-weight: 500;">
+                                    📍 Lihat Lokasi di Peta
+                                </a>
+                            @else
+                                <span>-</span>
+                            @endif
+                        </td>
+                    </tr>
 
-            <!-- Spesifikasi Jaminan -->
-            <tr>
-                <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px; vertical-align: top;">Spesifikasi Jaminan</td>
-                <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px; white-space: pre-line; text-align: justify; text-justify: inter-word;">{{ $agunan->spesifikasi ?? '-' }}</td>
-            </tr>
+                    <!-- TABEL RINCIAN NILAI JAMINAN -->
+                    <tr class="bg-label text-center">
+                        <td style="width: 20%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Uraian</td>
+                        <td style="width: 10%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Luas (m2)</td>
+                        <td style="width: 14%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Harga</td>
+                        <td style="width: 18%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Nilai Pasar</td>
+                        <td style="width: 19%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Nilai Taksasi</td>
+                        <td style="width: 19%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Nilai Likuidasi</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Tanah</td>
+                        <td class="text-center" style="border: 1px solid #0A3370 !important; text-align: center; padding: 8px;">{{ $agunan->luas_tanah ?? '-' }}</td>
+                        <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($hargaTanah, 0, ',', '.') }}</td>
+                        <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($tanahPasar, 0, ',', '.') }}</td>
+                        <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($tanahTaksasi, 0, ',', '.') }}</td>
+                        <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($tanahLikuidasi, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Bangunan</td>
+                        <td class="text-center" style="border: 1px solid #0A3370 !important; text-align: center; padding: 8px;">{{ $agunan->luas_bangunan ?? '-' }}</td>
+                        <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($hargaBangunan, 0, ',', '.') }}</td>
+                        <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($bangunanPasar, 0, ',', '.') }}</td>
+                        <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($bangunanTaksasi, 0, ',', '.') }}</td>
+                        <td class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($bangunanLikuidasi, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr class="font-bold bg-label">
+                        <td colspan="3" class="text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">TOTAL</td>
+                        <td class="text-right" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Rp {{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</td>
+                        <td class="text-right" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Rp {{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</td>
+                        <td class="text-right" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Rp {{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</td>
+                    </tr>
 
-            <!-- Denah -->
-            <tr>
-                <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px; vertical-align: top;">Denah</td>
-                <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px;">
-                    @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                        <!-- Ubah max-width menjadi lebih besar, misalnya 400px atau 100% agar menyesuaikan lebar sel tabel -->
-                        <div style="width: 100%; max-width: 400px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff;">
-                            <img src="{{ public_path('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; display: block;">
-                        </div>
-                    @else
-                        <span>-</span>
-                    @endif
-                </td>
-            </tr>
+                    <!-- Spesifikasi Jaminan -->
+                    <tr>
+                        <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px; vertical-align: top;">Spesifikasi Jaminan</td>
+                        <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px; white-space: pre-line; text-align: justify; text-justify: inter-word;">{{ $agunan->spesifikasi ?? '-' }}</td>
+                    </tr>
 
-            <!-- Informasi Harga -->
-            <tr>
-                <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px; vertical-align: top;">Informasi Harga</td>
-                <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 0 !important;">
-                    @php
-                        $infoList = [
-                            $agunan->info_harga1 ?? '-',
-                            $agunan->info_harga2 ?? '-',
-                            $agunan->info_harga3 ?? '-'
-                        ];
-                    @endphp
-                    <table style="width: 100%; border-collapse: collapse; border: none !important;">
-                        @foreach($infoList as $index => $info)
-                            <tr>
-                                <td style="width: 10%; border-top: {{ $loop->first ? 'none' : '1px solid #d1d5db' }}; border-bottom: {{ $loop->last ? 'none' : '1px solid #d1d5db' }}; border-right: 1px solid #d1d5db; border-left: none; text-align: center; padding: 8px; background-color: #f9fafb; font-weight: 500;">{{ $index + 1 }}</td>
-                                <td style="width: 90%; border-top: {{ $loop->first ? 'none' : '1px solid #d1d5db' }}; border-bottom: {{ $loop->last ? 'none' : '1px solid #d1d5db' }}; border-right: none; border-left: none; padding: 8px; white-space: pre-line; text-align: justify; text-justify: inter-word;">{{ !empty(trim($info)) ? $info : '-' }}</td>
-                            </tr>
-                        @endforeach
-                    </table>
-                </td>
-            </tr>
-        </table>
+                    <!-- Denah -->
+                    <tr>
+                        <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px; vertical-align: top;">Denah</td>
+                        <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 8px;">
+                            @if(!empty($agunan->denah) && $agunan->denah !== '-')
+                                <div style="width: 100%; max-width: 400px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff;">
+                                    <img src="{{ public_path('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; display: block;">
+                                </div>
+                            @else
+                                <span>-</span>
+                            @endif
+                        </td>
+                    </tr>
+
+                    <!-- Informasi Harga -->
+                    <tr>
+                        <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px; vertical-align: top;">Informasi Harga</td>
+                        <td colspan="5" style="border: 1px solid #0A3370 !important; padding: 0 !important;">
+                            @php
+                                $infoList = [
+                                    $agunan->info_harga1 ?? '-',
+                                    $agunan->info_harga2 ?? '-',
+                                    $agunan->info_harga3 ?? '-'
+                                ];
+                            @endphp
+                            <table style="width: 100%; border-collapse: collapse; border: none !important;">
+                                @foreach($infoList as $infoIndex => $info)
+                                    <tr>
+                                        <td style="width: 10%; border-top: {{ $loop->first ? 'none' : '1px solid #d1d5db' }}; border-bottom: {{ $loop->last ? 'none' : '1px solid #d1d5db' }}; border-right: 1px solid #d1d5db; border-left: none; text-align: center; padding: 8px; background-color: #f9fafb; font-weight: 500;">{{ $infoIndex + 1 }}</td>
+                                        <td style="width: 90%; border-top: {{ $loop->first ? 'none' : '1px solid #d1d5db' }}; border-bottom: {{ $loop->last ? 'none' : '1px solid #d1d5db' }}; border-right: none; border-left: none; padding: 8px; white-space: pre-line; text-align: justify; text-justify: inter-word;">{{ !empty(trim($info)) ? $info : '-' }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            @endforeach
+        @endif
 
         <!-- C. SLIK -->
         <table class="export-table" style="margin-top: 8px; table-layout: fixed; width: 100%;">

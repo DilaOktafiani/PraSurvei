@@ -123,31 +123,94 @@
 <script>
     const inputLainnya = document.getElementById('input_lainnya');
     const radioLainnya = document.getElementById('radio_lainnya');
+    const formPraSurvei = document.getElementById('formPraSurvei');
+    const containerAgunan = document.getElementById('container_agunan'); 
+    
+    // Tambahkan variabel untuk input sahe location (sesuaikan ID-nya jika berbeda)
+    const inputSaheLocation = document.getElementById('sahe_location');
 
-    // Jika user mengetik, otomatis pilih radio "Yang Lain"
+    // Jika user mengetik, otomatis pilih radio "Yang Lain" dan hilangkan warna merah
     inputLainnya.addEventListener('input', function() {
         if (this.value.trim() !== '') {
             radioLainnya.checked = true;
+            this.style.borderColor = ''; 
         }
     });
 
+    // Hilangkan warna merah pada container radio saat salah satu radio dipilih
+    const radiosAgunan = formPraSurvei.querySelectorAll('input[name="jenis_agunan"]');
+    radiosAgunan.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (containerAgunan) {
+                containerAgunan.style.border = '';
+                containerAgunan.style.padding = '';
+            }
+        });
+    });
+
+    // Hilangkan border merah pada sahe_location saat user mulai mengetik ulang
+    if (inputSaheLocation) {
+        inputSaheLocation.addEventListener('input', function() {
+            this.style.borderColor = '';
+        });
+    }
+
+    // Fungsi helper sederhana untuk mendeteksi apakah sebuah teks berbentuk URL
+    function isValidURL(string) {
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+
     // Ubah event tombol submit form agar memanggil fungsi validasi kustom
-    const formPraSurvei = document.getElementById('formPraSurvei');
     formPraSurvei.addEventListener('submit', function(event) {
-        event.preventDefault(); // Mencegah form langsung submit
+        event.preventDefault(); 
         
         const selectedAgunan = formPraSurvei.querySelector('input[name="jenis_agunan"]:checked');
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
+        // Reset semua indikator merah sebelum validasi
+        inputLainnya.style.borderColor = '';
+        if (containerAgunan) {
+            containerAgunan.style.border = '';
+            containerAgunan.style.padding = '';
+        }
+        if (inputSaheLocation) {
+            inputSaheLocation.style.borderColor = '';
+        }
+
         // 1. Validasi Radio terpilih
         if (!selectedAgunan) {
             isValid = false;
+            if (containerAgunan) {
+                containerAgunan.style.border = '1px solid red';
+                containerAgunan.style.borderRadius = '4px';
+                containerAgunan.style.padding = '8px';
+            }
         }
         // 2. Validasi "Yang Lain" jika radio terpilih tapi input teks kosong
         else if (selectedAgunan.value === 'yang_lain' && inputLainnya.value.trim() === '') {
             isValid = false;
+            inputLainnya.style.borderColor = 'red';
             errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+        }
+        
+        // 3. Validasi khusus SAHE Location (Kosong atau bukan URL)
+        if (inputSaheLocation) {
+            const saheValue = inputSaheLocation.value.trim();
+            if (saheValue === '') {
+                isValid = false;
+                inputSaheLocation.style.borderColor = 'red';
+                errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+            } else if (!isValidURL(saheValue)) {
+                isValid = false;
+                inputSaheLocation.style.borderColor = 'red';
+                errorMessage = 'Format Sahe Location harus diisi dengan URL yang valid (contoh: https://...)';
+            }
         }
 
         if (!isValid) {
