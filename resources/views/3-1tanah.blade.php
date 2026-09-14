@@ -74,11 +74,13 @@
 
                 <!-- Share Location -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                    <label for="share_location" class="block text-sm font-medium text-gray-700 mb-1">
                         Share Location <span class="text-red-500">*</span>
                     </label>
-                    <input type="url" name="share_location" value="{{ old('share_location', $tanah->share_location ?? '') }}" placeholder="ex : https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" required>
+                    <p id="share_location_help" class="text-xs text-gray-500 mb-1.5">Wajib diisi link Google Maps</p>
+                    
+                    <input type="url" id="share_location" name="share_location" value="{{ old('share_location', $tanah->share_location ?? '') }}" placeholder="ex : https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]" aria-describedby="share_location_help" required>
                 </div>
 
                 <!-- Luas Tanah -->
@@ -331,7 +333,7 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
             });
 
             // 1.1 Validasi Khusus Share Loc (harus berupa link URL Google Maps / http / https)
-            const shareLocInput = formPraSurvei.querySelector('input[name="share_loc"]') || document.getElementById('share_loc');
+            const shareLocInput = formPraSurvei.querySelector('input[name="share_location"]') || document.getElementById('share_location');
             if (shareLocInput) {
                 // Hapus border merah seketika saat user mengetik
                 shareLocInput.addEventListener('input', function() {
@@ -346,7 +348,7 @@ https://maps.app.goo.gl/6eNyKi1gtgXwXBo9A" class="w-full border border-gray-300 
                 if (valLoc !== '' && !valLoc.startsWith('http://') && !valLoc.startsWith('https://') && !valLoc.includes('maps')) {
                     isValid = false;
                     shareLocInput.style.borderColor = 'red';
-                    errorMessage = 'Share loc harus diisi dengan link/URL Google Maps yang valid';
+                    errorMessage = 'Share Location wajib diisi dengan link Google Maps';
                 } else if (valLoc === '' && shareLocInput.hasAttribute('required')) {
                     isValid = false;
                     shareLocInput.style.borderColor = 'red';

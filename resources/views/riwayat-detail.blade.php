@@ -200,21 +200,17 @@
             <!-- B. DATA JAMINAN -->
             @if(isset($data->agunan_tanah) && $data->agunan_tanah->count() > 0)
                 <div class="mb-6">
-                    <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
-                        B. Data Jaminan
-                    </div>
-
                     @foreach($data->agunan_tanah as $index => $agunan)
                         @php
                             $urutanJaminan = $index + 1;
                         @endphp
 
-                        <div class="border border-[#0A3370] {{ !$loop->last ? 'mb-4' : '' }} rounded-none text-xs">
-                            <!-- Header Sub-Jaminan jika lebih dari 1 -->
-                            <div class="bg-gray-100 px-3 py-1.5 font-bold text-[#0A3370] border-b border-gray-300">
-                                Jaminan {{ $urutanJaminan }}
-                            </div>
+                        <!-- Header Utama / Nomor Jaminan (Menyatu di atas boks, persis seperti PDF) -->
+                        <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase {{ !$loop->first ? 'mt-6' : '' }}">
+                            B. DATA {{ $data->agunan_tanah->count() > 1 ? 'JAMINAN KE-' . $urutanJaminan : 'JAMINAN' }}
+                        </div>
 
+                        <div class="border border-[#0A3370] {{ !$loop->last ? 'mb-4' : '' }} rounded-none text-xs">
                             <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
                                 <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Kepemilikan</div>
                                 <div class="p-2 sm:col-span-3 font-medium flex items-center">{{ $agunan->kepemilikan ?? '-' }}</div>
