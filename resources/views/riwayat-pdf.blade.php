@@ -10,7 +10,7 @@
         }
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 8pt;
+            font-size: 10pt;
             color: #111;
             line-height: 1.15;
             margin: 0;
@@ -315,7 +315,7 @@
                 <td style="width: 20%; text-align: right; font-weight: normal; border-left: none;">{{ number_format($omset, 0, ',', '.') }}</td>
                 <td colspan="2" rowspan="11" style="vertical-align: top; width: 40%; background: #fff;">
                     <div class="font-bold" style="padding-bottom: 2px; margin-bottom: 6px; padding-top: 4px;">Deskripsi Usaha :</div>
-                    <div style="white-space: pre-line; font-size: 8pt; text-align: justify;">{{ optional($data->infousaha)->deskripsi_usaha ?? '-' }}</div>
+                    <div style="white-space: pre-line; font-size: 10pt; text-align: justify;">{{ optional($data->infousaha)->deskripsi_usaha ?? '-' }}</div>
                 </td>
             </tr>
             <tr>

@@ -11,7 +11,7 @@
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 8pt;
+            font-size: 10pt;
             color: #111;
             line-height: 1.2;
             margin: 0;
@@ -32,7 +32,7 @@
 
         h2.main-title {
             text-align: center;
-            font-size: 11pt;
+            font-size: 12pt;
             margin: 0 0 15px 0;
             color: #0A3370;
             text-transform: uppercase;

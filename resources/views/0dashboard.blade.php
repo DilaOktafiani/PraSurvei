@@ -63,7 +63,7 @@
         </div>
 
         <!-- 🔳 SECTION TOMBOL UTAMA (3 KARTU SEJAJAR) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
             
             <!-- Tombol 1: Pra-Survei -->
             <div class="bg-white border-t-4 border-[#0082CB] rounded-xl card-3d border-x border-b border-gray-100 p-6 flex flex-col justify-between">
@@ -84,7 +84,7 @@
             </div>
 
             <!-- Tombol 2: Survei CA -->
-            <div class=" hidden bg-white border-t-4 border-[#0A3370] rounded-xl card-3d border-x border-b border-gray-100 p-6 flex flex-col justify-between">
+            <div class="bg-white border-t-4 border-[#0A3370] rounded-xl card-3d border-x border-b border-gray-100 p-6 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center gap-3 mb-4">
                         <div class="p-2.5 bg-amber-50 text-amber-600 rounded-lg shadow-inner">

@@ -12,7 +12,7 @@
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 8pt;
+            font-size: 10pt;
             color: #111;
             line-height: 1.15;
             margin: 0;
@@ -33,7 +33,7 @@
 
         h2 {
             text-align: center;
-            font-size: 11pt;
+            font-size: 12pt;
             margin: 0 0 8px 0;
             color: #0A3370;
             text-transform: uppercase;
@@ -149,7 +149,7 @@
             </tr>
             <tr>
                 <td class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Type Fasilitas</td>
-                <td style="font-size: 8pt; border: 1px solid #0A3370 !important;">
+                <td style="font-size: 10pt; border: 1px solid #0A3370 !important;">
                     {{ is_array($data->tipe_fasilitas ?? null) ? implode(', ', $data->tipe_fasilitas) : ($data->tipe_fasilitas ?? '-') }}
                 </td>
             </tr>
@@ -359,7 +359,7 @@
                 <td style="width: 17%; padding: 2.5px; text-align: right; font-weight: normal; border-top: 1px solid #0A3370 !important; border-bottom: 1px solid #0A3370 !important; border-right: 1px solid #0A3370 !important; border-left: none;">{{ number_format($omset, 0, ',', '.') }}</td>
                 <td colspan="2" rowspan="12" style="vertical-align: top; padding: 4px; width: 40%; background-color: #fff; border: 1px solid #0A3370 !important;">
                     <div class="font-bold" style="margin-bottom: 2px;">Deskripsi Usaha :</div>
-                    <div style="white-space: pre-line; color: #333; font-size: 8pt; text-align: justify;">
+                    <div style="white-space: pre-line; color: #333; font-size: 10pt; text-align: justify;">
                         {{ optional($data->infousaha)->deskripsi_usaha ?? '-' }}
                     </div>
                 </td>

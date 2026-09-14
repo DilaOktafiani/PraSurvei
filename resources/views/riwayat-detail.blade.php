@@ -52,7 +52,7 @@
                         FORM PRA-SURVEI
                     </h2>
                     
-                    <a href="{{ route('1pra-survei', ['id' => $data->id]) }}" class="no-print inline-flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-200 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-amber-100 transition shadow-sm">
+                    <a href="{{ route('1pra-survei', ['id' => $data->id]) }}" class="no-print inline-flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-200 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-100 transition shadow-sm">
                         <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         <span>Edit</span>
                     </a>
@@ -61,7 +61,7 @@
                 <!-- Tombol Cetak & Export -->
                 <div class="no-print flex flex-wrap items-center justify-end gap-2.5 w-full md:w-auto">
                     <!-- Tombol Cetak -->
-                    <button type="button" onclick="printRiwayat({{ $data->id }})" class="inline-flex items-center gap-2 bg-white text-gray-900 border border-gray-300 px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-50 transition shadow-sm cursor-pointer active:scale-95">
+                    <button type="button" onclick="printRiwayat({{ $data->id }})" class="inline-flex items-center gap-2 bg-white text-gray-900 border border-gray-300 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition shadow-sm cursor-pointer active:scale-95">
                         <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.725 14.406v2.426c0 1.096.892 1.988 1.988 1.988h6.574c1.096 0 1.988-.892 1.988-1.988v-2.426m-10.55 0h10.55m-10.55 0a2.25 2.25 0 01-2.25-2.25v-3.375c0-1.242 1.008-2.25 2.25-2.25h10.55c1.242 0 2.25 1.008 2.25 2.25v3.375a2.25 2.25 0 01-2.25 2.25m-10.55 0V6.75A2.25 2.25 0 018.975 4.5h6.05a2.25 2.25 0 012.25 2.25v5.437"/></svg>
                         <span>Cetak</span>
                     </button>
@@ -69,7 +69,7 @@
                     @if(!isset($isExport))
                     <!-- Dropdown Download/Export Dokumen (Alpine.js) -->
                     <div class="relative inline-block text-left w-full sm:w-auto" x-data="{ open: false }">
-                        <button @click="open = !open" type="button" style="background-color: #0082CB; border: 1px solid #0A3370;" class="w-full sm:w-auto inline-flex items-center justify-between sm:justify-center gap-5 text-white px-5 py-2 rounded-lg text-xs font-semibold hover:opacity-95 transition shadow-sm active:scale-95">
+                        <button @click="open = !open" type="button" style="background-color: #0082CB; border: 1px solid #0A3370;" class="w-full sm:w-auto inline-flex items-center justify-between sm:justify-center gap-5 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-95 transition shadow-sm active:scale-95">
                             <span class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-sky-100" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
                                 <span>Download</span>
@@ -91,15 +91,15 @@
                             @click.away="open = false" 
                             class="absolute left-0 sm:left-auto sm:right-0 mt-2 w-full bg-white ring-1 ring-black/5 focus:outline-none z-50 rounded-xl shadow-xl overflow-hidden divide-y divide-gray-100">
                             <div class="p-1.5 space-y-0.5">
-                                <a href="{{ route('riwayat.pdf', $data->id) }}" class="group flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors">
+                                <a href="{{ route('riwayat.pdf', $data->id) }}" class="group flex items-center gap-2.5 px-3 py-2 text-sm font-semibold text-gray-700 rounded-lg hover:bg-rose-50 hover:text-rose-700 transition-colors">
                                     <svg class="w-4 h-4 text-rose-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
                                     <span>PDF</span>
                                 </a>
-                                <a href="{{ route('riwayat.word', $data->id) }}" class="group flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+                                <a href="{{ route('riwayat.word', $data->id) }}" class="group flex items-center gap-2.5 px-3 py-2 text-sm font-semibold text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
                                     <svg class="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
                                     <span>Word</span>
                                 </a>
-                                <a href="{{ route('riwayat.excel', $data->id) }}" class="group flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-gray-700 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                                <a href="{{ route('riwayat.excel', $data->id) }}" class="group flex items-center gap-2.5 px-3 py-2 text-sm font-semibold text-gray-700 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
                                     <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
                                     <span>Excel</span>
                                 </a>
@@ -112,10 +112,10 @@
 
             <!-- A. DATA DEBITUR -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-sm uppercase rounded-none">
                     A. Data Debitur
                 </div>
-                <div class="border border-[#0A3370] rounded-none text-xs">
+                <div class="border border-[#0A3370] rounded-none text-sm">
                     
                     <!-- Nomor Register & Nama Marketing -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 border-b border-gray-300">
@@ -206,11 +206,11 @@
                         @endphp
 
                         <!-- Header Utama / Nomor Jaminan (Menyatu di atas boks, persis seperti PDF) -->
-                        <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase {{ !$loop->first ? 'mt-6' : '' }}">
+                        <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-sm uppercase {{ !$loop->first ? 'mt-6' : '' }}">
                             B. DATA {{ $data->agunan_tanah->count() > 1 ? 'JAMINAN KE-' . $urutanJaminan : 'JAMINAN' }}
                         </div>
 
-                        <div class="border border-[#0A3370] {{ !$loop->last ? 'mb-4' : '' }} rounded-none text-xs">
+                        <div class="border border-[#0A3370] {{ !$loop->last ? 'mb-4' : '' }} rounded-none text-sm">
                             <div class="grid grid-cols-1 sm:grid-cols-4 border-b border-gray-300">
                                 <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 flex items-center">Kepemilikan</div>
                                 <div class="p-2 sm:col-span-3 font-medium flex items-center">{{ $agunan->kepemilikan ?? '-' }}</div>
@@ -328,10 +328,10 @@
 
             <!-- C. SLIK -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-sm uppercase rounded-none">
                     C. SLIK
                 </div>
-                <div class="border border-[#0A3370] rounded-none overflow-x-auto text-xs">
+                <div class="border border-[#0A3370] rounded-none overflow-x-auto text-sm">
                     <table class="w-full text-left border-collapse table-fixed">
                         <colgroup>
                             <col style="width: 16.666%;">
@@ -385,10 +385,10 @@
 
             <!-- D. INFORMASI USAHA -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-sm uppercase rounded-none">
                     D. Informasi Usaha
                 </div>
-                <div class="border border-[#0A3370] rounded-none text-xs">
+                <div class="border border-[#0A3370] rounded-none text-sm">
                     <div class="grid grid-cols-1 sm:grid-cols-12">
                         
                         <!-- Bagian Kiri: Tabel Keuangan (Mengambil 7 kolom) -->
@@ -514,10 +514,10 @@
             <!-- E. LEGALITAS -->
             @forelse($data->agunan_tanah ?? [] as $tanah)
                 <div class="mb-6">
-                    <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
+                    <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-sm uppercase rounded-none">
                         E. Legalitas
                     </div>
-                    <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
+                    <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-sm flex items-center" style="text-align: justify;">
                         {{ $tanah->kepemilikan ?? '-' }}
                     </div>
                 </div>
@@ -534,10 +534,10 @@
 
             <!-- F. CAPITAL / ASET YANG DIMILIKI -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-sm uppercase rounded-none">
                     F. Capital / Aset Yang Dimiliki
                 </div>
-                <div class="border border-[#0A3370] rounded-none text-xs">
+                <div class="border border-[#0A3370] rounded-none text-sm">
                     @php 
                         $capital = $data->capital;
                         $asets = [
@@ -560,10 +560,10 @@
 
             <!-- G. KELENGKAPAN BERKAS TAKE OVER -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-sm uppercase rounded-none">
                     G. Kelengkapan Berkas Take Over
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
+                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-sm flex items-center" style="text-align: justify;">
                     @php $val = $data->kondisi->berkas_take_over ?? null; @endphp
                     {{ is_array($val) ? implode(', ', $val) : ($val ?? '-') }}
                 </div>
@@ -571,10 +571,10 @@
 
             <!-- H. KELENGKAPAN DATA KTP -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-sm uppercase rounded-none">
                     H. Kelengkapan Data KTP
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
+                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-sm flex items-center" style="text-align: justify;">
                     @php $val = $data->datalengkap->ktp ?? null; @endphp
                     {{ is_array($val) ? implode(', ', $val) : ($val ?? '-') }}
                 </div>
@@ -582,10 +582,10 @@
 
             <!-- I. KELENGKAPAN DATA SLIK -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-sm uppercase rounded-none">
                     I. Kelengkapan Data SLIK
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
+                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-sm flex items-center" style="text-align: justify;">
                     @php 
                         $val = $data->datalengkap->slik ?? null; 
                         
@@ -603,10 +603,10 @@
 
             <!-- J. KELENGKAPAN DATA KARTU KELUARGA -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-sm uppercase rounded-none">
                     J. Kelengkapan Data Kartu Keluarga
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
+                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-sm flex items-center" style="text-align: justify;">
                     @php $val = $data->datalengkap->kk ?? null; @endphp
                     {{ is_array($val) ? implode(', ', $val) : ($val ?? '-') }}
                 </div>
@@ -614,10 +614,10 @@
 
             <!-- K. KELENGKAPAN DATA SURAT NIKAH -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-sm uppercase rounded-none">
                     K. Kelengkapan Data Surat Nikah
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
+                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-sm flex items-center" style="text-align: justify;">
                     @php $val = $data->datalengkap->surat_nikah ?? null; @endphp
                     {{ is_array($val) ? implode(', ', $val) : ($val ?? '-') }}
                 </div>
@@ -625,10 +625,10 @@
 
             <!-- L. KELENGKAPAN DATA BADAN USAHA -->
             <div class="mb-6">
-                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-xs uppercase rounded-none">
+                <div class="bg-[#0A3370] text-white px-3 py-1.5 font-bold text-sm uppercase rounded-none">
                     L. Kelengkapan Data Badan Usaha
                 </div>
-                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-xs flex items-center" style="text-align: justify;">
+                <div class="border border-[#0A3370] rounded-none p-2 bg-white whitespace-pre-line text-sm flex items-center" style="text-align: justify;">
                     @php $val = $data->badanusaha->berkas_badan_usaha ?? null; @endphp
                     {{ is_array($val) ? implode(', ', $val) : ($val ?? '-') }}
                 </div>

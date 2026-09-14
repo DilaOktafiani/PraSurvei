@@ -10,7 +10,7 @@
     }
     body {
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 8pt;
+        font-size: 10pt;
         color: #111;
         line-height: 1.15;
         margin: 0;
@@ -23,7 +23,7 @@
     }
     h2 {
         text-align: center;
-        font-size: 11pt;
+        font-size: 12pt;
         margin: 0 0 15px 0;
         color: #0A3370;
         text-transform: uppercase;
@@ -195,9 +195,7 @@
                     <td colspan="3" bgcolor="#f3f4f6" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;">Share Loc</td>
                     <td colspan="9" style="border: 1px solid #0A3370 !important; padding: 8px;">
                         @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
-                            <a href="{{ $agunan->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; font-weight: 500;">
-                                📍 Lihat Lokasi di Peta
-                            </a>
+                            <span>{{ $agunan->share_location }}</span>
                         @else
                             <span>-</span>
                         @endif
