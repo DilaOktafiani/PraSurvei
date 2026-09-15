@@ -43,78 +43,98 @@
 
     </div>
 
-    <!-- Header / Navbar -->
-    <header class="bg-[#0A3370] text-white shadow-lg py-4 border-b-4 border-[#0082CB] sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center relative z-10">
+    <!-- HEADER -->
+    <header class="bg-[#0A3370] text-white shadow-md py-4 border-b-4 border-[#0082CB] sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            
+            <!-- Logo & Judul Website -->
             <div class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo BPR Adipura Santosa" class="h-9 w-auto bg-white p-1 rounded object-contain">
                 <h1 class="text-xl font-bold tracking-wide">BPR ADIPURA SANTOSA</h1>
             </div>
-        </div>
+
+            <!-- Tombol Logout (Disamakan persis dengan gaya tombol Beranda) -->
+            <form action="{{ route('logout') }}" method="POST" class="inline">
+                @csrf
+                <button type="submit" class="inline-flex items-center justify-center gap-2 text-sm text-white font-medium px-4 py-1.5 rounded-full border-2 border-white hover:bg-white/10 transition">
+                    <!-- Ikon Logout (SVG) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>Logout</span>
+                </button>
+            </form>
+        </div> 
     </header>
 
     <!-- Main Content -->
     <main class="max-w-5xl mx-auto mt-8 px-4 w-full flex-grow relative z-10">
         
-        <!-- Welcome Message -->
-        <div class="bg-white rounded-xl card-3d p-6 mb-10 text-center md:text-left border border-gray-100">
-            <h2 class="text-2xl font-bold text-[#0A3370]">Selamat Datang di Sistem Survei Marketing</h2>
-            <p class="text-gray-600 mt-2 text-sm md:text-base">Silakan pilih menu formulir di bawah ini untuk memulai input data atau mengecek riwayat pengajuan.</p>
+        <!-- Welcome Message (Diringkas agar tidak banyak teks) -->
+        <div class="bg-white rounded-xl card-3d p-8 mb-7 text-center md:text-left border border-gray-100">
+            <h2 class="text-[26px] font-bold text-[#0A3370]">Selamat Datang di Sistem Survei Marketing</h2>
+            <p class="text-gray-600 mt-2 text-[17px]">Silakan pilih menu formulir di bawah ini untuk memulai input data atau mengecek riwayat pengajuan.</p>
         </div>
 
         <!-- 🔳 SECTION TOMBOL UTAMA (3 KARTU SEJAJAR) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-7">
             
             <!-- Tombol 1: Pra-Survei -->
-            <div class="bg-white border-t-4 border-[#0082CB] rounded-xl card-3d border-x border-b border-gray-100 p-6 flex flex-col justify-between">
+            <div class="bg-white border-t-4 border-[#0082CB] rounded-xl card-3d border-x border-b border-gray-100 p-7 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center gap-3 mb-4">
+                    <div class="flex items-center gap-3.5 mb-5">
                         <div class="p-2.5 bg-sky-50 text-sky-600 rounded-lg shadow-inner">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-800">Pra-Survei AO</h3>
+                        <h3 class="text-[20px] font-bold text-gray-800">Pra-Survei AO</h3>
                     </div>
-                    <p class="text-gray-500 text-sm mb-6">Input data awal dan pengecekan komitmen calon nasabah langsung dari lokasi kunjungan.</p>
+                    <!-- Deskripsi dipangkas jadi singkat agar tidak kelihatan penuh tulisan -->
+                    <p class="text-gray-500 text-[15px] mb-8 leading-relaxed">Input data kunjungan awal dan komitmen calon nasabah.</p>            
                 </div>
-                <a href="{{ route('1pra-survei', ['new' => 'true']) }}" class="block text-center bg-[#0082CB] text-white font-semibold py-2.5 rounded-lg hover:bg-[#006FB0] transition shadow-md text-sm">
+                <!-- Tombol Utama -->
+                <a href="{{ route('1pra-survei', ['new' => 'true']) }}" class="block text-center bg-[#0082CB] text-white font-semibold py-3 rounded-lg hover:bg-[#006FB0] transition shadow-md text-[16px]">
                     Isi Formulir Pra-Survei
                 </a>
             </div>
 
             <!-- Tombol 2: Survei CA -->
-            <div class="bg-white border-t-4 border-[#0A3370] rounded-xl card-3d border-x border-b border-gray-100 p-6 flex flex-col justify-between">
+            <div class="bg-white border-t-4 border-[#0A3370] rounded-xl card-3d border-x border-b border-gray-100 p-7 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center gap-3 mb-4">
+                    <div class="flex items-center gap-3.5 mb-5">
                         <div class="p-2.5 bg-amber-50 text-amber-600 rounded-lg shadow-inner">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                             </svg>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-800">Survei CA</h3>
+                        <h3 class="text-[20px] font-bold text-gray-800">Survei CA</h3>
                     </div>
-                    <p class="text-gray-500 text-sm mb-6">Analisis kelayakan kredit mendalam dan verifikasi data lanjutan oleh Credit Analyst.</p>
+                    <!-- Deskripsi dipangkas jadi singkat -->
+                    <p class="text-gray-500 text-[15px] mb-8 leading-relaxed">Analisis kelayakan kredit lanjutan oleh Credit Analyst.</p>
                 </div>
-                <a href="{{ route('z1-surveica', ['new' => 'true']) }}" class="block text-center bg-[#0A3370] text-white font-semibold py-2.5 rounded-lg hover:bg-[#062452] transition shadow-md text-sm">
+                <!-- Tombol Utama -->
+                <a href="{{ route('z1-surveica', ['new' => 'true']) }}" class="block text-center bg-[#0A3370] text-white font-semibold py-3 rounded-lg hover:bg-[#062452] transition shadow-md text-[16px]">
                     Isi Formulir Survei
                 </a>
             </div>
 
             <!-- Tombol 3: Riwayat Pengajuan -->
-            <div class="bg-white border-t-4 border-[#0A3370] rounded-xl card-3d border-x border-b border-gray-100 p-6 flex flex-col justify-between">
+            <div class="bg-white border-t-4 border-[#0A3370] rounded-xl card-3d border-x border-b border-gray-100 p-7 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center gap-3 mb-4">
+                    <div class="flex items-center gap-3.5 mb-5">
                         <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg shadow-inner">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                             </svg>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-800">Riwayat Pengajuan</h3>
+                        <h3 class="text-[20px] font-bold text-gray-800">Riwayat Pengajuan</h3>
                     </div>
-                    <p class="text-gray-500 text-sm mb-6">Cek riwayat lengkap pengiriman data untuk formulir pra-survei dan survei Anda.</p>
+                    <!-- Deskripsi dipangkas jadi singkat -->
+                    <p class="text-gray-500 text-[15px] mb-8 leading-relaxed">Cek semua riwayat pengiriman data pra-survei dan survei.</p>
                 </div>
-                <a href="/riwayat" class="block text-center bg-transparent text-[#0A3370] border-2 border-[#0A3370] font-semibold py-2.5 rounded-lg hover:bg-[#0A3370] hover:text-white transition shadow-sm text-sm">
+                <!-- Tombol Utama -->
+                <a href="/riwayat" class="block text-center bg-transparent text-[#0A3370] border-2 border-[#0A3370] font-semibold py-3 rounded-lg hover:bg-[#0A3370] hover:text-white transition shadow-sm text-[16px]">
                     Lihat Riwayat
                 </a>
             </div>
@@ -123,6 +143,7 @@
 
     </main>
 
+    <!-- Teks Footer di Bagian Bawah -->
     <footer class="text-center text-xs text-gray-500 mt-16 pb-8 relative z-10">
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>

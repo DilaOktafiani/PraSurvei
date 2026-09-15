@@ -43,7 +43,7 @@
                 <svg class="w-4 h-4 opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
-                <span>Riwayat Pra-Survei AO</span>
+                <span>Riwayat Pra-Survei</span>
             </button>
             <button @click="activeTab = 'surveica'" 
                 :class="activeTab === 'surveica' ? 'bg-gradient-to-r from-[#0A3370] via-[#0082CB] to-[#38BDF8] text-white shadow-lg ring-2 ring-[#0A3370]/25' : 'bg-white text-gray-700 hover:bg-sky-50/60 hover:text-[#0A3370] shadow-md'"
@@ -51,7 +51,7 @@
                 <svg class="w-4 h-4 opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2m-6 9l2 2 4-4"/>
                 </svg>
-                <span>Riwayat Survei CA</span>
+                <span>Riwayat Survei</span>
             </button>
         </div>
 
@@ -62,8 +62,8 @@
             <div x-show="activeTab === 'prasurvei'">
                 <div class="mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-[#0A3370]">Riwayat Pengajuan Pra-Survei AO</h2>
-                        <p class="text-gray-500 text-sm mt-0.5">Daftar ringkasan data nasabah tahap awal dari Account Officer.</p>
+                        <h2 class="text-2xl font-bold text-[#0A3370]">Riwayat Pengajuan Pra-Survei AO</h2>
+                        <p class="text-gray-500 text-[15px] mt-0.5"></p>
                     </div>
                     <!-- Kolom Pencarian -->
                     <div class="relative w-full sm:w-80 flex items-center">
@@ -85,25 +85,26 @@
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr class="bg-[#0A3370] text-white uppercase tracking-wider">
-                                <th class="p-3">No</th>
-                                <th class="p-3">No. Register</th>
-                                <th class="p-3">Nama Nasabah</th>
-                                <th class="p-3">Jenis Usaha</th>
-                                <th class="p-3">Plafon Pengajuan</th>
-                                <th class="p-3 text-center">Aksi</th>
+                                <th class="py-4 px-6">No</th>
+                                <th class="py-4 px-6">No. Register</th>
+                                <th class="py-4 px-6">Nama Nasabah</th>
+                                <th class="py-4 px-6">Jenis Usaha</th>
+                                <th class="py-4 px-6">Plafon Pengajuan</th>
+                                <th class="py-4 px-6 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="text-gray-700 divide-y divide-gray-200">
                             @forelse($dataDebitur ?? [] as $index => $item)
                             <tr class="hover:bg-blue-50/60 transition-colors"
                                 x-show="searchPrasurvei === '' || '{{ strtolower($item->no_register ?? '') }}'.includes(searchPrasurvei.toLowerCase()) || '{{ strtolower($item->nama ?? '') }}'.includes(searchPrasurvei.toLowerCase()) || '{{ strtolower($item->usaha ?? '') }}'.includes(searchPrasurvei.toLowerCase())">
-                                <td class="p-3">{{ $loop->iteration }}</td>
-                                <td class="p-3 font-semibold text-gray-800">{{ $item->no_register ?? '-' }}</td>
-                                <td class="p-3 font-medium text-gray-900">{{ $item->nama ?? '-' }}</td>
-                                <td class="p-3">{{ $item->usaha ?? '-' }}</td>
-                                <td class="p-3 font-semibold text-emerald-700">Rp {{ number_format($item->plafon ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3 text-center">
-                                    <a href="{{ route('riwayat.detail', $item->id) }}" class="group relative inline-flex items-center gap-2 px-3 py-1 text-sm font-semibold text-[#0A3370] bg-blue-50/80 hover:bg-gradient-to-r hover:from-[#0A3370] hover:via-[#0082CB] hover:to-[#38BDF8] hover:text-white rounded-lg border border-blue-200/60 shadow-xs hover:shadow-md transition-all duration-300">
+                                <td class="py-4 px-6">{{ $loop->iteration }}</td>
+                                <td class="py-4 px-6 font-semibold text-gray-800">{{ $item->no_register ?? '-' }}</td>
+                                <td class="py-4 px-6 font-medium text-gray-900">{{ $item->nama ?? '-' }}</td>
+                                <td class="py-4 px-6">{{ $item->usaha ?? '-' }}</td>
+                                <td class="py-4 px-6 font-semibold text-emerald-700">Rp {{ number_format($item->plafon ?? 0, 0, ',', '.') }}</td>
+                                <td class="py-4 px-6 text-center">
+                                    <!-- Tombol dengan padding lebih luas agar tidak terlihat rancu -->
+                                    <a href="{{ route('riwayat.detail', $item->id) }}" class="group relative inline-flex items-center gap-2.5 px-5 py-2 text-sm font-semibold text-[#0A3370] bg-blue-50/80 hover:bg-gradient-to-r hover:from-[#0A3370] hover:via-[#0082CB] hover:to-[#38BDF8] hover:text-white rounded-lg border border-blue-200/60 shadow-xs hover:shadow-md transition-all duration-300">
                                         <span class="w-5 h-5 bg-white/80 group-hover:bg-white/20 rounded-md flex items-center justify-center transition-all duration-300 group-hover:scale-105 shadow-xs">
                                             <svg class="w-3 h-3 text-[#0082CB] group-hover:text-white group-hover:rotate-45 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
@@ -114,7 +115,7 @@
                                 </td>
                             </tr>
                             @empty
-                            <tr><td colspan="6" class="p-5 text-center text-gray-500 text-sm">Belum ada data riwayat pra-survei yang tersimpan.</td></tr>
+                            <tr><td colspan="6" class="p-6 text-center text-gray-500 text-sm">Belum ada data riwayat pra-survei yang tersimpan.</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -125,8 +126,8 @@
             <div x-show="activeTab === 'surveica'">
                 <div class="mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-[#0A3370]">Riwayat Analisis Survei CA</h2>
-                        <p class="text-gray-500 text-sm mt-0.5">Daftar ringkasan analisis kelayakan kredit oleh Credit Analyst.</p>
+                        <h2 class="text-2xl font-bold text-[#0A3370]">Riwayat Analisis Survei CA</h2>
+                        <p class="text-gray-500 text-[15px] mt-0.5"></p>
                     </div>
                     <!-- Kolom Pencarian -->
                     <div class="relative w-full sm:w-80 flex items-center">
@@ -148,25 +149,26 @@
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr class="bg-[#0A3370] text-white uppercase tracking-wider">
-                                <th class="p-3">No</th>
-                                <th class="p-3">No. Register</th>
-                                <th class="p-3">Nama Nasabah</th>
-                                <th class="p-3">Plafon</th>
-                                <th class="p-3">Jangka Waktu</th>
-                                <th class="p-3 text-center">Aksi</th>
+                                <th class="py-4 px-6">No</th>
+                                <th class="py-4 px-6">No. Register</th>
+                                <th class="py-4 px-6">Nama Nasabah</th>
+                                <th class="py-4 px-6">Plafon</th>
+                                <th class="py-4 px-6">Jangka Waktu</th>
+                                <th class="py-4 px-6 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="text-gray-700 divide-y divide-gray-200">
                             @forelse($dataSurveiCa ?? [] as $index => $ca)
                             <tr class="hover:bg-blue-50/60 transition-colors"
                                 x-show="searchCa === '' || '{{ strtolower($ca->no_register ?? '') }}'.includes(searchCa.toLowerCase()) || '{{ strtolower($ca->nama ?? '') }}'.includes(searchCa.toLowerCase())">
-                                <td class="p-3">{{ $loop->iteration }}</td>
-                                <td class="p-3 font-medium text-gray-900">{{ $ca->no_register ?? '-' }}</td>
-                                <td class="p-3 font-medium text-gray-900">{{ $ca->nama ?? '-' }}</td>
-                                <td class="p-3 font-semibold text-emerald-700">Rp {{ number_format($ca->plafon ?? 0, 0, ',', '.') }}</td>
-                                <td class="p-3">{{ $ca->jangka_waktu ?? '-' }}</td>
-                                <td class="p-3 text-center">
-                                    <a href="{{ route('riwayat.detail2', $ca->id) }}" class="group relative inline-flex items-center gap-2 px-3 py-1 text-sm font-semibold text-[#0A3370] bg-blue-50/80 hover:bg-gradient-to-r hover:from-[#0A3370] hover:via-[#0082CB] hover:to-[#38BDF8] hover:text-white rounded-lg border border-blue-200/60 shadow-xs hover:shadow-md transition-all duration-300">
+                                <td class="py-4 px-6">{{ $loop->iteration }}</td>
+                                <td class="py-4 px-6 font-medium text-gray-900">{{ $ca->no_register ?? '-' }}</td>
+                                <td class="py-4 px-6 font-medium text-gray-900">{{ $ca->nama ?? '-' }}</td>
+                                <td class="py-4 px-6 font-semibold text-emerald-700">Rp {{ number_format($ca->plafon ?? 0, 0, ',', '.') }}</td>
+                                <td class="py-4 px-6">{{ $ca->jangka_waktu ?? '-' }}</td>
+                                <td class="py-4 px-6 text-center">
+                                    <!-- Tombol dengan padding lebih luas agar tidak terlihat rancu -->
+                                    <a href="{{ route('riwayat.detail2', $ca->id) }}" class="group relative inline-flex items-center gap-2.5 px-5 py-2 text-sm font-semibold text-[#0A3370] bg-blue-50/80 hover:bg-gradient-to-r hover:from-[#0A3370] hover:via-[#0082CB] hover:to-[#38BDF8] hover:text-white rounded-lg border border-blue-200/60 shadow-xs hover:shadow-md transition-all duration-300">
                                         <span class="w-5 h-5 bg-white/80 group-hover:bg-white/20 rounded-md flex items-center justify-center transition-all duration-300 group-hover:scale-105 shadow-xs">
                                             <svg class="w-3 h-3 text-[#0082CB] group-hover:text-white group-hover:rotate-45 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
@@ -177,7 +179,7 @@
                                 </td>
                             </tr>
                             @empty
-                            <tr><td colspan="6" class="p-5 text-center text-gray-500 text-sm">Belum ada data riwayat survei CA yang tersimpan.</td></tr>
+                            <tr><td colspan="6" class="p-6 text-center text-gray-500 text-sm">Belum ada data riwayat survei CA yang tersimpan.</td></tr>
                             @endforelse
                         </tbody>
                     </table>

@@ -45,14 +45,14 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-gray-200 gap-4">
                 <!-- Judul & Tombol Edit -->
                 <div class="flex flex-wrap items-center gap-3">
-                    <h2 class="text-xl font-bold text-[#0A3370] tracking-wide flex items-center gap-2.5">
+                    <h2 class="text-2xl font-bold text-[#0A3370] tracking-wide flex items-center gap-2.5">
                         <svg class="w-5 h-5 text-[#0A3370]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2m-6 9l2 2 4-4"/>
                         </svg>
                         FORM SURVEI
                     </h2>
                     
-                    <a href="{{ route('z1-surveica', ['id' => $data->id]) }}" class="no-print inline-flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-200 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-100 transition shadow-sm">
+                    <a href="{{ route('z1-surveica', ['id' => $data->id]) }}" class="no-print inline-flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-200 px-4 py-2 rounded-lg text-base font-semibold hover:bg-amber-100 transition shadow-sm">
                         <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         <span>Edit</span>
                     </a>
@@ -61,7 +61,7 @@
                 <!-- Tombol Cetak & Export -->
                 <div class="no-print flex flex-wrap items-center justify-end gap-2.5 w-full md:w-auto">
                     <!-- Tombol Cetak -->
-                    <button type="button" onclick="printRiwayat({{ $data->id }})" class="inline-flex items-center gap-2 bg-white text-gray-900 border border-gray-300 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition shadow-sm cursor-pointer active:scale-95">
+                    <button type="button" onclick="printRiwayat({{ $data->id }})" class="inline-flex items-center gap-2 bg-white text-gray-900 border border-gray-300 px-4 py-2 rounded-lg text-base font-bold hover:bg-gray-50 transition shadow-sm cursor-pointer active:scale-95">
                         <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.725 14.406v2.426c0 1.096.892 1.988 1.988 1.988h6.574c1.096 0 1.988-.892 1.988-1.988v-2.426m-10.55 0h10.55m-10.55 0a2.25 2.25 0 01-2.25-2.25v-3.375c0-1.242 1.008-2.25 2.25-2.25h10.55c1.242 0 2.25 1.008 2.25 2.25v3.375a2.25 2.25 0 01-2.25 2.25m-10.55 0V6.75A2.25 2.25 0 018.975 4.5h6.05a2.25 2.25 0 012.25 2.25v5.437"/></svg>
                         <span>Cetak</span>
                     </button>
@@ -69,7 +69,7 @@
                     @if(!isset($isExport))
                     <!-- Dropdown Download/Export Dokumen (Alpine.js) -->
                     <div class="relative inline-block text-left w-full sm:w-auto" x-data="{ open: false }">
-                        <button @click="open = !open" type="button" style="background-color: #0082CB; border: 1px solid #0A3370;" class="w-full sm:w-auto inline-flex items-center justify-between sm:justify-center gap-5 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-95 transition shadow-sm active:scale-95">
+                        <button @click="open = !open" type="button" style="background-color: #0082CB; border: 1px solid #0A3370;" class="w-full sm:w-auto inline-flex items-center justify-between sm:justify-center gap-5 text-white px-5 py-2 rounded-lg text-base font-semibold hover:opacity-95 transition shadow-sm active:scale-95">
                             <span class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-sky-100" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
                                 <span>Download</span>
