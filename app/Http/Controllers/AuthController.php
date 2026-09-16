@@ -16,8 +16,9 @@ class AuthController extends Controller
     // Proses pengecekan login
     public function login(Request $request)
     {
+        // Diubah dari 'email' menjadi 'username'
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'username' => ['required'],
             'password' => ['required'],
         ]);
 
@@ -29,9 +30,10 @@ class AuthController extends Controller
             return redirect()->intended('/'); 
         }
 
+        // Pesan error diarahkan ke 'username'
         return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->onlyInput('email');
+            'username' => 'Username atau password salah.',
+        ])->onlyInput('username');
     }
 
     // Proses logout

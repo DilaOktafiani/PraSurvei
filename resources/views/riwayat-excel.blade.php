@@ -14,7 +14,7 @@
             width: 100%;
             border-collapse: collapse;
             font-family: 'Calibri', 'Arial', sans-serif; /* Font standar Excel */
-            font-size: 10pt;
+            font-size: 12pt;
             background-color: #ffffff;
         }
         th, td {
@@ -58,7 +58,7 @@
 
     <table>
         <tr>
-            <th colspan="6" class="header-section header-center" style="font-size: 12pt; padding: 8px;">FORM PRA-SURVEI</th>
+            <th colspan="6" class="header-section header-center" style="font-size: 14pt; padding: 8px;">FORM PRA-SURVEI</th>
         </tr>
 
         <!-- A. DATA DEBITUR -->
@@ -144,7 +144,7 @@
                         <td class="bg-label">Share Loc</td>
                         <td colspan="5" style="padding: 5px 8px;">
                             @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
-                                <a href="{{ $agunan->share_location }}" target="_blank" style="font-size: 10pt; color: #007bff; text-decoration: underline;">
+                                <a href="{{ $agunan->share_location }}" target="_blank" style="font-size: 12pt; color: #007bff; text-decoration: underline;">
                                     {{ $agunan->share_location }}
                                 </a>
                             @else
@@ -194,7 +194,7 @@
                         <td class="bg-label" style="background-color: #f2f2f2 !important; border: 1px solid #d9d9d9 !important; font-weight: bold; padding: 5px 8px; vertical-align: top;">Denah</td>
                         <td colspan="5" style="border: 1px solid #d9d9d9 !important; padding: 5px 8px;">
                             @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                                <a href="{{ asset('storage/' . $agunan->denah) }}" target="_blank" style="font-size: 11px; color: #000000; text-decoration: none;">
+                                <a href="{{ asset('storage/' . $agunan->denah) }}" target="_blank" style="font-size: 12px; color: #000000; text-decoration: none;">
                                     {{ asset('storage/' . $agunan->denah) }}
                                 </a>
                             @else
@@ -293,7 +293,7 @@
             <td style="text-align: right; width: 15%;">{{ number_format($omset, 0, ',', '.') }}</td>
             <td colspan="2" rowspan="11" style="vertical-align: top; width: 40%;">
                 <div style="font-weight: bold; padding-bottom: 2px; margin-bottom: 6px; padding-top: 4px;">Deskripsi Usaha :</div>
-                <div style="white-space: pre-line; font-size: 10pt; text-align: justify;">{{ optional($data->infousaha)->deskripsi_usaha ?? '-' }}</div>
+                <div style="white-space: pre-line; font-size: 12pt; text-align: justify;">{{ optional($data->infousaha)->deskripsi_usaha ?? '-' }}</div>
             </td>
         </tr>
         <tr><td colspan="2">2. Biaya Operasional</td><td>Rp</td><td style="text-align: right;">{{ number_format($biaya, 0, ',', '.') }}</td></tr>

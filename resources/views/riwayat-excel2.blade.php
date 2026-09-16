@@ -9,7 +9,7 @@
             margin: 0;
             padding: 10px;
             font-family: 'Calibri', 'Arial', sans-serif;
-            font-size: 10pt;
+            font-size: 12pt; /* Diubah ke 12pt */
             color: #000000;
         }
         .page-container {
@@ -18,7 +18,7 @@
             margin: 0 auto;
         }
         .main-title {
-            font-size: 12pt;
+            font-size: 14pt; /* Diubah ke 14pt */
             font-weight: bold;
             text-align: center;
             margin-bottom: 15px;
@@ -31,21 +31,21 @@
             background-color: #ffffff;
             margin-bottom: 15px;
             table-layout: fixed;
-            font-size: 10pt;
+            font-size: 12pt; /* Diubah ke 12pt */
         }
         table.export-table th, 
         table.export-table td {
             border: 1px solid #d9d9d9 !important;
             padding: 5px 8px;
             vertical-align: middle;
-            font-size: 10pt;
+            font-size: 12pt; /* Diubah ke 12pt */
         }
         .section-header {
             background-color: #0A3370 !important;
             color: #FFFFFF !important;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 10pt;
+            font-size: 12pt; /* Diubah ke 12pt */
             padding: 6px 8px;
             border: 1px solid #0A3370 !important;
             text-align: left;
@@ -158,7 +158,7 @@
                     <td colspan="2" class="bg-label">Share Loc</td>
                     <td colspan="5" style="padding: 5px 8px;">
                         @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
-                            <a href="{{ $agunan->share_location }}" target="_blank" style="font-size: 10pt; color: #000000; text-decoration: none;">
+                            <a href="{{ $agunan->share_location }}" target="_blank" style="font-size: 12pt; color: #000000; text-decoration: none;">
                                 {{ $agunan->share_location }}
                             </a>
                         @else
@@ -221,7 +221,7 @@
                     <td colspan="2" class="bg-label font-bold" style="font-weight: bold; color: #000000; vertical-align: middle;">Denah</td>
                     <td colspan="5" style="padding: 5px 8px; vertical-align: middle;">
                         @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                            <a href="{{ asset('storage/' . $agunan->denah) }}" target="_blank" style="font-size: 10pt; color: #000000; text-decoration: none;">
+                            <a href="{{ asset('storage/' . $agunan->denah) }}" target="_blank" style="font-size: 12pt; color: #000000; text-decoration: none;">
                                 {{ asset('storage/' . $agunan->denah) }}
                             </a>
                         @else
@@ -273,7 +273,7 @@
         <table class="export-table">
             <thead>
                 <tr style="text-align: left;">
-                    <th colspan="7" class="section-header" style="text-align: left; font-weight: bold; color: #000000;">D. ANALISIS SLIK</th>
+                    <th colspan="7" class="section-header" style="text-align: left; font-weight: bold; color: #FFFFFF;">D. ANALISIS SLIK</th>
                 </tr>
             </thead>
             <tbody>

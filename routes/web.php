@@ -12,10 +12,6 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Tambahan Rute Lupa Password (Ditaruh di luar middleware auth agar bisa diakses saat belum login)
-Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
-Route::post('/forgot-password', [AuthController::class, 'updatePassword'])->name('password.update');
-
 // =========================================================================
 // RUTE YANG DIKUNCI (Wajib Login Dulu Baru Bisa Diakses)
 // =========================================================================

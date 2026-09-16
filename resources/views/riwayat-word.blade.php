@@ -95,7 +95,7 @@
                 <td colspan="4" style="background-color: #0A3370; color: #FFFFFF; font-weight: bold; padding: 5px 8px; text-transform: uppercase;">A. DATA DEBITUR</td>
             </tr>
             <tr>
-                <td class="bg-label" style="width: 20%; padding-left: 16px;">Nomor Register</td>
+                <td class="bg-label" style="width: 20%; padding-left: 4px;">Nomor Register</td>
                 <td style="width: 30%; font-weight: bold;">{{ $data->no_register ?? '-' }}</td>
                 <td class="bg-label" style="width: 20%;">Nama Marketing</td>
                 <td style="width: 30%;">{{ $data->nama_marketing ?? '-' }}</td>
@@ -107,7 +107,7 @@
                 <td class="font-bold">{{ $data->nama_pasangan ?? '-' }}</td>
             </tr>
             <tr>
-                <td class="bg-label" style="padding-left: 16px;">Usia</td>
+                <td class="bg-label" style="padding-left: 4px;">Usia</td>
                 <td>{{ $data->usia ?? '-' }}</td>
                 <td class="bg-label">Usia Pasangan</td>
                 <td>{{ $data->usia_pasangan ?? '-' }}</td>
@@ -123,7 +123,7 @@
                 <td colspan="3" class="font-normal">{{ $data->alamat_ktp ?? '-' }}</td>
             </tr>
             <tr>
-                <td class="bg-label" style="padding-left: 15px;">Alamat Domisili</td>
+                <td class="bg-label" style="padding-left: 4px;">Alamat Domisili</td>
                 <td colspan="3" class="font-normal">{{ $data->alamat_domisili ?? '-' }}</td>
             </tr>
             <tr>
@@ -209,24 +209,24 @@
                     <tr>
                         <td class="bg-label-jaminan" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: left; padding: 8px;">Tanah</td>
                         <td class="cell-jaminan text-center" style="border: 1px solid #0A3370 !important; text-align: center; padding: 8px;">{{ $agunan->luas_tanah ?? '-' }}</td>
-                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($hargaTanah, 0, ',', '.') }}</td>
-                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($tanahPasar, 0, ',', '.') }}</td>
-                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($tanahTaksasi, 0, ',', '.') }}</td>
-                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($tanahLikuidasi, 0, ',', '.') }}</td>
+                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp<br>{{ number_format($hargaTanah, 0, ',', '.') }}</td>
+                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp<br>{{ number_format($tanahPasar, 0, ',', '.') }}</td>
+                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp<br>{{ number_format($tanahTaksasi, 0, ',', '.') }}</td>
+                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp<br>{{ number_format($tanahLikuidasi, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td class="bg-label-jaminan" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: left; padding: 8px;">Bangunan</td>
                         <td class="cell-jaminan text-center" style="border: 1px solid #0A3370 !important; text-align: center; padding: 8px;">{{ $agunan->luas_bangunan ?? '-' }}</td>
-                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($hargaBangunan, 0, ',', '.') }}</td>
-                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($bangunanPasar, 0, ',', '.') }}</td>
-                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($bangunanTaksasi, 0, ',', '.') }}</td>
-                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp {{ number_format($bangunanLikuidasi, 0, ',', '.') }}</td>
+                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp<br>{{ number_format($hargaBangunan, 0, ',', '.') }}</td>
+                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp<br>{{ number_format($bangunanPasar, 0, ',', '.') }}</td>
+                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp<br>{{ number_format($bangunanTaksasi, 0, ',', '.') }}</td>
+                        <td class="cell-jaminan" style="border: 1px solid #0A3370 !important; text-align: right; padding: 8px;">Rp<br>{{ number_format($bangunanLikuidasi, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td colspan="3" class="bg-label-jaminan" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: center; font-weight: bold; padding: 8px;">TOTAL</td>
-                        <td class="bg-label-jaminan" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; font-weight: bold; padding: 8px;">Rp {{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</td>
-                        <td class="bg-label-jaminan" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; font-weight: bold; padding: 8px;">Rp {{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</td>
-                        <td class="bg-label-jaminan" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; font-weight: bold; padding: 8px;">Rp {{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</td>
+                        <td class="bg-label-jaminan" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; font-weight: bold; padding: 8px;">Rp<br>{{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</td>
+                        <td class="bg-label-jaminan" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; font-weight: bold; padding: 8px;">Rp<br>{{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</td>
+                        <td class="bg-label-jaminan" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; font-weight: bold; padding: 8px;">Rp<br>{{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</td>
                     </tr>
 
                     <!-- Spesifikasi Jaminan -->
