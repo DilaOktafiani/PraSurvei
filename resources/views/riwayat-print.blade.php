@@ -106,7 +106,7 @@
                 <td class="bg-label" style="width: 22%; padding: 10px 14px; padding-left: 28px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nomor Register</td>
                 <td style="width: 28%; padding: 10px 14px; border: 1px solid #0A3370 !important; font-weight: bold;">{{ $data->no_register ?? '-' }}</td>
                 <td class="bg-label" style="width: 22%; padding: 10px 14px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nama Marketing</td>
-                <td style="width: 28%; padding: 10px 14px; border: 1px solid #0A3370 !important;">{{ $data->nama_marketing ?? '-' }}</td>
+                <td style="width: 28%; padding: 10px 14px; border: 1px solid #0A3370 !important;">{{ $data?->user?->name ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label" style="padding: 10px 14px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">1. Nama Debitur</td>

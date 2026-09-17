@@ -71,11 +71,11 @@ Route::middleware(['auth'])->group(function () {
 
     // Route Halaman 8 Take Over
     Route::get('/8-1takeover', [DebiturController::class, 'createStep8_1'])->name('8-1takeover');
-    Route::post('/8-1takeover', [DebiturController::class, 'storeStep8_1'])->name('storeStep8_1');
+    Route::post('/8-1takeover', [DebiturController::class, 'storeStep8_1'])->name('storeStep8-1');
 
     // Route Halaman 8 Kondisi
     Route::get('/8-2kondisi', [DebiturController::class, 'createStep8_2'])->name('8-2kondisi');
-    Route::post('/8-2kondisi', [DebiturController::class, 'storeStep8_2'])->name('storeStep8_2');
+    Route::post('/8-2kondisi', [DebiturController::class, 'storeStep8_2'])->name('storeStep8-2');
 
     // Route Halaman 9 Kelengkapan Data
     Route::get('/9datalengkap', [DebiturController::class, 'createStep9'])->name('9datalengkap');

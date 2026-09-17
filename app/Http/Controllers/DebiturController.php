@@ -98,16 +98,23 @@ class DebiturController extends Controller
         // Bersihkan array dari indeks yang bolong
         $data['tipe_fasilitas'] = array_values($fasilitas);
 
+        $data['user_id'] = auth()->id();
+
         // LOGIKA UPDATE / CREATE
         if (session()->has('debitur_id')) {
             $debitur = Debitur::find(session('debitur_id'));
             if ($debitur) {
-                $debitur->update($data);
+                // Saat update, user_id tidak ikut diubah agar tetap mencatat marketing awal
+                $debitur->update($request->except(['tipe_fasilitas_lain', 'user_id']));
             } else {
+                // Jika session ada tapi datanya tidak ditemukan di DB, buat baru
+                $data['user_id'] = auth()->id();
                 $debitur = Debitur::create($data);
                 session(['debitur_id' => $debitur->id]);
             }
         } else {
+            // Data baru murni
+            $data['user_id'] = auth()->id();
             $debitur = Debitur::create($data);
             session(['debitur_id' => $debitur->id]);
         }

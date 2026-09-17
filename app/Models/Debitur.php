@@ -10,6 +10,7 @@ class Debitur extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'no_register',
         'nama',
         'usia',
@@ -99,5 +100,10 @@ class Debitur extends Model
     public function takeover()
     {
         return $this->hasOne(TakeOver::class, 'debitur_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

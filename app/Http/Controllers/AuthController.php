@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User; // Pastikan model User di-import
 
 class AuthController extends Controller
 {
@@ -13,24 +14,28 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // Proses pengecekan login
+    // Proses pengecekan login (Dibuat Ketat / Case-Sensitive)
     public function login(Request $request)
     {
-        // Diubah dari 'email' menjadi 'username'
-        $credentials = $request->validate([
+        $request->validate([
             'username' => ['required'],
             'password' => ['required'],
         ]);
 
-        // Menggunakan true agar sesi login diingat (Remember Me)
-        if (Auth::attempt($credentials, true)) {
-            $request->session()->regenerate();
+        // 1. Cari user secara manual dengan BINARY agar huruf besar/kecil dicek ketat
+        $user = User::whereRaw('BINARY username = ?', [$request->username])->first();
+
+        // 2. Cek apakah user ditemukan DAN password-nya cocok
+        if ($user && \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
             
-            // Diarahkan ke halaman utama '/' sesuai rute web.php kita
+            // Login-kan user secara manual
+            Auth::login($user, true);
+            
+            $request->session()->regenerate();
             return redirect()->intended('/'); 
         }
 
-        // Pesan error diarahkan ke 'username'
+        // 3. Jika gagal, kembalikan pesan error
         return back()->withErrors([
             'username' => 'Username atau password salah.',
         ])->onlyInput('username');

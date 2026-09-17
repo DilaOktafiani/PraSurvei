@@ -67,7 +67,7 @@
             <td class="bg-label" style="width: 20%;">Nomor Register</td>
             <td colspan="2" style="width: 30%;"><b>{{ $data->no_register ?? '-' }}</b></td>
             <td class="bg-label" style="width: 20%;">Nama Marketing</td>
-            <td colspan="2" style="width: 30%;">{{ $data->nama_marketing ?? '-' }}</td>
+            <td colspan="2" style="width: 30%;">{{ $data?->user?->name ?? '-' }}</td>
         </tr>
         <tr>
             <td class="bg-label">1. Nama Debitur</td>

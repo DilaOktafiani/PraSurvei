@@ -120,7 +120,7 @@
                         <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-3 flex items-center">Nomor Register</div>
                         <div class="p-2 border-r border-gray-300 sm:col-span-4 font-medium flex items-center">{{ $data->no_register ?? '-' }}</div>
                         <div class="p-2 bg-gray-50 font-semibold border-r border-gray-300 sm:col-span-2 flex items-center">Nama Marketing</div>
-                        <div class="p-2 sm:col-span-2 font-medium flex items-center">{{ $data->nama_marketing ?? '-' }}</div>
+                        <div class="p-2 sm:col-span-2 flex items-center">{{ $data?->user?->name ?? '-' }}</div>
                     </div>
 
                     <!-- 1. Nama Debitur & Nama Pasangan -->

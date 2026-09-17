@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('debiturs', function (Blueprint $table) {
             $table->id();
+
+            // Ditambahkan langsung di sini agar otomatis ikut terbuat
+            $table->unsignedBigInteger('user_id')->nullable();
+            
             $table->string('no_register');
             $table->string('nama');
             $table->string('usia');

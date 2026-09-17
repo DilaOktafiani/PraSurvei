@@ -98,7 +98,7 @@
                 <td class="bg-label" style="width: 20%; padding-left: 4px;">Nomor Register</td>
                 <td style="width: 30%; font-weight: bold;">{{ $data->no_register ?? '-' }}</td>
                 <td class="bg-label" style="width: 20%;">Nama Marketing</td>
-                <td style="width: 30%;">{{ $data->nama_marketing ?? '-' }}</td>
+                <td style="width: 30%;">{{ $data?->user?->name ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="bg-label">1. Nama Debitur</td>
