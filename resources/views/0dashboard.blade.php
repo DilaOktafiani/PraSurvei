@@ -98,7 +98,7 @@
         
         <!-- Welcome Message (Diringkas agar tidak banyak teks) -->
         <div class="bg-white rounded-xl card-3d p-8 mb-7 text-center md:text-left border border-gray-100">
-            <h2 class="text-[26px] font-bold text-[#0A3370]">Selamat Datang di Sistem Survei Marketing</h2>
+            <h2 class="text-[26px] font-bold text-[#0A3370]">Selamat Datang di Sistem Informasi Kredit</h2>
             <p class="text-gray-600 mt-2 text-[17px]">Silakan pilih menu formulir di bawah ini untuk memulai input data atau mengecek riwayat pengajuan.</p>
         </div>
 
@@ -131,17 +131,17 @@
                     <div class="flex items-center gap-3.5 mb-5">
                         <div class="p-2.5 bg-amber-50 text-amber-600 rounded-lg shadow-inner">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                             </svg>
                         </div>
-                        <h3 class="text-[20px] font-bold text-gray-800">Survei CA</h3>
+                        <h3 class="text-[20px] font-bold text-gray-800">Memo Usulan</h3>
                     </div>
                     <!-- Deskripsi dipangkas jadi singkat -->
-                    <p class="text-gray-500 text-[15px] mb-8 leading-relaxed">Analisis kelayakan kredit lanjutan oleh Credit Analyst.</p>
+                    <p class="text-gray-500 text-[15px] mb-8 leading-relaxed">Ringkasan dan rekomendasi putusan kredit oleh analis.</p>
                 </div>
                 <!-- Tombol Utama -->
                 <a href="{{ route('z1-surveica', ['new' => 'true']) }}" class="block text-center bg-[#0A3370] text-white font-semibold py-3 rounded-lg hover:bg-[#062452] transition shadow-md text-[16px]">
-                    Isi Formulir Survei
+                    Isi Formulir MUK
                 </a>
             </div>
 
@@ -157,7 +157,7 @@
                         <h3 class="text-[20px] font-bold text-gray-800">Riwayat Pengajuan</h3>
                     </div>
                     <!-- Deskripsi dipangkas jadi singkat -->
-                    <p class="text-gray-500 text-[15px] mb-8 leading-relaxed">Cek semua riwayat pengiriman data pra-survei dan survei.</p>
+                    <p class="text-gray-500 text-[15px] mb-8 leading-relaxed">Cek semua riwayat pengiriman data pra-survei dan MUK.</p>
                 </div>
                 <!-- Tombol Utama -->
                 <a href="/riwayat" class="block text-center bg-transparent text-[#0A3370] border-2 border-[#0A3370] font-semibold py-3 rounded-lg hover:bg-[#0A3370] hover:text-white transition shadow-sm text-[16px]">
