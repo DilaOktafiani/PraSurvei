@@ -187,47 +187,11 @@
         </table>
 
         <!-- B. AGUNAN -->
-        @php
-            $agunan = $data->agunan_tanah->first() ?? null;
-        @endphp
-        <table class="export-table" style="width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #0A3370 !important;">
-            <thead>
-                <tr>
-                    <th colspan="12" class="section-header" style="text-align: left; background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
-                        B. Agunan
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Sub Header JAMINAN -->
-                <tr>
-                    <td colspan="12" class="sub-header" style="text-align: left; background-color: #f3f4f6 !important; color: #0A3370 !important; font-weight: bold; font-size: 10.5pt; padding: 10px 14px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Jaminan</td>
-                </tr>
-                <!-- Kepemilikan -->
-                <tr>
-                    <td colspan="3" class="bg-label" style="width: 25%; padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Kepemilikan</td>
-                    <td colspan="9" class="font-bold" style="width: 75%; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->kepemilikan ?? '-' }}</td>
-                </tr>
-                <!-- Alamat -->
-                <tr>
-                    <td colspan="3" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Alamat</td>
-                    <td colspan="9" style="padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->alamat ?? '-' }}</td>
-                </tr>
-                <!-- Share Loc -->
-                <tr>
-                    <td colspan="3" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Share Loc</td>
-                    <td colspan="9" style="padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">
-                        @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
-                            <a href="{{ $agunan->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline;">
-                                📍 Lihat Lokasi di Peta
-                            </a>
-                        @else
-                            <span>-</span>
-                        @endif
-                    </td>
-                </tr>
-
+        @if(isset($data->agunan_tanah) && $data->agunan_tanah->count() > 0)
+            @foreach($data->agunan_tanah as $index => $agunan)
                 @php
+                    $urutanJaminan = $index + 1;
+
                     // Perhitungan Tanah
                     $luasTanah = $agunan->luas_tanah ?? 0;
                     $hargaTanah = $agunan->harga_tanah ?? 0;
@@ -243,86 +207,125 @@
                     $bangunanLikuidasi = $bangunanPasar * 0.50;
                 @endphp
 
-                <!-- Sub Header COLLATERAL -->
-                <tr>
-                    <td colspan="12" class="sub-header" style="text-align: left; background-color: #f3f4f6 !important; color: #0A3370 !important; font-weight: bold; font-size: 10.5pt; padding: 10px 14px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Collateral</td>
-                </tr>
-                <!-- Header Kolom Collateral -->
-                <tr class="sub-header" style="text-align: center; background-color: #f9fafb !important; color: #000000 !important;">
-                    <td colspan="2" style="font-weight: bold; color: #000000; padding: 10px 8px; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Uraian</td>
-                    <td colspan="1" style="font-weight: bold; color: #000000; padding: 10px 8px; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Luas (m2)</td>
-                    <td colspan="2" style="font-weight: bold; text-align: right; color: #000000; padding: 10px 8px; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Harga</td>
-                    <td colspan="2" style="font-weight: bold; text-align: right; color: #000000; padding: 10px 8px; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nilai Pasar</td>
-                    <td colspan="2" style="font-weight: bold; text-align: right; color: #000000; padding: 10px 8px; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nilai Taksasi</td>
-                    <td colspan="3" style="font-weight: bold; text-align: right; color: #000000; padding: 10px 8px; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nilai Likuidasi</td>
-                </tr>
-                <!-- Baris Tanah -->
-                <tr>
-                    <td colspan="2" class="bg-label font-bold" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Tanah</td>
-                    <td colspan="1" class="text-center" style="padding: 10px 8px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->luas_tanah ?? '-' }}</td>
-                    <td colspan="2" class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; line-height: 1.5;">Rp {{ number_format($hargaTanah, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; line-height: 1.5;">Rp {{ number_format($tanahPasar, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; line-height: 1.5;">Rp {{ number_format($tanahTaksasi, 0, ',', '.') }}</td>
-                    <td colspan="3" class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; line-height: 1.5;">Rp {{ number_format($tanahLikuidasi, 0, ',', '.') }}</td>
-                </tr>
-                <!-- Baris Bangunan -->
-                <tr>
-                    <td colspan="2" class="bg-label font-bold" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Bangunan</td>
-                    <td colspan="1" class="text-center" style="padding: 10px 8px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->luas_bangunan ?? '-' }}</td>
-                    <td colspan="2" class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; line-height: 1.5;">Rp {{ number_format($hargaBangunan, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; line-height: 1.5;">Rp {{ number_format($bangunanPasar, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; line-height: 1.5;">Rp {{ number_format($bangunanTaksasi, 0, ',', '.') }}</td>
-                    <td colspan="3" class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; line-height: 1.5;">Rp {{ number_format($bangunanLikuidasi, 0, ',', '.') }}</td>
-                </tr>
-                <!-- Total Collateral -->
-                <tr class="font-bold bg-label">
-                    <td colspan="5" style="text-align: center; padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Total</td>
-                    <td colspan="2" class="text-right" style="padding: 10px 8px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Rp {{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</td>
-                    <td colspan="2" class="text-right" style="padding: 10px 8px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Rp {{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</td>
-                    <td colspan="3" class="text-right" style="padding: 10px 8px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Rp {{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</td>
-                </tr>
+                <table class="export-table" style="width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #0A3370 !important; margin-top: 12px; margin-bottom: 12px;">
+                    <thead>
+                        <tr>
+                            <th colspan="6" class="section-header" style="text-align: left; background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
+                                B. Agunan {{ $data->agunan_tanah->count() > 1 ? 'Ke-' . $urutanJaminan : '' }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Sub Header JAMINAN -->
+                        <tr>
+                            <td colspan="6" class="sub-header" style="text-align: left; background-color: #f3f4f6 !important; color: #0A3370 !important; font-weight: bold; font-size: 10.5pt; padding: 10px 14px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Jaminan</td>
+                        </tr>
+                        <!-- Kepemilikan -->
+                        <tr>
+                            <td colspan="2" class="bg-label" style="width: 25%; padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Kepemilikan</td>
+                            <td colspan="4" class="font-bold" style="width: 75%; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->kepemilikan ?? '-' }}</td>
+                        </tr>
+                        <!-- Alamat -->
+                        <tr>
+                            <td colspan="2" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Alamat</td>
+                            <td colspan="4" style="padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->alamat ?? '-' }}</td>
+                        </tr>
+                        <!-- Share Loc -->
+                        <tr>
+                            <td colspan="2" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Share Loc</td>
+                            <td colspan="4" style="padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">
+                                @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
+                                    <a href="{{ $agunan->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline;">
+                                        📍 Lihat Lokasi di Peta
+                                    </a>
+                                @else
+                                    <span>-</span>
+                                @endif
+                            </td>
+                        </tr>
 
-                <!-- Denah -->
-                <tr>
-                    <td colspan="3" class="bg-label" style="vertical-align: middle; padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Denah</td>
-                    <td colspan="9" style="padding: 12px; border: 1px solid #0A3370 !important; line-height: 1.5;">
-                        @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                            <div style="width: 100%; max-width: 380px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff;">
-                                <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; display: block;">
-                            </div>
-                        @else
-                            <span>-</span>
-                        @endif
-                    </td>
-                </tr>
+                        <!-- Sub Header COLLATERAL -->
+                        <tr>
+                            <td colspan="6" class="sub-header" style="text-align: left; background-color: #f3f4f6 !important; color: #0A3370 !important; font-weight: bold; font-size: 10.5pt; padding: 10px 14px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Collateral</td>
+                        </tr>
+                        <!-- Header Kolom Collateral -->
+                        <tr class="sub-header" style="text-align: center; background-color: #f9fafb !important; color: #000000 !important;">
+                            <td style="width: 25%; font-weight: bold; color: #000000; padding: 10px 8px; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Uraian</td>
+                            <td style="width: 10%; font-weight: bold; color: #000000; padding: 10px 8px; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Luas (m2)</td>
+                            <td style="width: 15%; font-weight: bold; text-align: right; color: #000000; padding: 10px 8px; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Harga</td>
+                            <td style="width: 16%; font-weight: bold; text-align: right; color: #000000; padding: 10px 8px; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nilai Pasar</td>
+                            <td style="width: 17%; font-weight: bold; text-align: right; color: #000000; padding: 10px 8px; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nilai Taksasi</td>
+                            <td style="width: 17%; font-weight: bold; text-align: right; color: #000000; padding: 10px 8px; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nilai Likuidasi</td>
+                        </tr>
+                        <!-- Baris Tanah -->
+                        <tr>
+                            <td class="bg-label font-bold" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Tanah</td>
+                            <td class="text-center" style="padding: 10px 8px; border: 1px solid #0A3370 !important; text-align: center; line-height: 1.5;">{{ $agunan->luas_tanah ?? '-' }}</td>
+                            <td class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; text-align: right; line-height: 1.5;">Rp {{ number_format($hargaTanah, 0, ',', '.') }}</td>
+                            <td class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; text-align: right; line-height: 1.5;">Rp {{ number_format($tanahPasar, 0, ',', '.') }}</td>
+                            <td class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; text-align: right; line-height: 1.5;">Rp {{ number_format($tanahTaksasi, 0, ',', '.') }}</td>
+                            <td class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; text-align: right; line-height: 1.5;">Rp {{ number_format($tanahLikuidasi, 0, ',', '.') }}</td>
+                        </tr>
+                        <!-- Baris Bangunan -->
+                        <tr>
+                            <td class="bg-label font-bold" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Bangunan</td>
+                            <td class="text-center" style="padding: 10px 8px; border: 1px solid #0A3370 !important; text-align: center; line-height: 1.5;">{{ $agunan->luas_bangunan ?? '-' }}</td>
+                            <td class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; text-align: right; line-height: 1.5;">Rp {{ number_format($hargaBangunan, 0, ',', '.') }}</td>
+                            <td class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; text-align: right; line-height: 1.5;">Rp {{ number_format($bangunanPasar, 0, ',', '.') }}</td>
+                            <td class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; text-align: right; line-height: 1.5;">Rp {{ number_format($bangunanTaksasi, 0, ',', '.') }}</td>
+                            <td class="text-right" style="padding: 10px 8px; border: 1px solid #0A3370 !important; text-align: right; line-height: 1.5;">Rp {{ number_format($bangunanLikuidasi, 0, ',', '.') }}</td>
+                        </tr>
+                        <!-- Total Collateral -->
+                        <tr class="font-bold bg-label">
+                            <td colspan="3" style="text-align: center; padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Total</td>
+                            <td class="text-right" style="padding: 10px 8px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Rp {{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</td>
+                            <td class="text-right" style="padding: 10px 8px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Rp {{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</td>
+                            <td class="text-right" style="padding: 10px 8px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Rp {{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</td>
+                        </tr>
 
-                <!-- Spesifikasi Jaminan -->
-                <tr>
-                    <td colspan="3" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Spesifikasi Jaminan</td>
-                    <td colspan="9" class="whitespace-pre-line font-medium" style="text-align: justify; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->spesifikasi ?? '-' }}</td>
-                </tr>
+                        <!-- Denah -->
+                        <tr>
+                            <td colspan="2" class="bg-label" style="vertical-align: middle; padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Denah</td>
+                            <td colspan="4" style="padding: 12px; border: 1px solid #0A3370 !important; line-height: 1.5;">
+                                @if(!empty($agunan->denah) && $agunan->denah !== '-')
+                                    <div style="width: 100%; max-width: 380px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff;">
+                                        <img src="{{ asset('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; display: block;">
+                                    </div>
+                                @else
+                                    <span>-</span>
+                                @endif
+                            </td>
+                        </tr>
 
-                <!-- Sub Header INFORMASI HARGA -->
-                <tr>
-                    <td colspan="12" class="sub-header" style="text-align: left; background-color: #f3f4f6 !important; color: #0A3370 !important; font-weight: bold; font-size: 10.5pt; padding: 10px 14px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Informasi Harga</td>
-                </tr>
-                <!-- Informasi Harga 1 -->
-                <tr>
-                    <td class="bg-label text-center" style="width: 8%; padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">1</td>
-                    <td colspan="11" class="whitespace-pre-line font-medium" style="text-align: justify; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->info_harga1 ?? '-' }}</td>
-                </tr>
-                <!-- Informasi Harga 2 -->
-                <tr>
-                    <td class="bg-label text-center" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">2</td>
-                    <td colspan="11" class="whitespace-pre-line font-medium" style="text-align: justify; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->info_harga2 ?? '-' }}</td>
-                </tr>
-                <!-- Informasi Harga 3 -->
-                <tr>
-                    <td class="bg-label text-center" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">3</td>
-                    <td colspan="11" class="whitespace-pre-line font-medium" style="text-align: justify; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->info_harga3 ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
+                        <!-- Spesifikasi Jaminan -->
+                        <tr>
+                            <td colspan="2" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Spesifikasi Jaminan</td>
+                            <td colspan="4" class="whitespace-pre-line font-medium" style="text-align: justify; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->spesifikasi ?? '-' }}</td>
+                        </tr>
+
+                        <!-- Sub Header INFORMASI HARGA -->
+                        <tr>
+                            <td colspan="6" class="sub-header" style="text-align: left; background-color: #f3f4f6 !important; color: #0A3370 !important; font-weight: bold; font-size: 10.5pt; padding: 10px 14px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Informasi Harga</td>
+                        </tr>
+                        <!-- Informasi Harga 1 -->
+                        <tr>
+                            <td class="bg-label text-center" style="width: 8%; padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">1</td>
+                            <td colspan="5" class="whitespace-pre-line font-medium" style="text-align: justify; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->info_harga1 ?? '-' }}</td>
+                        </tr>
+                        <!-- Informasi Harga 2 -->
+                        <tr>
+                            <td class="bg-label text-center" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">2</td>
+                            <td colspan="5" class="whitespace-pre-line font-medium" style="text-align: justify; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->info_harga2 ?? '-' }}</td>
+                        </tr>
+                        <!-- Informasi Harga 3 -->
+                        <tr>
+                            <td class="bg-label text-center" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">3</td>
+                            <td colspan="5" class="whitespace-pre-line font-medium" style="text-align: justify; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $agunan->info_harga3 ?? '-' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            @endforeach
+        @endif
 
         <!-- C. ANALISIS JAMINAN -->
         <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important;">
