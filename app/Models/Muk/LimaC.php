@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Models\Survei;
+namespace App\Models\Muk;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DataSlik extends Model
+class LimaC extends Model
 {
     use HasFactory;
 
-    protected $connection = 'survei';
-    protected $table = 'dataslik';
+    protected $connection = 'muk';
+    protected $table = 'limac';
     protected $guarded = ['id'];
 
     public function debitur()

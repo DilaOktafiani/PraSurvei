@@ -5,16 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;            
-use App\Models\Survei\Debitur;    
-use App\Models\Survei\Agunan;
-use App\Models\Survei\AgunanTanah;
-use App\Models\Survei\AgunanKendaraan;
-use App\Models\Survei\AgunanSimpanan;
-use App\Models\Survei\AgunanLogam;
-use App\Models\Survei\YangLain;
-use App\Models\Survei\AnalisisJaminan;
-use App\Models\Survei\Capacity;
-use App\Models\Survei\DataSlik;
+use App\Models\Muk\Debitur;  
+use App\Models\Muk\PlafonKredit;
+use App\Models\Muk\InformasiUsaha;
+use App\Models\Muk\LimaC;
+
 use App\Models\Survei\Capital;
 use App\Models\Survei\TakeOver;
 use App\Models\Survei\Kondisi;
@@ -27,7 +22,7 @@ use App\Models\Survei\MutasiRekening;
 use App\Models\Survei\MutasiRekening1;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class SurveiController extends Controller
+class MukController extends Controller
 {
     // =========================================================================
     // Z1-SURVEICA
@@ -52,7 +47,7 @@ class SurveiController extends Controller
             $debitur = Debitur::find(session('debitur_id'));
         }
 
-        return view('z1-surveica', compact('debitur'));
+        return view('z1-muk', compact('debitur'));
     }
     
     public function storeAlur1(Request $request)
@@ -60,43 +55,50 @@ class SurveiController extends Controller
         $validated = $request->validate([
             'no_register'           => 'required|string|max:100',
             'nama'                  => 'required|string|max:255',
-            'temuan_ca'             => 'required|string',
-            'plafon'                => 'required|numeric',
-            'tujuan_penggunaan'     => 'required|string',
-            'jangka_waktu'          => 'required|string|max:100',
-            'estimasi_kewajiban'    => 'required|numeric',
-            'tipe_fasilitas'        => 'required|array',
-            'tipe_fasilitas.*'      => 'required|string',
-            'tipe_fasilitas_lain'   => 'nullable|string|max:255',
+            'tempat_tanggal_lahir'  => 'required|string|max:255',
+            'nama_ibu_kandung'      => 'required|string|max:255',
+            'nama_istri_penjamin'   => 'required|string|max:255',
+            'alamat_ktp'            => 'required|string',
+            'alamat_domisili'       => 'required|string',
+            'no_hp'                 => 'required|string|max:50',
+            'pekerjaan'             => 'required|string|max:255',
+            'bidang_usaha'          => 'required|string|max:255',
+            'alamat_usaha'          => 'required|string',
+            'kontak'                => 'required|string|max:50',
+            'idi_di_bank_lain'      => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240', // Maks 10MB
+            'keterangan'            => 'required|string',
+
         ], [
             'required' => 'Kolom :attribute wajib diisi.',
-            'numeric'  => 'Kolom :attribute harus berupa angka.',
-            'array'    => 'Format pilihan :attribute tidak valid.',
+            'string'   => 'Kolom :attribute harus berupa teks.',
+            'max'      => 'Kolom :attribute melebihi batas maksimal karakter.',
+            'file'     => 'Kolom :attribute harus berupa sebuah berkas.',
+            'mimes'    => 'Format file IDI di bank lain harus berupa PDF, JPG, JPEG, PNG, atau DWG.',
+            'idi_di_bank_lain.max' => 'Ukuran file IDI di bank lain maksimal adalah 10 MB.',
         ]);
 
-        $data = $request->except(['tipe_fasilitas_lain']);
-        $fasilitas = $request->tipe_fasilitas;
+        $data = $request->except(['idi_di_bank_lain']);
 
-        if ($request->filled('tipe_fasilitas_lain')) {
-            $key = array_search('Yang Lain', $fasilitas);
+        // Handle Upload File IDI di Bank Lain
+        if ($request->hasFile('idi_di_bank_lain')) {
+            $file = $request->file('idi_di_bank_lain');
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
             
-            if ($key !== false) {
-                $fasilitas[$key] = $request->tipe_fasilitas_lain;
-            } else {
-                $fasilitas[] = $request->tipe_fasilitas_lain;
-            }
-        } else {
-            $fasilitas = array_filter($fasilitas, function($value) {
-                return $value !== 'Yang Lain';
-            });
+            // Simpan ke storage (pastikan sudah php artisan storage:link)
+            $path = $file->storeAs('public/idi_bank_lain', $filename);
+            
+            // Simpan path relatif ke database kolom 'idi_di_bank_lain'
+            $data['idi_di_bank_lain'] = str_replace('public/', '', $path);
         }
-
-        $data['tipe_fasilitas'] = array_values($fasilitas);
 
         // LOGIKA UPDATE / CREATE (Simpan ke database survei)
         if (session()->has('debitur_id')) {
             $debitur = Debitur::find(session('debitur_id'));
             if ($debitur) {
+                // Jika ada file baru dan file lama ada, hapus file lama
+                if ($request->hasFile('idi_di_bank_lain') && $debitur->idi_di_bank_lain) {
+                    Storage::disk('public')->delete($debitur->idi_di_bank_lain);
+                }
                 $debitur->update($data);
             } else {
                 $debitur = Debitur::create($data);
@@ -107,588 +109,78 @@ class SurveiController extends Controller
             session(['debitur_id' => $debitur->id]);
         }
 
-        return redirect()->route('z2-surveica');
+        return redirect()->route('z2-muk');
     }
 
-    // =========================================================================
-    // JAMINAN / COLLATERAL (ALUR 2)
-    // =========================================================================
+    // ==========================================
+    // PENGAJUAN PLAFON KREDIT
+    // ==========================================
 
     public function createAlur2()
-    {
-        $debiturId = session('debitur_id');
-
-        if (!$debiturId) {
-            return redirect()->route('z1-surveica')->with('error', 'Sesi telah berakhir. Silakan isi dari awal.');
-        }
-
-        $agunanId = session('agunan_id');
-        $data = null;
-
-        if ($agunanId) {
-            $data = Agunan::where('id', $agunanId)
-                          ->where('debitur_id', $debiturId)
-                          ->first();
-        }
-
-        if (!$data) {
-            $data = Agunan::where('debitur_id', $debiturId)
-                          ->latest('updated_at')
-                          ->first();
-            if ($data) {
-                session(['agunan_id' => $data->id]);
-            }
-        }
-
-        // =========================================================================
-        // TAMBAHAN LOGIKA KHUSUS "YANG LAIN"
-        // =========================================================================
-        $standarOpsi = [
-            'tanah_sawah', 
-            'tanah_pekarangan_kosong', 
-            'tanah_pekarangan_bangunan', 
-            'kendaraan_bermotor', 
-            'simpanan', 
-            'logam_mulia'
-        ];
-
-        if ($data && !in_array($data->jenis_agunan, $standarOpsi)) {
-            // Simpan teks custom ke properti sementara untuk input text di Blade
-            $data->jenis_agunan_lainnya = $data->jenis_agunan;
-            // Ubah nilai jenis_agunan menjadi 'yang_lain' agar radio button-nya tercentang
-            $data->jenis_agunan = 'yang_lain';
-        }
-
-        $backRoute = route('z1-surveica');
-
-        return view('z2-surveica', compact('debiturId', 'data', 'backRoute'));
-    }
-    
-    public function storeAlur2(Request $request)
-    {
-        $request->validate([
-            'jenis_agunan' => 'required',
-            'jenis_agunan_lainnya' => 'required_if:jenis_agunan,yang_lain|nullable|string|max:255',
-        ]);
-
-        $debiturId = session('debitur_id');
-
-        $jenisAgunanVal = $request->jenis_agunan;
-        if ($request->jenis_agunan === 'yang_lain') {
-            $jenisAgunanVal = $request->jenis_agunan_lainnya ?? 'Lainnya';
-        }
-
-        // Gunakan kunci ganda (debitur_id & jenis_agunan) agar tidak saling menimpa data yang berbeda
-        $agunan = Agunan::updateOrCreate(
-            [
-                'debitur_id' => $debiturId,
-                'jenis_agunan' => $jenisAgunanVal
-            ],
-            [
-                'updated_at' => now()
-            ]
-        );
-
-        // Simpan ID agunan spesifik ke session
-        session(['agunan_id' => $agunan->id]);
-
-        switch ($request->jenis_agunan) {
-            case 'tanah_sawah':
-            case 'tanah_pekarangan_kosong':
-            case 'tanah_pekarangan_bangunan':
-                return redirect()->route('z3-1tanah');
-            
-            case 'kendaraan_bermotor':
-                return redirect()->route('z3-2kendaraan');
-                
-            case 'simpanan':
-                return redirect()->route('z3-3simpanan');
-                
-            case 'logam_mulia':
-                return redirect()->route('z3-4logam');
-                
-            case 'yang_lain':
-                return redirect()->route('z4-jaminan');
-                
-            default:
-                return back()->withErrors(['jenis_agunan' => 'Pilihan tidak valid']);
-        }
-    }
-
-    // ==========================================
-    // TANAH
-    // ==========================================
-
-    public function createAlur3_1(Request $request)
-    {
-        $debiturId = session('debitur_id');
-
-        if (!$debiturId) {
-            return redirect()->route('z1-surveica')->with('error', 'Sesi telah berakhir. Silakan isi dari awal.');
-        }
-
-        $urutan = (int) $request->query('urutan', 1);
-
-        // Cari data agunan tanah berdasarkan debitur
-        $agunan = Agunan::where('debitur_id', $debiturId)->where('jenis_agunan', 'tanah')->first();
-        
-        $tanah = null;
-        if ($agunan) {
-            // Ambil data berdasarkan urutan jaminan yang sedang dibuka
-            $tanah = AgunanTanah::where('agunan_id', $agunan->id)->where('urutan', $urutan)->first();
-        }
-
-        // Tentukan rute tombol kembali secara dinamis berdasarkan urutan tanah
-        if ($urutan > 1) {
-            // Jika berada di urutan 2 atau 3, tombol kembali mengarah ke urutan sebelumnya
-            $backRoute = route('z3-1tanah', ['urutan' => $urutan - 1]);
-        } else {
-            // Jika berada di urutan 1, tombol kembali mengarah ke Halaman 2 Survei
-            $backRoute = route('z2-surveica');
-        }
-
-        return view('z3-1tanah', compact('debiturId', 'urutan', 'tanah', 'backRoute')); 
-    }
-
-    public function storeAlur3_1(Request $request)
-    {
-
-        $request->validate([
-            'debitur_id'         => 'required|exists:survei.debiturs,id',
-            'urutan'             => 'required|integer', 
-            'kepemilikan'        => 'nullable|string|max:500',
-            'alamat'             => 'nullable|string|max:500',
-            'share_location'     => 'nullable|url',
-            'luas_tanah'         => 'nullable|integer',
-            'luas_bangunan'      => 'nullable|integer',
-            'spesifikasi'        => 'nullable|string',
-            'file_denah'         => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240', 
-            'harga_tanah'        => 'nullable|integer',
-            'harga_bangunan'     => 'nullable|integer',
-            'info_harga1'        => 'nullable|string',
-            'info_harga2'        => 'nullable|string',
-            'info_harga3'        => 'nullable|string',
-            'jaminan_lain_input' => 'nullable|string', 
-        ]);
-
-        DB::beginTransaction();
-        try {
-            $urutanJaminan = (int) $request->urutan;
-
-            $agunan = Agunan::firstOrCreate([
-                'debitur_id'   => $request->debitur_id,
-                'jenis_agunan' => 'tanah'
-            ]);
-
-            // Pertahankan file denah lama jika tidak mengupload file baru
-            $existingTanah = AgunanTanah::where('agunan_id', $agunan->id)->where('urutan', $urutanJaminan)->first();
-            $pathDenah = $existingTanah ? $existingTanah->denah : null;
-
-            if ($request->hasFile('file_denah')) {
-                $pathDenah = $request->file('file_denah')->store('denah_agunan', 'public');
-            }
-
-            AgunanTanah::updateOrCreate(
-                [
-                    'agunan_id' => $agunan->id,
-                    'urutan'    => $urutanJaminan
-                ],
-                [
-                    'kepemilikan'    => $request->kepemilikan,
-                    'alamat'         => $request->alamat,
-                    'share_location' => $request->share_location,
-                    'luas_tanah'     => $request->luas_tanah,
-                    'luas_bangunan'  => $request->luas_bangunan,
-                    'spesifikasi'    => $request->spesifikasi,
-                    'denah'          => $pathDenah, 
-                    'harga_tanah'    => $request->harga_tanah,
-                    'harga_bangunan' => $request->harga_bangunan,
-                    'info_harga1'    => $request->info_harga1,
-                    'info_harga2'    => $request->info_harga2,
-                    'info_harga3'    => $request->info_harga3,
-                    'jaminan_lain'   => $request->jaminan_lain_input, 
-                ]
-            );
-
-            DB::commit();
-
-            // KONDISI JIKA SUDAH DI JAMINAN 3
-            if ($urutanJaminan >= 3) {
-                return redirect()->route('z3-2kendaraan')
-                                ->with('success', 'Data jaminan tanah (1-3) selesai. Silakan lanjut ke data kendaraan.');
-            }
-
-            $pilihan = $request->jaminan_lain_input;
-
-            if ($pilihan === 'ADA SELAIN HM/HGB') {
-                return redirect()->route('z2-surveica')
-                                ->with('success', 'Data agunan tanah berhasil disimpan.');
-            } 
-            elseif ($pilihan === 'ADA') {
-                return redirect()->route('z3-1tanah', ['urutan' => $urutanJaminan + 1])
-                                ->with('success', 'Data jaminan tanah ' . $urutanJaminan . ' berhasil disimpan. Silakan isi jaminan berikutnya.');
-            } 
-            else {
-                return redirect()->route('z6-capacity')
-                                ->with('success', 'Data agunan tanah selesai.');
-            }
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
-        }
-    }
-
-    // ==========================================
-    // KENDARAAN
-    // ==========================================
-
-    public function createAlur3_2($debitur_id = null)
-    {
-        $debitur_id = $debitur_id ?? session('debitur_id');
-
-        if (!$debitur_id) {
-            return redirect()->route('z2-surveica')->with('error', 'Silakan isi data debitur terlebih dahulu.');
-        }
-
-        session(['debitur_id' => $debitur_id]);
-
-        $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'kendaraan')->first();
-        $data = $agunan ? $agunan->kendaraan : null; 
-
-        // Deteksi halaman asal dari riwayat URL sebelumnya untuk tombol Kembali
-        $previousUrl = url()->previous();
-        if (str_contains($previousUrl, 'z2-surveica')) {
-            session(['kendaraan_back' => route('z2-surveica')]);
-        } elseif (str_contains($previousUrl, 'z3-1tanah')) {
-            // Ambil URL sebelumnya secara utuh (termasuk query parameter seperti ?urutan=3)
-            session(['kendaraan_back' => $previousUrl]);
-        }
-
-        // Fallback default ke z3-1tanah (atau z2-surveica) jika session belum terekam
-        $backRoute = session('kendaraan_back', route('z3-1tanah', ['urutan' => 3]));
-
-        return view('z3-2kendaraan', compact('debitur_id', 'data', 'backRoute'));
-    }
-
-    public function storeAlur3_2(Request $request)
-    {
-        // 1. Lengkapi validasi agar aman dari input kosong yang tidak diinginkan
-        $request->validate([
-            'debitur_id'                 => 'required|exists:survei.debiturs,id',
-            'spesifikasi'                => 'nullable|string',
-            'status_kepemilikan'         => 'nullable|string',
-            'status_kepemilikan_lainnya' => 'nullable|string',
-            'harga_taksasi'              => 'nullable|numeric',
-            'harga_taksasi_sumber_lain'  => 'nullable|string',
-        ]);
-
-        // 2. Ambil atau buat agunan
-        $agunan = Agunan::updateOrCreate(
-            ['debitur_id' => $request->debitur_id, 'jenis_agunan' => 'kendaraan'],
-            ['updated_at' => now()]
-        );
-
-        // 3. Update atau buat detail kendaraan
-        // Gunakan operator `??` untuk mencegah nilai null masuk ke database jika kolomnya wajib (NOT NULL)
-        AgunanKendaraan::updateOrCreate(
-            ['agunan_id' => $agunan->id],
-            [
-                'spesifikasi' => $request->spesifikasi,
-                'status_kepemilikan' => ($request->status_kepemilikan === 'yang_lain') ? $request->status_kepemilikan_lainnya : $request->status_kepemilikan,
-                'harga_taksasi' => $request->harga_taksasi,
-                'harga_taksasi_sumber_lain' => $request->harga_taksasi_sumber_lain ?? '',
-            ]
-        );
-
-        return redirect()->route('z3-3simpanan')->with('success', 'Data tersimpan.');
-    }
-
-    // ==========================================
-    // SIMPANAN
-    // ==========================================
-
-    public function createAlur3_3($debitur_id = null)
-    {
-        $debitur_id = $debitur_id ?? session('debitur_id');
-
-        if (!$debitur_id) {
-            return redirect()->route('z2-surveica')->with('error', 'Silakan isi data debitur terlebih dahulu.');
-        }
-
-        session(['debitur_id' => $debitur_id]);
-
-        $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'simpanan')->first();
-        $data = $agunan ? $agunan->simpanan : null;
-
-        // Deteksi halaman asal dari riwayat URL sebelumnya untuk tombol Kembali (Pola yang sama seperti kendaraan)
-        $previousUrl = url()->previous();
-        if (str_contains($previousUrl, 'z3-2kendaraan')) {
-            session(['simpanan_back' => route('z3-2kendaraan')]);
-        } elseif (str_contains($previousUrl, 'z2-surveica')) {
-            session(['simpanan_back' => route('z2-surveica')]);
-        }
-
-        // Fallback default ke z3-2kendaraan karena sebelum simpanan pastinya adalah kendaraan
-        $backRoute = session('simpanan_back', route('z3-2kendaraan'));
-
-        return view('z3-3simpanan', compact('debitur_id', 'data', 'backRoute'));
-    }
-
-    public function storeAlur3_3(Request $request)
-    {
-        $request->validate([
-            'debitur_id'             => 'required|exists:survei.debiturs,id',
-            'jenis_simpanan'         => 'required|string',
-            'jenis_simpanan_lainnya' => 'nullable|string',
-            'nilai_simpanan'         => 'required|numeric',
-        ]);
-
-        // Tangani jika user memilih "yang_lain"
-        $jenisSimpananFinal = $request->jenis_simpanan;
-        if ($request->jenis_simpanan === 'yang_lain') {
-            $jenisSimpananFinal = $request->jenis_simpanan_lainnya ?? 'Lainnya';
-        }
-
-        DB::beginTransaction();
-        try {
-            // Gunakan updateOrCreate untuk agunan utama
-            $agunan = Agunan::updateOrCreate(
-                [
-                    'debitur_id' => $request->debitur_id, 
-                    'jenis_agunan' => 'simpanan'
-                ],
-                [
-                    'updated_at' => now()
-                ]
-            );
-
-            // Gunakan updateOrCreate untuk detail agunan simpanan
-            AgunanSimpanan::updateOrCreate(
-                [
-                    'agunan_id' => $agunan->id
-                ],
-                [
-                    'jenis_simpanan' => $jenisSimpananFinal,
-                    'nilai_simpanan' => $request->nilai_simpanan,
-                ]
-            );
-
-            DB::commit();
-            return redirect()->route('z3-4logam')->with('success', 'Data agunan simpanan berhasil disimpan.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
-        }
-    }
-
-    // ==========================================
-    // LOGAM MULIA (Step 3-4)
-    // ==========================================
-
-    public function createAlur3_4($debitur_id = null)
-    {
-        // Ambil debitur_id dari parameter URL atau dari session
-        $debitur_id = $debitur_id ?? session('debitur_id');
-
-        if (!$debitur_id) {
-            return redirect()->route('z2-surveica')->with('error', 'Silakan isi data debitur terlebih dahulu.');
-        }
-
-        session(['debitur_id' => $debitur_id]);
-
-        $agunan = null;
-        $data = null;
-        $opsiStandar = ['emas_antam', 'emas_non_antam', 'emas_lokal', 'emas_perhiasan'];
-        $jenisLogamVal = '';
-        $jenisLogamLainVal = '';
-
-        // Ambil data agunan logam mulia utama
-        $agunan = Agunan::where('debitur_id', $debitur_id)->where('jenis_agunan', 'logam_mulia')->first();
-        
-        // Ambil data detail secara langsung agar data yang sudah tersimpan tampil kembali
-        if ($agunan) {
-            $data = AgunanLogam::where('agunan_id', $agunan->id)->first(); 
-        }
-
-        if ($data) {
-            if (in_array($data->jenis_logam, $opsiStandar)) {
-                $jenisLogamVal = $data->jenis_logam;
-            } else {
-                // Jika tidak ada di opsi standar, berarti itu dulunya "yang_lain"
-                $jenisLogamVal = 'yang_lain';
-                $jenisLogamLainVal = $data->jenis_logam;
-            }
-        }
-
-        // Tentukan rute tombol kembali secara dinamis
-        $previousUrl = url()->previous();
-
-        if (str_contains($previousUrl, 'z3-3simpanan') || str_contains($previousUrl, 'simpanan')) {
-            session(['logam_mulia_back' => route('z3-3simpanan')]);
-        } elseif (str_contains($previousUrl, 'z2-surveica')) {
-            session(['logam_mulia_back' => route('z2-surveica')]);
-        }
-
-        // Fallback default jika session belum terekam
-        $backRoute = session('logam_mulia_back', route('z2-surveica'));
-
-        return view('z3-4logam', compact('debitur_id', 'data', 'jenisLogamVal', 'jenisLogamLainVal', 'backRoute'));
-    }
-
-    public function storeAlur3_4(Request $request)
-    {
-        $request->validate([
-            'debitur_id' => 'required|exists:survei.debiturs,id',
-            'jenis_logam' => 'required|string',
-            'jenis_logam_lain' => 'nullable|string',
-            'berat' => 'required|numeric',
-            'harga_beli_tahun_perolehan' => 'required|string',
-            'harga_saatini' => 'required|numeric',
-        ]);
-
-        // Tangani jika user memilih "yang_lain"
-        $jenisLogamFinal = $request->jenis_logam;
-        if ($request->jenis_logam === 'yang_lain') {
-            $jenisLogamFinal = $request->jenis_logam_lain ?? 'Lainnya';
-        }
-
-        DB::beginTransaction();
-        try {
-            // Gunakan updateOrCreate untuk agunan utama
-            $agunan = Agunan::updateOrCreate(
-                [
-                    'debitur_id' => $request->debitur_id, 
-                    'jenis_agunan' => 'logam_mulia'
-                ],
-                [
-                    'updated_at' => now()
-                ]
-            );
-
-            // Gunakan updateOrCreate untuk detail agunan logam mulia
-            AgunanLogam::updateOrCreate(
-                [
-                    'agunan_id' => $agunan->id
-                ],
-                [
-                    'jenis_logam' => $jenisLogamFinal,
-                    'berat' => $request->berat,
-                    'harga_beli_tahun_perolehan' => $request->harga_beli_tahun_perolehan,
-                    'harga_saatini' => $request->harga_saatini,
-                ]
-            );
-
-            DB::commit();
-            return redirect()->route('z4-jaminan')->with('success', 'Data agunan logam mulia berhasil disimpan.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])->withInput();
-        }
-    }
-
-    // ==========================================
-    // JAMINAN LAIN / YANG LAIN (z4-jaminan)
-    // ==========================================
-
-    public function createAlur4()
-    {
-        $debiturId = session('debitur_id');
-        $yangLain = null;
-
-        if ($debiturId) {
-            // Cari agunan dengan jenis 'yang_lain' (sesuaikan dengan nilai storeAlur2 yaitu 'yang_lain')
-            $agunan = Agunan::where('debitur_id', $debiturId)
-                            ->whereIn('jenis_agunan', ['lainnya', 'yang_lain'])
-                            ->first();
-            if ($agunan) {
-                $yangLain = YangLain::where('agunan_id', $agunan->id)->first();
-            }
-        }
-
-        // Deteksi halaman asal menggunakan session (lebih aman dan tidak mudah meleset)
-        $previousUrl = url()->previous();
-        if (str_contains($previousUrl, 'z3-4logam')) {
-            session(['jaminan_lain_back' => route('z3-4logam')]);
-        } elseif (str_contains($previousUrl, 'z2-surveica')) {
-            session(['jaminan_lain_back' => route('z2-surveica')]);
-        }
-
-        // Fallback default ke z3-4logam (karena alur normal sebelum jaminan lain adalah logam mulia)
-        $backRoute = session('jaminan_lain_back', route('z3-4logam'));
-
-        return view('z4-jaminan', compact('yangLain', 'backRoute'));
-    }
-
-    public function storeAlur4(Request $request)
-    {
-        $request->validate([
-            'jaminan_lainnya_jikaada' => 'nullable|string',
-        ]);
-
-        $debiturId = session('debitur_id');
-
-        if (!$debiturId) {
-            return redirect()->route('z1-surveica')->with('error', 'Sesi telah berakhir. Silakan isi dari awal.');
-        }
-
-        DB::beginTransaction();
-        try {
-            // Pastikan konsisten menggunakan 'yang_lain' sesuai switch case di storeAlur2
-            $agunan = Agunan::updateOrCreate(
-                ['debitur_id' => $debiturId],
-                ['jenis_agunan' => 'yang_lain']
-            );
-
-            YangLain::updateOrCreate(
-                ['agunan_id' => $agunan->id],
-                ['jaminan_lainnya_jikaada' => $request->jaminan_lainnya_jikaada]
-            );
-
-            DB::commit();
-            return redirect()->route('z5-jaminan-analisis')->with('success', 'Data berhasil disimpan.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
-        }
-    }
-
-    // ==========================================
-    // ANALISIS SEMUA JAMINAN
-    // ==========================================
-
-    public function createAlur5()
     {
         $debiturId = session('debitur_id'); 
         $data = null; 
 
         if ($debiturId) {
-            $data = AnalisisJaminan::where('debitur_id', $debiturId)->first();
+            // Mengambil data berdasarkan debitur_id menggunakan model PlafonKredit
+            $data = PlafonKredit::where('debitur_id', $debiturId)->first();
         }
 
-        // Tentukan rute tombol kembali secara dinamis ke halaman Analisis Jaminan Lainnya (z4-jaminan)
-        $backRoute = route('z4-jaminan');
+        // Tentukan rute tombol kembali secara dinamis (sesuaikan dengan rute alur sebelumnya, misal z1-muk)
+        $backRoute = route('z1-muk'); 
 
-        return view('z5-jaminan-analisis', compact('data', 'backRoute')); 
+        return view('z2-muk', compact('data', 'backRoute')); 
     }
 
-    public function storeAlur5(Request $request)
+    public function storeAlur2(Request $request)
     {
-        // Validasi input (ubah 'exists:debiturs,id' cukup menjadi 'required')
+        // 1. Validasi input sesuai dengan form & model PlafonKredit
         $request->validate([
-            'debitur_id' => 'required', // <- Hapus bagian exists:debiturs,id sementara
-            'analisis_jaminan' => 'required|string',
+            'debitur_id'              => 'required',
+            'pengajuan_plafon_kredit' => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
+            'tujuan_penggunaan'       => 'required|string',
+        ], [
+            'required'                  => 'Kolom :attribute wajib diisi.',
+            'string'                    => 'Kolom :attribute harus berupa teks.',
+            'file'                      => 'Kolom :attribute harus berupa sebuah berkas.',
+            'mimes'                     => 'Format file harus berupa PDF, JPG, JPEG, PNG, atau DWG.',
+            'pengajuan_plafon_kredit.max' => 'Ukuran file maksimal adalah 10 MB.',
         ]);
 
         DB::beginTransaction();
         try {
-            AnalisisJaminan::updateOrCreate(
+            // 2. Ambil data lama jika ada untuk pengecekan file
+            $plafon = PlafonKredit::where('debitur_id', $request->debitur_id)->first();
+            $pathFile = $plafon ? $plafon->pengajuan_plafon_kredit : null;
+
+            // 3. Handle upload file baru jika di-upload user
+            if ($request->hasFile('pengajuan_plafon_kredit')) {
+                // Hapus file lama fisik jika ada di storage
+                if ($pathFile && Storage::disk('public')->exists($pathFile)) {
+                    Storage::disk('public')->delete($pathFile);
+                }
+
+                $file = $request->file('pengajuan_plafon_kredit');
+                $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+                
+                // Simpan ke storage (disk public)
+                $pathFile = $file->storeAs('pengajuan_plafon', $filename, 'public');
+            }
+
+            // 4. Simpan atau update data menggunakan model PlafonKredit
+            PlafonKredit::updateOrCreate(
                 ['debitur_id' => $request->debitur_id],
-                ['analisis_jaminan' => $request->analisis_jaminan]
+                [
+                    'pengajuan_plafon_kredit' => $pathFile,
+                    'tujuan_penggunaan'       => $request->tujuan_penggunaan,
+                ]
             );
 
             DB::commit();
-            return redirect()->route('z6-capacity')->with('success', 'Analisis jaminan berhasil disimpan.');
+            
+            // Redirect ke alur selanjutnya (sesuaikan nama routenya, misal z3-muk)
+            return redirect()->route('z3-muk')->with('success', 'Data plafon kredit berhasil disimpan.');
+            
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
@@ -696,10 +188,10 @@ class SurveiController extends Controller
     }
 
     // ==========================================
-    // ANALISIS CAPACITY
+    // INFORMASI USAHA
     // ==========================================
 
-    public function createAlur6(Request $request, $debitur_id = null)
+    public function createAlur3(Request $request, $debitur_id = null)
     {
         $debiturId = $debitur_id ?? $request->input('debitur_id') ?? session('debitur_id');
 
@@ -709,30 +201,18 @@ class SurveiController extends Controller
 
         session(['debitur_id' => $debiturId]);
 
-        $capacity = Capacity::where('debitur_id', $debiturId)->first();
         $debitur = Debitur::find($debiturId);
-        $infoUsaha = null;
-        $tanah = null;
+        
+        // Ambil data Informasi Usaha jika sudah pernah diisi sebelumnya
+        $data = InformasiUsaha::where('debitur_id', $debiturId)->first();
 
-        // Deteksi halaman asal dari riwayat URL sebelumnya secara utuh untuk tombol Kembali
-        $previousUrl = url()->previous();
-        if (str_contains($previousUrl, 'z5-jaminan-analisis')) {
-            session(['capacity_back' => route('z5-jaminan-analisis')]);
-        } elseif (str_contains($previousUrl, 'z3-1tanah')) {
-            // SIMPAN URL LENGKAPNYA (Membawa ?urutan=1 atau ?urutan=2 secara presisi)
-            session(['capacity_back' => $previousUrl]);
-        }
+        // Tentukan rute tombol kembali (sesuaikan dengan alur aplikasi Anda sebelumnya)
+        $backRoute = session('informasi_usaha_back', route('z2-muk')); // Ganti route sebelumnya sesuai alur
 
-        // Fallback default jika session belum terekam (cek apakah ada analisis jaminan atau fallback ke tanah urutan 1)
-        $hasAnalisisJaminan = AnalisisJaminan::where('debitur_id', $debiturId)->exists();
-        $defaultBack = $hasAnalisisJaminan ? route('z5-jaminan-analisis') : route('z3-1tanah', ['urutan' => 1]);
-
-        $backRoute = session('capacity_back', $defaultBack);
-
-        return view('z6-capacity', compact('capacity', 'debitur', 'infoUsaha', 'tanah', 'backRoute')); 
+        return view('z3-muk', compact('debitur', 'data', 'backRoute')); 
     }
 
-    public function storeAlur6(Request $request)
+    public function storeAlur3(Request $request)
     {
         // PENGAMAN: Jika debitur_id dari form kosong, ambil dari session. Jika session kosong, paksa ke ID 1.
         $debiturId = $request->debitur_id ?? session('debitur_id', 1);
@@ -740,72 +220,74 @@ class SurveiController extends Controller
         // Simpan debitur_id ke session
         session(['debitur_id' => $debiturId]);
 
-        // 1. Validasi input (DIAMANKAN: Hapus 'exists:debiturs,id' & ubah numeric ke string agar bebas dari error titik/koma format rupiah)
+        // 1. Validasi input form Informasi Usaha
         $request->validate([
-            'deskripsi_usaha' => 'required|string',
-            'informasi_penghasilan_utama' => 'required|string',
-            'informasi_penghasilan_pendukung' => 'nullable|string',
-            'pengeluaran_rumah_tangga' => 'required', 
-            'angsuran_bank_lain' => 'required',
-            'angsuran_bpr' => 'required',
-            'analisis_kapasitas' => 'required|string',
-            'file_mutasi_rekening' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240', 
-            'kelengkapan_berkas' => 'nullable|array',
-            'berkas_lainnya_detail' => 'nullable|string',
+            'gambaran_pekerjaan_debitur1'   => 'required|string',
+            'perhitungan_omset_usaha1'      => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
+            'gambaran_pekerjaan_debitur2'   => 'required|string',
+            'perhitungan_omset_usaha2'      => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
+            'gambaran_pekerjaan_debitur3'   => 'required|string',
+            'perhitungan_omset_usaha3'      => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
+            'usaha_pendukung1'              => 'required|string',
+            'perhitungan_omset_pendukung1'  => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
+            'usaha_pendukung2'              => 'required|string',
+            'perhitungan_omset_pendukung2'  => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
+            'usaha_pendukung3'              => 'required|string',
+            'perhitungan_omset_pendukung3'  => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
         ]);
 
         DB::beginTransaction();
         try {
-            // 2. Ambil data lama jika ada untuk pengecekan file mutasi rekening
-            $capacity = Capacity::where('debitur_id', $debiturId)->first();
-            $filePath = $capacity ? $capacity->mutasi_rekening : null;
+            // 2. Ambil data lama jika ada untuk pengecekan file yang sudah diunggah sebelumnya
+            $infoUsaha = InformasiUsaha::where('debitur_id', $debiturId)->first();
 
-            // 3. Handle Upload File Mutasi Rekening baru jika diunggah
-            if ($request->hasFile('file_mutasi_rekening')) {
-                if ($filePath && \Storage::disk('public')->exists($filePath)) {
-                    \Storage::disk('public')->delete($filePath);
+            // Daftar file yang akan di-handle
+            $fileFields = [
+                'perhitungan_omset_usaha1',
+                'perhitungan_omset_usaha2',
+                'perhitungan_omset_usaha3',
+                'perhitungan_omset_pendukung1',
+                'perhitungan_omset_pendukung2',
+                'perhitungan_omset_pendukung3',
+            ];
+
+            $updateData = [
+                'debitur_id'                  => $debiturId,
+                'gambaran_pekerjaan_debitur1' => $request->gambaran_pekerjaan_debitur1,
+                'gambaran_pekerjaan_debitur2' => $request->gambaran_pekerjaan_debitur2,
+                'gambaran_pekerjaan_debitur3' => $request->gambaran_pekerjaan_debitur3,
+                'usaha_pendukung1'            => $request->usaha_pendukung1,
+                'usaha_pendukung2'            => $request->usaha_pendukung2,
+                'usaha_pendukung3'            => $request->usaha_pendukung3,
+            ];
+
+            // 3. Loop untuk menangani upload file satu per satu secara dinamis & aman
+            foreach ($fileFields as $field) {
+                $oldPath = $infoUsaha ? $infoUsaha->$field : null;
+
+                if ($request->hasFile($field)) {
+                    // Hapus file lama jika ada di storage
+                    if ($oldPath && \Storage::disk('public')->exists($oldPath)) {
+                        \Storage::disk('public')->delete($oldPath);
+                    }
+                    // Simpan file baru ke folder 'informasi_usaha'
+                    $updateData[$field] = $request->file($field)->store('informasi_usaha', 'public');
+                } else {
+                    // Jika tidak mengunggah file baru, pertahankan file lama yang sudah ada di database
+                    $updateData[$field] = $oldPath;
                 }
-                $filePath = $request->file('file_mutasi_rekening')->store('mutasi_rekening', 'public');
             }
 
-            // 4. Handle Kelengkapan Berkas & Format "Yang Lain"
-            $berkas = $request->input('kelengkapan_berkas', []);
-            if (in_array('yang_lain', $berkas) && $request->filled('berkas_lainnya_detail')) {
-                $berkas = array_map(function($item) use ($request) {
-                    return $item === 'yang_lain' ? 'Lainnya: ' . $request->input('berkas_lainnya_detail') : $item;
-                }, $berkas);
-            }
-
-            // 5. Bersihkan format angka (hapus titik/koma rupiah sebelum masuk database)
-            $cleanNumber = function($value) {
-                $clean = preg_replace('/[^\d]/', '', $value);
-                return $clean === '' ? 0 : $clean;
-            };
-
-            $pengeluaran = $cleanNumber($request->pengeluaran_rumah_tangga);
-            $angsuranLain = $cleanNumber($request->angsuran_bank_lain);
-            $angsuranBpr = $cleanNumber($request->angsuran_bpr);
-
-            // 6. Simpan atau perbarui data menggunakan updateOrCreate
-            Capacity::updateOrCreate(
+            // 4. Simpan atau perbarui data menggunakan updateOrCreate
+            InformasiUsaha::updateOrCreate(
                 ['debitur_id' => $debiturId],
-                [
-                    'deskripsi_usaha' => $request->deskripsi_usaha,
-                    'informasi_penghasilan_utama' => $request->informasi_penghasilan_utama,
-                    'informasi_penghasilan_pendukung' => $request->informasi_penghasilan_pendukung,
-                    'pengeluaran_rumah_tangga' => $pengeluaran,
-                    'angsuran_bank_lain' => $angsuranLain,
-                    'angsuran_bpr' => $angsuranBpr,
-                    'analisis_kapasitas' => $request->analisis_kapasital ?? $request->analisis_kapasitas,
-                    'mutasi_rekening' => $filePath, 
-                    'kelengkapan_berkas' => $berkas,
-                ]
+                $updateData
             );
 
             DB::commit();
 
-            // Arahkan ke rute berikutnya
-            return redirect()->route('z7-dataslik')->with('success', 'Data Capacity berhasil disimpan.');
+            // Arahkan ke rute berikutnya (sesuaikan dengan rute step selanjutnya, misal z4 atau step berikutnya)
+            return redirect()->route('z4-muk')->with('success', 'Informasi Usaha berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
@@ -813,10 +295,10 @@ class SurveiController extends Controller
     }
 
     // ==========================================
-    // DATA SLIK
+    // URAIAN SINGKAT MENGENAI 5 C
     // ==========================================
 
-    public function createAlur7()
+    public function createAlur4()
     {
         // PENGAMAN: Deteksi ID dari session, jika kosong paksa ke ID 1
         $debiturId = session('debitur_id');
@@ -826,52 +308,67 @@ class SurveiController extends Controller
             session(['debitur_id' => $debiturId]);
         }
 
-        $dataslik = DataSlik::where('debitur_id', $debiturId)->first();
+        $data = \App\Models\Muk\LimaC::where('debitur_id', $debiturId)->first();
         $debitur = \App\Models\Debitur::find($debiturId);
 
-        // Atur tombol kembali secara pasti ke halaman Capacity (z6)
-        $backRoute = route('z6-capacity');
+        // Atur tombol kembali secara pasti ke halaman sebelumnya (z3-muk)
+        $backRoute = route('z3-muk');
 
-        return view('z7-dataslik', compact('dataslik', 'debitur', 'backRoute')); 
+        return view('z4-muk', compact('data', 'debitur', 'backRoute')); 
     }
 
-    public function storeAlur7(Request $request)
+    public function storeAlur4(Request $request)
     {
         // PENGAMAN: Ambil ID dari request form, fallback ke session, terakhir ke ID 1
         $debiturId = $request->debitur_id ?? session('debitur_id', 1);
 
-        // 1. Validasi input (HAPUS 'exists:debiturs,id' agar tidak rewel, izinkan dwg/pdf/img)
+        // 1. Validasi input sesuai dengan field di form HTML dan migrasi 'limac'
         $request->validate([
-            'file_slik' => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240', 
-            'analisis_slik' => 'required|string',
+            'capital' => 'required|string',
+            'collateral' => 'required|string',
+            'ringkasan_penilaian_jaminan' => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240', 
+            'tanggal' => 'required|string',
+            'info_harga_tanah1' => 'required|string',
+            'info_harga_tanah2' => 'required|string',
+            'info_harga_tanah3' => 'required|string',
+            'batas_objek_jaminan' => 'required|string',
+            'catatan_khusus' => 'required|string',
         ]);
 
         DB::beginTransaction();
         try {
-            // 2. Ambil data lama jika ada untuk pengecekan file
-            $dataslik = DataSlik::where('debitur_id', $debiturId)->first();
-            $filePath = $dataslik ? $dataslik->file_slik : null;
+            // 2. Ambil data lama jika ada untuk pengecekan file jaminan
+            $data = \App\Models\Muk\LimaC::where('debitur_id', $debiturId)->first();
+            $filePath = $data ? $data->ringkasan_penilaian_jaminan : null;
 
-            // 3. Handle Upload File SLIK baru jika diunggah
-            if ($request->hasFile('file_slik')) {
+            // 3. Handle Upload File Ringkasan Penilaian Jaminan baru jika diunggah
+            if ($request->hasFile('ringkasan_penilaian_jaminan')) {
                 if ($filePath && \Storage::disk('public')->exists($filePath)) {
                     \Storage::disk('public')->delete($filePath);
                 }
-                $filePath = $request->file('file_slik')->store('slik_ojk', 'public');
+                $filePath = $request->file('ringkasan_penilaian_jaminan')->store('penilaian_jaminan', 'public');
             }
 
-            // 4. Simpan atau perbarui data menggunakan updateOrCreate
-            DataSlik::updateOrCreate(
+            // 4. Simpan atau perbarui data menggunakan updateOrCreate ke model LimaC
+            \App\Models\Muk\LimaC::updateOrCreate(
                 ['debitur_id' => $debiturId],
                 [
-                    'file_slik' => $filePath,
-                    'analisis_slik' => $request->analisis_slik,
+                    'capital' => $request->capital,
+                    'collateral' => $request->collateral,
+                    'ringkasan_penilaian_jaminan' => $filePath,
+                    'tanggal' => $request->tanggal,
+                    'info_harga_tanah1' => $request->info_harga_tanah1,
+                    'info_harga_tanah2' => $request->info_harga_tanah2,
+                    'info_harga_tanah3' => $request->info_harga_tanah3,
+                    'batas_objek_jaminan' => $request->batas_objek_jaminan,
+                    'catatan_khusus' => $request->catatan_khusus,
                 ]
             );
 
             DB::commit();
 
-            return redirect()->route('z8-capital')->with('success', 'Data SLIK berhasil disimpan.');
+            // 5. Redirect ke route berikutnya (z5-muk)
+            return redirect()->route('z5-muk')->with('success', 'Data 5C (Capital & Collateral) berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
@@ -1645,6 +1142,7 @@ class SurveiController extends Controller
         }
     }
 
+    
     // ==========================================
     // RIWAYAT
     // ==========================================
@@ -1655,7 +1153,7 @@ class SurveiController extends Controller
         $dataDebitur = \App\Models\Debitur::latest()->get(); 
 
         // Tab 2: Mengambil data Survei CA (Model dari folder Survei)
-        $dataSurveiCa = \App\Models\Survei\Debitur::latest()->get(); 
+        $dataSurveiCa = \App\Models\Muk\Debitur::latest()->get(); 
 
         // Kirim kedua variabel ke file blade riwayat
         return view('riwayat', compact('dataDebitur', 'dataSurveiCa'));
@@ -1676,12 +1174,6 @@ class SurveiController extends Controller
     public function show($id)
     {
         $data = Debitur::with([
-            'agunans',            
-            'agunan_kendaraan',
-            'agunan_logam',
-            'agunan_simpanan',
-            'agunan_tanah',
-            'yang_lain',
             'analisis_jaminan',
             'badanusaha',
             'berkas_lengkap',      

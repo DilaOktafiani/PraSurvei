@@ -87,7 +87,7 @@
                             <tr class="bg-[#0A3370] text-white uppercase tracking-wider">
                                 <th class="py-4 px-6">No</th>
                                 <th class="py-4 px-6">No. Register</th>
-                                <th class="py-4 px-6">Nama Nasabah</th>
+                                <th class="py-4 px-6">Nama Debitur</th>
                                 <th class="py-4 px-6">Jenis Usaha</th>
                                 <th class="py-4 px-6">Plafon Pengajuan</th>
                                 <th class="py-4 px-6 text-center">Aksi</th>
@@ -151,9 +151,9 @@
                             <tr class="bg-[#0A3370] text-white uppercase tracking-wider">
                                 <th class="py-4 px-6">No</th>
                                 <th class="py-4 px-6">No. Register</th>
-                                <th class="py-4 px-6">Nama Nasabah</th>
-                                <th class="py-4 px-6">Plafon</th>
-                                <th class="py-4 px-6">Jangka Waktu</th>
+                                <th class="py-4 px-6">Nama Debitur</th>
+                                <th class="py-4 px-6">Bidang Usaha</th>
+                                <th class="py-4 px-6">Telp / HP</th>
                                 <th class="py-4 px-6 text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -164,8 +164,8 @@
                                 <td class="py-4 px-6">{{ $loop->iteration }}</td>
                                 <td class="py-4 px-6 font-medium text-gray-900">{{ $ca->no_register ?? '-' }}</td>
                                 <td class="py-4 px-6 font-medium text-gray-900">{{ $ca->nama ?? '-' }}</td>
-                                <td class="py-4 px-6 font-semibold text-emerald-700">Rp {{ number_format($ca->plafon ?? 0, 0, ',', '.') }}</td>
-                                <td class="py-4 px-6">{{ $ca->jangka_waktu ?? '-' }}</td>
+                                <td class="py-4 px-6 font-medium text-gray-900">{{ $ca->bidang_usaha ?? '-' }}</td>
+                                <td class="py-4 px-6">{{ $ca->no_hp ?? '-' }}</td>
                                 <td class="py-4 px-6 text-center">
                                     <!-- Tombol dengan padding lebih luas agar tidak terlihat rancu -->
                                     <a href="{{ route('riwayat.detail2', $ca->id) }}" class="group relative inline-flex items-center gap-2.5 px-5 py-2 text-sm font-semibold text-[#0A3370] bg-blue-50/80 hover:bg-gradient-to-r hover:from-[#0A3370] hover:via-[#0082CB] hover:to-[#38BDF8] hover:text-white rounded-lg border border-blue-200/60 shadow-xs hover:shadow-md transition-all duration-300">

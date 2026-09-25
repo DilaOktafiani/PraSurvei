@@ -64,13 +64,13 @@ return [
             ]) : [],
         ],
 
-        // 👇 KONEKSI DATABASE KEDUA ('survei') DITAMBAHKAN DI SINI 👇
-        'survei' => [
+        // 👇 KONEKSI DATABASE KEDUA ('muk') DITAMBAHKAN DI SINI 👇
+        'muk' => [
             'driver' => 'mysql',
             'url' => env('DB_URL'),
             'host' => env('DB_HOST_SURVEI', '127.0.0.1'),
             'port' => env('DB_PORT_SURVEI', '3306'),
-            'database' => env('DB_DATABASE_SURVEI', 'survei'),
+            'database' => env('DB_DATABASE_SURVEI', 'muk'),
             'username' => env('DB_USERNAME_SURVEI', 'root'),
             'password' => env('DB_PASSWORD_SURVEI', ''),
             'unix_socket' => env('DB_SOCKET', ''),
@@ -81,7 +81,7 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 

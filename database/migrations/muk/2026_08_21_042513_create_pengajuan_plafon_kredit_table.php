@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('analisis_jaminan', function (Blueprint $table) {
+        Schema::create('pengajuan_plafon_kredit', function (Blueprint $table) {
             $table->id();
             $table->foreignId('debitur_id')->constrained('debiturs')->onDelete('cascade');
-            $table->text('analisis_jaminan')->nullable();
+            $table->string('pengajuan_plafon_kredit', 300)->nullable();
+            $table->text('tujuan_penggunaan');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('analisis_jaminan');
+        Schema::dropIfExists('pengajuan_plafon_kredit');
     }
 };

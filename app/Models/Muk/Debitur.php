@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Survei;
+namespace App\Models\Muk;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -8,54 +8,31 @@ use Illuminate\Database\Eloquent\Model;
 class Debitur extends Model
 {
     use HasFactory;
-    protected $connection = 'survei';
+
+    protected $connection = 'muk';
 
     protected $table = 'debiturs';
     
     protected $fillable = [
         'no_register',
         'nama',
-        'temuan_ca',
-        'plafon',
-        'tujuan_penggunaan',
-        'jangka_waktu',
-        'estimasi_kewajiban',
-        'tipe_fasilitas',
+        'tempat_tanggal_lahir',
+        'nama_ibu_kandung',
+        'nama_istri_penjamin',
+        'alamat_ktp',
+        'alamat_domisili',
+        'no_hp',
+        'pekerjaan',
+        'bidang_usaha',
+        'alamat_usaha',
+        'kontak',
+        'idi_di_bank_lain',
+        'keterangan',
     ];
 
     protected $casts = [
-        'tipe_fasilitas' => 'array',
+        // 'tipe_fasilitas' => 'array', // Aktifkan jika kolom ini ada di database
     ];
-
-    public function agunans()
-    {
-        return $this->hasMany(Agunan::class, 'debitur_id', 'id');
-    }
-    
-    public function agunan_kendaraan()
-    {
-        return $this->hasManyThrough(AgunanKendaraan::class, Agunan::class, 'debitur_id', 'agunan_id', 'id', 'id');
-    }
-
-    public function agunan_logam()
-    {
-        return $this->hasManyThrough(AgunanLogam::class, Agunan::class, 'debitur_id', 'agunan_id', 'id', 'id');
-    }
-
-    public function agunan_simpanan()
-    {
-        return $this->hasManyThrough(AgunanSimpanan::class, Agunan::class, 'debitur_id', 'agunan_id', 'id', 'id');
-    }
-
-    public function agunan_tanah()
-    {
-        return $this->hasManyThrough(AgunanTanah::class, Agunan::class, 'debitur_id', 'agunan_id', 'id', 'id');
-    }
-
-    public function yang_lain()
-    {
-        return $this->hasManyThrough(YangLain::class, Agunan::class, 'debitur_id', 'agunan_id', 'id', 'id');
-    }
 
     public function analisis_jaminan()
     {

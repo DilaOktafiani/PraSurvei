@@ -140,7 +140,7 @@
                     <p class="text-gray-500 text-[15px] mb-8 leading-relaxed">Ringkasan dan rekomendasi putusan kredit oleh analis.</p>
                 </div>
                 <!-- Tombol Utama -->
-                <a href="{{ route('z1-surveica', ['new' => 'true']) }}" class="block text-center bg-[#0A3370] text-white font-semibold py-3 rounded-lg hover:bg-[#062452] transition shadow-md text-[16px]">
+                <a href="{{ route('z1-muk', ['new' => 'true']) }}" class="block text-center bg-[#0A3370] text-white font-semibold py-3 rounded-lg hover:bg-[#062452] transition shadow-md text-[16px]">
                     Isi Formulir MUK
                 </a>
             </div>

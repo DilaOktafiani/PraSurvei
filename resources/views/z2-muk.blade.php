@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Credit Analys - PT BPR Adipura Santosa</title>
+    <title>Form Credit Analysis - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SweetAlert2 -->
@@ -32,8 +32,8 @@
         <div class="bg-white rounded-lg shadow-sm border-t-8 border-[#0082CB] border-x border-b border-gray-200 p-6 mb-6">
             <div class="flex justify-between items-start gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Form Credit Analys</h2>
-                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan hasil analisis lapangan untuk penentuan kelayakan akhir nasabah.</p>
+                    <h2 class="text-2xl font-bold text-gray-800">Form Memo Usulan Kredit (MUK)</h2>
+                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan data di bawah ini untuk melengkapi Memo Usulan Kredit (MUK) nasabah.</p>
                 </div>
             </div>
             <p class="text-xs text-red-500 mt-4 font-medium flex items-center gap-1 border-t border-gray-100 pt-3">
@@ -41,32 +41,46 @@
             </p>
         </div>
 
-        <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeAlur7') }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>    
+        @if ($errors->any())
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 text-red-500 font-bold mr-2">&#9888;</div>
+                    <h3 class="text-sm font-bold text-red-800">Ada beberapa kesalahan pada inputan Anda:</h3>
+                </div>
+                <ul class="mt-2 list-disc list-inside text-xs text-red-700 space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <!-- FORM UTAMA (Ditambah enctype agar bisa upload file) -->
+        <form id="formPraSurvei" action="{{ route('storeAlur2') }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>
             @csrf
 
-            <!-- Input tersembunyi untuk debitur_id -->
-            <input type="hidden" name="debitur_id" value="{{ session('debitur_id') ?? ($debitur->id ?? '') }}">
+            <!-- PENTING: Hidden input untuk mengirim debitur_id -->
+            <input type="hidden" name="debitur_id" value="{{ session('debitur_id') }}">
 
-            <!-- DATA SLIK -->
+            <!-- B. PENGAJUAN PLAFON KREDIT -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">DATA SLIK</h3>
-                <p class="text-xs text-gray-500 mt-0.5">Isikan Data Hasil SLIK OJK</p>
+                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">B. PENGAJUAN PLAFON KREDIT</h3>
 
-                <!-- Upload Data SLIK -->
+                <!-- Perhitungan Pengajuan Plafon Kredit -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Upload Data SLIK <span class="text-red-500"></span></label>
-                    <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Pengajuan Plafon Kredit <span class="text-red-500">*</span></label>
+                    <div id="container_file_plafon" class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                        <input type="file" id="file_slik" name="file_slik" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this)">
-                        <button type="button" onclick="document.getElementById('file_slik').click()" 
+                        <!-- Nama input disamakan dengan validasi controller: pengajuan_plafon_kredit -->
+                        <input type="file" id="file_plafon" name="pengajuan_plafon_kredit" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this)">
+                        <button type="button" onclick="document.getElementById('file_plafon').click()" 
                                 class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
                             <span id="txt_btn_upload">Tambahkan file</span>
                         </button>
 
-                        @if(isset($dataslik->file_slik) && $dataslik->file_slik)
+                        @if(isset($data->pengajuan_plafon_kredit) && $data->pengajuan_plafon_kredit)
                             <div id="file_preview" class="mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                                <span id="file_name" class="truncate font-medium">{{ basename($dataslik->file_slik) }}</span>
+                                <span id="file_name" class="truncate font-medium">{{ basename($data->pengajuan_plafon_kredit) }}</span>
                                 <button type="button" onclick="removeFile()" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
                             </div>
                         @else
@@ -77,24 +91,23 @@
                         @endif
                     </div>
                 </div>
-                
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Analisis SLIK <span class="text-red-500">*</span>
+                        Tujuan Penggunaan <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="analisis_slik" rows="6" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('analisis_slik', $dataslik->analisis_slik ?? '') }}</textarea>
+                    <textarea id="tujuan_penggunaan" name="tujuan_penggunaan" rows="6" placeholder="" required
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('tujuan_penggunaan', $data->tujuan_penggunaan ?? '') }}</textarea>
                 </div>
             </div>
 
             <!-- TOMBOL AKSI NAVIGASI -->
             <div class="flex justify-between items-center pt-2">
-                <button type="reset" 
-                        class="text-[#0A3370] text-sm font-semibold hover:underline transition focus:outline-none">
+                <button type="reset" class="text-[#0A3370] text-sm font-semibold hover:underline transition focus:outline-none">
                     Kosongkan Form
                 </button>
                 <div class="flex items-center gap-3">  
-                    <a href="{{ $backRoute }}" 
+                    <a href="{{ $backRoute ?? '#' }}" 
                             class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                         Kembali
                     </a>
@@ -111,50 +124,40 @@
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
 
-    <!-- SCRIPT JAVASCRIPT UNTUK PREVIEW FILE -->
-    <script>
-        function handleFileSelect(input) {
-            if (input.files && input.files[0]) {
-                const fileName = input.files[0].name;
-                const previewDiv = document.getElementById('file_preview');
-                const fileNameSpan = document.getElementById('file_name');
-                const btnText = document.getElementById('txt_btn_upload');
-
-                fileNameSpan.textContent = fileName;
-                previewDiv.classList.remove('hidden');
-                btnText.textContent = 'Ganti file';
-            }
+<script>
+    // Fungsi untuk menghandle preview file yang dipilih
+    function handleFileSelect(input) {
+        if (input.files && input.files[0]) {
+            const fileName = input.files[0].name;
+            document.getElementById('file_name').textContent = fileName;
+            document.getElementById('file_preview').classList.remove('hidden');
+            document.getElementById('txt_btn_upload').textContent = 'Ganti file';
         }
+    }
 
-        function removeFile() {
-            const input = document.getElementById('file_slik');
-            const previewDiv = document.getElementById('file_preview');
-            const fileNameSpan = document.getElementById('file_name');
-            const btnText = document.getElementById('txt_btn_upload');
+    // Fungsi untuk menghapus file yang dipilih
+    function removeFile() {
+        const fileInput = document.getElementById('file_plafon');
+        fileInput.value = '';
+        document.getElementById('file_preview').classList.add('hidden');
+        document.getElementById('txt_btn_upload').textContent = 'Tambahkan file';
+    }
 
-            input.value = '';
-            fileNameSpan.textContent = '';
-            previewDiv.classList.add('hidden');
-            btnText.textContent = 'Tambahkan file';
-        }
-    </script>
-
-    <script>
-    // Ubah event tombol submit form khusus untuk form SLIK ini
     const formPraSurvei = document.getElementById('formPraSurvei');
+    const tujuanPenggunaan = document.getElementById('tujuan_penggunaan');
+
     formPraSurvei.addEventListener('submit', function(event) {
-        const analisisSlikInput = formPraSurvei.querySelector('textarea[name="analisis_slik"]');
+        event.preventDefault(); // Mencegah form langsung submit
         
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
-        // Hanya validasi kolom Analisis SLIK saja yang wajib diisi
-        if (analisisSlikInput.value.trim() === '') {
+        // Validasi Textarea Tujuan Penggunaan
+        if (!tujuanPenggunaan.value.trim()) {
             isValid = false;
         }
 
         if (!isValid) {
-            event.preventDefault(); // Mencegah form submit jika tidak valid
             Swal.fire({
                 icon: 'warning',
                 title: 'Peringatan',
@@ -167,8 +170,9 @@
                     confirmButton: 'swal2-tight-btn'
                 }
             });
+        } else {
+            formPraSurvei.submit(); 
         }
-        // Jika valid, form akan langsung melakukan submit secara normal ke server meskipun file kosong
     });
 </script>
 

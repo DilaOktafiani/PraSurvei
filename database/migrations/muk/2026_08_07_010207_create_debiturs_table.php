@@ -15,12 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('no_register');
             $table->string('nama');
-            $table->string('temuan_ca');
-            $table->decimal('plafon', 15, 2);
-            $table->text('tujuan_penggunaan');
-            $table->string('jangka_waktu');
-            $table->decimal('estimasi_kewajiban', 15, 2);
-            $table->json('tipe_fasilitas');
+            $table->string('tempat_tanggal_lahir');
+            $table->string('nama_ibu_kandung');
+            $table->string('nama_istri_penjamin');
+            $table->text('alamat_ktp');
+            $table->text('alamat_domisili');
+            $table->string('no_hp');
+            $table->string('pekerjaan');
+            $table->string('bidang_usaha');
+            $table->text('alamat_usaha');
+            $table->string('kontak');
+            $table->string('idi_di_bank_lain', 300)->nullable();
+            $table->text('keterangan');
             $table->timestamps();
         });
     }

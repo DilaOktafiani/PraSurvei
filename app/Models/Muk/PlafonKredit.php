@@ -1,20 +1,21 @@
 <?php
 
-namespace App\Models\Survei;
+namespace App\Models\Muk;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AnalisisJaminan extends Model
+class PlafonKredit extends Model
 {
     use HasFactory;
-    protected $connection = 'survei';
+    protected $connection = 'muk';
 
-    protected $table = 'analisis_jaminan';
+    protected $table = 'pengajuan_plafon_kredit';
 
     protected $fillable = [
         'debitur_id',
-        'analisis_jaminan',
+        'pengajuan_plafon_kredit',
+        'tujuan_penggunaan',
     ];
 
     // Relasi ke model Debitur
