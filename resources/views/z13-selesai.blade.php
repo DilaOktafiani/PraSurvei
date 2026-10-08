@@ -32,14 +32,28 @@
         <div class="bg-white rounded-lg shadow-sm border-t-8 border-[#0082CB] border-x border-b border-gray-200 p-6 mb-6">
             <div class="flex justify-between items-start gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Form Credit Analys</h2>
-                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan hasil analisis lapangan untuk penentuan kelayakan akhir nasabah.</p>
+                    <h2 class="text-2xl font-bold text-gray-800">Form Memo Usulan Kredit (MUK)</h2>
+                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan data di bawah ini untuk melengkapi Memo Usulan Kredit (MUK) nasabah.</p>
                 </div>
             </div>
         </div>
 
-        <!-- FORM DENGAN ID formPraSurvei -->
-        <form id="formPraSurvei" action="{{ route('storeAlur18') }}" method="POST" class="space-y-6">
+        @if ($errors->any())
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 text-red-500 font-bold mr-2">&#9888;</div>
+                    <h3 class="text-sm font-bold text-red-800">Ada beberapa kesalahan pada inputan Anda:</h3>
+                </div>
+                <ul class="mt-2 list-disc list-inside text-xs text-red-700 space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <!-- FORM UTAMA -->
+        <form id="formPraSurvei" action="{{ route('storeAlur13') }}" method="POST" class="space-y-6">
             @csrf
             
             <input type="hidden" name="debitur_id" value="{{ $debitur_id }}">

@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('takeover', function (Blueprint $table) {
+        Schema::create('kesimpulan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('debitur_id')->constrained('debiturs')->onDelete('cascade');
-            $table->enum('apakah_kredit_take_over', ['YA', 'TIDAK']); 
+            $table->text('kesimpulan');
+            $table->string('plafon', 300)->nullable();
+            $table->text('provisi');
+            $table->text('biaya_administrasi');
+            $table->text('jaminan');
+            $table->text('blokir');
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('takeover');
+        Schema::dropIfExists('kesimpulan');
     }
 };

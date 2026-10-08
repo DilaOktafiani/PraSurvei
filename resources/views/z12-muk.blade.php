@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Credit Analysis - PT BPR Adipura Santosa</title>
+    <title>Form Credit Analys - PT BPR Adipura Santosa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SweetAlert2 -->
@@ -55,65 +55,56 @@
             </div>
         @endif
 
-        <!-- FORM UTAMA (Ditambah enctype agar bisa upload file) -->
-        <form id="formPraSurvei" action="{{ route('storeAlur2') }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>
-            @csrf
+        <!-- FORM UTAMA -->
+        <form id="formPraSurvei" action="{{ route('storeAlur12') }}" method="POST" enctype="multipart/form-data" class="space-y-6" novalidate>
+            @csrf <!-- Security Token Laravel -->
 
-            <!-- PENTING: Hidden input untuk mengirim debitur_id -->
-            <input type="hidden" name="debitur_id" value="{{ session('debitur_id') }}">
+            <!-- Hidden Input Debitur ID (Wajib agar terhubung dengan tabel debitur) -->
+            <input type="hidden" name="debitur_id" value="{{ $debitur->id ?? session('debitur_id') }}">
 
-            <!-- B. PENGAJUAN PLAFON KREDIT -->
+            <!-- DENAH JAMINAN -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">B. PENGAJUAN PLAFON KREDIT</h3>
+                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">DENAH JAMINAN</h3>
 
-                <!-- Perhitungan Pengajuan Plafon Kredit -->
+                <!-- Denah Jaminan -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Pengajuan Plafon Kredit <span class="text-red-500">*</span></label>
-                    <div id="container_file_plafon" class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Denah Jaminan <span class="text-red-500">*</span>
+                    </label>
+                    <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
                         
-                        <!-- MODIFIKASI DI SINI: required dibuat dinamis & ditambahkan data-has-file -->
-                        <input type="file" id="file_plafon" name="pengajuan_plafon_kredit" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this)"
-                            {{ isset($data->pengajuan_plafon_kredit) && $data->pengajuan_plafon_kredit ? '' : 'required' }}
-                            data-has-file="{{ isset($data->pengajuan_plafon_kredit) && $data->pengajuan_plafon_kredit ? 'true' : 'false' }}">
+                        <!-- Input File -->
+                        <input type="file" id="file_denah_jaminan" name="denah_jaminan" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this)"
+                            data-has-file="{{ isset($data->denah_jaminan) && $data->denah_jaminan ? 'true' : 'false' }}">
 
-                        <button type="button" onclick="document.getElementById('file_plafon').click()" 
+                        <!-- Tombol Pilih File -->
+                        <button type="button" onclick="document.getElementById('file_denah_jaminan').click()" 
                             class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
                             <span id="txt_btn_upload">
-                                {{ isset($data->pengajuan_plafon_kredit) && $data->pengajuan_plafon_kredit ? 'Ganti file' : 'Tambahkan file' }}
+                                {{ isset($data->denah_jaminan) && $data->denah_jaminan ? 'Ganti file' : 'Tambahkan file' }}
                             </span>
                         </button>
 
-                        @if(isset($data->pengajuan_plafon_kredit) && $data->pengajuan_plafon_kredit)
-                            <div id="file_preview" class="mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                                <span id="file_name" class="truncate font-medium">{{ basename($data->pengajuan_plafon_kredit) }}</span>
-                                <button type="button" onclick="removeFile()" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
-                            </div>
-                        @else
-                            <div id="file_preview" class="hidden mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                                <span id="file_name" class="truncate font-medium"></span>
-                                <button type="button" onclick="removeFile()" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
-                            </div>
-                        @endif
+                        <!-- Preview File -->
+                        <div id="file_preview" class="{{ isset($data->denah_jaminan) && $data->denah_jaminan ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
+                            <span id="file_name" class="truncate font-medium">
+                                {{ isset($data->denah_jaminan) && $data->denah_jaminan ? basename($data->denah_jaminan) : '' }}
+                            </span>
+                            <button type="button" onclick="removeFile()" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
+                        </div>
                     </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Tujuan Penggunaan <span class="text-red-500">*</span>
-                    </label>
-                    <textarea id="tujuan_penggunaan" name="tujuan_penggunaan" rows="6" placeholder="" required
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('tujuan_penggunaan', $data->tujuan_penggunaan ?? '') }}</textarea>
                 </div>
             </div>
 
             <!-- TOMBOL AKSI NAVIGASI -->
             <div class="flex justify-between items-center pt-2">
-                <button type="reset" class="text-[#0A3370] text-sm font-semibold hover:underline transition focus:outline-none">
+                <button type="reset" 
+                        class="text-[#0A3370] text-sm font-semibold hover:underline transition focus:outline-none">
                     Kosongkan Form
                 </button>
                 <div class="flex items-center gap-3">  
-                    <a href="{{ $backRoute ?? '#' }}" 
+                    <a href="{{ $backRoute }}" 
                             class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                         Kembali
                     </a>
@@ -131,64 +122,115 @@
     </footer>
 
 <script>
-    // Fungsi untuk menghandle preview file yang dipilih
+    // =========================================================
+    // HANDLE PILIH FILE
+    // =========================================================
     function handleFileSelect(input) {
         if (input.files && input.files[0]) {
-            const fileName = input.files[0].name;
+            const file = input.files[0];
+            const maxSize = 10 * 1024 * 1024; // 10 MB
+
+            // Validasi Ukuran
+            if (file.size > maxSize) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Ukuran File Terlalu Besar',
+                    text: 'Ukuran file Denah Jaminan maksimal 10 MB.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#0082CB',
+                    heightAuto: false
+                });
+                input.value = '';
+                return;
+            }
+
+            // Validasi Ekstensi
+            const allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png', 'dwg'];
+            const fileName = file.name;
+            const fileExtension = fileName.split('.').pop().toLowerCase();
+
+            if (!allowedExtensions.includes(fileExtension)) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Format File Tidak Didukung',
+                    text: 'Denah Jaminan hanya dapat berupa PDF, JPG, JPEG, PNG, atau DWG.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#0082CB',
+                    heightAuto: false
+                });
+                input.value = '';
+                return;
+            }
+
+            // Tampilkan nama file di preview
             document.getElementById('file_name').textContent = fileName;
+
+            // Munculkan kotak preview
             document.getElementById('file_preview').classList.remove('hidden');
+
+            // Ubah teks tombol jadi "Ganti file"
             document.getElementById('txt_btn_upload').textContent = 'Ganti file';
+
+            // Tandai bahwa file baru sudah dipilih
+            input.setAttribute('data-has-file', 'true');
         }
     }
 
-    // Fungsi untuk menghapus file yang dipilih
+    // =========================================================
+    // HAPUS FILE
+    // =========================================================
     function removeFile() {
-        const fileInput = document.getElementById('file_plafon');
-        fileInput.value = ''; // Reset nilai input file
-        document.getElementById('file_preview').classList.add('hidden'); // Sembunyikan preview
-        document.getElementById('txt_btn_upload').textContent = 'Tambahkan file'; // Kembalikan teks tombol
+        const fileInput = document.getElementById('file_denah_jaminan');
+
+        // Kosongkan nilai input file
+        fileInput.value = '';
+        fileInput.setAttribute('data-has-file', 'false');
+
+        // Kosongkan nama file dan sembunyikan preview
+        document.getElementById('file_name').textContent = '';
+        document.getElementById('file_preview').classList.add('hidden');
+
+        // Kembalikan teks tombol
+        document.getElementById('txt_btn_upload').textContent = 'Tambahkan file';
     }
 
+    // =========================================================
+    // VALIDASI SAAT SUBMIT FORM
+    // =========================================================
     const formPraSurvei = document.getElementById('formPraSurvei');
-    const tujuanPenggunaan = document.getElementById('tujuan_penggunaan');
-    const filePlafon = document.getElementById('file_plafon');
-    const filePreview = document.getElementById('file_preview');
 
-    formPraSurvei.addEventListener('submit', function(event) {
-        event.preventDefault(); // Mencegah form langsung submit
-        
-        let isValid = true;
-        let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+    if (formPraSurvei) {
+        formPraSurvei.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-        // 1. Validasi Textarea Tujuan Penggunaan
-        if (!tujuanPenggunaan.value.trim()) {
-            isValid = false;
-        }
+            const fileInput = document.getElementById('file_denah_jaminan');
+            const hasNewFile = fileInput.files && fileInput.files.length > 0;
+            const hasOldFile = fileInput.getAttribute('data-has-file') === 'true';
 
-        // 2. Validasi File Pengajuan Plafon Kredit
-        // File dianggap kosong jika: belum pilih file BARU DAN preview-nya sedang tersembunyi (tidak ada file lama dari database)
-        const isFilePreviewVisible = !filePreview.classList.contains('hidden');
-        if (filePlafon.files.length === 0 && !isFilePreviewVisible) {
-            isValid = false;
-        }
+            let isValid = true;
 
-        if (!isValid) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Peringatan',
-                text: errorMessage,
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#0082CB',
-                heightAuto: false,
-                customClass: {
-                    popup: 'swal2-tight-popup',
-                    confirmButton: 'swal2-tight-btn'
-                }
-            });
-        } else {
-            formPraSurvei.submit(); 
-        }
-    });
+            // Jika belum ada file baru dan tidak ada file lama
+            if (!hasNewFile && !hasOldFile) {
+                isValid = false;
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan',
+                    text: 'Mohon upload Denah Jaminan terlebih dahulu.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#0082CB',
+                    heightAuto: false,
+                    customClass: {
+                        popup: 'swal2-tight-popup',
+                        confirmButton: 'swal2-tight-btn'
+                    }
+                });
+            }
+
+            if (isValid) {
+                formPraSurvei.submit();
+            }
+        });
+    }
 </script>
 
 <style>

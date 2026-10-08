@@ -122,19 +122,45 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/z3-muk', [MukController::class, 'createAlur3'])->name('z3-muk');
     Route::post('/z3-muk', [MukController::class, 'storeAlur3'])->name('storeAlur3');
 
-    // Route Halaman Data Slik
+    // Route Halaman 4
     Route::get('/z4-muk', [MukController::class, 'createAlur4'])->name('z4-muk');
     Route::post('/z4-muk', [MukController::class, 'storeAlur4'])->name('storeAlur4');
 
-    // Route Halaman Data Slik
+    // Route Halaman 5
     Route::get('/z5-muk', [MukController::class, 'createAlur5'])->name('z5-muk');
     Route::post('/z5-muk', [MukController::class, 'storeAlur5'])->name('storeAlur5');
 
-    // Route Halaman Data Slik
+    // Route Halaman 6
     Route::get('/z6-muk', [MukController::class, 'createAlur6'])->name('z6-muk');
     Route::post('/z6-muk', [MukController::class, 'storeAlur6'])->name('storeAlur6');
 
+    // Route Halaman 7
+    Route::get('/z7-muk', [MukController::class, 'createAlur7'])->name('z7-muk');
+    Route::post('/z7-muk', [MukController::class, 'storeAlur7'])->name('storeAlur7');
 
+    // Route Halaman 8
+    Route::get('/z8-muk', [MukController::class, 'createAlur8'])->name('z8-muk');
+    Route::post('/z8-muk', [MukController::class, 'storeAlur8'])->name('storeAlur8');
+
+    // Route Halaman 9
+    Route::get('/z9-muk', [MukController::class, 'createAlur9'])->name('z9-muk');
+    Route::post('/z9-muk', [MukController::class, 'storeAlur9'])->name('storeAlur9');
+
+    // Route Halaman 10
+    Route::get('/z10-muk', [MukController::class, 'createAlur10'])->name('z10-muk');
+    Route::post('/z10-muk', [MukController::class, 'storeAlur10'])->name('storeAlur10');
+
+    // Route Halaman 11
+    Route::get('/z11-muk', [MukController::class, 'createAlur11'])->name('z11-muk');
+    Route::post('/z11-muk', [MukController::class, 'storeAlur11'])->name('storeAlur11');
+
+    // Route Halaman 12
+    Route::get('/z12-muk', [MukController::class, 'createAlur12'])->name('z12-muk');
+    Route::post('/z12-muk', [MukController::class, 'storeAlur12'])->name('storeAlur12');
+
+    // Route Halaman Kirim
+    Route::get('/z13-selesai', [MukController::class, 'createAlur13'])->name('z13-selesai');
+    Route::post('/z13-selesai', [MukController::class, 'storeAlur13'])->name('storeAlur13');
 
     // Route Halaman Riwayat
     Route::get('/riwayat', [MukController::class, 'createAlurRiwayat'])->name('riwayat');
@@ -145,52 +171,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Route Cetak atau Print
     Route::get('/riwayat/detail2/{id}/print2', [MukController::class, 'printPage2'])->name('riwayat.print2');
-
-
-    
-
-    // Route Halaman Capital
-    Route::get('/z8-capital', [SurveiController::class, 'createAlur8'])->name('z8-capital');
-    Route::post('/z8-capital', [SurveiController::class, 'storeAlur8'])->name('storeAlur8');
-
-    // Route Halaman Take Over
-    Route::get('/z9-takeover', [SurveiController::class, 'createAlur9'])->name('z9-takeover');
-    Route::post('/z9-takeover', [SurveiController::class, 'storeAlur9'])->name('storeAlur9');
-
-    // Route Halaman Kondisi
-    Route::get('/z10-kondisi', [SurveiController::class, 'createAlur10'])->name('z10-kondisi');
-    Route::post('/z10-kondisi', [SurveiController::class, 'storeAlur10'])->name('storeAlur10');
-
-    // Route Halaman Kelengkapan Berkas
-    Route::get('/z11-berkas-lengkap', [SurveiController::class, 'createAlur11'])->name('z11-berkas-lengkap');
-    Route::post('/z11-berkas-lengkap', [SurveiController::class, 'storeAlur11'])->name('storeAlur11');
-
-    // Route Halaman Badan Usaha
-    Route::get('/z12-badanusaha', [SurveiController::class, 'createAlur12'])->name('z12-badanusaha');
-    Route::post('/z12-badanusaha', [SurveiController::class, 'storeAlur12'])->name('storeAlur12');
-
-    // Route Halaman Analisis SWOT
-    Route::get('/z13-swot', [SurveiController::class, 'createAlur13'])->name('z13-swot');
-    Route::post('/z13-swot', [SurveiController::class, 'storeAlur13'])->name('storeAlur13');
-
-    // Route Halaman Data Tambahan
-    Route::get('/z14-data-tambahan', [SurveiController::class, 'createAlur14'])->name('z14-data-tambahan');
-    Route::post('/z14-data-tambahan', [SurveiController::class, 'storeAlur14'])->name('storeAlur14');
-
-    // Route Halaman Pinjaman
-    Route::get('/z15-pinjaman', [SurveiController::class, 'createAlur15'])->name('z15-pinjaman');
-    Route::post('/z15-pinjaman', [SurveiController::class, 'storeAlur15'])->name('storeAlur15');
-
-    // Route Halaman Mutasi Rekening
-    Route::get('/z16-mutasi-rekening', [SurveiController::class, 'createAlur16'])->name('z16-mutasi-rekening');
-    Route::post('/z16-mutasi-rekening', [SurveiController::class, 'storeAlur16'])->name('storeAlur16');
-
-    Route::get('/z17-mutasi-rekening1', [SurveiController::class, 'createAlur17'])->name('z17-mutasi-rekening1');
-    Route::post('/z17-mutasi-rekening1', [SurveiController::class, 'storeAlur17'])->name('storeAlur17');
-
-    // Route Halaman Kirim
-    Route::get('/z18-selesai', [SurveiController::class, 'createAlur18'])->name('z18-selesai');
-    Route::post('/z18-selesai', [SurveiController::class, 'storeAlur18'])->name('storeAlur18');
 
     // Route Export pdf, word, excel
     Route::get('/riwayat/detail2/{id}/export/pdf2', [SurveiController::class, 'exportPdf2'])->name('riwayat.pdf2');

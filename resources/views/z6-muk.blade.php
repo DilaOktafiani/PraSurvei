@@ -32,42 +32,48 @@
         <div class="bg-white rounded-lg shadow-sm border-t-8 border-[#0082CB] border-x border-b border-gray-200 p-6 mb-6">
             <div class="flex justify-between items-start gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Form Credit Analys</h2>
-                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan hasil analisis lapangan untuk penentuan kelayakan akhir nasabah.</p>
+                    <h2 class="text-2xl font-bold text-gray-800">Form Memo Usulan Kredit (MUK)</h2>
+                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan data di bawah ini untuk melengkapi Memo Usulan Kredit (MUK) nasabah.</p>
                 </div>
             </div>
+            <p class="text-xs text-red-500 mt-4 font-medium flex items-center gap-1 border-t border-gray-100 pt-3">
+                <span>*</span> Menunjukkan pertanyaan yang wajib diisi
+            </p>
         </div>
 
+        @if ($errors->any())
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 text-red-500 font-bold mr-2">&#9888;</div>
+                    <h3 class="text-sm font-bold text-red-800">Ada beberapa kesalahan pada inputan Anda:</h3>
+                </div>
+                <ul class="mt-2 list-disc list-inside text-xs text-red-700 space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeAlur16') }}" method="POST" class="space-y-6" novalidate>
+        <form id="formPraSurvei" action="{{ route('storeAlur6') }}" method="POST" class="space-y-6" novalidate>   
             @csrf <!-- Security Token Laravel -->
 
             <!-- Hidden Input Debitur ID (Wajib agar terhubung dengan tabel debitur) -->
             <input type="hidden" name="debitur_id" value="{{ $debitur->id ?? session('debitur_id') }}">
 
-            <!-- Mutasi Rekening Tabungan -->
+            <!-- F. DEVIASI -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">Mutasi Rekening Tabungan</h3>
+                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">F. DEVIASI</h3>
 
-                <!-- Apakah ingin mengisi detail mutasi tabungan -->
+                <!-- Keterangan -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Apakah ingin mengisi detail mutasi tabungan <span class="text-red-500">*</span>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Keterangan <span class="text-red-500">*</span>
                     </label>
-                    <div class="space-y-3 text-sm text-gray-700">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="detail_mutasi_tabungan" value="YA" 
-                                   {{ (old('detail_mutasi_tabungan', $takeover->detail_mutasi_tabungan ?? '') == 'YA') ? 'checked' : '' }} 
-                                   class="accent-[#0082CB]" required>
-                            <span>YA</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="detail_mutasi_tabungan" value="TIDAK" 
-                                   {{ (old('detail_mutasi_tabungan', $takeover->detail_mutasi_tabungan ?? '') == 'TIDAK') ? 'checked' : '' }} 
-                                   class="accent-[#0082CB]" required>
-                            <span>Tidak (saya ingin mengisi manual di excel)</span>
-                        </label>
-                    </div>
+                    <textarea id="deviasi" name="deviasi" rows="4" placeholder="ex : 
+Sesuai ketentuan provisi 1% x plafon, biaya administrasi 1% x plafon x tenor, menjadi provisi 1% x plafon, biaya administrasi 1% x plafon." required
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('deviasi', $data->deviasi ?? '') }}</textarea>
                 </div>
             </div>
 
@@ -78,7 +84,7 @@
                     Kosongkan Form
                 </button>
                 <div class="flex items-center gap-3">  
-                    <a href="{{ $backUrl }}" 
+                    <a href="{{ $backRoute }}" 
                             class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                         Kembali
                     </a>
@@ -96,21 +102,23 @@
     </footer>
 
 <script>
-    // Validasi form menggunakan SweetAlert2 disesuaikan dengan input field saat ini (detail_mutasi_tabungan)
+    // Validasi form halaman Deviasi
     const formPraSurvei = document.getElementById('formPraSurvei');
+
     formPraSurvei.addEventListener('submit', function(event) {
-        event.preventDefault(); // Mencegah form langsung submit
-        
-        const selectedMutasi = formPraSurvei.querySelector('input[name="detail_mutasi_tabungan"]:checked');
+        const deviasi = formPraSurvei.querySelector('textarea[name="deviasi"]');
+
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
-        // Validasi Radio Mutasi Tabungan terpilih
-        if (!selectedMutasi) {
+        // Validasi textarea deviasi
+        if (!deviasi || deviasi.value.trim() === '') {
             isValid = false;
         }
 
         if (!isValid) {
+            event.preventDefault();
+
             Swal.fire({
                 icon: 'warning',
                 title: 'Peringatan',
@@ -123,9 +131,12 @@
                     confirmButton: 'swal2-tight-btn'
                 }
             });
-        } else {
-            formPraSurvei.submit(); 
+
+            return;
         }
+
+        // Jika valid, submit form
+        formPraSurvei.submit();
     });
 </script>
 

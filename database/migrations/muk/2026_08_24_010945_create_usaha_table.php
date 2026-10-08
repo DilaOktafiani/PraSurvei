@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mutasi_rekening1', function (Blueprint $table) {
+        Schema::create('usaha', function (Blueprint $table) {
             $table->id();
             $table->foreignId('debitur_id')->constrained('debiturs')->onDelete('cascade');
-            $table->integer('urutan')->default(1); // Menyimpan indeks mutasi rekening ke-n
-            $table->string('nama_bank');
-            $table->string('bulan');
-            $table->decimal('debet', 15, 2);
-            $table->decimal('kredit', 15, 2);
-            $table->string('saldo');
-            $table->enum('apakah_masih_ada_mutasi_tabungan', ['YA', 'TIDAK ADA'])->nullable();
+            $table->integer('urutan')->default(1);
+            $table->text('nama_usaha');  
+            $table->string('google_maps', 300)->nullable();
+            $table->string('share_location', 300)->nullable();
+            $table->string('kode_qr', 300)->nullable();
+            $table->longText('foto_usaha', 300)->nullable();
+            $table->enum('apakah_ada_usaha_lain', ['YA', 'TIDAK ADA']);
             $table->timestamps();
 
             // Memastikan kombinasi debitur dan urutan unik
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mutasi_rekening1');
+        Schema::dropIfExists('usaha');
     }
 };

@@ -70,85 +70,43 @@
                     <h4 class="text-base font-bold text-gray-700">1. Gambaran Pekerjaan Debitur</h4>
                 </div>
 
-                <!-- Gambaran Pekerjaan Debitur 1 -->
+                <!-- Gambaran Pekerjaan Debitur 1-->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Gambaran Pekerjaan Debitur 1 <span class="text-red-500">*</span>
+                        Gambaran Pekerjaan Debitur 1<span class="text-red-500">*</span>
                     </label>
-                    <textarea id="gambaran_pekerjaan_debitur1" name="gambaran_pekerjaan_debitur1" rows="6" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('gambaran_pekerjaan_debitur1', $data->gambaran_pekerjaan_debitur1 ?? '') }}</textarea>
+                    <textarea id="gambaran_pekerjaan_debitur" name="gambaran_pekerjaan_debitur" rows="6" required
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('gambaran_pekerjaan_debitur', $infoUtama->gambaran_pekerjaan_debitur ?? '') }}</textarea>
                 </div>
 
-                <!-- Perhitungan Omset Usaha 1 -->
+                <!-- Perhitungan Omset Usaha 1-->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Omset Usaha 1 <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Omset Usaha 1<span class="text-red-500">*</span></label>
                     <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                        <input type="file" id="file_omset1" name="perhitungan_omset_usaha1" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_omset1', 'preview_omset1', 'btn_omset1')">
-                        <button type="button" onclick="document.getElementById('file_omset1').click()" 
+                        <input type="file" id="file_omset" name="perhitungan_omset_usaha" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_omset', 'preview_omset', 'btn_omset')" {{ isset($infoUtama->perhitungan_omset_usaha) && $infoUtama->perhitungan_omset_usaha ? '' : 'required' }}>
+                        
+                        <button type="button" onclick="document.getElementById('file_omset').click()" 
                                 class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
-                            <span id="btn_omset1">Tambahkan file</span>
+                            <span id="btn_omset">{{ isset($infoUtama->perhitungan_omset_usaha) && $infoUtama->perhitungan_omset_usaha ? 'Ganti file' : 'Tambahkan file' }}</span>
                         </button>
 
-                        <div id="preview_omset1" class="{{ isset($data->perhitungan_omset_usaha1) && $data->perhitungan_omset_usaha1 ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                            <span id="name_omset1" class="truncate font-medium">{{ isset($data->perhitungan_omset_usaha1) ? basename($data->perhitungan_omset_usaha1) : '' }}</span>
-                            <button type="button" onclick="removeFile('file_omset1', 'preview_omset1', 'btn_omset1')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
+                        <div id="preview_omset" class="{{ isset($infoUtama->perhitungan_omset_usaha) && $infoUtama->perhitungan_omset_usaha ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
+                            <span id="name_omset" class="truncate font-medium">{{ isset($infoUtama->perhitungan_omset_usaha) ? basename($infoUtama->perhitungan_omset_usaha) : '' }}</span>
+                            <button type="button" onclick="removeFile('file_omset', 'preview_omset', 'btn_omset')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Gambaran Pekerjaan Debitur 2 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Gambaran Pekerjaan Debitur 2 <span class="text-red-500">*</span>
-                    </label>
-                    <textarea id="gambaran_pekerjaan_debitur2" name="gambaran_pekerjaan_debitur2" rows="6" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('gambaran_pekerjaan_debitur2', $data->gambaran_pekerjaan_debitur2 ?? '') }}</textarea>
-                </div>
+                <!-- CONTAINER UNTUK USAHA TAMBAHAN (2 sampai 10) -->
+                <div id="additional-businesses-container" class="space-y-6"></div>
 
-                <!-- Perhitungan Omset Usaha 2 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Omset Usaha 2 <span class="text-red-500">*</span></label>
-                    <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
-                        <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                        <input type="file" id="file_omset2" name="perhitungan_omset_usaha2" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_omset2', 'preview_omset2', 'btn_omset2')">
-                        <button type="button" onclick="document.getElementById('file_omset2').click()" 
-                                class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
-                            <span id="btn_omset2">Tambahkan file</span>
-                        </button>
-
-                        <div id="preview_omset2" class="{{ isset($data->perhitungan_omset_usaha2) && $data->perhitungan_omset_usaha2 ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                            <span id="name_omset2" class="truncate font-medium">{{ isset($data->perhitungan_omset_usaha2) ? basename($data->perhitungan_omset_usaha2) : '' }}</span>
-                            <button type="button" onclick="removeFile('file_omset2', 'preview_omset2', 'btn_omset2')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Gambaran Pekerjaan Debitur 3 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Gambaran Pekerjaan Debitur 3 <span class="text-red-500">*</span>
-                    </label>
-                    <textarea id="gambaran_pekerjaan_debitur3" name="gambaran_pekerjaan_debitur3" rows="6" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('gambaran_pekerjaan_debitur3', $data->gambaran_pekerjaan_debitur3 ?? '') }}</textarea>
-                </div>
-
-                <!-- Perhitungan Omset Usaha 3 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Omset Usaha 3 <span class="text-red-500">*</span></label>
-                    <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
-                        <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                        <input type="file" id="file_omset3" name="perhitungan_omset_usaha3" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_omset3', 'preview_omset3', 'btn_omset3')">
-                        <button type="button" onclick="document.getElementById('file_omset3').click()" 
-                                class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
-                            <span id="btn_omset3">Tambahkan file</span>
-                        </button>
-
-                        <div id="preview_omset3" class="{{ isset($data->perhitungan_omset_usaha3) && $data->perhitungan_omset_usaha3 ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                            <span id="name_omset3" class="truncate font-medium">{{ isset($data->perhitungan_omset_usaha3) ? basename($data->perhitungan_omset_usaha3) : '' }}</span>
-                            <button type="button" onclick="removeFile('file_omset3', 'preview_omset3', 'btn_omset3')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
-                        </div>
-                    </div>
+                <!-- TOMBOL TAMBAH USAHA -->
+                <div class="pt-2">
+                    <button type="button" id="btn-tambah-usaha" onclick="tambahUsahaBaru()" 
+                            class="bg-[#0082CB] text-[#FFFFFF] border-2 border-[#0082CB] px-5 py-2 rounded-lg text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-md flex items-center justify-center gap-2">
+                        <span>+ Tambah Usaha</span>
+                    </button>
                 </div>
             </div>
 
@@ -158,83 +116,35 @@
                     <h4 class="text-base font-bold text-gray-700">2. Usaha Pendukung Lain</h4>
                 </div>
 
-                <!-- Usaha Pendukung 1 -->
+                <!-- Usaha Pendukung Lain -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Usaha Pendukung 1 <span class="text-red-500">*</span>
+                        Usaha Pendukung Lain <span class="text-red-500"></span>
                     </label>
-                    <textarea id="usaha_pendukung1" name="usaha_pendukung1" rows="6" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('usaha_pendukung1', $data->usaha_pendukung1 ?? '') }}</textarea>
+                    <textarea id="usaha_pendukung" name="usaha_pendukung" rows="6"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('usaha_pendukung', $infoUtama->usaha_pendukung ?? '') }}</textarea>
                 </div>
 
                 <!-- Perhitungan Omset Usaha Pendukung 1 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Omset Usaha Pendukung 1 <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Omset Usaha Pendukung <span class="text-red-500"></span></label>
                     <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                        <input type="file" id="file_omset_pendukung1" name="perhitungan_omset_pendukung1" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_omset_pendukung1', 'preview_omset_pendukung1', 'btn_omset_pendukung1')">
-                        <button type="button" onclick="document.getElementById('file_omset_pendukung1').click()" 
+                        
+                        <input type="file" id="file_omset_pendukung" name="perhitungan_omset_pendukung" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_omset_pendukung', 'preview_omset_pendukung', 'btn_omset_pendukung')">
+                        
+                        <button type="button" onclick="document.getElementById('file_omset_pendukung').click()" 
                                 class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
-                            <span id="btn_omset_pendukung1">Tambahkan file</span>
+                            <!-- Diubah dari $data menjadi $infoUtama -->
+                            <span id="btn_omset_pendukung">
+                                {{ isset($infoUtama->perhitungan_omset_pendukung) && $infoUtama->perhitungan_omset_pendukung ? 'Ganti file' : 'Tambahkan file' }}
+                            </span>
                         </button>
 
-                        <div id="preview_omset_pendukung1" class="{{ isset($data->perhitungan_omset_pendukung1) && $data->perhitungan_omset_pendukung1 ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                            <span id="name_omset_pendukung1" class="truncate font-medium">{{ isset($data->perhitungan_omset_pendukung1) ? basename($data->perhitungan_omset_pendukung1) : '' }}</span>
-                            <button type="button" onclick="removeFile('file_omset_pendukung1', 'preview_omset_pendukung1', 'btn_omset_pendukung1')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Usaha Pendukung 2 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Usaha Pendukung 2 <span class="text-red-500">*</span>
-                    </label>
-                    <textarea id="usaha_pendukung2" name="usaha_pendukung2" rows="6" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('usaha_pendukung2', $data->usaha_pendukung2 ?? '') }}</textarea>
-                </div>
-
-                <!-- Perhitungan Omset Usaha Pendukung 2 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Omset Usaha Pendukung 2 <span class="text-red-500">*</span></label>
-                    <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
-                        <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                        <input type="file" id="file_omset_pendukung2" name="perhitungan_omset_pendukung2" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_omset_pendukung2', 'preview_omset_pendukung2', 'btn_omset_pendukung2')">
-                        <button type="button" onclick="document.getElementById('file_omset_pendukung2').click()" 
-                                class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
-                            <span id="btn_omset_pendukung2">Tambahkan file</span>
-                        </button>
-
-                        <div id="preview_omset_pendukung2" class="{{ isset($data->perhitungan_omset_pendukung2) && $data->perhitungan_omset_pendukung2 ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                            <span id="name_omset_pendukung2" class="truncate font-medium">{{ isset($data->perhitungan_omset_pendukung2) ? basename($data->perhitungan_omset_pendukung2) : '' }}</span>
-                            <button type="button" onclick="removeFile('file_omset_pendukung2', 'preview_omset_pendukung2', 'btn_omset_pendukung2')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Usaha Pendukung 3 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Usaha Pendukung 3 <span class="text-red-500">*</span>
-                    </label>
-                    <textarea id="usaha_pendukung3" name="usaha_pendukung3" rows="6" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('usaha_pendukung3', $data->usaha_pendukung3 ?? '') }}</textarea>
-                </div>
-
-                <!-- Perhitungan Omset Usaha Pendukung 3 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Omset Usaha Pendukung 3 <span class="text-red-500">*</span></label>
-                    <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
-                        <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                        <input type="file" id="file_omset_pendukung3" name="perhitungan_omset_pendukung3" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_omset_pendukung3', 'preview_omset_pendukung3', 'btn_omset_pendukung3')">
-                        <button type="button" onclick="document.getElementById('file_omset_pendukung3').click()" 
-                                class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
-                            <span id="btn_omset_pendukung3">Tambahkan file</span>
-                        </button>
-
-                        <div id="preview_omset_pendukung3" class="{{ isset($data->perhitungan_omset_pendukung3) && $data->perhitungan_omset_pendukung3 ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                            <span id="name_omset_pendukung3" class="truncate font-medium">{{ isset($data->perhitungan_omset_pendukung3) ? basename($data->perhitungan_omset_pendukung3) : '' }}</span>
-                            <button type="button" onclick="removeFile('file_omset_pendukung3', 'preview_omset_pendukung3', 'btn_omset_pendukung3')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
+                        <!-- Diubah dari $data menjadi $infoUtama -->
+                        <div id="preview_omset_pendukung" class="{{ isset($infoUtama->perhitungan_omset_pendukung) && $infoUtama->perhitungan_omset_pendukung ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
+                            <span id="name_omset_pendukung" class="truncate font-medium">{{ isset($infoUtama->perhitungan_omset_pendukung) ? basename($infoUtama->perhitungan_omset_pendukung) : '' }}</span>
+                            <button type="button" onclick="removeFile('file_omset_pendukung', 'preview_omset_pendukung', 'btn_omset_pendukung')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
                         </div>
                     </div>
                 </div>
@@ -264,65 +174,199 @@
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
 
-    <script>
-        // Fungsi modular untuk menangani pemilihan file dinamis
-        function handleFileSelect(input, spanId, previewId, btnId) {
-            if (input.files && input.files[0]) {
-                const fileName = input.files[0].name;
-                const previewDiv = document.getElementById(previewId);
-                const fileNameSpan = document.getElementById(spanId);
-                const btnText = document.getElementById(btnId);
-
-                fileNameSpan.textContent = fileName;
-                previewDiv.classList.remove('hidden');
-                btnText.textContent = 'Ganti file';
-            }
-        }
-
-        // Fungsi modular untuk menghapus file yang dipilih
-        function removeFile(inputId, previewId, btnId) {
-            const input = document.getElementById(inputId);
+<script>
+    // Fungsi untuk menangani pemilihan file
+    function handleFileSelect(input, spanId, previewId, btnId) {
+        if (input.files && input.files[0]) {
+            const fileName = input.files[0].name;
             const previewDiv = document.getElementById(previewId);
-            const fileNameSpan = document.getElementById(spanId = inputId.replace('file_', 'name_')); // Mengambil id span
+            const fileNameSpan = document.getElementById(spanId);
             const btnText = document.getElementById(btnId);
 
-            input.value = '';
-            if(fileNameSpan) fileNameSpan.textContent = '';
-            previewDiv.classList.add('hidden');
-            btnText.textContent = 'Tambahkan file';
-        }
-
-        function validateAndSubmit() {
-            const form = document.getElementById('formPraSurvei');
-            let isValid = true;
-            let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
-
-            // Validasi sederhana untuk memastikan textarea wajib diisi
-            const textareas = form.querySelectorAll('textarea[required]');
-            textareas.forEach(textarea => {
-                if (!textarea.value.trim()) {
-                    isValid = false;
-                }
-            });
-
-            if (!isValid) {
+            // Validasi ukuran maksimal 10 MB
+            if (input.files[0].size > 10 * 1024 * 1024) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Peringatan',
-                    text: errorMessage,
+                    title: 'Ukuran File Terlalu Besar',
+                    text: 'Ukuran file maksimal 10 MB.',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#0082CB',
-                    heightAuto: false,
-                    customClass: {
-                        popup: 'swal2-tight-popup',
-                        confirmButton: 'swal2-tight-btn'
-                    }
+                    heightAuto: false
                 });
-            } else {
-                form.submit();
+
+                input.value = '';
+                if (previewDiv) previewDiv.classList.add('hidden');
+                if (btnText) btnText.textContent = 'Tambahkan file';
+                return;
             }
+
+            if (fileNameSpan) fileNameSpan.textContent = fileName;
+            if (previewDiv) previewDiv.classList.remove('hidden');
+            if (btnText) btnText.textContent = 'Ganti file';
         }
-    </script>
+    }
+
+    // Fungsi untuk menghapus file yang dipilih
+    function removeFile(inputId, previewId, btnId) {
+        const input = document.getElementById(inputId);
+        const previewDiv = document.getElementById(previewId);
+        const btnText = document.getElementById(btnId);
+
+        if (input) input.value = '';
+        
+        if (previewDiv) {
+            const fileNameSpan = previewDiv.querySelector('span');
+            if (fileNameSpan) fileNameSpan.textContent = '';
+            previewDiv.classList.add('hidden');
+        }
+        
+        if (btnText) btnText.textContent = 'Tambahkan file';
+    }
+
+    // Counter untuk usaha tambahan
+    let usahaCount = 1;
+    const maxUsaha = 10;
+
+    // Fungsi untuk menambah usaha secara dinamis (ditambahkan parameter opsional untuk data lama)
+    function tambahUsahaBaru(savedPekerjaan = '', savedFile = '') {
+        if (usahaCount >= maxUsaha) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Batas Maksimal',
+                text: 'Maksimal penambahan adalah hingga 10 usaha.',
+                confirmButtonColor: '#0082CB',
+                heightAuto: false
+            });
+            return;
+        }
+
+        usahaCount++;
+        const container = document.getElementById('additional-businesses-container');
+
+        const wrapper = document.createElement('div');
+        wrapper.className = "bg-gray-50/50 rounded-lg border border-dashed border-gray-300 p-4 space-y-4 relative dynamic-usaha-item mt-4";
+        wrapper.setAttribute('data-index', usahaCount);
+
+        // Jika ada file lama, atur teks tombol dan tampilkan preview nama file-nya
+        let btnTextLabel = 'Tambahkan file';
+        let previewClass = 'hidden';
+        if (savedFile) {
+            // Mengambil nama file saja dari path storage (misal: 'informasi_usaha/abc.pdf' jadi 'abc.pdf')
+            savedFile = savedFile.split('/').pop(); 
+            btnTextLabel = 'Ganti file';
+            previewClass = 'mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm';
+        }
+
+        wrapper.innerHTML = `
+            <div class="flex items-center justify-between border-b pb-2 mb-2">
+                <h4 class="text-base font-bold text-gray-700">Gambaran Pekerjaan Debitur ${usahaCount}</h4>
+                <button type="button" onclick="hapusUsahaItem(this)" class="text-red-500 hover:text-red-700 text-xs font-semibold px-2.5 py-1 bg-red-50 rounded border border-red-200 transition">Hapus Usaha Ini</button>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Gambaran Pekerjaan Debitur ${usahaCount}
+                </label>
+                <textarea name="gambaran_pekerjaan_debitur_${usahaCount}" rows="6"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">${savedPekerjaan}</textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Omset Usaha ${usahaCount}</label>
+                <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm bg-white">
+                    <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
+                    <input type="file" id="file_omset_${usahaCount}" name="perhitungan_omset_usaha_${usahaCount}" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_omset_${usahaCount}', 'preview_omset_${usahaCount}', 'btn_omset_${usahaCount}')">
+                    
+                    <button type="button" onclick="document.getElementById('file_omset_${usahaCount}').click()" 
+                            class="bg-white text-[#0082CB] border border-gray-300 px-4 py-2 rounded-md text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-sm inline-flex items-center gap-2">
+                        <span id="btn_omset_${usahaCount}">${btnTextLabel}</span>
+                    </button>
+
+                    <div id="preview_omset_${usahaCount}" class="${previewClass}">
+                        <span id="name_omset_${usahaCount}" class="truncate font-medium">${savedFile}</span>
+                        <button type="button" onclick="removeFile('file_omset_${usahaCount}', 'preview_omset_${usahaCount}', 'btn_omset_${usahaCount}')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(wrapper);
+
+        if (usahaCount >= maxUsaha) {
+            const btnTambah = document.getElementById('btn-tambah-usaha');
+            if (btnTambah) btnTambah.style.display = 'none';
+        }
+    }
+
+    // Fungsi untuk menghapus baris usaha dinamis
+    function hapusUsahaItem(button) {
+        const item = button.closest('.dynamic-usaha-item');
+        if (item) {
+            item.remove();
+            usahaCount--;
+            // Munculkan kembali tombol tambah jika jumlahnya di bawah 10
+            const btnTambah = document.getElementById('btn-tambah-usaha');
+            if (btnTambah) btnTambah.style.display = 'inline-flex';
+        }
+    }
+
+    // Fungsi Validasi Utama saat tombol Berikutnya ditekan
+    function validateAndSubmit() {
+        const form = document.getElementById('formPraSurvei');
+        let isValid = true;
+
+        // Secara otomatis mengecek seluruh elemen di form yang memiliki atribut [required]
+        const requiredInputs = form.querySelectorAll('[required]');
+
+        requiredInputs.forEach(input => {
+            if (input.type === 'file') {
+                const container = input.closest('div');
+                const previewDiv = container.querySelector('[id*="preview"]');
+                const hasNewFile = input.files && input.files.length > 0;
+                const hasOldFile = previewDiv && !previewDiv.classList.contains('hidden');
+
+                // Jika file baru tidak dipilih dan tidak ada file lama (dari database), maka invalid
+                if (!hasNewFile && !hasOldFile) {
+                    isValid = false;
+                }
+            } else {
+                // Untuk textarea / input teks biasa
+                if (!input.value.trim()) {
+                    isValid = false;
+                }
+            }
+        });
+
+        if (!isValid) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Mohon lengkapi semua pertanyaan yang bertanda (*)',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#0082CB',
+                heightAuto: false,
+                customClass: {
+                    popup: 'swal2-tight-popup',
+                    confirmButton: 'swal2-tight-btn'
+                }
+            });
+        } else {
+            form.submit();
+        }
+    }
+
+    // Otomatis muat data lama (urutan 2-10) saat halaman dibuka kembali
+    document.addEventListener("DOMContentLoaded", function () {
+        const existingUsahaLainnya = @json($infoLainnya ?? []);
+
+        if (existingUsahaLainnya.length > 0) {
+            existingUsahaLainnya.forEach((item) => {
+                // Panggil fungsi tambahUsahaBaru dengan membawa data dari database
+                tambahUsahaBaru(item.gambaran_pekerjaan_debitur, item.perhitungan_omset_usaha);
+            });
+        }
+    });
+</script>
 
 <style>
     .swal2-popup.swal2-tight-popup {

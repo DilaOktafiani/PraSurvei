@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Models\Survei;
+namespace App\Models\Muk;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Capital extends Model
+class Deviasi extends Model
 {
     use HasFactory;
 
-    protected $connection = 'survei';
-    protected $table = 'capital';
+    protected $connection = 'muk';
+    protected $table = 'deviasi';
     protected $guarded = ['id'];
 
     public function debitur()

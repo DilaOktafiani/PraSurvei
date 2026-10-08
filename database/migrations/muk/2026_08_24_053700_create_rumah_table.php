@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('swot', function (Blueprint $table) {
+        Schema::create('rumah', function (Blueprint $table) {
             $table->id();
             $table->foreignId('debitur_id')->constrained('debiturs')->onDelete('cascade');
-            $table->text('kekuatan');
-            $table->text('kelemahan');
-            $table->text('peluang');
-            $table->text('ancaman');
-            $table->text('kesimpulan');
-            $table->enum('rekomendasi', ['Disetujui', 'Disetujui dengan syarat', 'Ditolak']);
-            $table->text('syarat_catatan');
+            $table->string('google_maps', 300)->nullable();
+            $table->string('share_location', 300)->nullable();
+            $table->string('kode_qr', 300)->nullable();
+            $table->longText('foto_tempat_tinggal', 300)->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('swot');
+        Schema::dropIfExists('rumah');
     }
 };

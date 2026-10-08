@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Models\Survei;
+namespace App\Models\Muk;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Swot extends Model
+class ReferensiCA extends Model
 {
     use HasFactory;
 
-    protected $connection = 'survei';
-    protected $table = 'swot';
+    protected $connection = 'muk';
+    protected $table = 'referensi_ca';
     protected $guarded = ['id'];
 
     public function debitur()

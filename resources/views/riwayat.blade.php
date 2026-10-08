@@ -62,7 +62,7 @@
             <div x-show="activeTab === 'prasurvei'">
                 <div class="mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h2 class="text-2xl font-bold text-[#0A3370]">Riwayat Pengajuan Pra-Survei AO</h2>
+                        <h2 class="text-2xl font-bold text-[#0A3370]">Riwayat Pengajuan Pra-Survei</h2>
                         <p class="text-gray-500 text-[15px] mt-0.5"></p>
                     </div>
                     <!-- Kolom Pencarian -->
@@ -126,7 +126,7 @@
             <div x-show="activeTab === 'surveica'">
                 <div class="mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h2 class="text-2xl font-bold text-[#0A3370]">Riwayat Analisis Survei CA</h2>
+                        <h2 class="text-2xl font-bold text-[#0A3370]">Riwayat Analisa Kredit</h2>
                         <p class="text-gray-500 text-[15px] mt-0.5"></p>
                     </div>
                     <!-- Kolom Pencarian -->
@@ -179,7 +179,7 @@
                                 </td>
                             </tr>
                             @empty
-                            <tr><td colspan="6" class="p-6 text-center text-gray-500 text-sm">Belum ada data riwayat survei CA yang tersimpan.</td></tr>
+                            <tr><td colspan="6" class="p-6 text-center text-gray-500 text-sm">Belum ada data riwayat analisa kredit yang tersimpan.</td></tr>
                             @endforelse
                         </tbody>
                     </table>

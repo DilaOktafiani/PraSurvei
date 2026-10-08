@@ -21,4 +21,3 @@ class TakeOver extends Model
         return $this->belongsTo(Debitur::class);
     }
 }
-

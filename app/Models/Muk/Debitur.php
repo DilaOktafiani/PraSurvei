@@ -34,68 +34,60 @@ class Debitur extends Model
         // 'tipe_fasilitas' => 'array', // Aktifkan jika kolom ini ada di database
     ];
 
-    public function analisis_jaminan()
+
+    public function denah()
     {
-        return $this->hasOne(AnalisisJaminan::class, 'debitur_id', 'id');
+        return $this->hasOne(Denah::class, 'debitur_id', 'id');
     }
 
-    public function badanusaha()
+    public function deviasi()
     {
-        return $this->hasOne(BadanUsaha::class, 'debitur_id', 'id');
+        return $this->hasOne(Deviasi::class, 'debitur_id', 'id');
     }
 
-    public function berkas_lengkap()
+    public function informasi_usaha()
     {
-        return $this->hasOne(BerkasLengkap::class, 'debitur_id', 'id');
+        return $this->hasMany(InformasiUsaha::class, 'debitur_id', 'id');
     }
 
-    public function capacity()
+    public function jaminan()
     {
-        return $this->hasOne(Capacity::class, 'debitur_id', 'id');
+        return $this->hasOne(Jaminan::class, 'debitur_id', 'id');
     }
 
-    public function capital()
+    public function kesimpulan()
     {
-        return $this->hasOne(Capital::class, 'debitur_id', 'id');
+        return $this->hasOne(Kesimpulan::class, 'debitur_id', 'id');
     }
 
-    public function dataslik()
+    public function limac()
     {
-        return $this->hasOne(DataSlik::class, 'debitur_id', 'id');
+        return $this->hasOne(LimaC::class, 'debitur_id', 'id');
     }
 
-    public function data_tambahan()
+    public function pengajuan_plafon_kredit()
     {
-        return $this->hasOne(DataTambahan::class, 'debitur_id', 'id');
+        return $this->hasOne(PlafonKredit::class, 'debitur_id', 'id');
     }
 
-    public function kondisi()
+    public function referensi_ca()
     {
-        return $this->hasOne(Kondisi::class, 'debitur_id', 'id');
+        return $this->hasOne(ReferensiCA::class, 'debitur_id', 'id');
     }
 
-    public function mutasi_rekening()
+    public function rumah()
     {
-        return $this->hasOne(MutasiRekening::class, 'debitur_id', 'id');
+        return $this->hasOne(Rumah::class, 'debitur_id', 'id');
     }
 
-    public function mutasi_rekening1()
+    public function spesifikasi()
     {
-        return $this->hasMany(MutasiRekening1::class, 'debitur_id', 'id');
+        return $this->hasOne(Spesifikasi::class, 'debitur_id', 'id');
     }
 
-    public function pinjaman()
+    public function usaha()
     {
-        return $this->hasMany(Pinjaman::class, 'debitur_id', 'id');
+        return $this->hasMany(Usaha::class, 'debitur_id', 'id');
     }
 
-    public function swot()
-    {
-        return $this->hasOne(Swot::class, 'debitur_id', 'id');
-    }
-
-    public function takeover()
-    {
-        return $this->hasOne(TakeOver::class, 'debitur_id', 'id');
-    }
 }

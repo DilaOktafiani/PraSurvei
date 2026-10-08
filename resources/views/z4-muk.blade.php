@@ -75,7 +75,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Keterangan <span class="text-red-500">*</span>
                     </label>
-                    <textarea id="capital" name="capital" rows="4" placeholder="Modal yang dimiliki debitur cukup antara lain berupa Rumah Tinggal, Tanah dan Motor." required
+                    <textarea id="capital" name="capital" rows="3" placeholder="ex : Modal yang dimiliki debitur cukup antara lain berupa Rumah Tinggal, Tanah, dan Motor." required
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('capital', $data->capital ?? '') }}</textarea>
                 </div>
             </div>
@@ -86,72 +86,115 @@
                     <h4 class="text-base font-bold text-gray-700">2. COLLATERAL</h4>
                 </div>
 
-                <!-- Keterangan -->
+                <!-- No.SHM -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Keterangan <span class="text-red-500">*</span>
+                        No.SHM <span class="text-red-500">*</span>
                     </label>
-                    <textarea id="collateral" name="collateral" rows="6" placeholder="Jaminan yang diberikan berupa SHM dengan data dan penilaian jaminan sebagai berikut:
-1. No.SHM               :  522
-    Luas                    :  193 m2 
-    Nama Pemilik		:  Tri Teguh Prakoso
-    Letak SHM			:  Ds/Kel..Cemani Kec.Grogol Kab.Sukoharjo
-" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('collateral', $data->collateral ?? '') }}</textarea>
+                    <input type="text" name="no_shm" value="{{ old('no_shm', $data->no_shm ?? '') }}" placeholder="ex : 522" required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                </div>
+
+                <!-- Luas -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Luas <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="luas" value="{{ old('luas', $data->luas ?? '') }}" placeholder="ex : 193 m2 " required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                </div>
+
+                <!-- Nama Pemilik -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Nama Pemilik <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="pemilik" value="{{ old('pemilik', $data->pemilik ?? '') }}" placeholder="ex : Adi Sucipto" required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                </div>
+
+                <!-- Letak SHM -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Letak SHM <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="letak_shm" value="{{ old('letak_shm', $data->letak_shm ?? '') }}" placeholder="ex : Ds/Kel..Cemani Kec.Grogol Kab.Sukoharjo" required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 
                 <!-- Ringkasan Penilaian Jaminan -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Ringkasan Penilaian Jaminan <span class="text-red-500">*</span></label>
-                    <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Ringkasan Penilaian Jaminan <span class="text-red-500">*</span>
+                    </label>
+                    <div id="container_file_ringkasan_penilaian_jaminan" class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                        <input type="file" id="file_ringkasan_penilaian_jaminan" name="ringkasan_penilaian_jaminan" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_ringkasan_penilaian_jaminan', 'preview_ringkasan_penilaian_jaminan', 'btn_ringkasan_penilaian_jaminan')">
+                        
+                        <!-- Input File dengan required dinamis & data-has-file -->
+                        <input type="file" id="file_ringkasan_penilaian_jaminan" name="ringkasan_penilaian_jaminan" 
+                            accept=".pdf,.jpg,.jpeg,.png,.dwg,application/pdf,image/*" 
+                            class="hidden" onchange="handleFileSelect(this)"
+                            {{ isset($data->ringkasan_penilaian_jaminan) && $data->ringkasan_penilaian_jaminan ? '' : 'required' }}
+                            data-has-file="{{ isset($data->ringkasan_penilaian_jaminan) && $data->ringkasan_penilaian_jaminan ? 'true' : 'false' }}">
+
                         <button type="button" onclick="document.getElementById('file_ringkasan_penilaian_jaminan').click()" 
                                 class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
-                            <span id="btn_ringkasan_penilaian_jaminan">Tambahkan file</span>
+                            <span id="txt_btn_upload_ringkasan_penilaian_jaminan">
+                                {{ isset($data->ringkasan_penilaian_jaminan) && $data->ringkasan_penilaian_jaminan ? 'Ganti file' : 'Tambahkan file' }}
+                            </span>
                         </button>
 
-                        <div id="preview_ringkasan_penilaian_jaminan" class="{{ isset($data->ringkasan_penilaian_jaminan) && $data->ringkasan_penilaian_jaminan ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                            <span id="name_ringkasan_penilaian_jaminan" class="truncate font-medium">{{ isset($data->ringkasan_penilaian_jaminan) ? basename($data->ringkasan_penilaian_jaminan) : '' }}</span>
-                            <button type="button" onclick="removeFile('file_ringkasan_penilaian_jaminan', 'preview_ringkasan_penilaian_jaminan', 'btn_ringkasan_penilaian_jaminan')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
-                        </div>
+                        @if(isset($data->ringkasan_penilaian_jaminan) && $data->ringkasan_penilaian_jaminan)
+                            <div id="file_preview_ringkasan_penilaian_jaminan" class="mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
+                                <span id="file_name_ringkasan_penilaian_jaminan" class="truncate font-medium">{{ basename($data->ringkasan_penilaian_jaminan) }}</span>
+                                <button type="button" onclick="removeFileRingkasanPenilaianJaminan()" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
+                            </div>
+                        @else
+                            <div id="file_preview_ringkasan_penilaian_jaminan" class="hidden mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
+                                <span id="file_name_ringkasan_penilaian_jaminan" class="truncate font-medium"></span>
+                                <button type="button" onclick="removeFileRingkasanPenilaianJaminan()" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
-                <!-- Tanggal Ringkasan Penilaian Jaminan -->
+                <!-- Tanggal Ringkasan Penilaian Jaminan (TIDAK Wajib) -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Tanggal Ringkasan Penilaian Jaminan <span class="text-red-500">*</span>
+                        Tanggal Ringkasan Penilaian Jaminan
                     </label>
-                    <input type="text" name="tanggal" value="{{ old('tanggal', $debitur->tanggal ?? '') }}" placeholder="ex : 09 September 2026" required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <input type="text" name="tanggal" value="{{ old('tanggal', $debitur->tanggal ?? '') }}" placeholder="ex : 09 September 2026"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 
-                <!-- Informasi Harga Tanah 1 -->
+                <!-- Informasi Harga Tanah 1 (Wajib) -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                         Informasi Harga Tanah 1 <span class="text-red-500">*</span>
+                        Informasi Harga Tanah 1 <span class="text-red-500">*</span>
                     </label>
-                    <textarea id="info_harga_tanah1" name="info_harga_tanah1" rows="5" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('info_harga_tanah1', $data->info_harga_tanah1 ?? '') }}</textarea>
+                    <textarea id="info_harga_tanah1" name="info_harga_tanah1" rows="5" placeholder="ex : 
+Bp. Budiman selaku Ketua RT, menginformasikan bahwa harga tanah cepat laku di sekitar jaminan sebesar Rp3.500.000 (masuk Gang) sampai Rp5.000.000/m. (pinggir jalan utama)" required
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('info_harga_tanah1', $data->info_harga_tanah1 ?? '') }}</textarea>
                 </div>
 
-                <!-- Informasi Harga Tanah 2 -->
+                <!-- Informasi Harga Tanah 2 (TIDAK Wajib) -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                         Informasi Harga Tanah 2 <span class="text-red-500">*</span>
+                        Informasi Harga Tanah 2
                     </label>
-                    <textarea id="info_harga_tanah2" name="info_harga_tanah2" rows="5" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('info_harga_tanah2', $data->info_harga_tanah2 ?? '') }}</textarea>
+                    <textarea id="info_harga_tanah2" name="info_harga_tanah2" rows="5" placeholder="ex : 
+Bp. Budiman selaku Ketua RT, menginformasikan bahwa harga tanah cepat laku di sekitar jaminan sebesar Rp3.500.000 (masuk Gang) sampai Rp5.000.000/m. (pinggir jalan utama)"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('info_harga_tanah2', $data->info_harga_tanah2 ?? '') }}</textarea>
                 </div>
 
-                <!-- Informasi Harga Tanah 3 -->
+                <!-- Informasi Harga Tanah 3 (TIDAK Wajib) -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                         Informasi Harga Tanah 3 <span class="text-red-500">*</span>
+                        Informasi Harga Tanah 3
                     </label>
-                    <textarea id="info_harga_tanah3" name="info_harga_tanah3" rows="5" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('info_harga_tanah3', $data->info_harga_tanah3 ?? '') }}</textarea>
+                    <textarea id="info_harga_tanah3" name="info_harga_tanah3" rows="5" placeholder="ex : 
+Bp. Budiman selaku Ketua RT, menginformasikan bahwa harga tanah cepat laku di sekitar jaminan sebesar Rp3.500.000 (masuk Gang) sampai Rp5.000.000/m. (pinggir jalan utama)"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('info_harga_tanah3', $data->info_harga_tanah3 ?? '') }}</textarea>
                 </div>
 
                 <!-- Batas Objek Jaminan -->
@@ -159,12 +202,12 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Batas Objek Jaminan <span class="text-red-500">*</span>
                     </label>
-                    <textarea id="batas_objek_jaminan" name="batas_objek_jaminan" rows="5" placeholder="-	Depan	    : Jalan
--	Belakang	: Rumah Debitur
--	Kanan	    : Rumah Tetangga
--	Kiri		    : Jalan
-" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('batas_objek_jaminan', $data->batas_objek_jaminan ?? '') }}</textarea>
+                    <textarea id="batas_objek_jaminan" name="batas_objek_jaminan" rows="6" placeholder=" ex : 
+-   Depan       : Jalan
+-   Belakang   : Rumah Debitur
+-   Kanan       : Rumah Tetangga
+-   Kiri            : Jalan" required
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('batas_objek_jaminan', $data->batas_objek_jaminan ?? '') }}</textarea>
                 </div>
 
                 <!-- Catatan Khusus Objek Jaminan -->
@@ -172,10 +215,10 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Catatan Khusus Objek Jaminan <span class="text-red-500">*</span>
                     </label>
-                    <textarea id="catatan_khusus" name="catatan_khusus" rows="6" placeholder="-	Jaminan memiliki akses jalan dengan lebar 4,5 meter yang bisa dilalui Mobil, lokasi strategis, berada ditengah kampung.
--	Bangunan rumah berdiri diatas 2 (dua) sertifikat,tetapi yang dihitung hanya sebatas luas bangunan yang berada dalam sertifikat jaminan.
-" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('catatan_khusus', $data->catatan_khusus ?? '') }}</textarea>
+                    <textarea id="catatan_khusus" name="catatan_khusus" rows="6" placeholder=" ex : 
+-	Jaminan memiliki akses jalan dengan lebar 4,5 meter yang bisa dilalui Mobil, lokasi strategis, berada ditengah kampung.
+-	Bangunan rumah berdiri diatas 2 (dua) sertifikat,tetapi yang dihitung hanya sebatas luas bangunan yang berada dalam sertifikat jaminan" required
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('catatan_khusus', $data->catatan_khusus ?? '') }}</textarea>
                 </div>
                 
             </div>
@@ -191,7 +234,8 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Keterangan <span class="text-red-500">*</span>
                     </label>
-                    <textarea id="condition" name="condition" rows="6" placeholder="Dari hasil slik terlihat semua pinjaman online dan leasing dalam kondisi macet,itu dikarenakan saat itu debitur butuh dana untuk mengobati anaknya yang terkena penyakit Leukimia dan harus opname cukup lama di Rumah Sakit sehingga debitur mengabaikan kewajibannya serta mengembalikan unit mobil ke Leasing karena merasa tidak mampu untuk membayar angsuran." required
+                    <textarea id="condition" name="condition" rows="10" placeholder="ex : 
+Dari hasil slik terlihat semua pinjaman online dan leasing dalam kondisi macet, itu dikarenakan saat itu debitur butuh dana untuk mengobati anaknya yang terkena penyakit Leukimia dan harus opname cukup lama di Rumah Sakit sehingga debitur mengabaikan kewajibannya serta mengembalikan unit mobil ke Leasing karena merasa tidak mampu untuk membayar angsuran." required
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('condition', $data->condition ?? '') }}</textarea>
                 </div>
             </div>
@@ -204,19 +248,37 @@
 
                 <!-- Perhitungan Capacity -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1"> Perhitungan Capacity <span class="text-red-500">*</span></label>
-                    <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Perhitungan Capacity <span class="text-red-500">*</span>
+                    </label>
+                    <div id="container_file_capacity" class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                        <input type="file" id="file_capacity" name="capacity" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_capacity', 'preview_capacity', 'btn_capacity')">
+                        
+                        <!-- Input File dengan required dinamis & data-has-file -->
+                        <input type="file" id="file_capacity" name="capacity" 
+                            accept=".pdf,.jpg,.jpeg,.png,.dwg,application/pdf,image/*" 
+                            class="hidden" onchange="handleFileSelect(this)"
+                            {{ isset($data->capacity) && $data->capacity ? '' : 'required' }}
+                            data-has-file="{{ isset($data->capacity) && $data->capacity ? 'true' : 'false' }}">
+
                         <button type="button" onclick="document.getElementById('file_capacity').click()" 
                                 class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
-                            <span id="btn_capacity">Tambahkan file</span>
+                            <span id="txt_btn_upload_capacity">
+                                {{ isset($data->capacity) && $data->capacity ? 'Ganti file' : 'Tambahkan file' }}
+                            </span>
                         </button>
 
-                        <div id="preview_capacity" class="{{ isset($data->capacity) && $data->capacity ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                            <span id="name_capacity" class="truncate font-medium">{{ isset($data->capacity) ? basename($data->capacity) : '' }}</span>
-                            <button type="button" onclick="removeFile('file_capacity', 'preview_capacity', 'btn_capacity')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
-                        </div>
+                        @if(isset($data->capacity) && $data->capacity)
+                            <div id="file_preview_capacity" class="mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
+                                <span id="file_name_capacity" class="truncate font-medium">{{ basename($data->capacity) }}</span>
+                                <button type="button" onclick="removeFileCapacity()" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
+                            </div>
+                        @else
+                            <div id="file_preview_capacity" class="hidden mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
+                                <span id="file_name_capacity" class="truncate font-medium"></span>
+                                <button type="button" onclick="removeFileCapacity()" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -225,8 +287,8 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Tanggungan Keluarga <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="keluarga" value="{{ old('keluarga', $debitur->keluarga ?? '') }}" placeholder="ex : 5 orang" required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <input type="text" name="keluarga" value="{{ old('keluarga', $data->keluarga ?? '') }}" placeholder="ex : 5 orang" required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 
                 <!-- Tanggungan Anak -->
@@ -234,8 +296,8 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Tanggungan Anak <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="anak" value="{{ old('anak', $debitur->anak ?? '') }}" placeholder="ex : 4 orang" required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <input type="text" name="anak" value="{{ old('anak', $data->anak ?? '') }}" placeholder="ex : 4 orang" required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 
                 <!-- Tanggungan Pendidikan -->
@@ -243,8 +305,8 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Tanggungan Pendidikan <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="pendidikan" value="{{ old('pendidikan', $debitur->pendidikan ?? '') }}" placeholder="ex : 3 orang" required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
+                    <input type="text" name="pendidikan" value="{{ old('pendidikan', $data->pendidikan ?? '') }}" placeholder="ex : 3 orang" required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
                 
             </div>
@@ -260,7 +322,8 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Internal <span class="text-red-500">*</span>
                     </label>
-                    <textarea id="internal" name="internal" rows="5" placeholder=" - Dalam memberikan informasi debitur cukup terbuka dan kooperatif. Gaya Hidup sederhana" required
+                    <textarea id="internal" name="internal" rows="5" placeholder="ex : 
+- Dalam memberikan informasi debitur cukup terbuka dan kooperatif. Gaya hidup sederhana." required
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('internal', $data->internal ?? '') }}</textarea>
                 </div>
 
@@ -269,118 +332,10 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Eksternal <span class="text-red-500">*</span>
                     </label>
-                    <textarea id="eksternal" name="eksternal" rows="6" placeholder="-	Bp. Jumadi, Ketua RT, menginformasikan bahwa cadeb mempunyai karakter yang baik. Memiliki usaha Toko Kelontong dan Toko Petshop yang dikelola bersama suaminya. Selama ini tidak ada permasalahan di lingkungan.
--	Bp. Soemad, Tetangga, menginformasikan bahwa cadeb memiliki usaha Grosir Kelontong sudah cukup lama. Tidak pernah ada permasalahan dan informasi negatif di lingkungan.
-" required
+                    <textarea id="eksternal" name="eksternal" rows="6" placeholder="ex : 
+- Bp. Jumadi, Ketua RT, menginformasikan bahwa cadeb mempunyai karakter yang baik. Memiliki usaha Toko Kelontong dan Toko Petshop yang dikelola bersama suaminya. Selama ini tidak ada permasalahan di lingkungan." required
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('eksternal', $data->eksternal ?? '') }}</textarea>
                 </div>
-            </div>
-
-            <!-- E. REFERENSI CREDIT ANALIST -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">E. REFERENSI CREDIT ANALIST</h3>
-
-                <!-- Keterangan -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Keterangan <span class="text-red-500">*</span>
-                    </label>
-                    <textarea id="referensi_ca" name="referensi_ca" rows="6" placeholder="Berdasarkan pertimbangan dari segala aspek yang ada, dengan melihat kondisi yang ada dilapangan serta pantauan pekerjaan dan pendukung yang baik, maka Credit Analyst dalam hal ini memberikan referensi debitur dengan nama Tri Teguh Prakoso layak diberikan fasilitas kredit Menurun (bayar bunga saja) sebesar Rp365.000.000 dengan jangka waktu 12 bulan." required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('referensi_ca', $data->referensi_ca ?? '') }}</textarea>
-                </div>
-            </div>
-
-            <!-- F. DEVIASI -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">F. DEVIASI</h3>
-
-                <!-- Keterangan -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Keterangan <span class="text-red-500">*</span>
-                    </label>
-                    <textarea id="deviasi" name="deviasi" rows="4" placeholder="Sesuai ketentuan provisi 1% x plafon,biaya administrasi 1% x plafon x tenor,menjadi provisi 1% 
-x plafon,biaya administrasi 1% x plafon." required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('deviasi', $data->deviasi ?? '') }}</textarea>
-                </div>
-            </div>
-
-            <!-- G. KESIMPULAN -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">G. KESIMPULAN</h3>
-
-                <!-- Kesimpulan -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Kesimpulan <span class="text-red-500">*</span>
-                    </label>
-                    <textarea id="kesimpulan" name="kesimpulan" rows="3" placeholder="Berdasarkan hasil survey, bukti-bukti fisik dan cek lingkungan serta didukung jaminan yang memadai,  maka pemohon layak untuk didanai sebagai berikut: " required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('kesimpulan', $data->kesimpulan ?? '') }}</textarea>
-                </div>
-
-                <!-- Plafon Kredit -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Plafon Kredit <span class="text-red-500">*</span></label>
-                    <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
-                        <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                        <input type="file" id="file_plafon" name="plafon" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_ringkasan_penilaian_jaminan', 'preview_ringkasan_penilaian_jaminan', 'btn_ringkasan_penilaian_jaminan')">
-                        <button type="button" onclick="document.getElementById('file_ringkasan_penilaian_jaminan').click()" 
-                                class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
-                            <span id="btn_plafon">Tambahkan file</span>
-                        </button>
-
-                        <div id="preview_ringkasan_penilaian_jaminan" class="{{ isset($data->ringkasan_penilaian_jaminan) && $data->ringkasan_penilaian_jaminan ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
-                            <span id="name_ringkasan_penilaian_jaminan" class="truncate font-medium">{{ isset($data->ringkasan_penilaian_jaminan) ? basename($data->ringkasan_penilaian_jaminan) : '' }}</span>
-                            <button type="button" onclick="removeFile('file_ringkasan_penilaian_jaminan', 'preview_ringkasan_penilaian_jaminan', 'btn_ringkasan_penilaian_jaminan')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Provisi -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Provisi <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="provisi" value="{{ old('provisi', $debitur->provisi ?? '') }}" placeholder="ex : Rp3.650.000 " required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
-                </div>
-
-                <!-- Biaya Administrasi -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Biaya Administrasi <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="provisi" value="{{ old('provisi', $debitur->provisi ?? '') }}" placeholder="ex : Rp3.650.000 " required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
-                </div>
-
-                <!-- Jaminan -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Jaminan <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="provisi" value="{{ old('provisi', $debitur->provisi ?? '') }}" placeholder="SHM No.552 an. Tri Teguh Prakoso seluas 193 m2 terletak di Ds/Kel.Cemani Kec.Grogol Kab.Sukoharjo " required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
-                </div>
-
-                <!-- Blokir -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Blokir <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="provisi" value="{{ old('provisi', $debitur->provisi ?? '') }}" placeholder="1 x Angsuran " required
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
-                </div>
-
-                <!-- Keterangan -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Keterangan <span class="text-red-500">*</span>
-                    </label>
-                    <textarea id="keterangan" name="keterangan" rows="5" placeholder="" required
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('kesimpulan', $data->kesimpulan ?? '') }}</textarea>
-                </div>
-
             </div>
 
             <!-- TOMBOL AKSI NAVIGASI -->
@@ -407,63 +362,97 @@ x plafon,biaya administrasi 1% x plafon." required
         &copy; 2026 BPR Adipura Santosa | Surakarta.
     </footer>
 
-    <script>
-        // Fungsi untuk Preview File Upload
-        function handleFileSelect(input, nameId, previewId, btnId) {
-            if (input.files && input.files[0]) {
-                const fileName = input.files[0].name;
-                const previewDiv = document.getElementById(previewId);
-                const fileNameSpan = document.getElementById(nameId);
-                const btnText = document.getElementById(btnId);
-
-                fileNameSpan.textContent = fileName;
-                previewDiv.classList.remove('hidden');
-                btnText.textContent = 'Ganti file';
-            }
-        }
-
-        // Fungsi untuk Menghapus File Upload
-        function removeFile(inputId, previewId, btnId) {
-            const input = document.getElementById(inputId);
-            const previewDiv = document.getElementById(previewId);
-            const btnText = document.getElementById(btnId);
-
-            input.value = '';
-            previewDiv.classList.add('hidden');
-            btnText.textContent = 'Tambahkan file';
-        }
-
-        // Validasi Form dengan SweetAlert saat Submit
-        const formPraSurvei = document.getElementById('formPraSurvei');
-        formPraSurvei.addEventListener('submit', function(event) {
-            const requiredTextareas = formPraSurvei.querySelectorAll('textarea[required]');
+<script>
+    // Fungsi untuk Preview File Upload (Universal untuk semua file upload)
+    // Fungsi untuk Preview File Upload (Otomatis mendeteksi ID dari input)
+    function handleFileSelect(input) {
+        if (input.files && input.files[0]) {
+            const fileName = input.files[0].name;
             
-            let isValid = true;
-            let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+            // Ambil bagian unik dari id input, misal "file_capacity" jadi "capacity"
+            const fieldId = input.id.replace('file_', ''); 
 
-            requiredTextareas.forEach(textarea => {
-                if (textarea.value.trim() === '') {
-                    isValid = false;
-                }
-            });
+            const previewDiv = document.getElementById('file_preview_' + fieldId);
+            const fileNameSpan = document.getElementById('file_name_' + fieldId);
+            const btnText = document.getElementById('txt_btn_upload_' + fieldId);
 
-            if (!isValid) {
-                event.preventDefault(); // Mencegah form submit jika tidak valid
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Peringatan',
-                    text: errorMessage,
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#0082CB',
-                    heightAuto: false,
-                    customClass: {
-                        popup: 'swal2-tight-popup',
-                        confirmButton: 'swal2-tight-btn'
+            if (fileNameSpan) fileNameSpan.textContent = fileName;
+            if (previewDiv) previewDiv.classList.remove('hidden');
+            if (btnText) btnText.textContent = 'Ganti file';
+        }
+    }
+
+    // Fungsi untuk Menghapus File Upload (Universal untuk semua file upload)
+    function removeFile(inputId, previewId, btnId) {
+        const input = document.getElementById(inputId);
+        const previewDiv = document.getElementById(previewId);
+        const btnText = document.getElementById(btnId);
+
+        if (input) input.value = '';
+        if (previewDiv) previewDiv.classList.add('hidden');
+        if (btnText) btnText.textContent = 'Tambahkan file';
+    }
+
+    // Validasi Form dengan SweetAlert saat Submit
+    document.addEventListener('DOMContentLoaded', function () {
+        const formPraSurvei = document.getElementById('formPraSurvei');
+
+        if (formPraSurvei) {
+            formPraSurvei.addEventListener('submit', function(event) {
+                let isValid = true;
+
+                // Cek semua input yang memiliki atribut required secara otomatis
+                const requiredFields = formPraSurvei.querySelectorAll('[required]');
+
+                requiredFields.forEach(field => {
+                    // Khusus file
+                    if (field.type === 'file') {
+                        // Jika file baru belum dipilih DAN belum ada file lama yang tersimpan di server/preview
+                        if (!field.files || field.files.length === 0) {
+                            // Cek apakah elemen preview-nya sedang aktif (artinya sudah ada file lama dari database)
+                            // Kita cek berdasarkan container terdekat atau atributnya jika perlu, 
+                            // tapi standar HTML required menangkap input kosong jika belum di-upload.
+                            // Catatan: Jika form mode edit dan file lama sudah ada, browser menganggap input file kosong 
+                            // kecuali kita buat pengecualian untuk file yang sudah ada.
+                            
+                            // Untuk amannya, kita cek apakah elemen preview terlihat atau tidak:
+                            let container = field.closest('div');
+                            let hasExistingFile = container && container.querySelector('.bg-gray-50') && !container.querySelector('.bg-gray-50').classList.contains('hidden');
+                            
+                            if (!hasExistingFile) {
+                                isValid = false;
+                            }
+                        }
+                    }
+                    // Input textarea/text/date dan lainnya
+                    else {
+                        if (!field.value.trim()) {
+                            isValid = false;
+                        }
                     }
                 });
-            }
-        });
-    </script>
+
+                // Jika ada field required yang belum diisi
+                if (!isValid) {
+                    event.preventDefault();
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Peringatan',
+                        text: 'Mohon lengkapi semua pertanyaan yang bertanda (*)',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#0082CB',
+                        heightAuto: false,
+                        customClass: {
+                            popup: 'swal2-tight-popup',
+                            confirmButton: 'swal2-tight-btn'
+                        }
+                    });
+                }
+            });
+        }
+    });
+</script>
 
     <style>
         .swal2-popup.swal2-tight-popup {

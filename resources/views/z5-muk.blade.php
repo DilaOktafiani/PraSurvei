@@ -29,11 +29,11 @@
     <!-- CONTAINER UTAMA -->
     <main class="max-w-3xl mx-auto mt-8 px-4 w-full flex-grow mb-12">
         
-        <div class="bg-white rounded-lg shadow-sm border-t-8 border-[#0082CB] border-x border-b border-gray-200 p-6 mb-6" novalidate>
+        <div class="bg-white rounded-lg shadow-sm border-t-8 border-[#0082CB] border-x border-b border-gray-200 p-6 mb-6">
             <div class="flex justify-between items-start gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Form Credit Analys</h2>
-                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan hasil analisis lapangan untuk penentuan kelayakan akhir nasabah.</p>
+                    <h2 class="text-2xl font-bold text-gray-800">Form Memo Usulan Kredit (MUK)</h2>
+                    <p class="text-gray-500 mt-1 text-sm">Silakan masukkan data di bawah ini untuk melengkapi Memo Usulan Kredit (MUK) nasabah.</p>
                 </div>
             </div>
             <p class="text-xs text-red-500 mt-4 font-medium flex items-center gap-1 border-t border-gray-100 pt-3">
@@ -41,36 +41,39 @@
             </p>
         </div>
 
+        @if ($errors->any())
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 text-red-500 font-bold mr-2">&#9888;</div>
+                    <h3 class="text-sm font-bold text-red-800">Ada beberapa kesalahan pada inputan Anda:</h3>
+                </div>
+                <ul class="mt-2 list-disc list-inside text-xs text-red-700 space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        
         <!-- FORM UTAMA -->
-        <form id="formPraSurvei" action="{{ route('storeAlur14') }}" method="POST" class="space-y-6" novalidate>
+        <form id="formPraSurvei" action="{{ route('storeAlur5') }}" method="POST" class="space-y-6" novalidate>
             @csrf <!-- Security Token Laravel -->
-
-            <!-- Hidden Input Debitur ID (Wajib agar terhubung dengan tabel debitur) -->
+            
+            <!-- Hidden Input Debitur ID (Penting agar data terhubung dengan benar) -->
             <input type="hidden" name="debitur_id" value="{{ $debitur->id ?? session('debitur_id') }}">
 
-            <!-- Data Tambahan -->
+            <!-- E. REFERENSI CREDIT ANALIST -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">Data Tambahan</h3>
+                <h3 class="text-md font-bold text-[#0A3370] border-b pb-2 mb-2">E. REFERENSI CREDIT ANALIST</h3>
 
-                <!-- Apakah ingin menambahkan data SLIK -->
+                <!-- Keterangan -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Apakah ingin menambahkan data SLIK <span class="text-red-500">*</span>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Keterangan <span class="text-red-500">*</span>
                     </label>
-                    <div class="space-y-3 text-sm text-gray-700">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="menambahkan_data_slik" value="YA" 
-                                   {{ (old('menambahkan_data_slik', $takeover->menambahkan_data_slik ?? '') == 'YA') ? 'checked' : '' }} 
-                                   class="accent-[#0082CB]" required>
-                            <span>YA</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="menambahkan_data_slik" value="Tidak (saya mengisi data manual di excel)" 
-                                   {{ (old('menambahkan_data_slik', $takeover->menambahkan_data_slik ?? '') == 'Tidak (saya mengisi data manual di excel)') ? 'checked' : '' }} 
-                                   class="accent-[#0082CB]" required>
-                            <span>Tidak (saya mengisi data manual di excel)</span>
-                        </label>
-                    </div>
+                    <textarea id="referensi_ca" name="referensi_ca" rows="7" placeholder="ex : 
+Berdasarkan pertimbangan dari segala aspek yang ada, dengan melihat kondisi yang ada dilapangan serta pantauan pekerjaan dan pendukung yang baik, maka Credit Analyst dalam hal ini memberikan referensi debitur dengan nama Adi Sucipto layak diberikan fasilitas kredit Menurun (bayar bunga saja) sebesar Rp365.000.000 dengan jangka waktu 12 bulan." required
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('referensi_ca', $data->referensi_ca ?? '') }}</textarea>
                 </div>
             </div>
 
@@ -99,21 +102,22 @@
     </footer>
 
 <script>
-    // Ubah event tombol submit form agar memanggil validasi kustom untuk Alur 14
     const formPraSurvei = document.getElementById('formPraSurvei');
+
     formPraSurvei.addEventListener('submit', function(event) {
-        event.preventDefault(); // Mencegah form langsung submit
-        
-        const selectedSlik = formPraSurvei.querySelector('input[name="menambahkan_data_slik"]:checked');
+        const referensiCA = formPraSurvei.querySelector('textarea[name="referensi_ca"]');
+
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
-        // Validasi Radio Data SLIK terpilih
-        if (!selectedSlik) {
+        // Validasi textarea referensi_ca
+        if (!referensiCA || referensiCA.value.trim() === '') {
             isValid = false;
         }
 
         if (!isValid) {
+            event.preventDefault();
+
             Swal.fire({
                 icon: 'warning',
                 title: 'Peringatan',
@@ -126,9 +130,12 @@
                     confirmButton: 'swal2-tight-btn'
                 }
             });
-        } else {
-            formPraSurvei.submit(); 
+
+            return;
         }
+
+        // Jika valid, form dikirim
+        formPraSurvei.submit();
     });
 </script>
 

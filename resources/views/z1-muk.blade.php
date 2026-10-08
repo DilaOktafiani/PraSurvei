@@ -41,7 +41,6 @@
             </p>
         </div>
 
-        <!-- TEMPELKAN INI DI ATAS <form id="formPraSurvei" ...> -->
         @if ($errors->any())
             <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm">
                 <div class="flex items-center">
@@ -78,13 +77,13 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Nama Debitur <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="nama" value="{{ old('nama', $debitur->nama ?? '') }}" placeholder="Sesuai KTP" required
+                    <input type="text" name="nama" value="{{ old('nama', $debitur->nama ?? '') }}" placeholder="ex : Adi Sucipto" required
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Tempat/Tanggal lahir <span class="text-red-500">*</span>
+                        Tempat / Tanggal lahir <span class="text-red-500">*</span>
                     </label>
                     <input type="text" name="tempat_tanggal_lahir" value="{{ old('tempat_tanggal_lahir', $debitur->tempat_tanggal_lahir ?? '') }}" placeholder="ex : Sukoharjo, 06-09-1979" required
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
@@ -100,7 +99,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Nama Istri/penjamin <span class="text-red-500">*</span>
+                        Nama Istri / penjamin <span class="text-red-500">*</span>
                     </label>
                     <input type="text" name="nama_istri_penjamin" value="{{ old('nama_istri_penjamin', $debitur->nama_istri_penjamin ?? '') }}" placeholder="Sesuai KTP" required
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">
@@ -150,7 +149,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Alamat Kerja / Usaha <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="alamat_usaha" rows="2" placeholder="Masukkan alamat kerja/usaha" required
+                    <textarea name="alamat_usaha" rows="2" placeholder="Masukkan alamat kerja / usaha" required
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('alamat_usaha', $debitur->alamat_usaha ?? '') }}</textarea>
                 </div>
 
@@ -167,10 +166,18 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">IDI di Bank Lain <span class="text-red-500">*</span></label>
                     <div id="container_file_idi" class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                        <input type="file" id="file_idi" name="idi_di_bank_lain" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this)">
+                        
+                        <!-- required dibuat dinamis & ditambahkan data-has-file -->
+                        <input type="file" id="file_idi" name="idi_di_bank_lain" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this)"
+                            {{ isset($debitur->idi_di_bank_lain) && $debitur->idi_di_bank_lain ? '' : 'required' }}
+                            data-has-file="{{ isset($debitur->idi_di_bank_lain) && $debitur->idi_di_bank_lain ? 'true' : 'false' }}">
+
                         <button type="button" onclick="document.getElementById('file_idi').click()" 
                                 class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
-                            <span id="txt_btn_upload">Tambahkan file</span>
+                            <!-- MODIFIKASI DI SINI: Teks tombol otomatis menyesuaikan -->
+                            <span id="txt_btn_upload">
+                                {{ isset($debitur->idi_di_bank_lain) && $debitur->idi_di_bank_lain ? 'Ganti file' : 'Tambahkan file' }}
+                            </span>
                         </button>
 
                         @if(isset($debitur->idi_di_bank_lain) && $debitur->idi_di_bank_lain)
@@ -222,6 +229,9 @@
             document.getElementById('file_name').textContent = fileName;
             document.getElementById('file_preview').classList.remove('hidden');
             document.getElementById('txt_btn_upload').textContent = 'Ganti file';
+            
+            // Tandai bahwa file baru sudah dipilih, jadi status "has-file" dianggap true
+            input.setAttribute('data-has-file', 'true');
         }
     }
 
@@ -230,6 +240,11 @@
         fileInput.value = '';
         document.getElementById('file_preview').classList.add('hidden');
         document.getElementById('txt_btn_upload').textContent = 'Tambahkan file';
+        
+        // Ubah data-has-file jadi false karena filenya dihapus oleh user
+        fileInput.setAttribute('data-has-file', 'false');
+        // Kembalikan atribut required jika filenya dihapus manual oleh user
+        fileInput.setAttribute('required', 'required');
     }
 
     function validateAndSubmit() {
@@ -238,8 +253,16 @@
         let isValid = true;
 
         requiredInputs.forEach(input => {
-            if (!input.value.trim()) {
-                isValid = false;
+            if (input.type === 'file') {
+                const hasExistingFile = input.getAttribute('data-has-file') === 'true';
+                // Validasi: Error jika tidak ada file yang dipilih DAN belum ada file lama di server
+                if (!input.files.length && !hasExistingFile) {
+                    isValid = false;
+                }
+            } else {
+                if (!input.value.trim()) {
+                    isValid = false;
+                }
             }
         });
 
