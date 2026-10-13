@@ -70,6 +70,7 @@ class MukController extends Controller
             'bidang_usaha'         => 'required|string|max:255',
             'alamat_usaha'         => 'required|string',
             'kontak'               => 'required|string|max:50',
+            'tanggal_slik'         => 'string|max:255',
             'idi_di_bank_lain'     => "$idiRule|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
             'keterangan'           => 'required|string',
         ], [
@@ -140,15 +141,22 @@ class MukController extends Controller
 
     public function storeAlur2(Request $request)
     {
-        // Cek apakah data plafon kredit sudah ada berdasarkan debitur_id
-        $plafonExisting = PlafonKredit::where('debitur_id', $request->debitur_id)->first();
+        // 1. Ambil debitur_id dari session (sama seperti alur 1)
+        $debiturId = session('debitur_id');
         
-        // Jika file lama sudah ada di database, buat jadi 'nullable' (tidak wajib upload ulang)
-        $fileRule = ($plafonExisting && $plafonExisting->pengajuan_plafon_kredit) ? 'nullable' : 'required';
+        // Pastikan session debitur ada, jika tidak arahkan kembali atau beri error
+        if (!$debiturId) {
+            return redirect()->route('z1-muk')->withErrors(['error' => 'Data debitur tidak ditemukan di sesi. Silakan isi data awal terlebih dahulu.']);
+        }
 
-        // 1. Validasi input sesuai dengan form & model PlafonKredit
+        // Cari data plafon kredit yang sudah ada berdasarkan debitur_id di session
+        $existingPlafon = PlafonKredit::where('debitur_id', $debiturId)->first();
+        
+        // 2. Jika file di database sudah ada, buat jadi 'nullable'. Jika belum, 'required'.
+        $fileRule = ($existingPlafon && $existingPlafon->pengajuan_plafon_kredit) ? 'nullable' : 'required';
+
+        // 3. Validasi input
         $request->validate([
-            'debitur_id'              => 'required',
             'pengajuan_plafon_kredit' => "$fileRule|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
             'tujuan_penggunaan'       => 'required|string',
         ], [
@@ -159,42 +167,36 @@ class MukController extends Controller
             'pengajuan_plafon_kredit.max' => 'Ukuran file maksimal adalah 10 MB.',
         ]);
 
-        DB::beginTransaction();
-        try {
-            // 2. Ambil data lama jika ada untuk pengecekan file
-            $pathFile = $plafonExisting ? $plafonExisting->pengajuan_plafon_kredit : null;
+        $data = $request->except(['pengajuan_plafon_kredit']);
+        $data['debitur_id'] = $debiturId; // Masukkan debitur_id secara otomatis dari session
 
-            // 3. Handle upload file baru jika di-upload user
-            if ($request->hasFile('pengajuan_plafon_kredit')) {
-                // Hapus file lama fisik jika ada di storage
-                if ($pathFile && Storage::disk('public')->exists($pathFile)) {
-                    Storage::disk('public')->delete($pathFile);
-                }
+        // 4. Handle Upload File Pengajuan Plafon Kredit
+        if ($request->hasFile('pengajuan_plafon_kredit')) {
+            $pathPlafon = $request->file('pengajuan_plafon_kredit')
+                ->store('pengajuan_plafon', 'public');
 
-                $file = $request->file('pengajuan_plafon_kredit');
-                $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
-                
-                // Simpan ke storage (disk public)
-                $pathFile = $file->storeAs('pengajuan_plafon', $filename, 'public');
+            // Simpan path relatif ke array data
+            $data['pengajuan_plafon_kredit'] = $pathPlafon;
+        }
+
+        // 5. LOGIKA UPDATE / CREATE (Sama persis polanya dengan alur 1)
+        if ($existingPlafon) {
+            // Jika ada file baru dan file lama ada, hapus file lama fisik di storage
+            if (
+                $request->hasFile('pengajuan_plafon_kredit') &&
+                $existingPlafon->pengajuan_plafon_kredit
+            ) {
+                Storage::disk('public')->delete(
+                    $existingPlafon->pengajuan_plafon_kredit
+                );
             }
 
-            // 4. Simpan atau update data menggunakan model PlafonKredit
-            PlafonKredit::updateOrCreate(
-                ['debitur_id' => $request->debitur_id],
-                [
-                    'pengajuan_plafon_kredit' => $pathFile,
-                    'tujuan_penggunaan'       => $request->tujuan_penggunaan,
-                ]
-            );
-
-            DB::commit();
-            
-            return redirect()->route('z3-muk')->with('success', 'Data plafon kredit berhasil disimpan.');
-            
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => 'Gagal: ' . $e->getMessage()])->withInput();
+            $existingPlafon->update($data);
+        } else {
+            PlafonKredit::create($data);
         }
+
+        return redirect()->route('z3-muk');
     }
 
     // ==========================================
@@ -227,51 +229,62 @@ class MukController extends Controller
 
     public function storeAlur3(Request $request)
     {
+        // 1. Ambil debitur_id dari session atau request
         $debiturId = $request->debitur_id ?? session('debitur_id');
 
         if (!$debiturId) {
             return redirect()->route('step1')
-                ->with('error', 'Data debitur tidak ditemukan.');
+                ->with('error', 'Data debitur tidak ditemukan di sesi. Silakan isi data awal terlebih dahulu.');
         }
 
         session(['debitur_id' => $debiturId]);
 
         // Ambil data usaha utama (urutan 1) yang sudah ada di database (jika ada)
         $infoUtama = InformasiUsaha::where('debitur_id', $debiturId)->where('urutan', 1)->first();
-        $hasExistingFile = $infoUtama && !empty($infoUtama->perhitungan_omset_usaha);
 
-        // 1. Validasi Input Utama & Dinamis
+        // 2. Jika file di database sudah ada, buat jadi 'nullable'. Jika belum, 'required'.
+        $fileOmsetUtamaRule       = ($infoUtama && $infoUtama->perhitungan_omset_usaha) ? 'nullable' : 'required';
+        $fileOmsetPendukungRule   = ($infoUtama && $infoUtama->perhitungan_omset_pendukung) ? 'nullable' : 'required';
+
+        // 3. Validasi Input Utama & Dinamis
         $rules = [
-            'gambaran_pekerjaan_debitur' => 'required|string',
-            'perhitungan_omset_usaha' => $hasExistingFile 
-                ? 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240' 
-                : 'required|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
-            'usaha_pendukung' => 'nullable|string',
-            'perhitungan_omset_pendukung' => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
+            'gambaran_pekerjaan_debitur'    => 'required|string',
+            'perhitungan_omset_usaha'       => "$fileOmsetUtamaRule|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
+            'usaha_pendukung'               => 'nullable|string',
+            'perhitungan_omset_pendukung'   => "$fileOmsetPendukungRule|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
         ];
 
         for ($i = 2; $i <= 10; $i++) {
             $rules["gambaran_pekerjaan_debitur_{$i}"] = 'nullable|string';
-            $rules["perhitungan_omset_usaha_{$i}"] = 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240';
+            $rules["perhitungan_omset_usaha_{$i}"]    = 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240';
         }
 
-        $request->validate($rules);
+        $messages = [
+            'required'                      => 'Kolom :attribute wajib diisi.',
+            'string'                        => 'Kolom :attribute harus berupa teks.',
+            'file'                          => 'Kolom :attribute harus berupa sebuah berkas.',
+            'mimes'                         => 'Format file harus berupa PDF, JPG, JPEG, PNG, atau DWG.',
+            'perhitungan_omset_usaha.max'     => 'Ukuran file omset usaha maksimal adalah 10 MB.',
+            'perhitungan_omset_pendukung.max' => 'Ukuran file omset pendukung maksimal adalah 10 MB.',
+        ];
+
+        $request->validate($rules, $messages);
 
         DB::beginTransaction();
 
         try {
             // ==========================================
-            // 2. SIMPAN USAHA UTAMA (Urutan = 1)
+            // 4. SIMPAN USAHA UTAMA (Urutan = 1)
             // ==========================================
             $infoUtama = InformasiUsaha::firstOrNew([
                 'debitur_id' => $debiturId,
-                'urutan' => 1
+                'urutan'     => 1
             ]);
 
             $infoUtama->gambaran_pekerjaan_debitur = $request->gambaran_pekerjaan_debitur;
-            $infoUtama->usaha_pendukung = $request->input('usaha_pendukung') ?? '';
+            $infoUtama->usaha_pendukung           = $request->input('usaha_pendukung') ?? '';
 
-            // Handle file omset usaha 1
+            // Handle file omset usaha 1 (Sama persis polanya dengan alur 2)
             if ($request->hasFile('perhitungan_omset_usaha')) {
                 if ($infoUtama->perhitungan_omset_usaha && \Storage::disk('public')->exists($infoUtama->perhitungan_omset_usaha)) {
                     \Storage::disk('public')->delete($infoUtama->perhitungan_omset_usaha);
@@ -279,12 +292,11 @@ class MukController extends Controller
                 $infoUtama->perhitungan_omset_usaha = $request->file('perhitungan_omset_usaha')->store('informasi_usaha', 'public');
             }
 
-            // Handle file omset pendukung (DIREVISI AGAR MASUK KE KOLOM YANG BENAR)
+            // Handle file omset pendukung (Sama persis polanya dengan alur 2)
             if ($request->hasFile('perhitungan_omset_pendukung')) {
                 if ($infoUtama->perhitungan_omset_pendukung && \Storage::disk('public')->exists($infoUtama->perhitungan_omset_pendukung)) {
                     \Storage::disk('public')->delete($infoUtama->perhitungan_omset_pendukung);
                 }
-                // Ubah dari perhitungan_omset_usaha menjadi perhitungan_omset_pendukung
                 $infoUtama->perhitungan_omset_pendukung = $request->file('perhitungan_omset_pendukung')->store('informasi_usaha', 'public');
             }
 
@@ -292,7 +304,7 @@ class MukController extends Controller
 
 
             // ==========================================
-            // 3. SIMPAN USAHA DINAMIS (Urutan 2 sampai 10)
+            // 5. SIMPAN USAHA DINAMIS (Urutan 2 sampai 10)
             // ==========================================
             $oldDetails = InformasiUsaha::where('debitur_id', $debiturId)->where('urutan', '>', 1)->get();
             
@@ -301,17 +313,26 @@ class MukController extends Controller
 
             for ($i = 2; $i <= 10; $i++) {
                 $fieldPekerjaan = "gambaran_pekerjaan_debitur_{$i}";
-                $fieldOmset = "perhitungan_omset_usaha_{$i}";
+                $fieldOmset     = "perhitungan_omset_usaha_{$i}";
 
                 $pekerjaanVal = $request->input($fieldPekerjaan);
-                $hasFile = $request->hasFile($fieldOmset);
+                $hasFile      = $request->hasFile($fieldOmset);
 
                 // Jika user mengisi teks atau mengupload file pada baris dinamis ini
                 if (!empty($pekerjaanVal) || $hasFile) {
                     $filePath = null;
 
                     if ($hasFile) {
-                        $filePath = $request->file($fieldOmset)->store('informasi_usaha', 'public');
+                        $fileBaru = $request->file($fieldOmset);
+                        $filePath = $fileBaru->store('informasi_usaha', 'public');
+
+                        // Hapus file lama jika ada di baris dinamis tersebut
+                        $oldItem = $oldDetails->where('urutan', $i)->first();
+                        if ($oldItem && $oldItem->perhitungan_omset_usaha) {
+                            if (\Storage::disk('public')->exists($oldItem->perhitungan_omset_usaha)) {
+                                \Storage::disk('public')->delete($oldItem->perhitungan_omset_usaha);
+                            }
+                        }
                     } else {
                         // Pertahankan file lama jika user tidak mengupload ulang di baris tersebut
                         $oldItem = $oldDetails->where('urutan', $i)->first();
@@ -321,11 +342,11 @@ class MukController extends Controller
                     }
 
                     InformasiUsaha::create([
-                        'debitur_id' => $debiturId,
-                        'urutan' => $i,
-                        'gambaran_pekerjaan_debitur' => $pekerjaanVal ?? '',
-                        'perhitungan_omset_usaha' => $filePath,
-                        'usaha_pendukung' => null, 
+                        'debitur_id'                  => $debiturId,
+                        'urutan'                      => $i,
+                        'gambaran_pekerjaan_debitur'  => $pekerjaanVal ?? '',
+                        'perhitungan_omset_usaha'     => $filePath,
+                        'usaha_pendukung'             => null, 
                         'perhitungan_omset_pendukung' => null,
                     ]);
                 }
@@ -377,7 +398,7 @@ class MukController extends Controller
 
     public function storeAlur4(Request $request)
     {
-        // Ambil debitur_id dari form atau session
+        // Ambil debitur_id dari session atau form
         $debiturId = $request->debitur_id ?? session('debitur_id');
 
         if (!$debiturId) {
@@ -388,13 +409,18 @@ class MukController extends Controller
         // Simpan ke session
         session(['debitur_id' => $debiturId]);
 
-
         // ==========================================
-        // 1. VALIDASI
+        // 1. AMBIL DATA LAMA (UNTUK VALIDASI & FILE)
         // ==========================================
-        // Ambil data lama untuk pengecekan file
         $existingData = \App\Models\Muk\LimaC::where('debitur_id', $debiturId)->first();
 
+        // Tentukan aturan file (nullable jika sudah ada di database, required jika belum)
+        $ruleRingkasan = ($existingData && $existingData->ringkasan_penilaian_jaminan) ? 'nullable' : 'required';
+        $ruleCapacity  = ($existingData && $existingData->capacity) ? 'nullable' : 'required';
+
+        // ==========================================
+        // 2. VALIDASI
+        // ==========================================
         $request->validate([
             // CAPITAL
             'capital' => 'required|string',
@@ -404,12 +430,7 @@ class MukController extends Controller
             'luas' => 'required|string',
             'pemilik' => 'required|string',
             'letak_shm' => 'required|string',
-
-            // Jika file lama belum ada, maka wajib upload. Jika sudah ada, jadi nullable.
-            'ringkasan_penilaian_jaminan' => ($existingData && $existingData->ringkasan_penilaian_jaminan) 
-                ? 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240' 
-                : 'required|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
-
+            'ringkasan_penilaian_jaminan' => "$ruleRingkasan|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
             'tanggal' => 'nullable|string',
             'info_harga_tanah1' => 'required|string',
             'info_harga_tanah2' => 'nullable|string',
@@ -421,10 +442,7 @@ class MukController extends Controller
             'condition' => 'required|string',
 
             // CAPACITY
-            'capacity' => ($existingData && $existingData->capacity) 
-                ? 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240' 
-                : 'required|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
-
+            'capacity' => "$ruleCapacity|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
             'keluarga' => 'required|string',
             'anak' => 'required|string',
             'pendidikan' => 'required|string',
@@ -432,159 +450,68 @@ class MukController extends Controller
             // CHARACTER
             'internal' => 'required|string',
             'eksternal' => 'required|string',
+        ], [
+            'required'                    => 'Kolom :attribute wajib diisi.',
+            'string'                      => 'Kolom :attribute harus berupa teks.',
+            'file'                        => 'Kolom :attribute harus berupa sebuah berkas.',
+            'mimes'                       => 'Format file harus berupa PDF, JPG, JPEG, PNG, atau DWG.',
+            'max'                         => 'Ukuran file maksimal adalah 10 MB.',
         ]);
 
+        // Ambil semua request kecuali file, lalu set debitur_id
+        $data = $request->except(['ringkasan_penilaian_jaminan', 'capacity']);
+        $data['debitur_id'] = $debiturId;
 
         DB::beginTransaction();
 
         try {
-
             // ==========================================
-            // 2. AMBIL DATA LAMA
+            // 3. HANDLE UPLOAD & HAPUS FILE LAMA: RINGKASAN PENILAIAN JAMINAN
             // ==========================================
-            $data = \App\Models\Muk\LimaC::where(
-                'debitur_id',
-                $debiturId
-            )->first();
-
-
-            // ==========================================
-            // 3. FILE RINGKASAN PENILAIAN JAMINAN
-            // ==========================================
-            $fileRingkasan = $data
-                ? $data->ringkasan_penilaian_jaminan
-                : null;
-
             if ($request->hasFile('ringkasan_penilaian_jaminan')) {
-
-                if (
-                    $fileRingkasan &&
-                    \Storage::disk('public')->exists($fileRingkasan)
-                ) {
-                    \Storage::disk('public')->delete($fileRingkasan);
+                if ($existingData && $existingData->ringkasan_penilaian_jaminan) {
+                    if (\Storage::disk('public')->exists($existingData->ringkasan_penilaian_jaminan)) {
+                        \Storage::disk('public')->delete($existingData->ringkasan_penilaian_jaminan);
+                    }
                 }
 
-                $fileRingkasan =
-                    $request->file('ringkasan_penilaian_jaminan')
-                        ->store('penilaian_jaminan', 'public');
+                $data['ringkasan_penilaian_jaminan'] = $request->file('ringkasan_penilaian_jaminan')
+                    ->store('penilaian_jaminan', 'public');
             }
 
-
             // ==========================================
-            // 4. FILE CAPACITY
+            // 4. HANDLE UPLOAD & HAPUS FILE LAMA: CAPACITY
             // ==========================================
-            $fileCapacity = $data
-                ? $data->capacity
-                : null;
-
             if ($request->hasFile('capacity')) {
-
-                if (
-                    $fileCapacity &&
-                    \Storage::disk('public')->exists($fileCapacity)
-                ) {
-                    \Storage::disk('public')->delete($fileCapacity);
+                if ($existingData && $existingData->capacity) {
+                    if (\Storage::disk('public')->exists($existingData->capacity)) {
+                        \Storage::disk('public')->delete($existingData->capacity);
+                    }
                 }
 
-                $fileCapacity =
-                    $request->file('capacity')
-                        ->store('capacity', 'public');
+                $data['capacity'] = $request->file('capacity')
+                    ->store('capacity', 'public');
             }
 
-
             // ==========================================
-            // 5. SIMPAN / UPDATE DATA
+            // 5. SIMPAN / UPDATE DATA (MENGGUNAKAN POLA ALUR 2)
             // ==========================================
-            \App\Models\Muk\LimaC::updateOrCreate(
-
-                ['debitur_id' => $debiturId],
-
-                [
-                    // CAPITAL
-                    'capital' =>
-                        $request->capital,
-
-
-                    // COLLATERAL (Rincian Jaminan)
-                    'no_shm' =>
-                        $request->no_shm,
-
-                    'luas' =>
-                        $request->luas,
-
-                    'pemilik' =>
-                        $request->pemilik,
-
-                    'letak_shm' =>
-                        $request->letak_shm,
-
-                    'ringkasan_penilaian_jaminan' =>
-                        $fileRingkasan,
-
-                    'tanggal' =>
-                        $request->tanggal,
-
-                    'info_harga_tanah1' =>
-                        $request->info_harga_tanah1,
-
-                    'info_harga_tanah2' =>
-                        $request->info_harga_tanah2,
-
-                    'info_harga_tanah3' =>
-                        $request->info_harga_tanah3,
-
-                    'batas_objek_jaminan' =>
-                        $request->batas_objek_jaminan,
-
-                    'catatan_khusus' =>
-                        $request->catatan_khusus,
-
-
-                    // CONDITION
-                    'condition' =>
-                        $request->condition,
-
-
-                    // CAPACITY
-                    'capacity' =>
-                        $fileCapacity,
-
-                    'keluarga' =>
-                        $request->keluarga,
-
-                    'anak' =>
-                        $request->anak,
-
-                    'pendidikan' =>
-                        $request->pendidikan,
-
-
-                    // CHARACTER
-                    'internal' =>
-                        $request->internal,
-
-                    'eksternal' =>
-                        $request->eksternal,
-                ]
-            );
-
+            if ($existingData) {
+                $existingData->update($data);
+            } else {
+                \App\Models\Muk\LimaC::create($data);
+            }
 
             DB::commit();
-
 
             // ==========================================
             // 6. KE HALAMAN BERIKUTNYA
             // ==========================================
             return redirect()
                 ->route('z5-muk')
-                ->with(
-                    'success',
-                    'Data 5C berhasil disimpan.'
-                );
-
+                ->with('success', 'Data 5C berhasil disimpan.');
 
         } catch (\Exception $e) {
-
             DB::rollBack();
 
             return back()
@@ -807,84 +734,72 @@ class MukController extends Controller
 
     public function storeAlur7(Request $request)
     {
-        // 1. Validasi input sesuai dengan form & model Kesimpulan
+        // 1. Ambil debitur_id dari session
+        $debiturId = session('debitur_id');
+        
+        // Pastikan session debitur ada
+        if (!$debiturId) {
+            return redirect()->route('z1-muk')->withErrors(['error' => 'Data debitur tidak ditemukan di sesi. Silakan isi data awal terlebih dahulu.']);
+        }
+
+        // Cari data Kesimpulan yang sudah ada berdasarkan debitur_id di session
+        $kesimpulan = Kesimpulan::where('debitur_id', $debiturId)->first();
+        
+        // 2. Jika file di database sudah ada, buat jadi 'nullable'. Jika belum, 'required'.
+        $fileRule = ($kesimpulan && $kesimpulan->plafon) ? 'nullable' : 'required';
+
+        // 3. Validasi input sesuai dengan form & model Kesimpulan
         $request->validate([
-            'debitur_id'         => 'required',
             'kesimpulan'         => 'required|string',
-            'plafon'             => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
+            'plafon'             => "$fileRule|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
             'provisi'            => 'required|string',
             'biaya_administrasi' => 'required|string',
             'jaminan'            => 'required|string',
             'blokir'             => 'required|string',
-            'keterangan'         => 'string',
+            'keterangan'         => 'string|nullable',
         ], [
-            'required'              => 'Kolom :attribute wajib diisi.',
-            'string'                => 'Kolom :attribute harus berupa teks.',
-            'file'                  => 'Kolom :attribute harus berupa sebuah berkas.',
-            'mimes'                 => 'Format file harus berupa PDF, JPG, JPEG, PNG, atau DWG.',
-            'plafon.max'            => 'Ukuran file plafon maksimal adalah 10 MB.',
+            'required'           => 'Kolom :attribute wajib diisi.',
+            'string'             => 'Kolom :attribute harus berupa teks.',
+            'file'               => 'Kolom :attribute harus berupa sebuah berkas.',
+            'mimes'              => 'Format file harus berupa PDF, JPG, JPEG, PNG, atau DWG.',
+            'plafon.max'         => 'Ukuran file plafon maksimal adalah 10 MB.',
         ]);
 
         DB::beginTransaction();
 
         try {
+            // Ambil data input kecuali plafon terlebih dahulu
+            $data = $request->except(['plafon']);
+            $data['debitur_id'] = $debiturId;
 
-            // 2. Ambil data Kesimpulan lama jika ada
-            $kesimpulan = Kesimpulan::where(
-                'debitur_id',
-                $request->debitur_id
-            )->first();
-
-            // Ambil path file plafon lama
-            $pathFile = $kesimpulan
-                ? $kesimpulan->plafon
-                : null;
-
-
-            // 3. Handle upload file plafon baru
+            // 4. Handle upload file plafon baru
             if ($request->hasFile('plafon')) {
-
-                // Hapus file plafon lama jika ada
-                if ($pathFile && Storage::disk('public')->exists($pathFile)) {
-                    Storage::disk('public')->delete($pathFile);
-                }
-
                 $file = $request->file('plafon');
 
-                $filename = time() . '_' .
-                    preg_replace(
-                        '/\s+/',
-                        '_',
-                        $file->getClientOriginalName()
-                    );
+                // UBAH DI SINI: Gunakan strtolower agar ekstensi (.PNG -> .png) otomatis kecil
+                $originalName = strtolower($file->getClientOriginalName());
+                $filename = time() . '_' . preg_replace('/\s+/', '_', $originalName);
 
                 // Simpan file baru ke folder plafon
-                $pathFile = $file->storeAs(
-                    'plafon',
-                    $filename,
-                    'public'
-                );
+                $pathFile = $file->storeAs('plafon', $filename, 'public');
+
+                // Masukkan path baru ke array data
+                $data['plafon'] = $pathFile;
             }
 
+            // 5. Logika Update / Create
+            if ($kesimpulan) {
+                // Jika ada file baru dan file lama ada di storage, hapus file lama secara fisik
+                if ($request->hasFile('plafon') && $kesimpulan->plafon) {
+                    if (Storage::disk('public')->exists($kesimpulan->plafon)) {
+                        Storage::disk('public')->delete($kesimpulan->plafon);
+                    }
+                }
 
-            // 4. Simpan atau update data Kesimpulan
-            Kesimpulan::updateOrCreate(
-                ['debitur_id' => $request->debitur_id],
-                [
-                    'kesimpulan'         => $request->kesimpulan,
-                    'plafon'             => $pathFile,
-                    'provisi'            => $request->provisi,
-                    'biaya_administrasi' => $request->biaya_administrasi,
-                    'jaminan'            => $request->jaminan,
-                    'blokir'             => $request->blokir,
-                    'keterangan'         => $request->keterangan,
-                ]
-            );
-
-            // Simpan debitur_id ke session
-            session([
-                'debitur_id' => $request->debitur_id
-            ]);
+                $kesimpulan->update($data);
+            } else {
+                Kesimpulan::create($data);
+            }
 
             DB::commit();
 
@@ -894,7 +809,6 @@ class MukController extends Controller
                 ->with('success', 'Data Kesimpulan berhasil disimpan.');
 
         } catch (\Exception $e) {
-
             DB::rollBack();
 
             return back()
@@ -1527,14 +1441,29 @@ class MukController extends Controller
     public function storeAlur12(Request $request)
     {
         // ==========================================
-        // 1. VALIDASI INPUT (Wajib Diisi)
+        // 1. AMBIL DEBITUR_ID DARI SESSION
         // ==========================================
+        $debiturId = session('debitur_id');
 
+        // Pastikan session debitur ada, jika tidak arahkan kembali
+        if (!$debiturId) {
+            return redirect()->route('z1-muk')->withErrors([
+                'error' => 'Data debitur tidak ditemukan di sesi. Silakan isi data awal terlebih dahulu.'
+            ]);
+        }
+
+        // Cari data denah yang sudah ada berdasarkan debitur_id di session
+        $existingDenah = Denah::where('debitur_id', $debiturId)->first();
+
+        // Jika file di database sudah ada, buat rule jadi 'nullable'. Jika belum, 'required'.
+        $fileRule = ($existingDenah && $existingDenah->denah_jaminan) ? 'nullable' : 'required';
+
+        // ==========================================
+        // 2. VALIDASI INPUT
+        // ==========================================
         $request->validate([
-            'debitur_id'    => 'required',
-            'denah_jaminan' => 'required|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
+            'denah_jaminan' => "$fileRule|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
         ], [
-            'debitur_id.required'    => 'Data debitur wajib tersedia.',
             'denah_jaminan.required' => 'Denah Jaminan wajib diunggah.',
             'denah_jaminan.file'     => 'Denah Jaminan harus berupa file.',
             'denah_jaminan.mimes'    => 'Format file harus berupa PDF, JPG, JPEG, PNG, atau DWG.',
@@ -1544,45 +1473,33 @@ class MukController extends Controller
         DB::beginTransaction();
 
         try {
-            // ==========================================
-            // 2. AMBIL DATA LAMA
-            // ==========================================
+            // Siapkan array data untuk create/update
+            $data = [
+                'debitur_id' => $debiturId
+            ];
 
-            $denah = Denah::where(
-                'debitur_id',
-                $request->debitur_id
-            )->first();
-
-            // Simpan path file lama
-            $pathFile = $denah ? $denah->denah_jaminan : null;
-
+            // Simpan path file lama (jika ada)
+            $pathFile = $existingDenah ? $existingDenah->denah_jaminan : null;
 
             // ==========================================
             // 3. HANDLE UPLOAD FILE BARU
             // ==========================================
-
             if ($request->hasFile('denah_jaminan')) {
-
-                // Hapus file lama jika ada
+                // Hapus file lama fisik di storage jika ada
                 if ($pathFile && Storage::disk('public')->exists($pathFile)) {
                     Storage::disk('public')->delete($pathFile);
                 }
 
                 $file = $request->file('denah_jaminan');
 
-                // Bersihkan nama file
-                $originalName = $file->getClientOriginalName();
-
-                $cleanName = preg_replace(
-                    '/\s+/',
-                    '_',
-                    $originalName
-                );
+                // UBAH DI SINI: Paksa nama & ekstensi file jadi huruf kecil (lowercase) semua
+                $originalName = strtolower($file->getClientOriginalName());
+                $cleanName = preg_replace('/\s+/', '_', $originalName);
 
                 // Buat nama file unik
                 $filename = time() . '_' . $cleanName;
 
-                // Simpan ke storage
+                // Simpan ke storage public
                 $pathFile = $file->storeAs(
                     'denah_jaminan',
                     $filename,
@@ -1590,41 +1507,33 @@ class MukController extends Controller
                 );
             }
 
+            // Masukkan path file ke array data (hanya jika file baru diupload atau sudah ada sebelumnya)
+            if ($pathFile) {
+                $data['denah_jaminan'] = $pathFile;
+            }
 
             // ==========================================
             // 4. SIMPAN / UPDATE DATA DENAH
             // ==========================================
-
-            Denah::updateOrCreate(
-                [
-                    'debitur_id' => $request->debitur_id
-                ],
-                [
-                    'denah_jaminan' => $pathFile
-                ]
-            );
-
+            if ($existingDenah) {
+                $existingDenah->update($data);
+            } else {
+                Denah::create($data);
+            }
 
             // ==========================================
             // 5. COMMIT TRANSACTION
             // ==========================================
-
             DB::commit();
-
 
             // ==========================================
             // 6. REDIRECT
             // ==========================================
-
             return redirect()
                 ->route('z13-selesai')
-                ->with(
-                    'success',
-                    'Data Denah Jaminan berhasil disimpan.'
-                );
+                ->with('success', 'Data Denah Jaminan berhasil disimpan.');
 
         } catch (\Exception $e) {
-
             // Batalkan transaksi jika terjadi error
             DB::rollBack();
 
@@ -1721,9 +1630,15 @@ class MukController extends Controller
             'pengajuan_plafon_kredit',
             'informasi_usaha',
             'limac',      
+            'referensi_ca',
+            'deviasi',
+            'kesimpulan',
+            'jaminan',
+            'usaha',
+            'rumah',      
+            'spesifikasi',
+            'denah',
         ])->findOrFail($id);
-
-        $agunan = $data->pengajuan_plafon_kredit;
 
         return view('riwayat-detail2', compact('data'));
     }
@@ -1734,25 +1649,17 @@ class MukController extends Controller
     public function printPage2($id)
     {
         $data = Debitur::with([
-            'agunans',            
-            'agunan_kendaraan',
-            'agunan_logam',
-            'agunan_simpanan',
-            'agunan_tanah',
-            'yang_lain',
-            'analisis_jaminan',
-            'badanusaha',
-            'berkas_lengkap',      
-            'capacity',
-            'capital',
-            'dataslik',
-            'data_tambahan',          
-            'kondisi',
-            'mutasi_rekening',
-            'mutasi_rekening1',
-            'pinjaman',
-            'swot',
-            'takeover'
+            'pengajuan_plafon_kredit',            
+            'informasi_usaha',
+            'limac',
+            'referensi_ca',
+            'deviasi',
+            'kesimpulan',
+            'jaminan',
+            'usaha',
+            'rumah',      
+            'spesifikasi',
+            'denah',
         ])->findOrFail($id);
 
         return view('riwayat-print2', compact('data'));
@@ -1764,25 +1671,17 @@ class MukController extends Controller
     public function exportPdf2($id)
     {
         $data = Debitur::with([
-            'agunans',            
-            'agunan_kendaraan',
-            'agunan_logam',
-            'agunan_simpanan',
-            'agunan_tanah',
-            'yang_lain',
-            'analisis_jaminan',
-            'badanusaha',
-            'berkas_lengkap',      
-            'capacity',
-            'capital',
-            'dataslik',
-            'data_tambahan',          
-            'kondisi',
-            'mutasi_rekening',
-            'mutasi_rekening1',
-            'pinjaman',
-            'swot',
-            'takeover'
+            'pengajuan_plafon_kredit',            
+            'informasi_usaha',
+            'limac',
+            'referensi_ca',
+            'deviasi',
+            'kesimpulan',
+            'jaminan',
+            'usaha',
+            'rumah',      
+            'spesifikasi',
+            'denah',
         ])->findOrFail($id);
 
         // Diubah ke riwayat-pdf2
@@ -1798,25 +1697,17 @@ class MukController extends Controller
     public function exportWord2($id)
     {
         $data = Debitur::with([
-            'agunans',            
-            'agunan_kendaraan',
-            'agunan_logam',
-            'agunan_simpanan',
-            'agunan_tanah',
-            'yang_lain',
-            'analisis_jaminan',
-            'badanusaha',
-            'berkas_lengkap',      
-            'capacity',
-            'capital',
-            'dataslik',
-            'data_tambahan',          
-            'kondisi',
-            'mutasi_rekening',
-            'mutasi_rekening1',
-            'pinjaman',
-            'swot',
-            'takeover'
+            'pengajuan_plafon_kredit',            
+            'informasi_usaha',
+            'limac',
+            'referensi_ca',
+            'deviasi',
+            'kesimpulan',
+            'jaminan',
+            'usaha',
+            'rumah',      
+            'spesifikasi',
+            'denah',
         ])->findOrFail($id);
 
         // --- UBAH GAMBAR MENJADI BASE64 AGAR MUNCUL DI WORD ---
@@ -1921,25 +1812,17 @@ class MukController extends Controller
     public function exportExcel2($id)
     {
         $data = Debitur::with([
-            'agunans',            
-            'agunan_kendaraan',
-            'agunan_logam',
-            'agunan_simpanan',
-            'agunan_tanah',
-            'yang_lain',
-            'analisis_jaminan',
-            'badanusaha',
-            'berkas_lengkap',      
-            'capacity',
-            'capital',
-            'dataslik',
-            'data_tambahan',          
-            'kondisi',
-            'mutasi_rekening',
-            'mutasi_rekening1',
-            'pinjaman',
-            'swot',
-            'takeover'
+            'pengajuan_plafon_kredit',            
+            'informasi_usaha',
+            'limac',
+            'referensi_ca',
+            'deviasi',
+            'kesimpulan',
+            'jaminan',
+            'usaha',
+            'rumah',      
+            'spesifikasi',
+            'denah',
         ])->findOrFail($id);
 
         // Diubah ke riwayat-excel2

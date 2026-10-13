@@ -107,13 +107,6 @@
                 </div>
             </div>
 
-            <!-- Judul Analisa Kredit
-            <div class="text-center mb-6">
-                <h2 class="text-[#0A3370] font-bold text-xl uppercase tracking-wider">
-                    ANALISA KREDIT
-                </h2>
-            </div> -->
-
             <!-- A. DATA DEBITUR -->
             <div class="mb-6">
                 <div class="text-[#0A3370] px-3.5 py-2 font-bold text-base uppercase rounded-none">
@@ -210,10 +203,17 @@
                     </div>
 
                     <!-- IDI di Bank Lain -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                    <div class="grid grid-cols-1 mb-4 sm:grid-cols-12">
                         <div class="p-2 font-semibold text-center sm:col-span-1">12</div>
                         <div class="p-2 font-semibold sm:col-span-2 flex items-center">IDI di Bank Lain</div>
                         <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                    </div>
+
+                    <!-- Hasil Slik, Tanggal -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
+                        <div class="p-2 font-semibold sm:col-span-12">
+                            Hasil Slik, Tanggal {{ $data->tanggal_slik ?? '-' }}
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-12">
@@ -253,26 +253,24 @@
                 </div>
                 <div class="rounded-none text-sm">
 
-                    <!-- Perhitungan Pengajuan Plafon Kredit -->
+                    <!-- Pengajuan Plafon Kredit -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">
-
                         <div class="p-8 sm:col-span-12">
-                            @if(!empty($data->idi_di_bank_lain) && $data->idi_di_bank_lain !== '-')
-
+                            {{-- Ubah pengecekan agar mengakses relasi dan kolom tabel plafon kredit dengan benar --}}
+                            @if(!empty($data->pengajuan_plafon_kredit) && !empty($data->pengajuan_plafon_kredit->pengajuan_plafon_kredit) && $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit !== '-')
                                 <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
                                     <img 
-                                        src="{{ asset('storage/' . $data->idi_di_bank_lain) }}" 
-                                        alt="IDI di Bank Lain"
+                                        {{-- Tambahkan ->pengajuan_plafon_kredit di depan untuk mengambil path dari relasi model --}}
+                                        src="{{ asset('storage/' . $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit) }}" 
+                                        alt="Plafon Kredit"
                                         style="width: 700px; height: auto;"
                                         class="block"
                                     >
                                 </div>
-
                             @else
                                 <span>-</span>
                             @endif
                         </div>
-
                     </div>
 
                     <!-- Tujuan Penggunaan -->
@@ -295,23 +293,362 @@
                 </div>
                 <div class="rounded-none text-sm">
 
-                     <!-- 1. Gambaran Pekerjaan Debitur -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                    @php
+                        // Ambil data yang diurutkan
+                        $listUsaha = $data->informasi_usaha->sortBy('urutan');
+                        $usahaUtama = $listUsaha->where('urutan', 1)->first();
+                        $usahaLainnya = $listUsaha->where('urutan', '>', 1);
+                    @endphp
+
+                    {{-- 1. BAGIAN UTAMA (Urutan 1: Judul + Isi + Gambar) --}}
+                    @if($usahaUtama && (!empty($usahaUtama->gambaran_pekerjaan_debitur) || !empty($usahaUtama->perhitungan_omset_usaha)))
+                        <div class="grid grid-cols-1 sm:grid-cols-12 mb-4">
+                            <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                                1. Gambaran Pekerjaan Debitur
+                            </div>
+                            <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
+                                {{ $usahaUtama->gambaran_pekerjaan_debitur ?? '-' }}
+                            </div>
+
+                            @if(!empty($usahaUtama->perhitungan_omset_usaha) && $usahaUtama->perhitungan_omset_usaha !== '-')
+                                <div class="py-2 px-8 sm:col-span-12 pl-8">
+                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                        <img 
+                                            src="{{ asset('storage/' . $usahaUtama->perhitungan_omset_usaha) }}" 
+                                            alt="Perhitungan Omset Usaha"
+                                            style="width: 700px; height: auto;"
+                                            class="block"
+                                        >
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
+
+                    {{-- 2. BAGIAN USAHA TAMBAHAN (Urutan 2 sampai 10: Langsung Isinya Saja Tanpa Judul Berulang) --}}
+                    @foreach($usahaLainnya as $usaha)
+                        @if(!empty($usaha->gambaran_pekerjaan_debitur) || !empty($usaha->perhitungan_omset_usaha))
+                            <div class="grid grid-cols-1 sm:grid-cols-12 mb-4">
+                                <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
+                                    {{ $usaha->gambaran_pekerjaan_debitur ?? '-' }}
+                                </div>
+
+                                @if(!empty($usaha->perhitungan_omset_usaha) && $usaha->perhitungan_omset_usaha !== '-')
+                                    <div class="py-2 px-8 sm:col-span-12 pl-8">
+                                        <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                            <img 
+                                                src="{{ asset('storage/' . $usaha->perhitungan_omset_usaha) }}" 
+                                                alt="Perhitungan Omset Usaha"
+                                                style="width: 700px; height: auto;"
+                                                class="block"
+                                            >
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+                    @endforeach
+
+                    <!-- 2. Usaha Pendukung Lain -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 mb-4">
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
-                           1. Gambaran Pekerjaan Debitur
+                            2. Usaha Pendukung Lain
                         </div>
                         <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
-                            {{ $infoUtama->informasi_usaha ->gambaran_pekerjaan_debitur ?? '-' }}
+                            {{ $data->informasi_usaha->where('urutan', 1)->first()->usaha_pendukung ?? '-' }}
+                        </div>
+
+                        {{-- Jika ada file omset pendukung, tampilkan gambarnya --}}
+                        @php
+                            $usahaUtama = $data->informasi_usaha->where('urutan', 1)->first();
+                        @endphp
+
+                        @if(!empty($usahaUtama->perhitungan_omset_pendukung) && $usahaUtama->perhitungan_omset_pendukung !== '-')
+                            <div class="py-2 px-8 sm:col-span-12 pl-8">
+                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                    <img 
+                                        src="{{ asset('storage/' . $usahaUtama->perhitungan_omset_pendukung) }}" 
+                                        alt="Perhitungan Omset Pendukung"
+                                        style="width: 700px; height: auto;"
+                                        class="block"
+                                    >
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                
+                </div>
+            </div>
+
+            <!-- D. URAIAN SINGKAT MENGENAI 5 C -->
+            <div class="mb-6">
+                <div class="text-[#0A3370] px-3.5 py-2 font-bold text-base uppercase rounded-none">
+                    D. URAIAN SINGKAT MENGENAI 5 C
+                </div>
+                <div class="rounded-none text-sm">
+
+                    <!-- 1. CAPITAL -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                           1. CAPITAL
+                        </div>
+                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8">
+                            {{ $data->limac ->capital ?? '-' }}
                         </div>
                     </div>
 
-                     <!-- 2. Usaha Pendukung Lain -->
+                    <!-- 2. COLLATERAL -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
-                           2. Usaha Pendukung Lain
+                           2. COLLATERAL
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
-                            {{ $infoUtama->informasi_usaha ->usaha_pendukung ?? '-' }}
+                    </div>
+
+                    <!-- No.SHM -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
+                        <div class="p-2 font-semibold sm:col-span-2">
+                            No.SHM
+                        </div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">
+                            :
+                        </div>
+                        <div class="p-2 sm:col-span-9 font-normal">
+                            {{ $data->limac->no_shm ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- Luas -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
+                        <div class="p-2 font-semibold sm:col-span-2">
+                            Luas
+                        </div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">
+                            :
+                        </div>
+                        <div class="p-2 sm:col-span-9 font-normal">
+                            {{ $data->limac->luas ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- Nama Pemilik -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
+                        <div class="p-2 font-semibold sm:col-span-2">
+                            Nama Pemilik
+                        </div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">
+                            :
+                        </div>
+                        <div class="p-2 sm:col-span-9 font-normal">
+                            {{ $data->limac->pemilik ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- Letak SHM -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center mb-6 pl-6">
+                        <div class="p-2 font-semibold sm:col-span-2">
+                            Letak SHM
+                        </div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">
+                            :
+                        </div>
+                        <div class="p-2 sm:col-span-9 font-normal">
+                            {{ $data->limac->letak_shm ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- Ringkasan Penilaian Jaminan, Tgl -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
+                        <div class="p-2 font-semibold sm:col-span-3">
+                            Ringkasan Penilaian Jaminan, Tgl
+                        </div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">
+                            :
+                        </div>
+                        <div class="p-2 sm:col-span-8 font-normal">
+                            {{ $data->limac->tanggal ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- Ringkasan Penilaian Jaminan -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-8 sm:col-span-12">
+                            @if(!empty($data->limac->ringkasan_penilaian_jaminan) && $data->limac->ringkasan_penilaian_jaminan !== '-')
+                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                    <img 
+                                        src="{{ asset('storage/' . $data->limac->ringkasan_penilaian_jaminan) }}" 
+                                        alt="Ringkasan Penilaian Jaminan"
+                                        style="width: 700px; height: auto;"
+                                        class="block"
+                                    >
+                                </div>
+                            @else
+                                <span>-</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Informasi Harga Tanah -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                           Informasi Harga Tanah :
+                        </div>
+                    </div>
+
+                    <!-- 1 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 items-start pl-6">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">
+                            1.
+                        </div>
+                        <div class="p-2 sm:col-span-11 font-normal">
+                            {{ $data->limac->info_harga_tanah1 ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- 2 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 items-start pl-6">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">
+                            2.
+                        </div>
+                        <div class="p-2 sm:col-span-11 font-normal">
+                            {{ $data->limac->info_harga_tanah2 ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- 3 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 items-start mb-4 pl-6">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">
+                            3.
+                        </div>
+                        <div class="p-2 sm:col-span-11 font-normal">
+                            {{ $data->limac->info_harga_tanah3 ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- Batas Objek Jaminan -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                           Batas Objek Jaminan :
+                        </div>
+                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8">
+                            {{ $data->limac ->batas_objek_jaminan ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- Catatan Khusus Objek Jaminan -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                           Catatan Khusus Objek Jaminan :
+                        </div>
+                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8">
+                            {{ $data->limac ->catatan_khusus ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- 3. CONDITION -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                           3. CONDITION
+                        </div>
+                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8">
+                            {{ $data->limac ->condition ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- 4. CAPACITY -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                           4. CAPACITY
+                        </div>
+                    </div>
+
+                    <!-- Perhitungan Capacity -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-8 sm:col-span-12">
+                            @if(!empty($data->limac->capacity) && $data->limac->capacity !== '-')
+                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                    <img 
+                                        src="{{ asset('storage/' . $data->limac->capacity) }}" 
+                                        alt="Perhitungan Capacity"
+                                        style="width: 700px; height: auto;"
+                                        class="block"
+                                    >
+                                </div>
+                            @else
+                                <span>-</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Tanggungan -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                           Tanggungan
+                        </div>
+                    </div>
+
+                    <!-- Tanggungan Keluarga -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
+                        <div class="p-2 font-normal sm:col-span-3">
+                           Tanggungan Keluarga
+                        </div>
+                        <div class="p-2 font-normal text-center sm:col-span-1">
+                            :
+                        </div>
+                        <div class="p-2 sm:col-span-8 font-normal">
+                            {{ $data->limac->keluarga ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- Tanggungan Anak -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
+                        <div class="p-2 font-normal sm:col-span-3">
+                            Tanggungan Anak
+                        </div>
+                        <div class="p-2 font-normal text-center sm:col-span-1">
+                            :
+                        </div>
+                        <div class="p-2 sm:col-span-8 font-normal">
+                            {{ $data->limac->anak ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- Tanggungan Pendidikan -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center mb-2 pl-6">
+                        <div class="p-2 font-normal sm:col-span-3">
+                            Tanggungan Pendidikan
+                        </div>
+                        <div class="p-2 font-normal text-center sm:col-span-1">
+                            :
+                        </div>
+                        <div class="p-2 sm:col-span-8 font-normal">
+                            {{ $data->limac->pendidikan ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- 5. CHARACTER -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                           5. CHARACTER
+                        </div>
+                    </div>
+
+                    <!-- Internal -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold sm:col-span-12 pl-12">
+                           Internal :
+                        </div>
+                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-12">
+                            {{ $data->limac ->internal ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- Eksternal -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold sm:col-span-12 pl-12">
+                           Eksternal :
+                        </div>
+                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-12">
+                            {{ $data->limac ->eksternal ?? '-' }}
                         </div>
                     </div>
                 
@@ -362,6 +699,24 @@
                     <div class="grid grid-cols-1 sm:grid-cols-12">
                         <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
                             {{ $data->kesimpulan->kesimpulan ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- Kesimpulan-->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-8 sm:col-span-12">
+                            @if(!empty($data->kesimpulan) && !empty($data->kesimpulan->plafon) && $data->kesimpulan->plafon !== '-')
+                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                    <img 
+                                        src="{{ asset('storage/' . $data->kesimpulan->plafon) }}" 
+                                        alt="Plafon Kredit"
+                                        style="width: 700px; height: auto;"
+                                        class="block"
+                                    >
+                                </div>
+                            @else
+                                <span>-</span>
+                            @endif
                         </div>
                     </div>
 
@@ -440,33 +795,364 @@
                 </h2>
             </div>
 
-                    <!-- 1. Lokasi dan Foto Jaminan  -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                    <!-- 1. Lokasi dan Foto Jaminan -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 mb-4">
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
-                           1. Lokasi dan Foto Jaminan 
+                            1. Lokasi dan Foto Jaminan
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
-                            {{ $infoUtama->informasi_usaha ->gambaran_pekerjaan_debitur ?? '-' }}
+                        
+                        <!-- Bagian Tabel yang Menjorok ke Dalam (mengikuti pl-8) -->
+                        <div class="sm:col-span-12 px-8">
+                            <table class="w-full border-collapse border border-black text-sm">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="border border-black p-2 text-left w-1/2">Gambar</th>
+                                        <th class="border border-black p-2 text-left w-1/2">Deskripsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Baris 1: Google Map di Kiri, Link & QR Code di Kanan -->
+                                    <tr>
+                                        <td class="border border-black p-2 align-top">
+                                            <div class="font-semibold mb-1">Google Map</div>
+                                            @if(!empty($data->jaminan->google_maps) && $data->jaminan->google_maps !== '-')
+                                                <div class="border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5 inline-block">
+                                                    <img 
+                                                        src="{{ asset('storage/' . $data->jaminan->google_maps) }}" 
+                                                        alt="Google Map" 
+                                                        style="width: 100%; max-width: 350px; height: auto;"
+                                                        class="block"
+                                                    >
+                                                </div>
+                                            @else
+                                                <span>-</span>
+                                            @endif
+                                        </td>
+                                        <td class="border border-black p-2 align-top">
+                                            <!-- Link Share Location -->
+                                            <div class="mb-4">
+                                                <div class="font-semibold mb-1">Link Share Location</div>
+                                                @if(!empty($data->jaminan->share_location))
+                                                    <a href="{{ $data->jaminan->share_location }}" target="_blank" class="text-blue-600 underline break-all">
+                                                        {{ $data->jaminan->share_location }}
+                                                    </a>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            </div>
+
+                                            <!-- Kode QR Maps -->
+                                            <div>
+                                                <div class="font-semibold mb-1">Kode QR Maps</div>
+                                                @if(!empty($data->jaminan->kode_qr) && $data->jaminan->kode_qr !== '-')
+                                                    <div class="border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5 inline-block">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $data->jaminan->kode_qr) }}" 
+                                                            alt="Kode QR Maps" 
+                                                            style="width: 150px; height: auto;"
+                                                            class="block"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Baris Berikutnya: Foto Jaminan (Berpasangan / 2 Kolom) -->
+                                    @php
+                                        $fotoJaminans = !empty($data->jaminan->foto_jaminan) ? json_decode($data->jaminan->foto_jaminan, true) : [];
+                                        $chunks = array_chunk($fotoJaminans, 2);
+                                    @endphp
+
+                                    @foreach($chunks as $chunk)
+                                        <tr>
+                                            <!-- Kolom Kiri -->
+                                            <td class="border border-black p-2 align-top w-1/2">
+                                                @if(isset($chunk[0]))
+                                                    <div class="font-semibold mb-1">Foto Jaminan</div>
+                                                    <div class="border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5 inline-block">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $chunk[0]) }}" 
+                                                            alt="Foto Jaminan" 
+                                                            style="width: 100%; max-width: 350px; height: auto;"
+                                                            class="block"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    &nbsp;
+                                                @endif
+                                            </td>
+
+                                            <!-- Kolom Kanan -->
+                                            <td class="border border-black p-2 align-top w-1/2">
+                                                @if(isset($chunk[1]))
+                                                    <div class="font-semibold mb-1">Foto Jaminan</div>
+                                                    <div class="border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5 inline-block">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $chunk[1]) }}" 
+                                                            alt="Foto Jaminan" 
+                                                            style="width: 100%; max-width: 350px; height: auto;"
+                                                            class="block"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    &nbsp;
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
-                     <!-- 2. Lokasi dan Foto Tempat Usaha -->
+                    <!-- 2. Lokasi dan Foto Tempat Usaha -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
                            2. Lokasi dan Foto Tempat Usaha
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
-                            {{ $infoUtama->informasi_usaha ->usaha_pendukung ?? '-' }}
-                        </div>
                     </div>
 
-                    <!-- 3. Lokasi dan Foto Tempat Tinggal -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12">
-                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
-                            3. Lokasi dan Foto Tempat Tinggal 
+                    @php
+                        // Ambil dan urutkan data usaha dari urutan 1 sampai 10
+                        $listUsaha = $data->usaha ? $data->usaha->sortBy('urutan') : collect();
+                    @endphp
+
+                    @foreach($listUsaha as $usahaItem)
+                        @php
+                            // Mengubah angka perulangan (1, 2, 3) menjadi huruf kecil (a, b, c)
+                            // Jika ingin huruf besar (A, B, C), gunakan strtoupper() di luarnya
+                            $hurufUrutan = chr(96 + $loop->iteration); 
+                        @endphp
+
+                        <!-- Judul Bagian dengan Penomoran Huruf (a, b, c) dan px-8 agar menjorok ke dalam -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 mb-2">
+                            <div class="p-2 font-semibold sm:col-span-12 px-8">
+                                {{ $hurufUrutan }}. Lokasi dan Foto Tempat Usaha {{ $usahaItem->nama_usaha }}
+                            </div>
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
-                            {{ $infoUtama->informasi_usaha ->usaha_pendukung ?? '-' }}
+
+                        <!-- Tabel Detail Lokasi & Foto Usaha -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 mb-6">
+                            <div class="sm:col-span-12 px-8">
+                                <table class="w-full border-collapse border border-black text-sm">
+                                    <thead>
+                                        <tr class="bg-gray-100">
+                                            <th class="border border-black p-2 text-left w-1/2">Gambar</th>
+                                            <th class="border border-black p-2 text-left w-1/2">Deskripsi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Baris 1: Google Map di Kiri, Link & QR Code di Kanan -->
+                                        <tr>
+                                            <td class="border border-black p-2 align-top">
+                                                <div class="font-semibold mb-1">Google Map</div>
+                                                @if(!empty($usahaItem->google_maps) && $usahaItem->google_maps !== '-')
+                                                    <div class="border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5 inline-block">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $usahaItem->google_maps) }}" 
+                                                            alt="Google Map" 
+                                                            style="width: 100%; max-width: 350px; height: auto;"
+                                                            class="block"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            </td>
+                                            <td class="border border-black p-2 align-top">
+                                                <!-- Link Share Location -->
+                                                <div class="mb-4">
+                                                    <div class="font-semibold mb-1">Link Share Location</div>
+                                                    @if(!empty($usahaItem->share_location))
+                                                        <a href="{{ $usahaItem->share_location }}" target="_blank" class="text-blue-600 underline break-all">
+                                                            {{ $usahaItem->share_location }}
+                                                        </a>
+                                                    @else
+                                                        <span>-</span>
+                                                    @endif
+                                                </div>
+
+                                                <!-- Kode QR Maps -->
+                                                <div>
+                                                    <div class="font-semibold mb-1">Kode QR Maps</div>
+                                                    @if(!empty($usahaItem->kode_qr) && $usahaItem->kode_qr !== '-')
+                                                        <div class="border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5 inline-block">
+                                                            <img 
+                                                                src="{{ asset('storage/' . $usahaItem->kode_qr) }}" 
+                                                                alt="Kode QR Maps" 
+                                                                style="width: 150px; height: auto;"
+                                                                class="block"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        <span>-</span>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Baris Berikutnya: Foto Usaha (Berpasangan / 2 Kolom ke Bawah) -->
+                                        @php
+                                            $fotoUsahas = !empty($usahaItem->foto_usaha) ? json_decode($usahaItem->foto_usaha, true) : [];
+                                            $chunks = array_chunk($fotoUsahas, 2);
+                                        @endphp
+
+                                        @foreach($chunks as $chunk)
+                                            <tr>
+                                                <!-- Kolom Kiri -->
+                                                <td class="border border-black p-2 align-top w-1/2">
+                                                    @if(isset($chunk[0]))
+                                                        <div class="font-semibold mb-1">Foto Usaha</div>
+                                                        <div class="border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5 inline-block">
+                                                            <img 
+                                                                src="{{ asset('storage/' . $chunk[0]) }}" 
+                                                                alt="Foto Usaha" 
+                                                                style="width: 100%; max-width: 350px; height: auto;"
+                                                                class="block"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        &nbsp;
+                                                    @endif
+                                                </td>
+
+                                                <!-- Kolom Kanan -->
+                                                <td class="border border-black p-2 align-top w-1/2">
+                                                    @if(isset($chunk[1]))
+                                                        <div class="font-semibold mb-1">Foto Usaha</div>
+                                                        <div class="border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5 inline-block">
+                                                            <img 
+                                                                src="{{ asset('storage/' . $chunk[1]) }}" 
+                                                                alt="Foto Usaha" 
+                                                                style="width: 100%; max-width: 350px; height: auto;"
+                                                                class="block"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        &nbsp;
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    @endforeach
+
+                    <!-- 3. Lokasi dan Foto Tempat Tinggal -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 mb-12">
+                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                            3. Lokasi dan Foto Tempat Tinggal
+                        </div>
+                        
+                        <!-- Bagian Tabel yang Menjorok ke Dalam (px-8) -->
+                        <div class="sm:col-span-12 px-8">
+                            <table class="w-full border-collapse border border-black text-sm">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="border border-black p-2 text-left w-1/2">Gambar</th>
+                                        <th class="border border-black p-2 text-left w-1/2">Deskripsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Baris 1: Google Map di Kiri, Link & QR Code di Kanan -->
+                                    <tr>
+                                        <td class="border border-black p-2 align-top">
+                                            <div class="font-semibold mb-1">Google Map</div>
+                                            @if(!empty($data->rumah->google_maps) && $data->rumah->google_maps !== '-')
+                                                <div class="border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5 inline-block">
+                                                    <img 
+                                                        src="{{ asset('storage/' . $data->rumah->google_maps) }}" 
+                                                        alt="Google Map" 
+                                                        style="width: 100%; max-width: 350px; height: auto;"
+                                                        class="block"
+                                                    >
+                                                </div>
+                                            @else
+                                                <span>-</span>
+                                            @endif
+                                        </td>
+                                        <td class="border border-black p-2 align-top">
+                                            <!-- Link Share Location -->
+                                            <div class="mb-4">
+                                                <div class="font-semibold mb-1">Link Share Location</div>
+                                                @if(!empty($data->rumah->share_location))
+                                                    <a href="{{ $data->rumah->share_location }}" target="_blank" class="text-blue-600 underline break-all">
+                                                        {{ $data->rumah->share_location }}
+                                                    </a>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            </div>
+
+                                            <!-- Kode QR Maps -->
+                                            <div>
+                                                <div class="font-semibold mb-1">Kode QR Maps</div>
+                                                @if(!empty($data->rumah->kode_qr) && $data->rumah->kode_qr !== '-')
+                                                    <div class="border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5 inline-block">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $data->rumah->kode_qr) }}" 
+                                                            alt="Kode QR Maps" 
+                                                            style="width: 150px; height: auto;"
+                                                            class="block"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Baris Berikutnya: Foto Tempat Tinggal (Berpasangan / 2 Kolom) -->
+                                    @php
+                                        $fotoTinggals = !empty($data->rumah->foto_tempat_tinggal) ? json_decode($data->rumah->foto_tempat_tinggal, true) : [];
+                                        $chunks = array_chunk($fotoTinggals, 2);
+                                    @endphp
+
+                                    @foreach($chunks as $chunk)
+                                        <tr>
+                                            <!-- Kolom Kiri -->
+                                            <td class="border border-black p-2 align-top w-1/2">
+                                                @if(isset($chunk[0]))
+                                                    <div class="font-semibold mb-1">Foto Tempat Tinggal</div>
+                                                    <div class="border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5 inline-block">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $chunk[0]) }}" 
+                                                            alt="Foto Tempat Tinggal" 
+                                                            style="width: 100%; max-width: 350px; height: auto;"
+                                                            class="block"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    &nbsp;
+                                                @endif
+                                            </td>
+
+                                            <!-- Kolom Kanan -->
+                                            <td class="border border-black p-2 align-top w-1/2">
+                                                @if(isset($chunk[1]))
+                                                    <div class="font-semibold mb-1">Foto Tempat Tinggal</div>
+                                                    <div class="border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5 inline-block">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $chunk[1]) }}" 
+                                                            alt="Foto Tempat Tinggal" 
+                                                            style="width: 100%; max-width: 350px; height: auto;"
+                                                            class="block"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    &nbsp;
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -476,71 +1162,239 @@
                     SPESIFIKASI JAMINAN KREDIT, MELIPUTI 
                 </h2>
             </div>
+
                     <!-- Sertifikat -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
                         <div class="p-2 font-semibold text-center sm:col-span-1">1</div>
-                        <div class="p-2 font-semibold sm:col-span-3">
-                            Sertifikat
-                        </div>
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            :
-                        </div>
-                        <div class="p-2 sm:col-span-8 font-normal">
-                            {{ $data->spesifikasi->sertifikat ?? '-' }}
-                        </div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Sertifikat</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->sertifikat ?? '-' }}</div>
                     </div>
 
-                    <!-- Nomor/ NIB -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
-                        <div class="p-2 font-semibold sm:col-span-3">
-                            Nomor/ NIB
-                        </div>
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            :
-                        </div>
-                        <div class="p-2 sm:col-span-8 font-normal">
-                            {{ $data->spesifikasi->nomor_nib ?? '-' }}
-                        </div>
+                    <!-- Nomor / NIB -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">2</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Nomor / NIB</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->nomor_nib ?? '-' }}</div>
                     </div>
 
                     <!-- Luas Tanah (P x L) -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
-                        <div class="p-2 font-semibold sm:col-span-3">
-                            Luas Tanah (P x L)
-                        </div>
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            :
-                        </div>
-                        <div class="p-2 sm:col-span-8 font-normal">
-                            {{ $data->spesifikasi->luas_tanah ?? '-' }}
-                        </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">3</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Luas Tanah (p x l)</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->luas_tanah ?? '-' }}</div>
                     </div>
 
                     <!-- Luas Bangunan (P x L) -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
-                        <div class="p-2 font-semibold sm:col-span-3">
-                            Luas Bangunan (P x L)
-                        </div>
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            :
-                        </div>
-                        <div class="p-2 sm:col-span-8 font-normal">
-                            {{ $data->spesifikasi->luas_bangunan ?? '-' }}
-                        </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">4</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Luas Bangunan (p x l)</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->luas_bangunan ?? '-' }}</div>
                     </div>
 
                     <!-- Lebar Depan -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
-                        <div class="p-2 font-semibold sm:col-span-3">
-                            Lebar Depan
-                        </div>
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            :
-                        </div>
-                        <div class="p-2 sm:col-span-8 font-normal">
-                            {{ $data->spesifikasi->lebar_depan ?? '-' }}
-                        </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">5</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Lebar Depan</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->lebar_depan ?? '-' }}</div>
                     </div>
+
+                    <!-- pbg -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">6</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">PBG</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->pbg ?? '-' }}</div>
+                    </div>
+
+                    <!-- orientasi -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">7</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Orientasi</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->orientasi ?? '-' }}</div>
+                    </div>
+
+                    <!-- Jumlah Ruangan -->
+                    <!-- Kamar Tidur, Kamar Mandi -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 mb-2 items-center">
+                        <!-- Bagian Label -->
+                        <div class="p-2 font-semibold text-center sm:col-span-1">8</div>
+                        <div class="p-2 font-semibold sm:col-span-2">Jumlah Ruangan</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        
+                        <!-- Bagian Isian -->
+                        <div class="p-2 border border-black sm:col-span-1 font-semibold text-center bg-white">{{ $data->spesifikasi->kamar_tidur ?? '-' }}</div>
+                        <div class="p-2 font-semibold sm:col-span-3">Kamar Tidur</div>
+                        <div class="p-2 border border-black sm:col-span-1 font-semibold text-center bg-white">{{ $data->spesifikasi->kamar_mandi ?? '-' }}</div>
+                        <div class="p-2 font-semibold sm:col-span-3 bg-white">Kamar Mandi</div>
+                    </div>
+
+                    <!-- Ruang Keluarga, Ruang Makan -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 mb-2 items-center">
+                        <!-- Bagian Label -->
+                        <div class="p-2 font-semibold text-center sm:col-span-1"></div>
+                        <div class="p-2 font-semibold sm:col-span-2"></div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1"></div>
+
+                        <!-- Bagian Isian -->
+                        <div class="p-2 border border-black sm:col-span-1 font-semibold text-center bg-white">{{ $data->spesifikasi->ruang_keluarga ?? '-' }}</div>
+                        <div class="p-2 font-semibold sm:col-span-3">Ruang Keluarga</div>
+                        <div class="p-2 border border-black sm:col-span-1 font-semibold text-center bg-white">{{ $data->spesifikasi->ruang_makan ?? '-' }}</div>
+                        <div class="p-2 font-semibold sm:col-span-3 bg-white">Ruang Makan</div>
+                    </div>
+
+                    <!-- Ruang Tamu, Dapur -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 mb-2 items-center">
+                        <!-- Bagian Label -->
+                        <div class="p-2 font-semibold text-center sm:col-span-1"></div>
+                        <div class="p-2 font-semibold sm:col-span-2"></div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1"></div>
+
+                        <!-- Bagian Isian -->
+                        <div class="p-2 border border-black sm:col-span-1 font-semibold text-center bg-white">{{ $data->spesifikasi->ruang_tamu ?? '-' }}</div>
+                        <div class="p-2 font-semibold sm:col-span-3">Ruang Tamu</div>
+                        <div class="p-2 border border-black sm:col-span-1 font-semibold text-center bg-white">{{ $data->spesifikasi->dapur ?? '-' }}</div>
+                        <div class="p-2 font-semibold sm:col-span-3 bg-white">Dapur</div>
+                    </div>
+
+                    <!-- Kamar Pembantu, Pekarangan -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 mb-2 items-center">
+                        <!-- Bagian Label -->
+                        <div class="p-2 font-semibold text-center sm:col-span-1"></div>
+                        <div class="p-2 font-semibold sm:col-span-2"></div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1"></div>
+
+                        <!-- Bagian Isian -->
+                        <div class="p-2 border border-black sm:col-span-1 font-semibold text-center bg-white">{{ $data->spesifikasi->kamar_pembantu ?? '-' }}</div>
+                        <div class="p-2 font-semibold sm:col-span-3">Kamar Pembantu</div>
+                        <div class="p-2 border border-black sm:col-span-1 font-semibold text-center bg-white">{{ $data->spesifikasi->pekarangan ?? '-' }}</div>
+                        <div class="p-2 font-semibold sm:col-span-3 bg-white">Taman / Pekarangan</div>
+                    </div>
+
+                    <!-- Gudang, Carport -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 mb-2 items-center">
+                        <!-- Bagian Label -->
+                        <div class="p-2 font-semibold text-center sm:col-span-1"></div>
+                        <div class="p-2 font-semibold sm:col-span-2"></div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1"></div>
+
+                        <!-- Bagian Isian -->
+                        <div class="p-2 border border-black sm:col-span-1 font-semibold text-center bg-white">{{ $data->spesifikasi->gudang ?? '-' }}</div>
+                        <div class="p-2 font-semibold sm:col-span-3">Gudang</div>
+                        <div class="p-2 border border-black sm:col-span-1 font-semibold text-center bg-white">{{ $data->spesifikasi->carport ?? '-' }}</div>
+                        <div class="p-2 font-semibold sm:col-span-3 bg-white">Carport</div>
+                    </div>
+
+                    <!-- Garasi, Ruangan Lain -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 mb-2 items-center">
+                        <!-- Bagian Label -->
+                        <div class="p-2 font-semibold text-center sm:col-span-1"></div>
+                        <div class="p-2 font-semibold sm:col-span-2"></div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1"></div>
+
+                        <!-- Bagian Isian -->
+                        <div class="p-2 border border-black sm:col-span-1 font-semibold text-center bg-white">{{ $data->spesifikasi->garasi ?? '-' }}</div>
+                        <div class="p-2 font-semibold sm:col-span-3">Garasi</div>
+                        <div class="p-2 border border-black sm:col-span-1 font-semibold text-center bg-white">{{ $data->spesifikasi->ruangan_lain ?? '-' }}</div>
+                        <div class="p-2 font-semibold sm:col-span-3 bg-white">.....</div>
+                    </div>
+
+                    <!-- fasilitas_lain -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 mb-2 items-center">
+                        <!-- Bagian Label -->
+                        <div class="p-2 font-semibold text-center sm:col-span-1">9</div>
+                        <div class="p-2 font-semibold sm:col-span-2">Fasilitas Lainnya</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        
+                        <!-- Bagian Isian -->
+                        <div class="p-2 border border-black sm:col-span-7 font-semibold text-start bg-white">{{ $data->spesifikasi->fasilitas_lain ?? '-' }}</div>
+                    </div>
+
+                    <!-- Kondisi Bangunan -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">10</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Kondisi Bangunan</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->kondisi_bangunan ?? '-' }}</div>
+                    </div>
+
+                    <!-- Kondisi Lantai -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">11</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Kondisi Lantai</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->kondisi_lantai ?? '-' }}</div>
+                    </div>
+
+                    <!-- Kondisi Plafon -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">12</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Kondisi Plafon</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->kondisi_plafon ?? '-' }}</div>
+                    </div>
+
+                    <!-- Bahan Atap -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">13</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Bahan Atap</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->bahan_atap ?? '-' }}</div>
+                    </div>
+
+                    <!-- Struktur Atap -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">14</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Struktur Atap</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->struktur_atap ?? '-' }}</div>
+                    </div>
+
+                    <!-- Listrik -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">15</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Listrik</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->listrik ?? '-' }}</div>
+                    </div>
+
+                    <!-- Air -->
+                    <div class="grid grid-cols-1 sm:grid-cols-12 mb-6">
+                        <div class="p-2 font-semibold text-center sm:col-span-1">16</div>
+                        <div class="p-2 font-semibold sm:col-span-2 flex items-center">Air</div>
+                        <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
+                        <div class="p-2 sm:col-span-8 font-semibold flex items-center" style="color: #000000;">{{ $data->spesifikasi->air ?? '-' }}</div>
+                    </div>
+
+            <!-- Judul Denah -->
+            <div class="text-center mb-6">
+                <h2 class="text-[#0A3370] font-bold text-lg uppercase tracking-wider">
+                    DENAH JAMINAN
+                </h2>
+            </div>
+
+            <!-- Denah -->
+            <div class="grid grid-cols-1 sm:grid-cols-12">
+                <div class="p-8 sm:col-span-12">
+                    @if(!empty($data->denah) && !empty($data->denah->denah_jaminan) && $data->denah->denah_jaminan !== '-')
+                        <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                            <img 
+                                src="{{ asset('storage/' . $data->denah->denah_jaminan) }}" 
+                                alt="Denah"
+                                style="width: 700px; height: auto;"
+                                class="block"
+                            >
+                        </div>
+                    @else
+                        <span>-</span>
+                    @endif
+                </div>
+            </div>
 
         </div>
 

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('bidang_usaha');
             $table->text('alamat_usaha');
             $table->string('kontak');
+            $table->string('tanggal_slik')->nullable();
             $table->string('idi_di_bank_lain', 300)->nullable();
             $table->text('keterangan');
             $table->timestamps();
