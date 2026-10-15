@@ -63,475 +63,1114 @@
 <body>
 
     <div class="page-container">
-        <h2 class="main-title">FORM SURVEI</h2>
+        <h2 class="main-title">ANALISA KREDIT</h2>
 
         <!-- A. DATA DEBITUR -->
-        <table class="export-table" style="width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #0A3370 !important;">
-            <thead>
-                <tr>
-                    <!-- Background biru dengan ukuran font dan padding yang seragam -->
-                    <th colspan="12" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-align: left; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
-                        A. Data Debitur
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Nomor Register -->
-                <tr>
-                    <td class="bg-label text-center" style="width: 8%; padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;"></td>
-                    <td colspan="3" class="bg-label" style="width: 25%; padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nomor Register</td>
-                    <td colspan="8" class="font-bold" style="width: 67%; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $data->no_register ?? '-' }}</td>
-                </tr>
-                <!-- Nama Debitur & Marketing -->
-                <tr>
-                    <td class="bg-label text-center" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">1</td>
-                    <td colspan="3" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nama Debitur</td>
-                    <td colspan="4" class="font-bold" style="padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $data->nama ?? '-' }}</td>
-                    <td colspan="2" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Nama Marketing</td>
-                    <td colspan="2" style="font-weight: normal; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $data->nama_marketing ?? '-' }}</td>
-                </tr>
-                <!-- Tanggal OTS -->
-                <tr>
-                    <td class="bg-label text-center" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;"></td>
-                    <td colspan="3" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Tanggal OTS</td>
-                    <td colspan="8" style="font-weight: normal; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $data->tanggal_ots ?? '-' }}</td>
-                </tr>
-                <!-- Plafon & JKW -->
-                <tr>
-                    <td class="bg-label text-center" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">2</td>
-                    <td colspan="3" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Plafon</td>
-                    <td colspan="4" style="font-weight: bold; color: #000000; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">Rp {{ number_format($data->plafon ?? 0, 0, ',', '.') }}</td>
-                    <td colspan="2" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">JKW</td>
-                    <td colspan="2" style="font-weight: normal; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $data->jangka_waktu ?? '-' }}</td>
-                </tr>
-                <!-- Tujuan Penggunaan -->
-                <tr>
-                    <td class="bg-label text-center" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">3</td>
-                    <td colspan="3" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Tujuan Penggunaan</td>
-                    <td colspan="8" style="padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $data->tujuan_penggunaan ?? '-' }}</td>
-                </tr>
-                <!-- Estimasi Kewajiban -->
-                <tr>
-                    <td class="bg-label text-center" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">4</td>
-                    <td colspan="3" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Estimasi Kewajiban</td>
-                    <td colspan="8" style="font-weight: bold; color: #000000; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">Rp {{ number_format($data->estimasi_kewajiban ?? 0, 0, ',', '.') }}</td>
-                </tr>
-                <!-- Type Fasilitas -->
-                <tr>
-                    <td class="bg-label text-center" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">5</td>
-                    <td colspan="3" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Type Fasilitas</td>
-                    <td colspan="8" style="padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">
-                        {{ is_array($data->tipe_fasilitas ?? null) ? implode(', ', $data->tipe_fasilitas) : ($data->tipe_fasilitas ?? '-') }}
-                    </td>
-                </tr>
-                <!-- Temuan CA -->
-                <tr>
-                    <td class="bg-label text-center" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">6</td>
-                    <td colspan="3" class="bg-label" style="padding: 10px 12px; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact;">Temuan CA</td>
-                    <td colspan="8" style="text-align: justify; padding: 10px 14px; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $data->temuan_ca ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- B. AGUNAN -->
-        @if(isset($data->agunan_tanah) && $data->agunan_tanah->count() > 0)
-            @foreach($data->agunan_tanah as $index => $agunan)
-                @php
-                    $urutanJaminan = $index + 1;
-
-                    // Perhitungan Tanah
-                    $luasTanah = $agunan->luas_tanah ?? 0;
-                    $hargaTanah = $agunan->harga_tanah ?? 0;
-                    $tanahPasar = $luasTanah * $hargaTanah;
-                    $tanahTaksasi = $tanahPasar * 0.70;
-                    $tanahLikuidasi = $tanahPasar * 0.50;
-
-                    // Perhitungan Bangunan
-                    $luasBangunan = $agunan->luas_bangunan ?? 0;
-                    $hargaBangunan = $agunan->harga_bangunan ?? 0;
-                    $bangunanPasar = $luasBangunan * $hargaBangunan;
-                    $bangunanTaksasi = $bangunanPasar * 0.70;
-                    $bangunanLikuidasi = $bangunanPasar * 0.50;
-                @endphp
-
-                <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 12px; table-layout: fixed;">
-                    <thead>
+            <div class="mb-6">
+                <!-- Header Section -->
+                <div class="section-header">
+                    A. DATA DEBITUR
+                </div>
+                
+                <div class="text-sm">
+                    <table class="table-form">
+                        <!-- 1. Nama Debitur -->
                         <tr>
-                            <th colspan="12" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;">
-                                B. Agunan {{ $data->agunan_tanah->count() > 1 ? 'Ke-' . $urutanJaminan : '' }}
-                            </th>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">1.</td>
+                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Nama Debitur</td>
+                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
+                            <td style="width: 57%; font-weight: normal;">{{ $data->nama ?? '-' }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Sub Header JAMINAN -->
+
+                        <!-- 2. Tempat / Tanggal Lahir -->
                         <tr>
-                            <td colspan="12" style="background-color: #f3f4f6 !important; color: #0A3370 !important; font-weight: bold; font-size: 10.5pt; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 14px; text-align: left;">Jaminan</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">2.</td>
+                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Tempat / Tgl Lahir</td>
+                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
+                            <td style="width: 57%;">{{ $data->tempat_tanggal_lahir ?? '-' }}</td>
                         </tr>
-                        
-                        <!-- Kepemilikan -->
+
+                        <!-- 3. Nama Ibu Kandung -->
                         <tr>
-                            <td colspan="3" class="bg-label" style="width: 25%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; line-height: 1.5;">Kepemilikan</td>
-                            <td colspan="9" style="width: 75%; border: 1px solid #0A3370 !important; padding: 10px 14px; font-weight: bold; line-height: 1.5;">{{ $agunan->kepemilikan ?? '-' }}</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">3.</td>
+                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Nama Ibu Kandung</td>
+                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
+                            <td style="width: 57%;">{{ $data->nama_ibu_kandung ?? '-' }}</td>
                         </tr>
-                        
-                        <!-- Alamat -->
+
+                        <!-- 4. Nama Istri / Penjamin -->
                         <tr>
-                            <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; line-height: 1.5;">Alamat</td>
-                            <td colspan="9" style="border: 1px solid #0A3370 !important; padding: 10px 14px; line-height: 1.5;">{{ $agunan->alamat ?? '-' }}</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">4.</td>
+                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Nama Istri / Penjamin</td>
+                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
+                            <td style="width: 57%;">{{ $data->nama_istri_penjamin ?? '-' }}</td>
                         </tr>
-                        
-                        <!-- Share Loc -->
+
+                        <!-- 5. Alamat KTP -->
                         <tr>
-                            <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; line-height: 1.5;">Share Loc</td>
-                            <td colspan="9" style="border: 1px solid #0A3370 !important; padding: 10px 14px; line-height: 1.5;">
-                                @if(!empty($agunan->share_location) && $agunan->share_location !== '-')
-                                    <a href="{{ $agunan->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; font-weight: 500;">
-                                        📍 Lihat Lokasi di Peta
-                                    </a>
-                                @else
-                                    <span>-</span>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">5.</td>
+                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Alamat KTP</td>
+                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
+                            <td style="width: 57%;">{{ $data->alamat_ktp ?? '-' }}</td>
+                        </tr>
+
+                        <!-- 6. Alamat Domisili -->
+                        <tr>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">6.</td>
+                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Alamat Domisili</td>
+                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
+                            <td style="width: 57%;">{{ $data->alamat_domisili ?? '-' }}</td>
+                        </tr>
+
+                        <!-- 7. Telp / HP -->
+                        <tr>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">7.</td>
+                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Telp / HP</td>
+                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
+                            <td style="width: 57%;">{{ $data->no_hp ?? '-' }}</td>
+                        </tr>
+
+                        <!-- 8. Pekerjaan -->
+                        <tr>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">8.</td>
+                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Pekerjaan</td>
+                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
+                            <td style="width: 57%;">{{ $data->pekerjaan ?? '-' }}</td>
+                        </tr>
+
+                        <!-- 9. Bidang Usaha -->
+                        <tr>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">9.</td>
+                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Bidang Usaha</td>
+                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
+                            <td style="width: 57%;">{{ $data->bidang_usaha ?? '-' }}</td>
+                        </tr>
+
+                        <!-- 10. Alamat Kerja / Usaha -->
+                        <tr>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">10.</td>
+                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Alamat Kerja / Usaha</td>
+                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
+                            <td style="width: 57%;">{{ $data->alamat_usaha ?? '-' }}</td>
+                        </tr>
+
+                        <!-- 11. Telp / HP Usaha -->
+                        <tr>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">11.</td>
+                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Telp / HP Usaha</td>
+                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
+                            <td style="width: 57%;">{{ $data->kontak ?? '-' }}</td>
+                        </tr>
+
+                        <!-- 12. IDI di Bank Lain -->
+                        <tr>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">12.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 3%;">IDI di Bank Lain</td>
+                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
+                            <td style="width: 62%;"></td>
+                        </tr>
+                    </table>
+
+                    <!-- Hasil Slik & Gambar -->
+                    <div style="padding-left: 5%; margin-top: 10px;">
+                        <div style="font-weight: normal;">
+                            Hasil Slik, Tanggal {{ $data->tanggal_slik ?? '-' }}
+                        </div>
+                        <div style="margin-top: 5px;">
+                            @if(!empty($data->idi_di_bank_lain) && $data->idi_di_bank_lain !== '-')
+                                <div style="display: inline-block; padding: 2px;">
+                                    <img 
+                                        src="{{ asset('storage/' . $data->idi_di_bank_lain) }}" 
+                                        alt="IDI di Bank Lain"
+                                        style="max-width: 100%; height: auto; display: block;"
+                                    >
+                                </div>
+                            @else
+                                <span>-</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Keterangan -->
+                    <div style="padding-left: 5%; margin-top: 10px; padding-right: 5%;">
+                        <div style="font-weight: bold;">
+                            Keterangan :
+                        </div>
+                        <div style="margin-top: 3px; text-align: justify; margin-bottom: 15px;">
+                            {{ $data->keterangan ?? '-' }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        <!-- B. PENGAJUAN PLAFON KREDIT -->
+            <div class="mb-6">
+                <!-- Header Section -->
+                <div class="section-header">
+                    B. PENGAJUAN PLAFON KREDIT
+                </div>
+                
+                <div class="text-sm">
+                    <!-- Plafon Kredit -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 5px;">
+                        <div style="margin-top: 5px;">
+                            @if(!empty($data->pengajuan_plafon_kredit->pengajuan_plafon_kredit) && $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit !== '-')
+                                <div style="display: inline-block; padding: 2px;">
+                                    <img 
+                                        src="{{ asset('storage/' . $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit) }}" 
+                                        alt="Plafon Kredit"
+                                        style="max-width: 100%; height: auto; display: block;"
+                                    >
+                                </div>
+                            @else
+                                <span>-</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Tujuan Penggunaan -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <div style="font-weight: bold;">
+                            Tujuan Penggunaan :
+                        </div>
+                        <div style="margin-top: 3px; text-align: justify; margin-bottom: 15px;">
+                            {{ $data->pengajuan_plafon_kredit->tujuan_penggunaan ?? '-' }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        <!-- C. INFORMASI MENGENAI USAHA -->
+            <div class="mb-6">
+                <!-- Header Section -->
+                <div class="section-header">
+                    C. INFORMASI MENGENAI USAHA
+                </div>
+
+                <div class="text-sm">
+                    @php
+                        // Ambil data yang diurutkan
+                        $listUsaha = $data->informasi_usaha->sortBy('urutan');
+                        $usahaUtama = $listUsaha->where('urutan', 1)->first();
+                        $usahaLainnya = $listUsaha->where('urutan', '>', 1);
+                    @endphp
+
+                    {{-- 1. BAGIAN UTAMA (Gambaran Pekerjaan Debitur) --}}
+                    @if($usahaUtama && (!empty($usahaUtama->gambaran_pekerjaan_debitur) || !empty($usahaUtama->perhitungan_omset_usaha)))
+                        <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                            <div style="font-weight: bold;">
+                                1. Gambaran Pekerjaan Debitur
+                            </div>
+                            <div style="margin-top: 3px; font-weight: normal; text-align: justify;">
+                                {{ $usahaUtama->gambaran_pekerjaan_debitur ?? '-' }}
+                            </div>
+
+                            @if(!empty($usahaUtama->perhitungan_omset_usaha) && $usahaUtama->perhitungan_omset_usaha !== '-')
+                                <div style="margin-top: 5px;">
+                                    <div style="display: inline-block; padding: 2px;">
+                                        <img 
+                                            src="{{ asset('storage/' . $usahaUtama->perhitungan_omset_usaha) }}" 
+                                            alt="Perhitungan Omset Usaha"
+                                            style="max-width: 100%; height: auto; display: block;"
+                                        >
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
+
+                    {{-- 2. BAGIAN USAHA TAMBAHAN (Urutan 2 dan seterusnya) --}}
+                    @foreach($usahaLainnya as $usaha)
+                        @if(!empty($usaha->gambaran_pekerjaan_debitur) || !empty($usaha->perhitungan_omset_usaha))
+                            <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                                <div style="margin-top: 3px; font-weight: normal; text-align: justify;">
+                                    {{ $usaha->gambaran_pekerjaan_debitur ?? '-' }}
+                                </div>
+
+                                @if(!empty($usaha->perhitungan_omset_usaha) && $usaha->perhitungan_omset_usaha !== '-')
+                                    <div style="margin-top: 5px;">
+                                        <div style="display: inline-block; padding: 2px;">
+                                            <img 
+                                                src="{{ asset('storage/' . $usaha->perhitungan_omset_usaha) }}" 
+                                                alt="Perhitungan Omset Usaha"
+                                                style="max-width: 100%; height: auto; display: block;"
+                                            >
+                                        </div>
+                                    </div>
                                 @endif
-                            </td>
-                        </tr>
+                            </div>
+                        @endif
+                    @endforeach
 
-                        <!-- Sub Header COLLATERAL -->
-                        <tr>
-                            <td colspan="12" style="background-color: #f3f4f6 !important; color: #0A3370 !important; font-weight: bold; font-size: 10.5pt; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 14px; text-align: left;">Collateral</td>
-                        </tr>
+                    {{-- 3. USAHA PENDUKUNG LAIN --}}
+                    @if($usahaUtama && !empty($usahaUtama->usaha_pendukung))
+                        <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                            <div style="font-weight: bold;">
+                                2. Usaha Pendukung Lain
+                            </div>
+                            <div style="margin-top: 3px; font-weight: normal; text-align: justify;">
+                                {{ $usahaUtama->usaha_pendukung ?? '-' }}
+                            </div>
 
-                        <!-- TABEL RINCIAN NILAI JAMINAN -->
-                        <tr class="sub-header" style="text-align: center; background-color: #f9fafb; color: #000000;">
-                            <td colspan="2" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; color: #000000; line-height: 1.5;">Uraian</td>
-                            <td colspan="1" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; color: #000000; line-height: 1.5;">Luas (m2)</td>
-                            <td colspan="2" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; color: #000000; line-height: 1.5;">Harga</td>
-                            <td colspan="2" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; color: #000000; line-height: 1.5;">Nilai Pasar</td>
-                            <td colspan="2" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; color: #000000; line-height: 1.5;">Nilai Taksasi</td>
-                            <td colspan="3" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; color: #000000; line-height: 1.5;">Nilai Likuidasi</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="bg-label font-bold" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; line-height: 1.5;">Tanah</td>
-                            <td colspan="1" class="text-center" style="border: 1px solid #0A3370 !important; text-align: center; padding: 10px 12px; line-height: 1.5;">{{ $agunan->luas_tanah ?? '-' }}</td>
-                            <td colspan="2" class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 10px 12px; line-height: 1.5;">Rp {{ number_format($hargaTanah, 0, ',', '.') }}</td>
-                            <td colspan="2" class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 10px 12px; line-height: 1.5;">Rp {{ number_format($tanahPasar, 0, ',', '.') }}</td>
-                            <td colspan="2" class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 10px 12px; line-height: 1.5;">Rp {{ number_format($tanahTaksasi, 0, ',', '.') }}</td>
-                            <td colspan="3" class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 10px 12px; line-height: 1.5;">Rp {{ number_format($tanahLikuidasi, 0, ',', '.') }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="bg-label font-bold" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; line-height: 1.5;">Bangunan</td>
-                            <td colspan="1" class="text-center" style="border: 1px solid #0A3370 !important; text-align: center; padding: 10px 12px; line-height: 1.5;">{{ $agunan->luas_bangunan ?? '-' }}</td>
-                            <td colspan="2" class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 10px 12px; line-height: 1.5;">Rp {{ number_format($hargaBangunan, 0, ',', '.') }}</td>
-                            <td colspan="2" class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 10px 12px; line-height: 1.5;">Rp {{ number_format($bangunanPasar, 0, ',', '.') }}</td>
-                            <td colspan="2" class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 10px 12px; line-height: 1.5;">Rp {{ number_format($bangunanTaksasi, 0, ',', '.') }}</td>
-                            <td colspan="3" class="text-right" style="border: 1px solid #0A3370 !important; text-align: right; padding: 10px 12px; line-height: 1.5;">Rp {{ number_format($bangunanLikuidasi, 0, ',', '.') }}</td>
-                        </tr>
-                        <tr class="font-bold bg-label">
-                            <td colspan="5" class="text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; line-height: 1.5;">TOTAL</td>
-                            <td colspan="2" class="text-right" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; line-height: 1.5;">Rp {{ number_format($tanahPasar + $bangunanPasar, 0, ',', '.') }}</td>
-                            <td colspan="2" class="text-right" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; line-height: 1.5;">Rp {{ number_format($tanahTaksasi + $bangunanTaksasi, 0, ',', '.') }}</td>
-                            <td colspan="3" class="text-right" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; text-align: right; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; line-height: 1.5;">Rp {{ number_format($tanahLikuidasi + $bangunanLikuidasi, 0, ',', '.') }}</td>
-                        </tr>
+                            @if(!empty($usahaUtama->perhitungan_omset_pendukung) && $usahaUtama->perhitungan_omset_pendukung !== '-')
+                                <div style="margin-top: 5px;">
+                                    <div style="display: inline-block; padding: 2px;">
+                                        <img 
+                                            src="{{ asset('storage/' . $usahaUtama->perhitungan_omset_pendukung) }}" 
+                                            alt="Perhitungan Omset Pendukung"
+                                            style="max-width: 100%; height: auto; display: block;"
+                                        >
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
 
-                        <!-- Denah -->
-                        <tr>
-                            <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: middle; line-height: 1.5;">Denah</td>
-                            <td colspan="9" style="border: 1px solid #0A3370 !important; padding: 10px 14px; line-height: 1.5;">
-                                @if(!empty($agunan->denah) && $agunan->denah !== '-')
-                                    <div style="width: 100%; max-width: 380px; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #fff;">
-                                        <img src="{{ public_path('storage/' . $agunan->denah) }}" alt="Denah Lokasi" style="width: 100%; height: auto; display: block;">
+                </div>
+            </div>
+
+        <!-- D. URAIAN SINGKAT MENGENAI 5 C -->
+            <div class="mb-6">
+                <!-- Header Section -->
+                <div class="section-header">
+                    D. URAIAN SINGKAT MENGENAI 5 C
+                </div>
+                
+                <div class="text-sm">
+
+                    <!-- 1. CAPITAL -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <div style="font-weight: bold;">
+                            1. CAPITAL
+                        </div>
+                        <div style="margin-top: 3px; font-weight: normal; text-align: justify;">
+                            {{ $data->limac->capital ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- 2. COLLATERAL -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <div style="font-weight: bold;">
+                            2. COLLATERAL
+                        </div>
+                        <div style="margin-top: 5px;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <td style="width: 25%; font-weight: normal; padding-bottom: 3px;">No.SHM</td>
+                                    <td style="width: 3%; text-align: center; padding-bottom: 3px;">:</td>
+                                    <td style="width: 72%; font-weight: normal; padding-bottom: 3px;">{{ $data->limac->no_shm ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: normal; padding-bottom: 3px;">Luas</td>
+                                    <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                    <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->luas ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: normal; padding-bottom: 3px;">Nama Pemilik</td>
+                                    <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                    <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->pemilik ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: normal; padding-bottom: 3px;">Letak SHM</td>
+                                    <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                    <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->letak_shm ?? '-' }}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Gambar Ringkasan Penilaian Jaminan -->
+                        <div style="padding-left: 0%; margin-top: 10px;">
+                            <div style="font-weight: normal;">
+                                Ringkasan Penilaian Jaminan, Tanggal {{ $data->limac->tanggal ?? '-' }}
+                            </div>
+                            <div style="margin-top: 5px;">
+                                @if(!empty($data->limac->ringkasan_penilaian_jaminan) && $data->limac->ringkasan_penilaian_jaminan !== '-')
+                                    <div style="display: inline-block; padding: 2px;">
+                                        <img 
+                                            src="{{ asset('storage/' . $data->limac->ringkasan_penilaian_jaminan) }}" 
+                                            alt="Ringkasan Penilaian Jaminan"
+                                            style="max-width: 100%; height: auto; display: block;"
+                                        >
                                     </div>
                                 @else
                                     <span>-</span>
                                 @endif
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
 
-                        <!-- Spesifikasi Jaminan -->
-                        <tr>
-                            <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; line-height: 1.5;">Spesifikasi Jaminan</td>
-                            <td colspan="9" style="border: 1px solid #0A3370 !important; padding: 10px 14px; white-space: pre-line; text-align: justify; text-justify: inter-word; line-height: 1.5;">{{ $agunan->spesifikasi ?? '-' }}</td>
-                        </tr>
+                        <!-- Informasi Harga Tanah -->
+                        <div style="margin-top: 10px; font-weight: bold;">
+                            Informasi Harga Tanah :
+                        </div>
+                        <div style="margin-top: 3px; padding-left: 15px; margin-bottom: 5px;">
+                            <div style="margin-left: 0%;">1. {{ $data->limac->info_harga_tanah1 ?? '-' }}</div><br>
+                            <div style="margin-left: 0%;">2. {{ $data->limac->info_harga_tanah2 ?? '-' }}</div><br>
+                            <div style="margin-left: 0%;">3. {{ $data->limac->info_harga_tanah3 ?? '-' }}</div>
+                        </div>
 
-                        <!-- Sub Header INFORMASI HARGA -->
-                        <tr>
-                            <td colspan="12" style="background-color: #f3f4f6 !important; color: #0A3370 !important; font-weight: bold; font-size: 10.5pt; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 14px; text-align: left;">Informasi Harga</td>
-                        </tr>
-                        <!-- Informasi Harga 1 -->
-                        <tr>
-                            <td class="bg-label text-center" style="width: 8%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; text-align: center; line-height: 1.5;">1</td>
-                            <td colspan="11" style="border: 1px solid #0A3370 !important; padding: 10px 14px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $agunan->info_harga1 ?? '-' }}</td>
-                        </tr>
-                        <!-- Informasi Harga 2 -->
-                        <tr>
-                            <td class="bg-label text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; text-align: center; line-height: 1.5;">2</td>
-                            <td colspan="11" style="border: 1px solid #0A3370 !important; padding: 10px 14px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $agunan->info_harga2 ?? '-' }}</td>
-                        </tr>
-                        <!-- Informasi Harga 3 -->
-                        <tr>
-                            <td class="bg-label text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; text-align: center; line-height: 1.5;">3</td>
-                            <td colspan="11" style="border: 1px solid #0A370 !important; padding: 10px 14px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $agunan->info_harga3 ?? '-' }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            @endforeach
-        @endif
+                        <!-- Batas Objek Jaminan -->
+                        <div style="margin-top: 10px; font-weight: bold; ">
+                            Batas Objek Jaminan :
+                        </div>
+                        <div style="margin-top: 3px; text-align: justify;">
+                            {{ $data->limac->batas_objek_jaminan ?? '-' }}
+                        </div>
 
-        <!-- C. ANALISIS JAMINAN -->
-        <table class="export-table" style="width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 5px;">
-            <thead>
-                <tr>
-                    <th colspan="12" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-align: left; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
-                        C. Analisis Jaminan
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="12" class="whitespace-pre" style="padding: 12px 16px; text-align: justify; border: 1px solid #0A3370 !important; line-height: 1.5;">{{ $data->analisis_jaminan->analisis_jaminan ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
+                        <!-- Catatan Khusus Objek Jaminan -->
+                        <div style="margin-top: 10px; font-weight: bold;">
+                            Catatan Khusus Objek Jaminan :
+                        </div>
+                        <div style="margin-top: 3px; text-align: justify;">
+                            {{ $data->limac->catatan_khusus ?? '-' }}
+                        </div>
+                    </div>
 
-        <!-- D. ANALISIS SLIK -->
-        @php
-            $capacity = $data->capacity ?? $data->dataslik ?? null;
-        @endphp
-        <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 5px; table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th colspan="12" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;">
-                        D. Analisis SLIK
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- D.1 Penghasilan Utama -->
-                <tr>
-                    <td class="bg-label text-center" style="width: 8%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; text-align: center; line-height: 1.5;">D.1</td>
-                    <td colspan="3" class="bg-label" style="width: 25%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; line-height: 1.5;">Informasi Penghasilan Utama menurut nasabah</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="width: 67%; border: 1px solid #0A3370 !important; padding: 10px 14px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $capacity->informasi_penghasilan_utama ?? $capacity->penghasilan_utama ?? $data->analisis_slik ?? '-' }}</td>
-                </tr>
-                
-                <!-- D.2 Penghasilan Pendukung -->
-                <tr>
-                    <td class="bg-label text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; text-align: center; line-height: 1.5;">D.2</td>
-                    <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; line-height: 1.5;">Informasi Penghasilan Pendukung menurut nasabah</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 10px 14px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $capacity->informasi_penghasilan_pendukung ?? $capacity->penghasilan_pendukung ?? $data->analisis_slik ?? '-' }}</td>
-                </tr>
+                    <!-- 3. CONDITION -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <div style="font-weight: bold;">
+                            3. CONDITION
+                        </div>
+                        <div style="margin-top: 3px; font-weight: normal; text-align: justify;">
+                            {{ $data->limac->condition ?? '-' }}
+                        </div>
+                    </div>
 
-                <!-- D.3 Pengeluaran Rumah Tangga -->
-                <tr>
-                    <td class="bg-label text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: middle; text-align: center; line-height: 1.5;">D.3</td>
-                    <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: middle; line-height: 1.5;">Pengeluaran Rumah Tangga</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 10px 14px; vertical-align: middle; line-height: 1.5;">
-                        @php $valD3 = $capacity->pengeluaran_rumah_tangga ?? 0; @endphp
-                        Rp {{ is_numeric($valD3) ? number_format($valD3, 0, ',', '.') : $valD3 }}
-                    </td>
-                </tr>
-
-                <!-- D.3 Angsuran Bank Lain -->
-                <tr>
-                    <td class="bg-label text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: middle; text-align: center; line-height: 1.5;"></td>
-                    <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: middle; line-height: 1.5;">Angsuran Bank Lain</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 10px 14px; vertical-align: middle; line-height: 1.5;">
-                        @php $valBankLain = $capacity->angsuran_bank_lain ?? 0; @endphp
-                        Rp {{ is_numeric($valBankLain) ? number_format($valBankLain, 0, ',', '.') : $valBankLain }}
-                    </td>
-                </tr>
-
-                <!-- D.3 Angsuran BPR -->
-                <tr>
-                    <td class="bg-label text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: middle; text-align: center; line-height: 1.5;"></td>
-                    <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: middle; line-height: 1.5;">Angsuran BPR</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 10px 14px; vertical-align: middle; line-height: 1.5;">
-                        @php $valBPR = $capacity->angsuran_bpr ?? 0; @endphp
-                        Rp {{ is_numeric($valBPR) ? number_format($valBPR, 0, ',', '.') : $valBPR }}
-                    </td>
-                </tr>
-
-                <!-- D.4 Analisis Kapasitas CA -->
-                <tr>
-                    <td class="bg-label text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; text-align: center; line-height: 1.5;">D.4</td>
-                    <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; line-height: 1.5;">Analisis Kapasitas CA</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 10px 14px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $capacity->analisis_kapasitas ?? $capacity->analisis_kapasitas_ca ?? $data->analisis_slik ?? '-' }}</td>
-                </tr>
-
-                <!-- D.5 Kelengkapan Berkas -->
-                <tr>
-                    <td class="bg-label text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; text-align: center; line-height: 1.5;">D.5</td>
-                    <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; line-height: 1.5;">Kelengkapan Berkas</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 10px 14px; vertical-align: top; text-align: justify; text-justify: inter-word; line-height: 1.5;">
-                        @if(!empty($capacity->kelengkapan_berkas))
-                            @if(is_array($capacity->kelengkapan_berkas))
-                                @foreach($capacity->kelengkapan_berkas as $item)
-                                    <div>{{ $item }}</div>
-                                @endforeach
+                    <!-- 4. CAPACITY -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <div style="font-weight: bold;">
+                            4. CAPACITY
+                        </div>
+                        
+                        <!-- Gambar Capacity -->
+                        <div style="margin-top: 5px;">
+                            @if(!empty($data->limac->capacity) && $data->limac->capacity !== '-')
+                                <div style="display: inline-block; padding: 2px;">
+                                    <img 
+                                        src="{{ asset('storage/' . $data->limac->capacity) }}" 
+                                        alt="Perhitungan Capacity"
+                                        style="max-width: 100%; height: auto; display: block;"
+                                    >
+                                </div>
                             @else
-                                {{ $capacity->kelengkapan_berkas }}
+                                <span>-</span>
                             @endif
+                        </div>
+
+                        <div style="margin-top: 10px; font-weight: bold;">
+                            Tanggungan
+                        </div>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 3px; padding-left: 15px;">
+                            <tr>
+                                <td style="width: 25%; font-weight: normal; padding-bottom: 3px;">Tanggungan Keluarga</td>
+                                <td style="width: 3%; text-align: center; padding-bottom: 3px;">:</td>
+                                <td style="width: 72%; font-weight: normal; padding-bottom: 3px;">{{ $data->limac->keluarga ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal; padding-bottom: 3px;">Tanggungan Anak</td>
+                                <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->anak ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal; padding-bottom: 3px;">Tanggungan Pendidikan</td>
+                                <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->pendidikan ?? '-' }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 5. CHARACTER -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <div style="font-weight: bold;">
+                            5. CHARACTER
+                        </div>
+                        <div style="margin-top: 5px; font-weight: bold;">
+                            Internal :
+                        </div>
+                        <div style="margin-top: 3px; font-weight: normal; text-align: justify;">
+                            {{ $data->limac->internal ?? '-' }}
+                        </div>
+
+                        <div style="margin-top: 8px; font-weight: bold;">
+                            Eksternal :
+                        </div>
+                        <div style="margin-top: 3px; font-weight: normal; text-align: justify; margin-bottom: 15px;">
+                            {{ $data->limac->eksternal ?? '-' }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        <!-- E. REFERENSI CREDIT ANALIST -->
+            <div class="mb-6">
+                <div class="section-header">
+                    E. REFERENSI CREDIT ANALIST
+                </div>
+                <div class="text-sm">
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <div style="margin-top: 3px; font-weight: normal; text-align: justify; margin-bottom: 15px;">
+                            {{ $data->referensi_ca->referensi_ca ?? '-' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- F. DEVIASI -->
+            <div class="mb-6">
+                <div class="section-header">
+                    F. DEVIASI
+                </div>
+                <div class="text-sm">
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <div style="margin-top: 3px; font-weight: normal; text-align: justify; margin-bottom: 15px;">
+                            {{ $data->deviasi->deviasi ?? '-' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- G. KESIMPULAN -->
+            <div class="mb-6">
+                <div class="section-header">
+                    G. KESIMPULAN
+                </div>
+                <div class="text-sm">
+                    <!-- Keterangan Kesimpulan -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <div style="margin-top: 3px; font-weight: normal; text-align: justify;">
+                            {{ $data->kesimpulan->kesimpulan ?? '-' }}
+                        </div>
+                    </div>
+
+                    <!-- Gambar Plafon / Kesimpulan -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        @if(!empty($data->kesimpulan) && !empty($data->kesimpulan->plafon) && $data->kesimpulan->plafon !== '-')
+                            <div style="display: inline-block; padding: 2px;">
+                                <img 
+                                    src="{{ asset('storage/' . $data->kesimpulan->plafon) }}" 
+                                    alt="Plafon Kredit"
+                                    style="max-width: 100%; height: auto; display: block;"
+                                >
+                            </div>
                         @else
-                            {{ $data->analisis_slik ?? '-' }}
+                            <span>-</span>
                         @endif
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    </div>
 
-        <!-- E. DESKRIPSI USAHA -->
-        <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 5px; table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th colspan="12" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;">
-                        E. Deskripsi Usaha
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="12" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 12px 16px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $data->capacity->deskripsi_usaha ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
+                    <!-- Tabel Detail Kesimpulan (Provisi, Biaya Administrasi, dll) -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="width: 25%; font-weight: normal; padding-bottom: 3px;">Provisi</td>
+                                <td style="width: 3%; text-align: center; padding-bottom: 3px;">:</td>
+                                <td style="width: 72%; font-weight: normal; padding-bottom: 3px;">{{ $data->kesimpulan->provisi ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal; padding-bottom: 3px;">Biaya Administrasi</td>
+                                <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->kesimpulan->biaya_administrasi ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal; padding-bottom: 3px;">Jaminan</td>
+                                <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->kesimpulan->jaminan ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal; padding-bottom: 3px;">Blokir</td>
+                                <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->kesimpulan->blokir ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal; padding-bottom: 3px;">Keterangan</td>
+                                <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->kesimpulan->keterangan ?? '-' }}</td>
+                            </tr>
+                        </table>
+                    </div>
 
-        <!-- F. ANALISIS CAPITAL -->
-        <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 5px; table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th colspan="12" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;">
-                        F. Analisis Capital
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="12" class="font-medium" style="border: 1px solid #0A3370 !important; padding: 12px 16px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $data->capital->analisis_aset ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
+                </div>
+            </div>
 
-        <!-- G. ANALISIS TAKE OVER -->
-        <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 5px; table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th colspan="12" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;">
-                        G. Analisis Take Over
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="12" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 12px 16px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $data->kondisi->analisis_take_over ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- GAMBAR JAMINAN, TEMPAT USAHA & TEMPAT TINGGAL -->
+        <div class="page-container" style="page-break-before: always; break-before: page;">  
+            <div class="mb-6">
+                <!-- Header Section -->
+                <div class="section-header" style="text-align: center;">
+                    GAMBAR JAMINAN, TEMPAT USAHA & TEMPAT TINGGAL
+                </div>
 
-        <!-- H. ANALISIS KELENGKAPAN BERKAS -->
-        <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 5px; table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th colspan="12" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;">
-                        H. Analisis Kelengkapan Berkas
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="12" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 12px 16px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $data->berkas_lengkap->analisis_kelengkapan_berkas ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
+                <div class="text-sm">
+                    <!-- 1. Lokasi dan Foto Jaminan -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <div style="font-weight: bold; margin-bottom: 8px;">
+                            1. Lokasi dan Foto Jaminan
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <!-- Tambahkan style untuk mencegah tabel terpotong buruk & mematikan repeat header -->
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid black; font-size: 0.875rem; page-break-inside: auto;">
+                                
+                                <!-- Tambahkan CSS agar theader TIDAK BERULANG di halaman baru -->
+                                <style>
+                                    thead { display: table-row-group; } /* Mencegah thead muncul otomatis di halaman berikutnya */
+                                    tr { page-break-inside: avoid; page-break-after: auto; } /* Mencegah baris tabel terpotong */
+                                </style>
 
-        <!-- I. ANALISIS BADAN USAHA -->
-        <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 5px; table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th colspan="12" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;">
-                        I. Analisis Badan Usaha
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="12" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 12px 16px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $data->badanusaha->analisa_badan_usaha ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
+                                <thead>
+                                    <tr style="background-color: #f3f4f6;">
+                                        <th style="border: 1px solid black; padding: 8px; text-align: left; width: 50%;">Gambar</th>
+                                        <th style="border: 1px solid black; padding: 8px; text-align: left; width: 50%;">Deskripsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Baris 1: Google Map di Kiri, Link & QR Code di Kanan -->
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+                                            <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
+                                            @if(!empty($data->jaminan->google_maps) && $data->jaminan->google_maps !== '-')
+                                                <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                    <img 
+                                                        src="{{ asset('storage/' . $data->jaminan->google_maps) }}" 
+                                                        alt="Google Map" 
+                                                        style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                    >
+                                                </div>
+                                            @else
+                                                <span>-</span>
+                                            @endif
+                                        </td>
+                                        <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+                                            <!-- Link Share Location -->
+                                            <div style="margin-bottom: 16px;">
+                                                <div style="font-weight: bold; margin-bottom: 4px;">Link Share Location</div>
+                                                @if(!empty($data->jaminan->share_location))
+                                                    <a href="{{ $data->jaminan->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; word-break: break-all;">
+                                                        {{ $data->jaminan->share_location }}
+                                                    </a>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            </div>
 
-        <!-- J. ANALISIS SWOT -->
-        <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 5px; table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th colspan="12" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;">
-                        J. Analisis SWOT
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- J.1 Strengths (Kekuatan) -->
-                <tr>
-                    <td class="bg-label text-center" style="width: 8%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; text-align: center; line-height: 1.5;">J.1</td>
-                    <td colspan="3" class="bg-label" style="width: 25%; background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; line-height: 1.5;">Strengths (Kekuatan)</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="width: 67%; border: 1px solid #0A3370 !important; padding: 10px 14px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $data->swot->kekuatan ?? '-' }}</td>
-                </tr>
-                <!-- J.2 Weaknesses (Kelemahan) dan Mitigasi -->
-                <tr>
-                    <td class="bg-label text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; text-align: center; line-height: 1.5;">J.2</td>
-                    <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; line-height: 1.5;">Weaknesses (Kelemahan) dan Mitigasi</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 10px 14px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $data->swot->kelemahan ?? '-' }}</td>
-                </tr>
-                <!-- J.3 Opportunities (Peluang) -->
-                <tr>
-                    <td class="bg-label text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; text-align: center; line-height: 1.5;">J.3</td>
-                    <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; line-height: 1.5;">Opportunities (Peluang)</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 10px 14px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $data->swot->peluang ?? '-' }}</td>
-                </tr>
-                <!-- J.4 Threats (Ancaman) -->
-                <tr>
-                    <td class="bg-label text-center" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; text-align: center; line-height: 1.5;">J.4</td>
-                    <td colspan="3" class="bg-label" style="background-color: #f3f4f6 !important; border: 1px solid #0A3370 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 12px; vertical-align: top; line-height: 1.5;">Threats (Ancaman)</td>
-                    <td colspan="8" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 10px 14px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $data->swot->ancaman ?? '-' }}</td>
-                </tr>
-                <!-- Sub Header Kesimpulan -->
-                <tr>
-                    <td colspan="12" class="sub-header" style="text-align: left; background-color: #f3f4f6 !important; color: #0A3370 !important; font-weight: bold; font-size: 10.5pt; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 14px;">Kesimpulan</td>
-                </tr>
-                <!-- Isi Kesimpulan -->
-                <tr>
-                    <td colspan="12" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 12px 16px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $data->swot->kesimpulan ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
+                                            <!-- Kode QR Maps -->
+                                            <div>
+                                                <div style="font-weight: bold; margin-bottom: 4px;">Kode QR Maps</div>
+                                                @if(!empty($data->jaminan->kode_qr) && $data->jaminan->kode_qr !== '-')
+                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $data->jaminan->kode_qr) }}" 
+                                                            alt="Kode QR Maps" 
+                                                            style="width: 150px; height: auto; display: block;"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
 
-        <!-- K. REKOMENDASI -->
-        <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 5px; table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th colspan="12" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;">
-                        K. Rekomendasi
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="12" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 12px 16px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $data->swot->rekomendasi ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
+                                    <!-- Baris Berikutnya: Foto Jaminan (Berpasangan / 2 Kolom) -->
+                                    @php
+                                        $fotoJaminans = !empty($data->jaminan->foto_jaminan) ? json_decode($data->jaminan->foto_jaminan, true) : [];
+                                        $chunks = array_chunk($fotoJaminans, 2);
+                                    @endphp
 
-        <!-- L. SYARAT DAN CATATAN LAINNYA -->
-        <table class="export-table" style="width: 100%; border-collapse: collapse; border: 1px solid #0A3370 !important; margin-top: 10px; margin-bottom: 5px; table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th colspan="12" style="background-color: #0A3370 !important; color: #FFFFFF !important; font-weight: bold; font-size: 11pt; padding: 12px 18px; text-transform: uppercase; border: 1px solid #0A3370 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: left;">
-                        L. Syarat dan Catatan Lainnya
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="12" class="whitespace-pre-line font-medium" style="border: 1px solid #0A3370 !important; padding: 12px 16px; white-space: pre-line; text-align: justify; text-justify: inter-word; vertical-align: top; line-height: 1.5;">{{ $data->swot->syarat_catatan ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
+                                    @foreach($chunks as $chunk)
+                                        <tr>
+                                            <!-- Kolom Kiri -->
+                                            <td style="border: 1px solid black; padding: 8px; vertical-align: top; width: 50%;">
+                                                @if(isset($chunk[0]))
+                                                    <div style="font-weight: bold; margin-bottom: 4px;">Foto Jaminan</div>
+                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $chunk[0]) }}" 
+                                                            alt="Foto Jaminan" 
+                                                            style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    &nbsp;
+                                                @endif
+                                            </td>
+
+                                            <!-- Kolom Kanan -->
+                                            <td style="border: 1px solid black; padding: 8px; vertical-align: top; width: 50%;">
+                                                @if(isset($chunk[1]))
+                                                    <div style="font-weight: bold; margin-bottom: 4px;">Foto Jaminan</div>
+                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $chunk[1]) }}" 
+                                                            alt="Foto Jaminan" 
+                                                            style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    &nbsp;
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 2. Lokasi dan Foto Tempat Usaha -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <div style="font-weight: bold; margin-bottom: 8px;">
+                            2. Lokasi dan Foto Tempat Usaha
+                        </div>
+
+                        @php
+                            $listUsaha = $data->usaha ? $data->usaha->sortBy('urutan') : collect();
+                        @endphp
+
+                        @foreach($listUsaha as $usahaItem)
+                            @php
+                                $hurufUrutan = chr(96 + $loop->iteration); 
+                            @endphp
+
+                            <!-- Judul Bagian dengan Penomoran Huruf (a, b, c) -->
+                            <div style="font-weight: bold; margin-top: 10px; margin-bottom: 6px;">
+                                {{ $hurufUrutan }}. Lokasi dan Foto Tempat Usaha {{ $usahaItem->nama_usaha }}
+                            </div>
+
+                            <!-- Tabel Detail Lokasi & Foto Usaha -->
+                            <div style="margin-bottom: 20px;">
+                                <table style="width: 100%; border-collapse: collapse; border: 1px solid black; font-size: 0.875rem;">
+                                    <thead>
+                                        <tr style="background-color: #f3f4f6;">
+                                            <th style="border: 1px solid black; padding: 8px; text-align: left; width: 50%;">Gambar</th>
+                                            <th style="border: 1px solid black; padding: 8px; text-align: left; width: 50%;">Deskripsi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Baris 1: Google Map di Kiri, Link & QR Code di Kanan -->
+                                        <tr>
+                                            <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+                                                <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
+                                                @if(!empty($usahaItem->google_maps) && $usahaItem->google_maps !== '-')
+                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $usahaItem->google_maps) }}" 
+                                                            alt="Google Map" 
+                                                            style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            </td>
+                                            <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+                                                <!-- Link Share Location -->
+                                                <div style="margin-bottom: 16px;">
+                                                    <div style="font-weight: bold; margin-bottom: 4px;">Link Share Location</div>
+                                                    @if(!empty($usahaItem->share_location))
+                                                        <a href="{{ $usahaItem->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; word-break: break-all;">
+                                                            {{ $usahaItem->share_location }}
+                                                        </a>
+                                                    @else
+                                                        <span>-</span>
+                                                    @endif
+                                                </div>
+
+                                                <!-- Kode QR Maps -->
+                                                <div>
+                                                    <div style="font-weight: bold; margin-bottom: 4px;">Kode QR Maps</div>
+                                                    @if(!empty($usahaItem->kode_qr) && $usahaItem->kode_qr !== '-')
+                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                            <img 
+                                                                src="{{ asset('storage/' . $usahaItem->kode_qr) }}" 
+                                                                alt="Kode QR Maps" 
+                                                                style="width: 150px; height: auto; display: block;"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        <span>-</span>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Baris Berikutnya: Foto Usaha (Berpasangan / 2 Kolom ke Bawah) -->
+                                        @php
+                                            $fotoUsahas = !empty($usahaItem->foto_usaha) ? json_decode($usahaItem->foto_usaha, true) : [];
+                                            $chunks = array_chunk($fotoUsahas, 2);
+                                        @endphp
+
+                                        @foreach($chunks as $chunk)
+                                            <tr>
+                                                <!-- Kolom Kiri -->
+                                                <td style="border: 1px solid black; padding: 8px; vertical-align: top; width: 50%;">
+                                                    @if(isset($chunk[0]))
+                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Usaha</div>
+                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                            <img 
+                                                                src="{{ asset('storage/' . $chunk[0]) }}" 
+                                                                alt="Foto Usaha" 
+                                                                style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        &nbsp;
+                                                    @endif
+                                                </td>
+
+                                                <!-- Kolom Kanan -->
+                                                <td style="border: 1px solid black; padding: 8px; vertical-align: top; width: 50%;">
+                                                    @if(isset($chunk[1]))
+                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Usaha</div>
+                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                            <img 
+                                                                src="{{ asset('storage/' . $chunk[1]) }}" 
+                                                                alt="Foto Usaha" 
+                                                                style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        &nbsp;
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- 3. Lokasi dan Foto Tempat Tinggal -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px; margin-bottom: 40px;">
+                        <div style="font-weight: bold; margin-bottom: 8px;">
+                            3. Lokasi dan Foto Tempat Tinggal
+                        </div>
+                        
+                        <div>
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid black; font-size: 0.875rem;">
+                                
+                                <!-- CSS untuk mematikan repeat header & mencegah baris terpotong -->
+                                <style>
+                                    thead { display: table-row-group; } 
+                                    tr { page-break-inside: avoid; page-break-after: auto; } 
+                                </style>
+
+                                <thead>
+                                    <tr style="background-color: #f3f4f6;">
+                                        <th style="border: 1px solid black; padding: 8px; text-align: left; width: 50%;">Gambar</th>
+                                        <th style="border: 1px solid black; padding: 8px; text-align: left; width: 50%;">Deskripsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Baris 1: Google Map di Kiri, Link & QR Code di Kanan -->
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+                                            <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
+                                            @if(!empty($data->rumah->google_maps) && $data->rumah->google_maps !== '-')
+                                                <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                    <img 
+                                                        src="{{ asset('storage/' . $data->rumah->google_maps) }}" 
+                                                        alt="Google Map" 
+                                                        style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                    >
+                                                </div>
+                                            @else
+                                                <span>-</span>
+                                            @endif
+                                        </td>
+                                        <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+                                            <!-- Link Share Location -->
+                                            <div style="margin-bottom: 16px;">
+                                                <div style="font-weight: bold; margin-bottom: 4px;">Link Share Location</div>
+                                                @if(!empty($data->rumah->share_location))
+                                                    <a href="{{ $data->rumah->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; word-break: break-all;">
+                                                        {{ $data->rumah->share_location }}
+                                                    </a>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            </div>
+
+                                            <!-- Kode QR Maps -->
+                                            <div>
+                                                <div style="font-weight: bold; margin-bottom: 4px;">Kode QR Maps</div>
+                                                @if(!empty($data->rumah->kode_qr) && $data->rumah->kode_qr !== '-')
+                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $data->rumah->kode_qr) }}" 
+                                                            alt="Kode QR Maps" 
+                                                            style="width: 150px; height: auto; display: block;"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Baris Berikutnya: Foto Tempat Tinggal (Berpasangan / 2 Kolom) -->
+                                    @php
+                                        $fotoTinggals = !empty($data->rumah->foto_tempat_tinggal) ? json_decode($data->rumah->foto_tempat_tinggal, true) : [];
+                                        $chunks = array_chunk($fotoTinggals, 2);
+                                    @endphp
+
+                                    @foreach($chunks as $chunk)
+                                        <tr>
+                                            <!-- Kolom Kiri -->
+                                            <td style="border: 1px solid black; padding: 8px; vertical-align: top; width: 50%;">
+                                                @if(isset($chunk[0]))
+                                                    <div style="font-weight: bold; margin-bottom: 4px;">Foto Tempat Tinggal</div>
+                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $chunk[0]) }}" 
+                                                            alt="Foto Tempat Tinggal" 
+                                                            style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    &nbsp;
+                                                @endif
+                                            </td>
+
+                                            <!-- Kolom Kanan -->
+                                            <td style="border: 1px solid black; padding: 8px; vertical-align: top; width: 50%;">
+                                                @if(isset($chunk[1]))
+                                                    <div style="font-weight: bold; margin-bottom: 4px;">Foto Tempat Tinggal</div>
+                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                        <img 
+                                                            src="{{ asset('storage/' . $chunk[1]) }}" 
+                                                            alt="Foto Tempat Tinggal" 
+                                                            style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    &nbsp;
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- SPESIFIKASI JAMINAN KREDIT -->
+        <div class="page-container" style="page-break-before: always; break-before: page;">
+            <div class="mb-6">
+                <!-- Header Section -->
+                <div class="section-header" style="text-align: center;">
+                    SPESIFIKASI JAMINAN KREDIT, MELIPUTI
+                </div>
+                
+                <div class="text-sm">
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <!-- 1. Sertifikat -->
+                            <tr>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">1.</td>
+                                <td style="width: 33%; font-weight: normal; padding-bottom: 4px;">Sertifikat</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 59%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->sertifikat ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 2. Nomor / NIB -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">2.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">Nomor / NIB</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->nomor_nib ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 3. Luas Tanah (P x L) -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">3.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">Luas Tanah (p x l)</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->luas_tanah ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 4. Luas Bangunan (P x L) -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">4.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">Luas Bangunan (p x l)</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->luas_bangunan ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 5. Lebar Depan -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">5.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">Lebar Depan</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->lebar_depan ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 6. PBG -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">6.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">PBG</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->pbg ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 7. Orientasi -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">7.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">Orientasi</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->orientasi ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 8. Jumlah Ruangan -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; vertical-align: top; padding-bottom: 4px;">8.</td>
+                                <td style="font-weight: normal; vertical-align: top; padding-bottom: 4px;">Jumlah Ruangan</td>
+                                <td style="text-align: center; font-weight: normal; vertical-align: top; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="width: 15%; border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->kamar_tidur ?? '-' }}</td>
+                                            <td style="width: 35%; padding-left: 6px; font-weight: normal;">Kamar Tidur</td>
+                                            <td style="width: 15%; border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->kamar_mandi ?? '-' }}</td>
+                                            <td style="width: 35%; padding-left: 6px; font-weight: normal;">Kamar Mandi</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px; margin-top: 2px;">{{ $data->spesifikasi->ruang_keluarga ?? '-' }}</td>
+                                            <td style="padding-left: 6px; font-weight: normal;">Ruang Keluarga</td>
+                                            <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->ruang_makan ?? '-' }}</td>
+                                            <td style="padding-left: 6px; font-weight: normal;">Ruang Makan</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->ruang_tamu ?? '-' }}</td>
+                                            <td style="padding-left: 6px; font-weight: normal;">Ruang Tamu</td>
+                                            <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->dapur ?? '-' }}</td>
+                                            <td style="padding-left: 6px; font-weight: normal;">Dapur</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->kamar_pembantu ?? '-' }}</td>
+                                            <td style="padding-left: 6px; font-weight: normal;">Kamar Pembantu</td>
+                                            <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->pekarangan ?? '-' }}</td>
+                                            <td style="padding-left: 6px; font-weight: normal;">Taman / Pekarangan</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->gudang ?? '-' }}</td>
+                                            <td style="padding-left: 6px; font-weight: normal;">Gudang</td>
+                                            <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->carport ?? '-' }}</td>
+                                            <td style="padding-left: 6px; font-weight: normal;">Carport</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->garasi ?? '-' }}</td>
+                                            <td style="padding-left: 6px; font-weight: normal;">Garasi</td>
+                                            <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->ruangan_lain ?? '-' }}</td>
+                                            <td style="padding-left: 6px; font-weight: normal;">.....</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- 9. Fasilitas Lainnya -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-top: 4px; padding-bottom: 4px;">9.</td>
+                                <td style="font-weight: normal; padding-top: 4px; padding-bottom: 4px;">Fasilitas Lainnya</td>
+                                <td style="text-align: center; font-weight: normal; padding-top: 4px; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-top: 4px; padding-bottom: 4px;">{{ $data->spesifikasi->fasilitas_lain ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 10. Kondisi Bangunan -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">10.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">Kondisi Bangunan</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->kondisi_bangunan ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 11. Kondisi Lantai -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">11.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">Kondisi Lantai</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->kondisi_lantai ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 12. Kondisi Plafon -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">12.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">Kondisi Plafon</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->kondisi_plafon ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 13. Bahan Atap -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">13.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">Bahan Atap</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->bahan_atap ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 14. Struktur Atap -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">14.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">Struktur Atap</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->struktur_atap ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 15. Listrik -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">15.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">Listrik</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->listrik ?? '-' }}</td>
+                            </tr>
+
+                            <!-- 16. Air -->
+                            <tr>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">16.</td>
+                                <td style="font-weight: normal; padding-bottom: 4px;">Air</td>
+                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->air ?? '-' }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DENAH JAMINAN -->
+        <div class="page-container" style="page-break-before: always; break-before: page;">   
+            <div class="mb-6">
+                <!-- Header Section -->
+                <div class="section-header" style="text-align: center;">
+                    DENAH JAMINAN
+                </div>
+                
+                <div class="text-sm">
+                    <!-- Denah -->
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                        @if(!empty($data->denah) && !empty($data->denah->denah_jaminan) && $data->denah->denah_jaminan !== '-')
+                            <div style="display: inline-block; padding: 2px;">
+                                <img 
+                                    src="{{ asset('storage/' . $data->denah->denah_jaminan) }}" 
+                                    alt="Denah"
+                                    style="max-width: 100%; height: auto; display: block;"
+                                >
+                            </div>
+                        @else
+                            <span>-</span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </body>

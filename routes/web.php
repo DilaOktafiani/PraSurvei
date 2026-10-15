@@ -173,8 +173,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/riwayat/detail2/{id}/print2', [MukController::class, 'printPage2'])->name('riwayat.print2');
 
     // Route Export pdf, word, excel
-    Route::get('/riwayat/detail2/{id}/export/pdf2', [SurveiController::class, 'exportPdf2'])->name('riwayat.pdf2');
-    Route::get('/riwayat/detail2/{id}/export/word2', [SurveiController::class, 'exportWord2'])->name('riwayat.word2');
-    Route::get('/riwayat/detail2/{id}/export/excel2', [SurveiController::class, 'exportExcel2'])->name('riwayat.excel2');
+    Route::get('/riwayat/detail2/{id}/export/pdf2', [MukController::class, 'exportPdf2'])->name('riwayat.pdf2');
+    Route::get('/riwayat/detail2/{id}/export/word2', [MukController::class, 'exportWord2'])->name('riwayat.word2');
+    Route::get('/riwayat/detail2/{id}/export/excel2', [MukController::class, 'exportExcel2'])->name('riwayat.excel2');
 
 });

@@ -1688,7 +1688,7 @@ class MukController extends Controller
         $view = view('riwayat-pdf2', compact('data'))->render();
         $pdf = Pdf::loadHtml($view);
         
-        return $pdf->download('Survei ' . $data->nama . '.pdf');
+        return $pdf->download('Analisa Kredit ' . $data->nama . '.pdf');
     }
 
     // ==========================================

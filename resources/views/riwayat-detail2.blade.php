@@ -238,7 +238,7 @@
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
                             Keterangan :
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8 text-justify">
                             {{ $data->keterangan ?? '-' }}
                         </div>
                     </div>
@@ -278,7 +278,7 @@
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
                            Tujuan Penggunaan :
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8 text-justify">
                             {{ $data->pengajuan_plafon_kredit ->tujuan_penggunaan ?? '-' }}
                         </div>
                     </div>
@@ -306,7 +306,7 @@
                             <div class="p-2 font-semibold sm:col-span-12 pl-8">
                                 1. Gambaran Pekerjaan Debitur
                             </div>
-                            <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
+                            <div class="py-1 px-8 sm:col-span-12 font-normal pl-8 text-justify">
                                 {{ $usahaUtama->gambaran_pekerjaan_debitur ?? '-' }}
                             </div>
 
@@ -354,7 +354,7 @@
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
                             2. Usaha Pendukung Lain
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8 text-justify">
                             {{ $data->informasi_usaha->where('urutan', 1)->first()->usaha_pendukung ?? '-' }}
                         </div>
 
@@ -392,7 +392,7 @@
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
                            1. CAPITAL
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8 text-justify">
                             {{ $data->limac ->capital ?? '-' }}
                         </div>
                     </div>
@@ -456,16 +456,10 @@
                         </div>
                     </div>
 
-                    <!-- Ringkasan Penilaian Jaminan, Tgl -->
+                    <!-- Ringkasan Penilaian Jaminan, Tanggal -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
-                        <div class="p-2 font-semibold sm:col-span-3">
-                            Ringkasan Penilaian Jaminan, Tgl
-                        </div>
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            :
-                        </div>
-                        <div class="p-2 sm:col-span-8 font-normal">
-                            {{ $data->limac->tanggal ?? '-' }}
+                        <div class="p-2 font-semibold sm:col-span-12">
+                            Ringkasan Penilaian Jaminan, Tanggal {{ $data->limac->tanggal ?? '-' }}
                         </div>
                     </div>
 
@@ -529,7 +523,7 @@
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
                            Batas Objek Jaminan :
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8 text-justify">
                             {{ $data->limac ->batas_objek_jaminan ?? '-' }}
                         </div>
                     </div>
@@ -539,7 +533,7 @@
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
                            Catatan Khusus Objek Jaminan :
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8 text-justify">
                             {{ $data->limac ->catatan_khusus ?? '-' }}
                         </div>
                     </div>
@@ -549,7 +543,7 @@
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
                            3. CONDITION
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8 text-justify">
                             {{ $data->limac ->condition ?? '-' }}
                         </div>
                     </div>
@@ -637,7 +631,7 @@
                         <div class="p-2 font-semibold sm:col-span-12 pl-12">
                            Internal :
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-12">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-12 text-justify">
                             {{ $data->limac ->internal ?? '-' }}
                         </div>
                     </div>
@@ -647,7 +641,7 @@
                         <div class="p-2 font-semibold sm:col-span-12 pl-12">
                            Eksternal :
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-12">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-12 text-justify">
                             {{ $data->limac ->eksternal ?? '-' }}
                         </div>
                     </div>
@@ -664,7 +658,7 @@
 
                      <!-- Keterangan -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8 text-justify">
                             {{ $data->referensi_ca->referensi_ca ?? '-' }}
                         </div>
                     </div>
@@ -681,7 +675,7 @@
 
                      <!-- Keterangan -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8 text-justify">
                             {{ $data->deviasi->deviasi ?? '-' }}
                         </div>
                     </div>
@@ -697,7 +691,7 @@
                 <div class="rounded-none text-sm">
                      <!-- Keterangan -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8 text-justify">
                             {{ $data->kesimpulan->kesimpulan ?? '-' }}
                         </div>
                     </div>
@@ -1312,7 +1306,7 @@
                         <div class="p-2 font-semibold text-center sm:col-span-1">:</div>
                         
                         <!-- Bagian Isian -->
-                        <div class="p-2 border border-black sm:col-span-7 font-semibold text-start bg-white">{{ $data->spesifikasi->fasilitas_lain ?? '-' }}</div>
+                        <div class="p-2 sm:col-span-7 font-semibold text-start bg-white">{{ $data->spesifikasi->fasilitas_lain ?? '-' }}</div>
                     </div>
 
                     <!-- Kondisi Bangunan -->
