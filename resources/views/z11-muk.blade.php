@@ -351,15 +351,28 @@
     const formPraSurvei = document.getElementById('formPraSurvei');
 
     if (formPraSurvei) {
+        const requiredFields = formPraSurvei.querySelectorAll(
+            'input[required], textarea[required], select[required]'
+        );
+
+        // Agar border merah hilang otomatis saat mulai diisi/dipilih
+        requiredFields.forEach(function(field) {
+            field.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    this.classList.remove('border-red-500');
+                }
+            });
+            field.addEventListener('change', function() {
+                if (this.value.trim() !== '' || (this.type === 'file' && this.files.length > 0)) {
+                    this.classList.remove('border-red-500');
+                }
+            });
+        });
+
         formPraSurvei.addEventListener('submit', function(event) {
             let isValid = true;
 
             const errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
-
-            // Semua input, textarea, dan select yang memiliki required
-            const requiredFields = formPraSurvei.querySelectorAll(
-                'input[required], textarea[required], select[required]'
-            );
 
             // Validasi seluruh field required
             requiredFields.forEach(function(field) {
@@ -397,15 +410,6 @@
                         confirmButton: 'swal2-tight-btn'
                     }
                 });
-
-                // Fokus ke field pertama yang belum diisi
-                const firstEmptyField = formPraSurvei.querySelector(
-                    'input[required]:invalid, textarea[required]:invalid, select[required]:invalid'
-                );
-
-                if (firstEmptyField) {
-                    firstEmptyField.focus();
-                }
 
                 return;
             }

@@ -203,6 +203,13 @@
             if (fileNameSpan) fileNameSpan.textContent = fileName;
             if (previewDiv) previewDiv.classList.remove('hidden');
             if (btnText) btnText.textContent = 'Ganti file';
+
+            // --- TAMBAHAN: Menghilangkan border merah wadah upload saat file dipilih ---
+            const container = input.closest('div');
+            if (container) {
+                container.style.borderColor = '';
+            }
+            input.style.borderColor = '';
         }
     }
 
@@ -268,7 +275,7 @@
                     Gambaran Pekerjaan Debitur ${usahaCount}
                 </label>
                 <textarea name="gambaran_pekerjaan_debitur_${usahaCount}" rows="6"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">${savedPekerjaan}</textarea>
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">${savedPekerjaan}</textarea>
             </div>
 
             <div>
@@ -318,21 +325,43 @@
         // Secara otomatis mengecek seluruh elemen di form yang memiliki atribut [required]
         const requiredInputs = form.querySelectorAll('[required]');
 
+        // --- TAMBAHAN: Reset semua border merah dan pasang event listener input otomatis ---
+        requiredInputs.forEach(input => {
+            input.style.borderColor = '';
+            if (input.type !== 'file') {
+                input.addEventListener('input', function() {
+                    if (this.value.trim() !== '') {
+                        this.style.borderColor = '';
+                    }
+                });
+            } else {
+                const container = input.closest('div');
+                if (container) container.style.borderColor = '';
+            }
+        });
+
         requiredInputs.forEach(input => {
             if (input.type === 'file') {
                 const container = input.closest('div');
-                const previewDiv = container.querySelector('[id*="preview"]');
+                const previewDiv = container ? container.querySelector('[id*="preview"]') : null;
                 const hasNewFile = input.files && input.files.length > 0;
                 const hasOldFile = previewDiv && !previewDiv.classList.contains('hidden');
 
                 // Jika file baru tidak dipilih dan tidak ada file lama (dari database), maka invalid
                 if (!hasNewFile && !hasOldFile) {
                     isValid = false;
+                    // --- TAMBAHAN: Berikan border merah pada wadah/container file ---
+                    if (container) {
+                        container.style.borderColor = 'red';
+                    }
+                    input.style.borderColor = 'red';
                 }
             } else {
                 // Untuk textarea / input teks biasa
                 if (!input.value.trim()) {
                     isValid = false;
+                    // --- TAMBAHAN: Berikan border merah pada input/textarea teks ---
+                    input.style.borderColor = 'red';
                 }
             }
         });

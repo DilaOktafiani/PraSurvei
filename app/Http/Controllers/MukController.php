@@ -70,7 +70,7 @@ class MukController extends Controller
             'bidang_usaha'         => 'required|string|max:255',
             'alamat_usaha'         => 'required|string',
             'kontak'               => 'required|string|max:50',
-            'tanggal_slik'         => 'string|max:255',
+            'tanggal_slik'         => 'nullable|string|max:255',
             'idi_di_bank_lain'     => "$idiRule|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
             'keterangan'           => 'required|string',
         ], [
@@ -243,7 +243,7 @@ class MukController extends Controller
         $infoUtama = InformasiUsaha::where('debitur_id', $debiturId)->where('urutan', 1)->first();
 
         // 2. Jika file di database sudah ada, buat jadi 'nullable'. Jika belum, 'required'.
-        $fileOmsetUtamaRule       = ($infoUtama && $infoUtama->perhitungan_omset_usaha) ? 'nullable' : 'required';
+        $fileOmsetUtamaRule      = ($infoUtama && $infoUtama->perhitungan_omset_usaha) ? 'nullable' : 'required';
         $fileOmsetPendukungRule   = ($infoUtama && $infoUtama->perhitungan_omset_pendukung) ? 'nullable' : 'required';
 
         // 3. Validasi Input Utama & Dinamis
@@ -251,7 +251,7 @@ class MukController extends Controller
             'gambaran_pekerjaan_debitur'    => 'required|string',
             'perhitungan_omset_usaha'       => "$fileOmsetUtamaRule|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
             'usaha_pendukung'               => 'nullable|string',
-            'perhitungan_omset_pendukung'   => "$fileOmsetPendukungRule|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
+            'perhitungan_omset_pendukung'   => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
         ];
 
         for ($i = 2; $i <= 10; $i++) {
@@ -1137,18 +1137,24 @@ class MukController extends Controller
     public function createAlur10()
     {
         $debiturId = session('debitur_id');
-
         $data = null;
+        $maxUrutan = 1; // Default fallback
 
         if ($debiturId) {
-            // Mengambil data berdasarkan debitur_id menggunakan model Rumah
             $data = Rumah::where('debitur_id', $debiturId)->first();
+            
+            // Cari urutan usaha terbesar yang pernah diisi oleh debitur ini
+            $latestUsaha = Usaha::where('debitur_id', $debiturId)
+                ->orderBy('urutan', 'desc')
+                ->first();
+
+            if ($latestUsaha) {
+                $maxUrutan = $latestUsaha->urutan;
+            }
         }
 
-        // Tentukan rute tombol kembali secara dinamis
-        $backRoute = route('z9-muk');
-
-        return view('z10-muk', compact('data', 'backRoute'));
+        // Kirim $maxUrutan ke view z10-muk
+        return view('z10-muk', compact('data', 'maxUrutan'));
     }
 
     public function storeAlur10(Request $request)

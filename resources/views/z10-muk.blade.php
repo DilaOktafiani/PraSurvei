@@ -203,8 +203,8 @@
                     Kosongkan Form
                 </button>
                 <div class="flex items-center gap-3">  
-                    <a href="{{ $backRoute }}" 
-                            class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
+                    <a href="{{ route('z9-muk', ['urutan' => $maxUrutan ?? 1]) }}"
+                        class="bg-transparent text-[#0A3370] border-2 border-[#0A3370] px-8 py-2 rounded-lg text-sm font-semibold hover:bg-[#0A3370] hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                         Kembali
                     </a>
                     <button type="submit" 
@@ -231,6 +231,10 @@
             document.getElementById('file_preview_google_maps').classList.remove('hidden');
             document.getElementById('txt_btn_upload_google_maps').textContent = 'Ganti file';
             input.setAttribute('data-has-file', 'true');
+
+            // Hapus border merah pada kontainer saat file dipilih
+            const container = document.getElementById('container_file_google_maps');
+            if (container) container.style.borderColor = '';
         }
     }
 
@@ -252,6 +256,10 @@
             document.getElementById('file_preview_kode_qr').classList.remove('hidden');
             document.getElementById('txt_btn_upload_kode_qr').textContent = 'Ganti file';
             input.setAttribute('data-has-file', 'true');
+
+            // Hapus border merah pada kontainer saat file dipilih
+            const container = document.getElementById('container_file_kode_qr');
+            if (container) container.style.borderColor = '';
         }
     }
 
@@ -266,17 +274,14 @@
     // ==========================================
     // 3. FOTO TEMPAT TINGGAL FILE FUNCTIONS (Multi-file max 50)
     // ==========================================
-    // Variabel global / penampung untuk menyimpan list file foto tempat tinggal secara akumulatif
     let dtFotoTempatTinggal = new DataTransfer();
 
     function handleFileSelectFotoTempatTinggal(input) {
         if (input.files && input.files.length > 0) {
-            // Masukkan file baru ke dalam objek DataTransfer
             for (let i = 0; i < input.files.length; i++) {
                 dtFotoTempatTinggal.items.add(input.files[i]);
             }
 
-            // Batasi maksimal 50 file
             if (dtFotoTempatTinggal.files.length > 50) {
                 Swal.fire({
                     icon: 'warning',
@@ -287,34 +292,30 @@
                     heightAuto: false
                 });
                 
-                // Reset jika melebihi 50 file
                 dtFotoTempatTinggal = new DataTransfer();
                 input.value = '';
                 return;
             }
 
-            // Terapkan gabungan file ke input form yang sebenarnya
             input.files = dtFotoTempatTinggal.files;
-
             const fileCount = dtFotoTempatTinggal.files.length;
 
-            // Tampilkan jumlah total file yang dipilih di area preview
             document.getElementById('file_name_foto_tempat_tinggal').textContent = `${fileCount} file dipilih`;
             document.getElementById('file_preview_foto_tempat_tinggal').classList.remove('hidden');
             
             input.setAttribute('data-has-file', 'true');
+
+            // Hapus border merah pada kontainer saat file dipilih
+            const container = document.getElementById('container_file_foto_tempat_tinggal');
+            if (container) container.style.borderColor = '';
         }
     }
 
     function removeFileFotoTempatTinggal() {
         const input = document.getElementById('file_foto_tempat_tinggal');
-        
-        // Kosongkan penampung DataTransfer dan nilai input
         dtFotoTempatTinggal = new DataTransfer();
         input.value = '';
-        
         document.getElementById('file_preview_foto_tempat_tinggal').classList.add('hidden');
-        
         input.setAttribute('data-has-file', 'false');
     }
 
@@ -324,10 +325,51 @@
     const formPraSurvei = document.getElementById('formPraSurvei') || document.querySelector('form');
 
     if (formPraSurvei) {
+        // Listener real-time untuk input umum bertanda [required]
+        formPraSurvei.querySelectorAll('[required]').forEach(field => {
+            if (field.type !== 'file') {
+                field.addEventListener('input', function() {
+                    if (this.value.trim() !== '') {
+                        this.style.borderColor = '';
+                    }
+                });
+            }
+        });
+
+        // Listener real-time khusus Share Location (menghapus border merah jika diisi link valid)
+        const shareLocInput = formPraSurvei.querySelector('input[name="share_location"]') || document.getElementById('share_location');
+        if (shareLocInput) {
+            shareLocInput.addEventListener('input', function() {
+                const val = this.value.trim();
+                if (val === '' || val.includes('http://') || val.includes('https://') || val.includes('maps')) {
+                    this.style.borderColor = '';
+                }
+            });
+        }
+
         formPraSurvei.addEventListener('submit', function(event) {
             let isValid = true;
+            let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
             const requiredFields = formPraSurvei.querySelectorAll('[required]');
 
+            // Reset semua border merah terlebih dahulu di awal submit
+            requiredFields.forEach(field => {
+                field.style.borderColor = '';
+            });
+            
+            // Reset border kontainer file
+            ['container_file_google_maps', 'container_file_kode_qr', 'container_file_foto_tempat_tinggal'].forEach(id => {
+                const c = document.getElementById(id);
+                if (c) c.style.borderColor = '';
+            });
+
+            // Reset border share location jika ada
+            if (shareLocInput) {
+                shareLocInput.style.borderColor = '';
+            }
+
+            // 1. Validasi Field Required (Input Teks & File Upload)
             requiredFields.forEach(field => {
                 if (field.type === 'file') {
                     const hasFileOnServer = field.getAttribute('data-has-file') === 'true';
@@ -335,21 +377,44 @@
 
                     if (!hasFileOnServer && !hasNewFileUploaded) {
                         isValid = false;
+                        
+                        if (field.id === 'file_google_maps') {
+                            const container = document.getElementById('container_file_google_maps');
+                            if (container) container.style.borderColor = 'red';
+                        } else if (field.id === 'file_kode_qr') {
+                            const container = document.getElementById('container_file_kode_qr');
+                            if (container) container.style.borderColor = 'red';
+                        } else if (field.id === 'file_foto_tempat_tinggal') {
+                            const container = document.getElementById('container_file_foto_tempat_tinggal');
+                            if (container) container.style.borderColor = 'red';
+                        }
                     }
                 } else {
                     if (!field.value.trim()) {
                         isValid = false;
+                        field.style.borderColor = 'red';
                     }
                 }
             });
 
+            // 2. Validasi Khusus Share Location (Format Link Google Maps)
+            if (shareLocInput) {
+                const valLoc = shareLocInput.value.trim();
+                if (valLoc !== '' && !valLoc.startsWith('http://') && !valLoc.startsWith('https://') && !valLoc.includes('maps')) {
+                    isValid = false;
+                    shareLocInput.style.borderColor = 'red';
+                    errorMessage = 'Share Location wajib diisi dengan link Google Maps';
+                }
+            }
+
+            // Jika ada yang belum valid, tampilkan SweetAlert
             if (!isValid) {
                 event.preventDefault();
 
                 Swal.fire({
                     icon: 'warning',
                     title: 'Peringatan',
-                    text: 'Mohon lengkapi semua pertanyaan yang bertanda (*)',
+                    text: errorMessage,
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#0082CB',
                     heightAuto: false,

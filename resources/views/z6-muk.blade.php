@@ -111,9 +111,17 @@ Sesuai ketentuan provisi 1% x plafon, biaya administrasi 1% x plafon x tenor, me
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
+        // Reset border merah terlebih dahulu sebelum validasi ulang
+        if (deviasi) {
+            deviasi.style.borderColor = '';
+        }
+
         // Validasi textarea deviasi
         if (!deviasi || deviasi.value.trim() === '') {
             isValid = false;
+            if (deviasi) {
+                deviasi.style.borderColor = 'red'; // Memberikan border merah jika kosong
+            }
         }
 
         if (!isValid) {
@@ -138,6 +146,16 @@ Sesuai ketentuan provisi 1% x plafon, biaya administrasi 1% x plafon x tenor, me
         // Jika valid, submit form
         formPraSurvei.submit();
     });
+
+    // Menghilangkan border merah secara otomatis saat textarea mulai diketik kembali
+    const deviasiInput = formPraSurvei.querySelector('textarea[name="deviasi"]');
+    if (deviasiInput) {
+        deviasiInput.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                this.style.borderColor = '';
+            }
+        });
+    }
 </script>
 
 <style>

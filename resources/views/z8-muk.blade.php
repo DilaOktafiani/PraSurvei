@@ -231,6 +231,12 @@
             document.getElementById('file_preview_google_maps').classList.remove('hidden');
             document.getElementById('txt_btn_upload_google_maps').textContent = 'Ganti file';
             input.setAttribute('data-has-file', 'true');
+
+            // Hilangkan border merah pada container saat file dipilih
+            const uploadContainer = document.getElementById('container_file_google_maps');
+            if (uploadContainer) {
+                uploadContainer.style.borderColor = '';
+            }
         }
     }
 
@@ -252,6 +258,12 @@
             document.getElementById('file_preview_kode_qr').classList.remove('hidden');
             document.getElementById('txt_btn_upload_kode_qr').textContent = 'Ganti file';
             input.setAttribute('data-has-file', 'true');
+
+            // Hilangkan border merah pada container saat file dipilih
+            const uploadContainer = document.getElementById('container_file_kode_qr');
+            if (uploadContainer) {
+                uploadContainer.style.borderColor = '';
+            }
         }
     }
 
@@ -266,18 +278,14 @@
     // ==========================================
     // 3. FOTO JAMINAN FILE FUNCTIONS (Multi-file max 50)
     // ==========================================
-    // Variabel global / penampung untuk menyimpan list file foto jaminan secara akumulatif
     let dtFotoJaminan = new DataTransfer();
 
     function handleFileSelectFotoJaminan(input) {
         if (input.files && input.files.length > 0) {
-            // Masukkan file baru ke dalam objek DataTransfer
             for (let i = 0; i < input.files.length; i++) {
-                // Cek agar tidak duplikat persis nama dan ukurannya (opsional, untuk keamanan)
                 dtFotoJaminan.items.add(input.files[i]);
             }
 
-            // Batasi maksimal 50 file
             if (dtFotoJaminan.files.length > 50) {
                 Swal.fire({
                     icon: 'warning',
@@ -288,31 +296,28 @@
                     heightAuto: false
                 });
                 
-                // Hapus file kelebihan terakhir yang baru dimasukkan
                 dtFotoJaminan = new DataTransfer();
-                for (let i = 0; i < input.files.length - (dtFotoJaminan.files.length - 50); i++) {
-                    // kembalikan ke kondisi sebelum melebihi batas
-                }
                 return;
             }
 
-            // Terapkan gabungan file ke input form yang sebenarnya
             input.files = dtFotoJaminan.files;
-
             const fileCount = dtFotoJaminan.files.length;
 
-            // Tampilkan jumlah total file yang dipilih di area preview
             document.getElementById('file_name_foto_jaminan').textContent = `${fileCount} file dipilih`;
             document.getElementById('file_preview_foto_jaminan').classList.remove('hidden');
             
             input.setAttribute('data-has-file', 'true');
+
+            // Hilangkan border merah pada container saat file dipilih
+            const uploadContainer = document.getElementById('container_file_foto_jaminan');
+            if (uploadContainer) {
+                uploadContainer.style.borderColor = '';
+            }
         }
     }
 
     function removeFileFotoJaminan() {
         const input = document.getElementById('file_foto_jaminan');
-        
-        // Kosongkan penampung DataTransfer dan nilai input
         dtFotoJaminan = new DataTransfer();
         input.value = '';
         
@@ -328,10 +333,46 @@
     const formPraSurvei = document.getElementById('formPraSurvei') || document.querySelector('form');
 
     if (formPraSurvei) {
+        // Real-time listener khusus Share Location agar border merah otomatis hilang saat diisi link valid
+        const shareLocInput = formPraSurvei.querySelector('input[name="share_location"]') || document.getElementById('share_location');
+        if (shareLocInput) {
+            shareLocInput.addEventListener('input', function() {
+                const val = this.value.trim();
+                if (val === '' || val.includes('http://') || val.includes('https://') || val.includes('maps')) {
+                    this.style.borderColor = '';
+                }
+            });
+        }
+
         formPraSurvei.addEventListener('submit', function(event) {
             let isValid = true;
+            let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
             const requiredFields = formPraSurvei.querySelectorAll('[required]');
 
+            // 1. Reset semua border merah & pasang event listener pembersih otomatis untuk input teks
+            requiredFields.forEach(field => {
+                field.style.borderColor = '';
+                if (field.type !== 'file') {
+                    field.addEventListener('input', function() {
+                        if (this.value.trim() !== '') {
+                            this.style.borderColor = '';
+                        }
+                    });
+                }
+            });
+
+            // Reset juga border merah pada kontainer upload masing-masing file
+            ['container_file_google_maps', 'container_file_kode_qr', 'container_file_foto_jaminan'].forEach(id => {
+                const container = document.getElementById(id);
+                if (container) container.style.borderColor = '';
+            });
+
+            // Reset border share location
+            if (shareLocInput) {
+                shareLocInput.style.borderColor = '';
+            }
+
+            // 2. Lakukan pengecekan validasi required
             requiredFields.forEach(field => {
                 if (field.type === 'file') {
                     const hasFileOnServer = field.getAttribute('data-has-file') === 'true';
@@ -339,21 +380,43 @@
 
                     if (!hasFileOnServer && !hasNewFileUploaded) {
                         isValid = false;
+                        
+                        let containerId = '';
+                        if (field.id === 'file_google_maps') containerId = 'container_file_google_maps';
+                        else if (field.id === 'file_kode_qr') containerId = 'container_file_kode_qr';
+                        else if (field.id === 'file_foto_jaminan') containerId = 'container_file_foto_jaminan';
+
+                        const uploadContainer = document.getElementById(containerId);
+                        if (uploadContainer) {
+                            uploadContainer.style.borderColor = 'red';
+                        }
                     }
                 } else {
                     if (!field.value.trim()) {
                         isValid = false;
+                        field.style.borderColor = 'red';
                     }
                 }
             });
 
+            // 3. Validasi Khusus Share Location (Format Link Google Maps)
+            if (shareLocInput) {
+                const valLoc = shareLocInput.value.trim();
+                if (valLoc !== '' && !valLoc.startsWith('http://') && !valLoc.startsWith('https://') && !valLoc.includes('maps')) {
+                    isValid = false;
+                    shareLocInput.style.borderColor = 'red';
+                    errorMessage = 'Share Location wajib diisi dengan link Google Maps';
+                }
+            }
+
+            // 4. Jika tidak valid, cegah submit dan tampilkan alert
             if (!isValid) {
                 event.preventDefault();
 
                 Swal.fire({
                     icon: 'warning',
                     title: 'Peringatan',
-                    text: 'Mohon lengkapi semua pertanyaan yang bertanda (*)',
+                    text: errorMessage,
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#0082CB',
                     heightAuto: false,

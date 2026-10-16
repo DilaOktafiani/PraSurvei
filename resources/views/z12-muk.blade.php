@@ -71,11 +71,13 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Denah Jaminan <span class="text-red-500">*</span>
                     </label>
-                    <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
+                    <!-- Tambahkan id="container_denah_jaminan" di sini -->
+                    <div id="container_denah_jaminan" class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
                         
                         <!-- Input File -->
                         <input type="file" id="file_denah_jaminan" name="denah_jaminan" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this)"
+                            required
                             data-has-file="{{ isset($data->denah_jaminan) && $data->denah_jaminan ? 'true' : 'false' }}">
 
                         <!-- Tombol Pilih File -->
@@ -173,6 +175,10 @@
 
             // Tandai bahwa file baru sudah dipilih
             input.setAttribute('data-has-file', 'true');
+
+            // Hapus border merah pada kontainer saat file berhasil dipilih
+            const container = document.getElementById('container_denah_jaminan');
+            if (container) container.classList.remove('border-red-500');
         }
     }
 
@@ -204,18 +210,26 @@
             event.preventDefault();
 
             const fileInput = document.getElementById('file_denah_jaminan');
+            const container = document.getElementById('container_denah_jaminan');
             const hasNewFile = fileInput.files && fileInput.files.length > 0;
             const hasOldFile = fileInput.getAttribute('data-has-file') === 'true';
 
             let isValid = true;
 
+            // Reset border merah terlebih dahulu di awal submit
+            if (container) container.classList.remove('border-red-500');
+
             // Jika belum ada file baru dan tidak ada file lama
             if (!hasNewFile && !hasOldFile) {
                 isValid = false;
+
+                // Tambahkan border merah pada kontainer pembungkusnya agar terlihat
+                if (container) container.classList.add('border-red-500');
+
                 Swal.fire({
                     icon: 'warning',
                     title: 'Peringatan',
-                    text: 'Mohon upload Denah Jaminan terlebih dahulu.',
+                    text: 'Mohon lengkapi semua pertanyaan yang bertanda (*)',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#0082CB',
                     heightAuto: false,
@@ -224,8 +238,11 @@
                         confirmButton: 'swal2-tight-btn'
                     }
                 });
+
+                return;
             }
 
+            // Jika semua valid, form dilanjutkan
             if (isValid) {
                 formPraSurvei.submit();
             }

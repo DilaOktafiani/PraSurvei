@@ -363,7 +363,6 @@ Dari hasil slik terlihat semua pinjaman online dan leasing dalam kondisi macet, 
     </footer>
 
 <script>
-    // Fungsi untuk Preview File Upload (Universal untuk semua file upload)
     // Fungsi untuk Preview File Upload (Otomatis mendeteksi ID dari input)
     function handleFileSelect(input) {
         if (input.files && input.files[0]) {
@@ -379,6 +378,15 @@ Dari hasil slik terlihat semua pinjaman online dan leasing dalam kondisi macet, 
             if (fileNameSpan) fileNameSpan.textContent = fileName;
             if (previewDiv) previewDiv.classList.remove('hidden');
             if (btnText) btnText.textContent = 'Ganti file';
+
+            // --- TAMBAHAN: Menghilangkan border merah saat file berhasil dipilih ---
+            input.style.borderColor = '';
+            let container = input.closest('div');
+            if (container) {
+                // Mencari wadah utama pembungkus upload jika ada (biasanya class w-full border atau miripnya)
+                const wrapper = input.closest('.border') || container;
+                if (wrapper) wrapper.style.borderColor = '';
+            }
         }
     }
 
@@ -398,8 +406,30 @@ Dari hasil slik terlihat semua pinjaman online dan leasing dalam kondisi macet, 
         const formPraSurvei = document.getElementById('formPraSurvei');
 
         if (formPraSurvei) {
+            // --- TAMBAHAN: Hilangkan border merah secara real-time saat input teks diketik ---
+            const allRequiredInputs = formPraSurvei.querySelectorAll('[required]');
+            allRequiredInputs.forEach(field => {
+                if (field.type !== 'file') {
+                    field.addEventListener('input', function() {
+                        if (this.value.trim() !== '') {
+                            this.style.borderColor = '';
+                        }
+                    });
+                }
+            });
+
             formPraSurvei.addEventListener('submit', function(event) {
                 let isValid = true;
+
+                // --- TAMBAHAN: Reset semua border merah sebelum validasi ulang ---
+                allRequiredInputs.forEach(field => {
+                    field.style.borderColor = '';
+                    if (field.type === 'file') {
+                        let container = field.closest('div');
+                        let wrapper = container ? (field.closest('.border') || container) : null;
+                        if (wrapper) wrapper.style.borderColor = '';
+                    }
+                });
 
                 // Cek semua input yang memiliki atribut required secara otomatis
                 const requiredFields = formPraSurvei.querySelectorAll('[required]');
@@ -409,18 +439,17 @@ Dari hasil slik terlihat semua pinjaman online dan leasing dalam kondisi macet, 
                     if (field.type === 'file') {
                         // Jika file baru belum dipilih DAN belum ada file lama yang tersimpan di server/preview
                         if (!field.files || field.files.length === 0) {
-                            // Cek apakah elemen preview-nya sedang aktif (artinya sudah ada file lama dari database)
-                            // Kita cek berdasarkan container terdekat atau atributnya jika perlu, 
-                            // tapi standar HTML required menangkap input kosong jika belum di-upload.
-                            // Catatan: Jika form mode edit dan file lama sudah ada, browser menganggap input file kosong 
-                            // kecuali kita buat pengecualian untuk file yang sudah ada.
-                            
-                            // Untuk amannya, kita cek apakah elemen preview terlihat atau tidak:
                             let container = field.closest('div');
                             let hasExistingFile = container && container.querySelector('.bg-gray-50') && !container.querySelector('.bg-gray-50').classList.contains('hidden');
                             
                             if (!hasExistingFile) {
                                 isValid = false;
+                                // --- TAMBAHAN: Berikan border merah pada area upload file ---
+                                field.style.borderColor = 'red';
+                                let wrapper = container ? (field.closest('.border') || container) : null;
+                                if (wrapper) {
+                                    wrapper.style.borderColor = 'red';
+                                }
                             }
                         }
                     }
@@ -428,6 +457,8 @@ Dari hasil slik terlihat semua pinjaman online dan leasing dalam kondisi macet, 
                     else {
                         if (!field.value.trim()) {
                             isValid = false;
+                            // --- TAMBAHAN: Berikan border merah pada input/textarea teks ---
+                            field.style.borderColor = 'red';
                         }
                     }
                 });

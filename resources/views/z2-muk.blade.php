@@ -138,6 +138,12 @@
             document.getElementById('file_name').textContent = fileName;
             document.getElementById('file_preview').classList.remove('hidden');
             document.getElementById('txt_btn_upload').textContent = 'Ganti file';
+            
+            // --- TAMBAHAN: Menghilangkan border merah pada container file saat file dipilih ---
+            const uploadContainer = document.getElementById('container_file_plafon');
+            if (uploadContainer) {
+                uploadContainer.style.borderColor = '';
+            }
         }
     }
 
@@ -153,6 +159,14 @@
     const tujuanPenggunaan = document.getElementById('tujuan_penggunaan');
     const filePlafon = document.getElementById('file_plafon');
     const filePreview = document.getElementById('file_preview');
+    const uploadContainer = document.getElementById('container_file_plafon'); // Pastikan ID ini ada di pembungkus HTML file
+
+    // --- TAMBAHAN: Menghilangkan border merah otomatis saat textarea diketik ---
+    tujuanPenggunaan.addEventListener('input', function() {
+        if (this.value.trim() !== '') {
+            this.style.borderColor = '';
+        }
+    });
 
     formPraSurvei.addEventListener('submit', function(event) {
         event.preventDefault(); // Mencegah form langsung submit
@@ -160,9 +174,15 @@
         let isValid = true;
         let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
 
+        // --- TAMBAHAN: Reset semua border merah di awal validasi ---
+        tujuanPenggunaan.style.borderColor = '';
+        if (uploadContainer) uploadContainer.style.borderColor = '';
+
         // 1. Validasi Textarea Tujuan Penggunaan
         if (!tujuanPenggunaan.value.trim()) {
             isValid = false;
+            // --- TAMBAHAN: Berikan border merah pada textarea ---
+            tujuanPenggunaan.style.borderColor = 'red';
         }
 
         // 2. Validasi File Pengajuan Plafon Kredit
@@ -170,6 +190,10 @@
         const isFilePreviewVisible = !filePreview.classList.contains('hidden');
         if (filePlafon.files.length === 0 && !isFilePreviewVisible) {
             isValid = false;
+            // --- TAMBAHAN: Berikan border merah pada container file upload ---
+            if (uploadContainer) {
+                uploadContainer.style.borderColor = 'red';
+            }
         }
 
         if (!isValid) {

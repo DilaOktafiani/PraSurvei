@@ -134,7 +134,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Jaminan <span class="text-red-500">*</span>
                     </label>
-                <textarea id="jaminan" name="jaminan" rows="2" placeholder="ex : SHM No.552 an. Tri Teguh Prakoso seluas 193 m2 terletak di Ds/Kel.Cemani Kec.Grogol Kab.Sukoharjo"
+                <textarea id="jaminan" name="jaminan" rows="2" placeholder="ex : SHM No.552 an. Tri Teguh Prakoso seluas 193 m2 terletak di Ds/Kel.Cemani Kec.Grogol Kab.Sukoharjo" required
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">{{ old('jaminan', $data->jaminan ?? '') }}</textarea>
                 </div>
 
@@ -192,10 +192,18 @@
             const fileNameSpan = document.getElementById('file_name_' + fieldId);
             const previewDiv = document.getElementById('file_preview_' + fieldId);
             const btnText = document.getElementById('txt_btn_upload_' + fieldId);
+            const uploadContainer = document.getElementById('upload_container_' + fieldId) || input.closest('.upload-wrapper') || input.parentElement;
 
             if (fileNameSpan) fileNameSpan.textContent = fileName;
             if (previewDiv) previewDiv.classList.remove('hidden');
             if (btnText) btnText.textContent = 'Ganti file';
+
+            // Menghilangkan border merah jika file sudah dipilih
+            if (uploadContainer) {
+                uploadContainer.style.border = '';
+                uploadContainer.style.padding = '';
+            }
+            input.style.borderColor = '';
         }
     }
 
@@ -215,11 +223,39 @@
         const formPraSurvei = document.getElementById('formPraSurvei');
 
         if (formPraSurvei) {
+            const requiredFields = formPraSurvei.querySelectorAll('[required]');
+
+            // Menambahkan event listener agar border merah otomatis hilang saat user mulai mengetik/mengubah isi
+            requiredFields.forEach(field => {
+                field.addEventListener('input', function() {
+                    if (this.value.trim() !== '') {
+                        this.style.borderColor = '';
+                    }
+                });
+                field.addEventListener('change', function() {
+                    if (this.value.trim() !== '') {
+                        this.style.borderColor = '';
+                    }
+                });
+            });
+
             formPraSurvei.addEventListener('submit', function(event) {
                 let isValid = true;
 
-                // Mengambil semua elemen yang memiliki atribut 'required' di dalam form
-                const requiredFields = formPraSurvei.querySelectorAll('[required]');
+                // Reset semua border merah terlebih dahulu sebelum validasi ulang
+                requiredFields.forEach(field => {
+                    if (field.type === 'file') {
+                        const fieldId = field.id.replace('file_', '');
+                        const uploadContainer = document.getElementById('upload_container_' + fieldId) || field.closest('.upload-wrapper') || field.parentElement;
+                        if (uploadContainer) {
+                            uploadContainer.style.border = '';
+                            uploadContainer.style.padding = '';
+                        }
+                        field.style.borderColor = '';
+                    } else {
+                        field.style.borderColor = '';
+                    }
+                });
 
                 requiredFields.forEach(field => {
                     if (field.type === 'file') {
@@ -231,12 +267,22 @@
                         if (!field.files || field.files.length === 0) {
                             if (!hasExistingFile) {
                                 isValid = false;
+                                // Berikan border merah pada container upload atau elemen filenya
+                                const uploadContainer = document.getElementById('upload_container_' + fieldId) || field.closest('.upload-wrapper') || field.parentElement;
+                                if (uploadContainer) {
+                                    uploadContainer.style.border = '1px solid red';
+                                    uploadContainer.style.borderRadius = '4px';
+                                    uploadContainer.style.padding = '5px';
+                                } else {
+                                    field.style.borderColor = 'red';
+                                }
                             }
                         }
                     } else {
                         // Untuk input teks, textarea, select, dll.
                         if (!field.value.trim()) {
                             isValid = false;
+                            field.style.borderColor = 'red';
                         }
                     }
                 });

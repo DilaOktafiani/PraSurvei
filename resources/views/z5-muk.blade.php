@@ -104,39 +104,59 @@ Berdasarkan pertimbangan dari segala aspek yang ada, dengan melihat kondisi yang
 <script>
     const formPraSurvei = document.getElementById('formPraSurvei');
 
-    formPraSurvei.addEventListener('submit', function(event) {
+    if (formPraSurvei) {
         const referensiCA = formPraSurvei.querySelector('textarea[name="referensi_ca"]');
 
-        let isValid = true;
-        let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
-
-        // Validasi textarea referensi_ca
-        if (!referensiCA || referensiCA.value.trim() === '') {
-            isValid = false;
-        }
-
-        if (!isValid) {
-            event.preventDefault();
-
-            Swal.fire({
-                icon: 'warning',
-                title: 'Peringatan',
-                text: errorMessage,
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#0082CB',
-                heightAuto: false,
-                customClass: {
-                    popup: 'swal2-tight-popup',
-                    confirmButton: 'swal2-tight-btn'
+        // --- TAMBAHAN: Menghilangkan border merah secara real-time saat mulai diketik ---
+        if (referensiCA) {
+            referensiCA.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    this.style.borderColor = '';
                 }
             });
-
-            return;
         }
 
-        // Jika valid, form dikirim
-        formPraSurvei.submit();
-    });
+        formPraSurvei.addEventListener('submit', function(event) {
+            let isValid = true;
+            let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
+
+            // --- TAMBAHAN: Reset border merah di awal validasi ---
+            if (referensiCA) {
+                referensiCA.style.borderColor = '';
+            }
+
+            // Validasi textarea referensi_ca
+            if (!referensiCA || referensiCA.value.trim() === '') {
+                isValid = false;
+                // --- TAMBAHAN: Berikan border merah jika kosong ---
+                if (referensiCA) {
+                    referensiCA.style.borderColor = 'red';
+                }
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan',
+                    text: errorMessage,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#0082CB',
+                    heightAuto: false,
+                    customClass: {
+                        popup: 'swal2-tight-popup',
+                        confirmButton: 'swal2-tight-btn'
+                    }
+                });
+
+                return;
+            }
+
+            // Jika valid, form dikirim
+            formPraSurvei.submit();
+        });
+    }
 </script>
 
 <style>

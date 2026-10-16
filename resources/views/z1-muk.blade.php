@@ -240,6 +240,13 @@
             
             // Tandai bahwa file baru sudah dipilih, jadi status "has-file" dianggap true
             input.setAttribute('data-has-file', 'true');
+
+            // Menghilangkan border merah wadah upload saat file dipilih
+            const uploadContainer = document.getElementById('container_file_idi');
+            if (uploadContainer) {
+                uploadContainer.style.borderColor = '';
+            }
+            input.style.borderColor = '';
         }
     }
 
@@ -260,16 +267,36 @@
         const requiredInputs = formPraSurvei.querySelectorAll('[required]');
         let isValid = true;
 
+        // Reset semua border merah terlebih dahulu sebelum validasi ulang
+        requiredInputs.forEach(input => {
+            input.style.borderColor = '';
+            if (input.type !== 'file') {
+                input.addEventListener('input', function() {
+                    if (this.value.trim() !== '') {
+                        this.style.borderColor = '';
+                    }
+                });
+            }
+        });
+        
+        const uploadContainer = document.getElementById('container_file_idi');
+        if (uploadContainer) uploadContainer.style.borderColor = '';
+
         requiredInputs.forEach(input => {
             if (input.type === 'file') {
                 const hasExistingFile = input.getAttribute('data-has-file') === 'true';
                 // Validasi: Error jika tidak ada file yang dipilih DAN belum ada file lama di server
                 if (!input.files.length && !hasExistingFile) {
                     isValid = false;
+                    // Berikan border merah pada container file upload
+                    if (uploadContainer) {
+                        uploadContainer.style.borderColor = 'red';
+                    }
                 }
             } else {
                 if (!input.value.trim()) {
                     isValid = false;
+                    input.style.borderColor = 'red';
                 }
             }
         });

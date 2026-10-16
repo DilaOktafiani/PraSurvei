@@ -62,7 +62,7 @@ class Debitur extends Model
 
     public function limac()
     {
-        return $this->hasOne(LimaC::class, 'debitur_id', 'id');
+        return $this->hasMany(LimaC::class, 'debitur_id', 'id');
     }
 
     public function pengajuan_plafon_kredit()

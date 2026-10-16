@@ -205,38 +205,41 @@
             </div>
 
             <!-- KOTAK 6 -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-                <!-- Apakah ada Usaha Lain -->
-                <div id="containerOpsiLanjut"
-                    class="{{ $urutan >= 20 ? 'hidden' : '' }}">
-
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Apakah ada Usaha Lain? <span class="text-red-500">*</span>
-                    </label>
-
-                    <div class="space-y-3 text-sm text-gray-700">
-
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio"
-                                name="apakah_ada_usaha_lain"
-                                value="YA"
-                                {{ old('apakah_ada_usaha_lain', $data->apakah_ada_usaha_lain ?? '') === 'YA' ? 'checked' : '' }}
-                                class="accent-[#0082CB]">
-                            <span>YA</span>
+            @if($urutan < 10)
+                <!-- Kotak dan isinya HANYA MUNCUL jika urutan di bawah 10 -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
+                    <div class="space-y-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Apakah ada Usaha Lain? <span class="text-red-500">*</span>
                         </label>
 
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio"
-                                name="apakah_ada_usaha_lain"
-                                value="TIDAK ADA"
-                                {{ old('apakah_ada_usaha_lain', $data->apakah_ada_usaha_lain ?? '') === 'TIDAK ADA' ? 'checked' : '' }}
-                                class="accent-[#0082CB]">
-                            <span>TIDAK ADA</span>
-                        </label>
+                        <div class="space-y-3 text-sm text-gray-700">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio"
+                                    name="apakah_ada_usaha_lain"
+                                    value="YA"
+                                    required
+                                    {{ old('apakah_ada_usaha_lain', $data->apakah_ada_usaha_lain ?? '') === 'YA' ? 'checked' : '' }}
+                                    class="accent-[#0082CB]">
+                                <span>YA</span>
+                            </label>
 
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio"
+                                    name="apakah_ada_usaha_lain"
+                                    value="TIDAK ADA"
+                                    required
+                                    {{ old('apakah_ada_usaha_lain', $data->apakah_ada_usaha_lain ?? '') === 'TIDAK ADA' ? 'checked' : '' }}
+                                    class="accent-[#0082CB]">
+                                <span>TIDAK ADA</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @else
+                <!-- Jika di urutan 10, kotak hilang total dan otomatis kirim nilai "TIDAK ADA" ke backend -->
+                <input type="hidden" name="apakah_ada_usaha_lain" value="TIDAK ADA">
+            @endif
 
             <!-- TOMBOL AKSI -->
             <div class="flex justify-between items-center pt-2">
@@ -300,6 +303,12 @@
             document.getElementById('file_preview_google_maps').classList.remove('hidden');
             document.getElementById('txt_btn_upload_google_maps').textContent = 'Ganti file';
             input.setAttribute('data-has-file', 'true');
+
+            // Hilangkan border merah pada container saat file dipilih
+            const uploadContainer = document.getElementById('container_file_google_maps');
+            if (uploadContainer) {
+                uploadContainer.style.borderColor = '';
+            }
         }
     }
 
@@ -337,6 +346,12 @@
             document.getElementById('file_preview_kode_qr').classList.remove('hidden');
             document.getElementById('txt_btn_upload_kode_qr').textContent = 'Ganti file';
             input.setAttribute('data-has-file', 'true');
+
+            // Hilangkan border merah pada container saat file dipilih
+            const uploadContainer = document.getElementById('container_file_kode_qr');
+            if (uploadContainer) {
+                uploadContainer.style.borderColor = '';
+            }
         }
     }
 
@@ -392,6 +407,12 @@
             document.getElementById('file_name_foto_usaha').textContent = `${fileCount} file dipilih`;
             document.getElementById('file_preview_foto_usaha').classList.remove('hidden');
             input.setAttribute('data-has-file', 'true');
+
+            // Hilangkan border merah pada container saat file dipilih
+            const uploadContainer = document.getElementById('container_file_foto_usaha');
+            if (uploadContainer) {
+                uploadContainer.style.borderColor = '';
+            }
         }
     }
 
@@ -427,16 +448,76 @@
         }
     });
 
+    // Tambahkan event listener untuk radio "apakah_ada_usaha_lain" agar border merah otomatis hilang saat dipilih
+    const radioUsahaLainList = document.querySelectorAll('input[name="apakah_ada_usaha_lain"]');
+    radioUsahaLainList.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const containerOpsiLanjut = document.getElementById('containerOpsiLanjut');
+            if (containerOpsiLanjut) {
+                // Hapus styling border merah yang diset secara inline sebelumnya
+                containerOpsiLanjut.style.removeProperty('border-color');
+                containerOpsiLanjut.style.removeProperty('border-width');
+                containerOpsiLanjut.style.removeProperty('border-style');
+                containerOpsiLanjut.style.removeProperty('border-radius');
+            }
+        });
+    });
+
     // ==========================================
     // 5. VALIDASI SUBMIT FORM DENGAN SWEETALERT
     // ==========================================
     const formPraSurvei = document.getElementById('formPraSurvei') || document.querySelector('form');
 
     if (formPraSurvei) {
+        // Real-time listener khusus Share Location agar border merah otomatis hilang saat diisi link valid
+        const shareLocInput = formPraSurvei.querySelector('input[name="share_location"]') || document.getElementById('share_location');
+        if (shareLocInput) {
+            shareLocInput.addEventListener('input', function() {
+                const val = this.value.trim();
+                if (val === '' || val.includes('http://') || val.includes('https://') || val.includes('maps')) {
+                    this.style.borderColor = '';
+                }
+            });
+        }
+
         formPraSurvei.addEventListener('submit', function(event) {
             let isValid = true;
+            let errorMessage = 'Mohon lengkapi semua pertanyaan yang bertanda (*)';
             const requiredFields = formPraSurvei.querySelectorAll('[required]');
 
+            // A. RESET SEMUA ERROR STYLING DI AWAL VALIDASI
+            requiredFields.forEach(field => {
+                field.style.borderColor = '';
+                if (field.type !== 'file' && field.type !== 'radio') {
+                    field.addEventListener('input', function() {
+                        if (this.value.trim() !== '') {
+                            this.style.borderColor = '';
+                        }
+                    });
+                }
+            });
+
+            // Reset border merah kontainer file upload
+            ['container_file_google_maps', 'container_file_kode_qr', 'container_file_foto_usaha'].forEach(id => {
+                const container = document.getElementById(id);
+                if (container) container.style.borderColor = '';
+            });
+
+            // Reset border share location
+            if (shareLocInput) {
+                shareLocInput.style.borderColor = '';
+            }
+
+            // Reset border/highlight pembungkus radio "apakah_ada_usaha_lain"
+            const containerOpsiLanjut = document.getElementById('containerOpsiLanjut');
+            if (containerOpsiLanjut) {
+                containerOpsiLanjut.style.borderColor = '';
+                containerOpsiLanjut.style.borderWidth = '';
+                containerOpsiLanjut.style.borderStyle = '';
+                containerOpsiLanjut.style.borderRadius = '';
+            }
+            
+            // B. PROSES PENGECEKAN VALIDASI UTAMA
             requiredFields.forEach(field => {
                 if (field.type === 'file') {
                     const hasFileOnServer = field.getAttribute('data-has-file') === 'true';
@@ -444,9 +525,18 @@
 
                     if (!hasFileOnServer && !hasNewFileUploaded) {
                         isValid = false;
+                        
+                        let containerId = '';
+                        if (field.id === 'file_google_maps') containerId = 'container_file_google_maps';
+                        else if (field.id === 'file_kode_qr') containerId = 'container_file_kode_qr';
+                        else if (field.id === 'file_foto_usaha') containerId = 'container_file_foto_usaha';
+
+                        const uploadContainer = document.getElementById(containerId);
+                        if (uploadContainer) {
+                            uploadContainer.style.borderColor = 'red';
+                        }
                     }
                 } else if (field.type === 'radio') {
-                    // Validasi radio khusus halaman 1-9
                     if (currentUrutan < maksimalHalaman) {
                         const radioGroup = formPraSurvei.querySelectorAll(`input[name="${field.name}"]`);
                         const isChecked = Array.from(radioGroup).some(r => r.checked);
@@ -457,28 +547,46 @@
                 } else {
                     if (!field.value || !field.value.trim()) {
                         isValid = false;
+                        field.style.borderColor = 'red';
                     }
                 }
             });
 
-            // Validasi tambahan untuk radio "apakah_ada_usaha_lain" di halaman < 10
+            // C. VALIDASI KHUSUS SHARE LOCATION (Format Link Google Maps)
+            if (shareLocInput) {
+                const valLoc = shareLocInput.value.trim();
+                if (valLoc !== '' && !valLoc.startsWith('http://') && !valLoc.startsWith('https://') && !valLoc.includes('maps')) {
+                    isValid = false;
+                    shareLocInput.style.borderColor = 'red';
+                    errorMessage = 'Share Location wajib diisi dengan link Google Maps';
+                }
+            }
+
+            // D. VALIDASI TAMBAHAN RADIO "apakah_ada_usaha_lain" di halaman < 10
             if (currentUrutan < maksimalHalaman) {
                 const radioUsahaLain = formPraSurvei.querySelectorAll('input[name="apakah_ada_usaha_lain"]');
                 if (radioUsahaLain.length > 0) {
                     const selected = formPraSurvei.querySelector('input[name="apakah_ada_usaha_lain"]:checked');
                     if (!selected) {
                         isValid = false;
+                        if (containerOpsiLanjut) {
+                            containerOpsiLanjut.style.setProperty('border-color', 'red', 'important');
+                            containerOpsiLanjut.style.setProperty('border-width', '1px', 'important');
+                            containerOpsiLanjut.style.setProperty('border-style', 'solid', 'important');
+                            containerOpsiLanjut.style.setProperty('border-radius', '0.5rem', 'important');
+                        }
                     }
                 }
             }
 
+            // E. JIKA TIDAK VALID, TAMPILKAN SWEETALERT
             if (!isValid) {
                 event.preventDefault();
 
                 Swal.fire({
                     icon: 'warning',
                     title: 'Peringatan',
-                    text: 'Mohon lengkapi semua pertanyaan yang bertanda (*)',
+                    text: errorMessage,
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#0082CB',
                     heightAuto: false,
