@@ -114,6 +114,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/z1-muk', [MukController::class, 'createAlur1'])->name('z1-muk');
     Route::post('/z1-muk', [MukController::class, 'storeAlur1'])->name('storeAlur1');
 
+    // Route API Search Prasurvei
+    Route::get('/prasurvei/search', [MukController::class, 'searchPrasurvei'])->name('prasurvei.search');
+
     // Route Halaman 2
     Route::get('/z2-muk', [MukController::class, 'createAlur2'])->name('z2-muk');
     Route::post('/z2-muk', [MukController::class, 'storeAlur2'])->name('storeAlur2');

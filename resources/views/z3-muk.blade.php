@@ -131,23 +131,24 @@
                     <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
                         <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
                         
+                        <!-- INPUT HIDDEN PENANDA HAPUS -->
+                        <input type="hidden" name="hapus_file_pendukung" id="hapus_file_pendukung" value="0">
+
                         <input type="file" id="file_omset_pendukung" name="perhitungan_omset_pendukung" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_omset_pendukung', 'preview_omset_pendukung', 'btn_omset_pendukung')">
                         
                         <button type="button" onclick="document.getElementById('file_omset_pendukung').click()" 
                                 class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-semibold text-[#0082CB] hover:bg-sky-50 transition">
-                            <!-- Diubah dari $data menjadi $infoUtama -->
                             <span id="btn_omset_pendukung">
                                 {{ isset($infoUtama->perhitungan_omset_pendukung) && $infoUtama->perhitungan_omset_pendukung ? 'Ganti file' : 'Tambahkan file' }}
                             </span>
                         </button>
 
-                        <!-- Diubah dari $data menjadi $infoUtama -->
                         <div id="preview_omset_pendukung" class="{{ isset($infoUtama->perhitungan_omset_pendukung) && $infoUtama->perhitungan_omset_pendukung ? '' : 'hidden' }} mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm">
                             <span id="name_omset_pendukung" class="truncate font-medium">{{ isset($infoUtama->perhitungan_omset_pendukung) ? basename($infoUtama->perhitungan_omset_pendukung) : '' }}</span>
                             <button type="button" onclick="removeFile('file_omset_pendukung', 'preview_omset_pendukung', 'btn_omset_pendukung')" class="text-gray-400 hover:text-red-500 transition ml-2">&#10005;</button>
-                        </div>
-                    </div>
-                </div>
+                      </div>
+                  </div>
+              </div>
             </div>
 
             <!-- TOMBOL AKSI NAVIGASI -->
@@ -221,6 +222,13 @@
 
         if (input) input.value = '';
         
+        // --- TAMBAHAN KHUSUS UNTUK OMSET PENDUKUNG ---
+        if (inputId === 'file_omset_pendukung') {
+            const flagHapus = document.getElementById('hapus_file_pendukung');
+            if (flagHapus) flagHapus.value = '1';
+        }
+        // ----------------------------------------------
+
         if (previewDiv) {
             const fileNameSpan = previewDiv.querySelector('span');
             if (fileNameSpan) fileNameSpan.textContent = '';
@@ -254,15 +262,20 @@
         wrapper.className = "bg-gray-50/50 rounded-lg border border-dashed border-gray-300 p-4 space-y-4 relative dynamic-usaha-item mt-4";
         wrapper.setAttribute('data-index', usahaCount);
 
-        // Jika ada file lama, atur teks tombol dan tampilkan preview nama file-nya
         let btnTextLabel = 'Tambahkan file';
-        let previewClass = 'hidden';
+        let previewClass = 'mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm';
+        
         if (savedFile) {
-            // Mengambil nama file saja dari path storage (misal: 'informasi_usaha/abc.pdf' jadi 'abc.pdf')
+            // Mengambil nama file saja dari path storage
             savedFile = savedFile.split('/').pop(); 
             btnTextLabel = 'Ganti file';
-            previewClass = 'mt-3 flex items-center justify-between p-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 max-w-sm';
+        } else {
+            // Jika belum ada file (baru ditambah), tambahkan 'hidden' di depan kelas styling-nya
+            previewClass += ' hidden';
         }
+
+        // Tentukan apakah file wajib diisi (jika belum ada savedFile dari database)
+        let isFileRequired = savedFile ? '' : 'required';
 
         wrapper.innerHTML = `
             <div class="flex items-center justify-between border-b pb-2 mb-2">
@@ -272,17 +285,19 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Gambaran Pekerjaan Debitur ${usahaCount}
+                    Gambaran Pekerjaan Debitur ${usahaCount} <span class="text-red-500">*</span>
                 </label>
-                <textarea name="gambaran_pekerjaan_debitur_${usahaCount}" rows="6"
+                <textarea name="usaha_tambahan[${usahaCount}][gambaran_pekerjaan_debitur]" rows="6" required
                     class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0082CB]">${savedPekerjaan}</textarea>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Omset Usaha ${usahaCount}</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Perhitungan Omset Usaha ${usahaCount} <span class="text-red-500">*</span></label>
                 <div class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm bg-white">
                     <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
-                    <input type="file" id="file_omset_${usahaCount}" name="perhitungan_omset_usaha_${usahaCount}" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_omset_${usahaCount}', 'preview_omset_${usahaCount}', 'btn_omset_${usahaCount}')">
+                    
+                    <!-- PERBAIKAN: Menggunakan format array agar rapi ditangkap di Controller Laravel -->
+                    <input type="file" id="file_omset_${usahaCount}" name="usaha_tambahan[${usahaCount}][perhitungan_omset_usaha]" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this, 'name_omset_${usahaCount}', 'preview_omset_${usahaCount}', 'btn_omset_${usahaCount}')" ${isFileRequired}>
                     
                     <button type="button" onclick="document.getElementById('file_omset_${usahaCount}').click()" 
                             class="bg-white text-[#0082CB] border border-gray-300 px-4 py-2 rounded-md text-sm font-semibold hover:bg-[#006FB0] hover:border-[#006FB0] transition shadow-sm inline-flex items-center gap-2">

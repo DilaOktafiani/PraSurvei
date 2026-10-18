@@ -306,7 +306,8 @@
                             <div class="p-2 font-semibold sm:col-span-12 pl-8">
                                 1. Gambaran Pekerjaan Debitur
                             </div>
-                            <div class="py-1 px-8 sm:col-span-12 font-normal pl-8 text-justify">
+                            <!-- Tambahan text-align: justify di sini -->
+                            <div class="py-1 px-8 sm:col-span-12 font-normal pl-8 text-justify" style="text-align: justify;">
                                 {{ $usahaUtama->gambaran_pekerjaan_debitur ?? '-' }}
                             </div>
 
@@ -329,7 +330,8 @@
                     @foreach($usahaLainnya as $usaha)
                         @if(!empty($usaha->gambaran_pekerjaan_debitur) || !empty($usaha->perhitungan_omset_usaha))
                             <div class="grid grid-cols-1 sm:grid-cols-12 mb-4">
-                                <div class="py-1 px-8 sm:col-span-12 font-normal pl-8">
+                                <!-- Tambahan text-align: justify di sini juga untuk perulangan -->
+                                <div class="py-1 px-8 sm:col-span-12 font-normal pl-8 text-justify" style="text-align: justify;">
                                     {{ $usaha->gambaran_pekerjaan_debitur ?? '-' }}
                                 </div>
 
@@ -354,7 +356,7 @@
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
                             2. Usaha Pendukung Lain
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8 text-justify">
+                        <div class="py-1 px-8 sm:col-span-12 font-normal pl-8 text-justify" style="text-align: justify;">
                             {{ $data->informasi_usaha->where('urutan', 1)->first()->usaha_pendukung ?? '-' }}
                         </div>
 
@@ -379,7 +381,6 @@
                 
                 </div>
             </div>
-
             <!-- D. URAIAN SINGKAT MENGENAI 5 C -->
             <div class="mb-6">
                 <div class="text-[#0A3370] px-3.5 py-2 font-bold text-base uppercase rounded-none">
@@ -400,143 +401,167 @@
                     <!-- 2. COLLATERAL -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
-                           2. COLLATERAL
+                            2. COLLATERAL
                         </div>
                     </div>
 
-                    <!-- No.SHM -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
-                        <div class="p-2 font-semibold sm:col-span-2">
-                            No.SHM
-                        </div>
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            :
-                        </div>
-                        <div class="p-2 sm:col-span-9 font-normal">
-                            {{ $data->limac->no_shm ?? '-' }}
-                        </div>
-                    </div>
+                    @php
+                        // Ambil data collaterals yang sudah diurutkan berdasarkan 'urutan'
+                        $listCollaterals = ($data && $data->limac_collaterals) 
+                            ? $data->limac_collaterals->sortBy('urutan') 
+                            : collect();
+                    @endphp
 
-                    <!-- Luas -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
-                        <div class="p-2 font-semibold sm:col-span-2">
-                            Luas
-                        </div>
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            :
-                        </div>
-                        <div class="p-2 sm:col-span-9 font-normal">
-                            {{ $data->limac->luas ?? '-' }}
-                        </div>
-                    </div>
+                    @foreach($listCollaterals as $collateral)
 
-                    <!-- Nama Pemilik -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
-                        <div class="p-2 font-semibold sm:col-span-2">
-                            Nama Pemilik
-                        </div>
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            :
-                        </div>
-                        <div class="p-2 sm:col-span-9 font-normal">
-                            {{ $data->limac->pemilik ?? '-' }}
-                        </div>
-                    </div>
-
-                    <!-- Letak SHM -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center mb-6 pl-6">
-                        <div class="p-2 font-semibold sm:col-span-2">
-                            Letak SHM
-                        </div>
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            :
-                        </div>
-                        <div class="p-2 sm:col-span-9 font-normal">
-                            {{ $data->limac->letak_shm ?? '-' }}
-                        </div>
-                    </div>
-
-                    <!-- Ringkasan Penilaian Jaminan, Tanggal -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
-                        <div class="p-2 font-semibold sm:col-span-12">
-                            Ringkasan Penilaian Jaminan, Tanggal {{ $data->limac->tanggal ?? '-' }}
-                        </div>
-                    </div>
-
-                    <!-- Ringkasan Penilaian Jaminan -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12">
-                        <div class="p-8 sm:col-span-12">
-                            @if(!empty($data->limac->ringkasan_penilaian_jaminan) && $data->limac->ringkasan_penilaian_jaminan !== '-')
-                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
-                                    <img 
-                                        src="{{ asset('storage/' . $data->limac->ringkasan_penilaian_jaminan) }}" 
-                                        alt="Ringkasan Penilaian Jaminan"
-                                        style="width: 700px; height: auto;"
-                                        class="block"
-                                    >
+                        {{-- TAMBAHAN: Label otomatis huruf kecil + angka urutan (a. Collateral 1, b. Collateral 2, dst.) --}}
+                        @if($listCollaterals->count() > 1)
+                            <div class="grid grid-cols-1 sm:grid-cols-12 mt-2">
+                                <div class="p-2 font-semibold sm:col-span-12 pl-8 text-black underline">
+                                    {{ chr(96 + $loop->iteration) }}. Collateral {{ $loop->iteration }}
                                 </div>
-                            @else
-                                <span>-</span>
-                            @endif
-                        </div>
-                    </div>
+                            </div>
+                        @endif
 
-                    <!-- Informasi Harga Tanah -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12">
-                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
-                           Informasi Harga Tanah :
+                        <!-- No.SHM -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
+                            <div class="p-2 font-semibold sm:col-span-2">
+                                No.SHM
+                            </div>
+                            <div class="p-2 font-semibold text-center sm:col-span-1">
+                                :
+                            </div>
+                            <div class="p-2 sm:col-span-9 font-normal">
+                                {{ $collateral->no_shm ?? '-' }}
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- 1 -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-start pl-6">
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            1.
+                        <!-- Luas -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
+                            <div class="p-2 font-semibold sm:col-span-2">
+                                Luas
+                            </div>
+                            <div class="p-2 font-semibold text-center sm:col-span-1">
+                                :
+                            </div>
+                            <div class="p-2 sm:col-span-9 font-normal">
+                                {{ $collateral->luas ?? '-' }}
+                            </div>
                         </div>
-                        <div class="p-2 sm:col-span-11 font-normal">
-                            {{ $data->limac->info_harga_tanah1 ?? '-' }}
-                        </div>
-                    </div>
 
-                    <!-- 2 -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-start pl-6">
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            2.
+                        <!-- Nama Pemilik -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
+                            <div class="p-2 font-semibold sm:col-span-2">
+                                Nama Pemilik
+                            </div>
+                            <div class="p-2 font-semibold text-center sm:col-span-1">
+                                :
+                            </div>
+                            <div class="p-2 sm:col-span-9 font-normal">
+                                {{ $collateral->pemilik ?? '-' }}
+                            </div>
                         </div>
-                        <div class="p-2 sm:col-span-11 font-normal">
-                            {{ $data->limac->info_harga_tanah2 ?? '-' }}
-                        </div>
-                    </div>
 
-                    <!-- 3 -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 items-start mb-4 pl-6">
-                        <div class="p-2 font-semibold text-center sm:col-span-1">
-                            3.
+                        <!-- Letak SHM -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 items-center mb-6 pl-6">
+                            <div class="p-2 font-semibold sm:col-span-2">
+                                Letak SHM
+                            </div>
+                            <div class="p-2 font-semibold text-center sm:col-span-1">
+                                :
+                            </div>
+                            <div class="p-2 sm:col-span-9 font-normal">
+                                {{ $collateral->letak_shm ?? '-' }}
+                            </div>
                         </div>
-                        <div class="p-2 sm:col-span-11 font-normal">
-                            {{ $data->limac->info_harga_tanah3 ?? '-' }}
-                        </div>
-                    </div>
 
-                    <!-- Batas Objek Jaminan -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12">
-                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
-                           Batas Objek Jaminan :
+                        <!-- Ringkasan Penilaian Jaminan, Tanggal -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 items-center pl-6">
+                            <div class="p-2 font-semibold sm:col-span-12">
+                                Ringkasan Penilaian Jaminan, Tanggal {{ $collateral->tanggal ?? '-' }}
+                            </div>
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8 text-justify">
-                            {{ $data->limac ->batas_objek_jaminan ?? '-' }}
-                        </div>
-                    </div>
 
-                    <!-- Catatan Khusus Objek Jaminan -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12">
-                        <div class="p-2 font-semibold sm:col-span-12 pl-8">
-                           Catatan Khusus Objek Jaminan :
+                        <!-- Ringkasan Penilaian Jaminan -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12">
+                            <div class="p-8 sm:col-span-12">
+                                @if(!empty($collateral->ringkasan_penilaian_jaminan) && $collateral->ringkasan_penilaian_jaminan !== '-')
+                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                        <img 
+                                            src="{{ asset('storage/' . $collateral->ringkasan_penilaian_jaminan) }}" 
+                                            alt="Ringkasan Penilaian Jaminan"
+                                            style="width: 700px; height: auto;"
+                                            class="block"
+                                        >
+                                    </div>
+                                @else
+                                    <span>-</span>
+                                @endif
+                            </div>
                         </div>
-                        <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8 text-justify">
-                            {{ $data->limac ->catatan_khusus ?? '-' }}
+
+                        <!-- Informasi Harga Tanah -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12">
+                            <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                                Informasi Harga Tanah :
+                            </div>
                         </div>
-                    </div>
+
+                        <!-- 1 -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 items-start pl-6">
+                            <div class="p-2 font-semibold text-center sm:col-span-1">
+                                1.
+                            </div>
+                            <div class="p-2 sm:col-span-10 font-normal text-justify">
+                                {{ $collateral->info_harga_tanah1 ?? '-' }}
+                            </div>
+                        </div>
+
+                        <!-- 2 -->
+                        @if(!empty($collateral->info_harga_tanah2) && $collateral->info_harga_tanah2 !== '-')
+                            <div class="grid grid-cols-1 sm:grid-cols-12 items-start pl-6">
+                                <div class="p-2 font-semibold text-center sm:col-span-1">
+                                    2.
+                                </div>
+                                <div class="p-2 sm:col-span-10 font-normal text-justify">
+                                    {{ $collateral->info_harga_tanah2 }}
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- 3 -->
+                        @if(!empty($collateral->info_harga_tanah3) && $collateral->info_harga_tanah3 !== '-')
+                            <div class="grid grid-cols-1 sm:grid-cols-12 items-start mb-4 pl-6">
+                                <div class="p-2 font-semibold text-center sm:col-span-1">
+                                    3.
+                                </div>
+                                <div class="p-2 sm:col-span-10 font-normal text-justify">
+                                    {{ $collateral->info_harga_tanah3 }}
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- Batas Objek Jaminan -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12">
+                            <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                                Batas Objek Jaminan :
+                            </div>
+                            <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8 text-justify">
+                                {{ $collateral->batas_objek_jaminan ?? '-' }}
+                            </div>
+                        </div>
+
+                        <!-- Catatan Khusus Objek Jaminan -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12">
+                            <div class="p-2 font-semibold sm:col-span-12 pl-8">
+                                Catatan Khusus Objek Jaminan :
+                            </div>
+                            <div class="py-1 px-8 sm:col-span-12 font-normal mb-2 pl-8 text-justify">
+                                {{ $collateral->catatan_khusus ?? '-' }}
+                            </div>
+                        </div>
+
+                    @endforeach
 
                     <!-- 3. CONDITION -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">

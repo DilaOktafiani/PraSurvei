@@ -26,6 +26,7 @@ class Debitur extends Model
         'bidang_usaha',
         'alamat_usaha',
         'kontak',
+        'tanggal_slik',
         'idi_di_bank_lain',
         'keterangan',
     ];
@@ -60,9 +61,22 @@ class Debitur extends Model
         return $this->hasOne(Kesimpulan::class, 'debitur_id', 'id');
     }
 
+    public function limac_collaterals()
+    {
+        // Parameter: (Model Tujuan, Model Perantara, foreign_key di tabel perantara, foreign_key di tabel tujuan, local_key di tabel ini, local_key di tabel perantara)
+        return $this->hasManyThrough(
+            Collateral::class, 
+            LimaC::class, 
+            'debitur_id', // foreign key di tabel limac
+            'limac_id',   // foreign key di tabel limac_collaterals
+            'id',         // local key di tabel debiturs
+            'id'          // local key di tabel limac
+        );
+    }
+
     public function limac()
     {
-        return $this->hasMany(LimaC::class, 'debitur_id', 'id');
+        return $this->hasOne(LimaC::class, 'debitur_id', 'id');
     }
 
     public function pengajuan_plafon_kredit()

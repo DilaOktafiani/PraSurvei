@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;            
-use App\Models\Muk\Debitur;  
+use Illuminate\Support\Facades\DB;   
+
+use App\Models\Debitur as PrasurveiDebitur;      // Untuk data Pra-Survei
+use App\Models\Muk\Debitur as MukDebitur;        // Untuk data MUK
+
+use App\Models\Muk\Debitur;
 use App\Models\Muk\PlafonKredit;
 use App\Models\Muk\InformasiUsaha;
+use App\Models\Muk\Collateral;
 use App\Models\Muk\LimaC;
 use App\Models\Muk\ReferensiCA;
 use App\Models\Muk\Deviasi;
@@ -117,6 +122,39 @@ class MukController extends Controller
         }
 
         return redirect()->route('z2-muk');
+    }
+
+   public function searchPrasurvei(Request $request)
+    {
+        $keyword = trim($request->query('q'));
+
+        if (!$keyword || strlen($keyword) < 2) {
+            return response()->json([]);
+        }
+
+        $searchTerm = '%' . strtolower($keyword) . '%';
+
+        // Ganti 'Debitur' menjadi 'PrasurveiDebitur' sesuai alias di atas
+        $debiturs = PrasurveiDebitur::where(function($query) use ($searchTerm) {
+                $query->whereRaw('LOWER(nama) LIKE ?', [$searchTerm])
+                    ->orWhereRaw('LOWER(no_register) LIKE ?', [$searchTerm]);
+            })
+            ->limit(5)
+            ->get();
+
+        $results = $debiturs->map(function ($item) {
+            return [
+                'id'                  => $item->id,
+                'no_register'         => $item->no_register ?? '',
+                'nama'                => $item->nama ?? '',
+                'alamat_ktp'          => $item->alamat_ktp ?? '',
+                'alamat_domisili'     => $item->alamat_domisili ?? '',
+                'nama_pasangan'       => $item->nama_pasangan ?? '',
+                'usaha'               => $item->usaha ?? '',
+            ];
+        });
+
+        return response()->json($results);
     }
 
     // ==========================================
@@ -229,7 +267,6 @@ class MukController extends Controller
 
     public function storeAlur3(Request $request)
     {
-        // 1. Ambil debitur_id dari session atau request
         $debiturId = $request->debitur_id ?? session('debitur_id');
 
         if (!$debiturId) {
@@ -239,33 +276,30 @@ class MukController extends Controller
 
         session(['debitur_id' => $debiturId]);
 
-        // Ambil data usaha utama (urutan 1) yang sudah ada di database (jika ada)
         $infoUtama = InformasiUsaha::where('debitur_id', $debiturId)->where('urutan', 1)->first();
 
-        // 2. Jika file di database sudah ada, buat jadi 'nullable'. Jika belum, 'required'.
-        $fileOmsetUtamaRule      = ($infoUtama && $infoUtama->perhitungan_omset_usaha) ? 'nullable' : 'required';
-        $fileOmsetPendukungRule   = ($infoUtama && $infoUtama->perhitungan_omset_pendukung) ? 'nullable' : 'required';
+        $fileOmsetUtamaRule     = ($infoUtama && $infoUtama->perhitungan_omset_usaha) ? 'nullable' : 'required';
+        $fileOmsetPendukungRule = ($infoUtama && $infoUtama->perhitungan_omset_pendukung) ? 'nullable' : 'required';
 
-        // 3. Validasi Input Utama & Dinamis
+        // 1. Definisikan Rules Validasi
         $rules = [
-            'gambaran_pekerjaan_debitur'    => 'required|string',
+            'gambaran_pekerjaan_debitur'     => 'required|string',
             'perhitungan_omset_usaha'       => "$fileOmsetUtamaRule|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
             'usaha_pendukung'               => 'nullable|string',
             'perhitungan_omset_pendukung'   => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
+            
+            // Validasi untuk array usaha tambahan
+            'usaha_tambahan'                => 'nullable|array',
+            'usaha_tambahan.*.gambaran_pekerjaan_debitur' => 'required|string',
+            'usaha_tambahan.*.perhitungan_omset_usaha'    => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
         ];
 
-        for ($i = 2; $i <= 10; $i++) {
-            $rules["gambaran_pekerjaan_debitur_{$i}"] = 'nullable|string';
-            $rules["perhitungan_omset_usaha_{$i}"]    = 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240';
-        }
-
         $messages = [
-            'required'                      => 'Kolom :attribute wajib diisi.',
-            'string'                        => 'Kolom :attribute harus berupa teks.',
-            'file'                          => 'Kolom :attribute harus berupa sebuah berkas.',
-            'mimes'                         => 'Format file harus berupa PDF, JPG, JPEG, PNG, atau DWG.',
-            'perhitungan_omset_usaha.max'     => 'Ukuran file omset usaha maksimal adalah 10 MB.',
-            'perhitungan_omset_pendukung.max' => 'Ukuran file omset pendukung maksimal adalah 10 MB.',
+            'required' => 'Kolom :attribute wajib diisi.',
+            'string'   => 'Kolom :attribute harus berupa teks.',
+            'file'     => 'Kolom :attribute harus berupa sebuah berkas.',
+            'mimes'    => 'Format file harus berupa PDF, JPG, JPEG, PNG, atau DWG.',
+            'max'      => 'Ukuran berkas maksimal adalah 10 MB.',
         ];
 
         $request->validate($rules, $messages);
@@ -274,7 +308,7 @@ class MukController extends Controller
 
         try {
             // ==========================================
-            // 4. SIMPAN USAHA UTAMA (Urutan = 1)
+            // 2. SIMPAN USAHA UTAMA (Urutan = 1)
             // ==========================================
             $infoUtama = InformasiUsaha::firstOrNew([
                 'debitur_id' => $debiturId,
@@ -284,7 +318,6 @@ class MukController extends Controller
             $infoUtama->gambaran_pekerjaan_debitur = $request->gambaran_pekerjaan_debitur;
             $infoUtama->usaha_pendukung           = $request->input('usaha_pendukung') ?? '';
 
-            // Handle file omset usaha 1 (Sama persis polanya dengan alur 2)
             if ($request->hasFile('perhitungan_omset_usaha')) {
                 if ($infoUtama->perhitungan_omset_usaha && \Storage::disk('public')->exists($infoUtama->perhitungan_omset_usaha)) {
                     \Storage::disk('public')->delete($infoUtama->perhitungan_omset_usaha);
@@ -292,64 +325,66 @@ class MukController extends Controller
                 $infoUtama->perhitungan_omset_usaha = $request->file('perhitungan_omset_usaha')->store('informasi_usaha', 'public');
             }
 
-            // Handle file omset pendukung (Sama persis polanya dengan alur 2)
+            // Handle file omset pendukung dengan deteksi tombol hapus
             if ($request->hasFile('perhitungan_omset_pendukung')) {
+                // Jika user mengupload file baru, hapus file lama yang fisik
                 if ($infoUtama->perhitungan_omset_pendukung && \Storage::disk('public')->exists($infoUtama->perhitungan_omset_pendukung)) {
                     \Storage::disk('public')->delete($infoUtama->perhitungan_omset_pendukung);
                 }
                 $infoUtama->perhitungan_omset_pendukung = $request->file('perhitungan_omset_pendukung')->store('informasi_usaha', 'public');
+            } elseif ($request->input('hapus_file_pendukung') == '1') {
+                // Jika user sengaja menghapus file pendukung (menekan tombol X)
+                if ($infoUtama->perhitungan_omset_pendukung && \Storage::disk('public')->exists($infoUtama->perhitungan_omset_pendukung)) {
+                    \Storage::disk('public')->delete($infoUtama->perhitungan_omset_pendukung);
+                }
+                $infoUtama->perhitungan_omset_pendukung = null; // Set jadi NULL di database
             }
 
             $infoUtama->save();
 
-
             // ==========================================
-            // 5. SIMPAN USAHA DINAMIS (Urutan 2 sampai 10)
+            // 3. SIMPAN USAHA DINAMIS (Urutan > 1)
             // ==========================================
             $oldDetails = InformasiUsaha::where('debitur_id', $debiturId)->where('urutan', '>', 1)->get();
             
-            // Hapus data lama dari database untuk urutan > 1 agar nanti diganti dengan inputan terbaru
+            // Hapus data lama urutan > 1 untuk direfresh dengan inputan baru
             InformasiUsaha::where('debitur_id', $debiturId)->where('urutan', '>', 1)->delete();
 
-            for ($i = 2; $i <= 10; $i++) {
-                $fieldPekerjaan = "gambaran_pekerjaan_debitur_{$i}";
-                $fieldOmset     = "perhitungan_omset_usaha_{$i}";
+            $usahaTambahan = $request->input('usaha_tambahan', []);
+            $urutan = 2; // Mulai dari urutan ke-2
 
-                $pekerjaanVal = $request->input($fieldPekerjaan);
-                $hasFile      = $request->hasFile($fieldOmset);
+            foreach ($usahaTambahan as $index => $item) {
+                $pekerjaanVal = $item['gambaran_pekerjaan_debitur'] ?? null;
+                $filePath = null;
 
-                // Jika user mengisi teks atau mengupload file pada baris dinamis ini
-                if (!empty($pekerjaanVal) || $hasFile) {
-                    $filePath = null;
+                // Cek apakah ada file baru di index array ini
+                if ($request->hasFile("usaha_tambahan.{$index}.perhitungan_omset_usaha")) {
+                    $fileBaru = $request->file("usaha_tambahan.{$index}.perhitungan_omset_usaha");
+                    $filePath = $fileBaru->store('informasi_usaha', 'public');
 
-                    if ($hasFile) {
-                        $fileBaru = $request->file($fieldOmset);
-                        $filePath = $fileBaru->store('informasi_usaha', 'public');
-
-                        // Hapus file lama jika ada di baris dinamis tersebut
-                        $oldItem = $oldDetails->where('urutan', $i)->first();
-                        if ($oldItem && $oldItem->perhitungan_omset_usaha) {
-                            if (\Storage::disk('public')->exists($oldItem->perhitungan_omset_usaha)) {
-                                \Storage::disk('public')->delete($oldItem->perhitungan_omset_usaha);
-                            }
-                        }
-                    } else {
-                        // Pertahankan file lama jika user tidak mengupload ulang di baris tersebut
-                        $oldItem = $oldDetails->where('urutan', $i)->first();
-                        if ($oldItem) {
-                            $filePath = $oldItem->perhitungan_omset_usaha;
+                    // Hapus file fisik lama jika ada padanannya
+                    $oldItem = $oldDetails->values()->get($urutan - 2);
+                    if ($oldItem && $oldItem->perhitungan_omset_usaha) {
+                        if (\Storage::disk('public')->exists($oldItem->perhitungan_omset_usaha)) {
+                            \Storage::disk('public')->delete($oldItem->perhitungan_omset_usaha);
                         }
                     }
-
-                    InformasiUsaha::create([
-                        'debitur_id'                  => $debiturId,
-                        'urutan'                      => $i,
-                        'gambaran_pekerjaan_debitur'  => $pekerjaanVal ?? '',
-                        'perhitungan_omset_usaha'     => $filePath,
-                        'usaha_pendukung'             => null, 
-                        'perhitungan_omset_pendukung' => null,
-                    ]);
+                } else {
+                    // Jika tidak upload file baru, pertahankan file lama (jika ada)
+                    $oldItem = $oldDetails->values()->get($urutan - 2);
+                    if ($oldItem) {
+                        $filePath = $oldItem->perhitungan_omset_usaha;
+                    }
                 }
+
+                InformasiUsaha::create([
+                    'debitur_id'                    => $debiturId,
+                    'urutan'                        => $urutan++,
+                    'gambaran_pekerjaan_debitur'    => $pekerjaanVal ?? '',
+                    'perhitungan_omset_usaha'       => $filePath,
+                    'usaha_pendukung'               => null, 
+                    'perhitungan_omset_pendukung'   => null,
+                ]);
             }
 
             DB::commit();
@@ -398,7 +433,6 @@ class MukController extends Controller
 
     public function storeAlur4(Request $request)
     {
-        // Ambil debitur_id dari session atau form
         $debiturId = $request->debitur_id ?? session('debitur_id');
 
         if (!$debiturId) {
@@ -406,107 +440,172 @@ class MukController extends Controller
                 ->with('error', 'Data debitur tidak ditemukan.');
         }
 
-        // Simpan ke session
         session(['debitur_id' => $debiturId]);
 
-        // ==========================================
-        // 1. AMBIL DATA LAMA (UNTUK VALIDASI & FILE)
-        // ==========================================
-        $existingData = \App\Models\Muk\LimaC::where('debitur_id', $debiturId)->first();
+        $existingLimaC = \App\Models\Muk\LimaC::where('debitur_id', $debiturId)->first();
+        
+        $collateralUtama = null;
+        if ($existingLimaC) {
+            $collateralUtama = \App\Models\Muk\Collateral::where('limac_id', $existingLimaC->id)->where('urutan', 1)->first();
+        }
 
-        // Tentukan aturan file (nullable jika sudah ada di database, required jika belum)
-        $ruleRingkasan = ($existingData && $existingData->ringkasan_penilaian_jaminan) ? 'nullable' : 'required';
-        $ruleCapacity  = ($existingData && $existingData->capacity) ? 'nullable' : 'required';
+        $ruleRingkasan = ($collateralUtama && $collateralUtama->ringkasan_penilaian_jaminan) ? 'nullable' : 'required';
+        $ruleCapacity  = ($existingLimaC && $existingLimaC->capacity) ? 'nullable' : 'required';
 
-        // ==========================================
-        // 2. VALIDASI
-        // ==========================================
+        // VALIDASI
         $request->validate([
-            // CAPITAL
-            'capital' => 'required|string',
-
-            // COLLATERAL
-            'no_shm' => 'required|string',
-            'luas' => 'required|string',
-            'pemilik' => 'required|string',
-            'letak_shm' => 'required|string',
-            'ringkasan_penilaian_jaminan' => "$ruleRingkasan|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
-            'tanggal' => 'nullable|string',
-            'info_harga_tanah1' => 'required|string',
-            'info_harga_tanah2' => 'nullable|string',
-            'info_harga_tanah3' => 'nullable|string',
-            'batas_objek_jaminan' => 'required|string',
-            'catatan_khusus' => 'required|string',
-
-            // CONDITION
-            'condition' => 'required|string',
-
-            // CAPACITY
-            'capacity' => "$ruleCapacity|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
-            'keluarga' => 'required|string',
-            'anak' => 'required|string',
+            'capital'    => 'required|string',
+            'condition'  => 'required|string',
+            'capacity'   => "$ruleCapacity|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
+            'keluarga'   => 'required|string',
+            'anak'       => 'required|string',
             'pendidikan' => 'required|string',
+            'internal'   => 'required|string',
+            'eksternal'  => 'required|string',
 
-            // CHARACTER
-            'internal' => 'required|string',
-            'eksternal' => 'required|string',
+            // COLLATERAL UTAMA (Urutan 1)
+            'no_shm'                      => 'required|string',
+            'luas'                         => 'required|string',
+            'pemilik'                      => 'required|string',
+            'letak_shm'                    => 'required|string',
+            'ringkasan_penilaian_jaminan' => "$ruleRingkasan|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240",
+            'tanggal'                      => 'nullable|string',
+            'info_harga_tanah1'            => 'required|string',
+            'info_harga_tanah2'            => 'nullable|string',
+            'info_harga_tanah3'            => 'nullable|string',
+            'batas_objek_jaminan'          => 'required|string',
+            'catatan_khusus'               => 'required|string',
+
+            // COLLATERAL TAMBAHAN (Urutan > 1)
+            'collateral_tambahan'                               => 'nullable|array',
+            'collateral_tambahan.*.no_shm'                        => 'required|string',
+            'collateral_tambahan.*.luas'                          => 'required|string',
+            'collateral_tambahan.*.pemilik'                       => 'required|string',
+            'collateral_tambahan.*.letak_shm'                     => 'required|string',
+            'collateral_tambahan.*.ringkasan_penilaian_jaminan' => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240',
+            'collateral_tambahan.*.tanggal'                       => 'nullable|string',
+            'collateral_tambahan.*.info_harga_tanah1'             => 'required|string',
+            'collateral_tambahan.*.info_harga_tanah2'             => 'nullable|string',
+            'collateral_tambahan.*.info_harga_tanah3'             => 'nullable|string',
+            'collateral_tambahan.*.batas_objek_jaminan'           => 'required|string',
+            'collateral_tambahan.*.catatan_khusus'                => 'required|string',
         ], [
-            'required'                    => 'Kolom :attribute wajib diisi.',
-            'string'                      => 'Kolom :attribute harus berupa teks.',
-            'file'                        => 'Kolom :attribute harus berupa sebuah berkas.',
-            'mimes'                       => 'Format file harus berupa PDF, JPG, JPEG, PNG, atau DWG.',
-            'max'                         => 'Ukuran file maksimal adalah 10 MB.',
+            'required' => 'Kolom :attribute wajib diisi.',
+            'string'   => 'Kolom :attribute harus berupa teks.',
+            'file'     => 'Kolom :attribute harus berupa sebuah berkas.',
+            'mimes'    => 'Format file harus berupa PDF, JPG, JPEG, PNG, atau DWG.',
+            'max'      => 'Ukuran file maksimal adalah 10 MB.',
         ]);
-
-        // Ambil semua request kecuali file, lalu set debitur_id
-        $data = $request->except(['ringkasan_penilaian_jaminan', 'capacity']);
-        $data['debitur_id'] = $debiturId;
 
         DB::beginTransaction();
 
         try {
-            // ==========================================
-            // 3. HANDLE UPLOAD & HAPUS FILE LAMA: RINGKASAN PENILAIAN JAMINAN
-            // ==========================================
-            if ($request->hasFile('ringkasan_penilaian_jaminan')) {
-                if ($existingData && $existingData->ringkasan_penilaian_jaminan) {
-                    if (\Storage::disk('public')->exists($existingData->ringkasan_penilaian_jaminan)) {
-                        \Storage::disk('public')->delete($existingData->ringkasan_penilaian_jaminan);
-                    }
-                }
+            // 1. SIMPAN/UPDATE DATA LIMA C
+            $dataLimaC = $request->only(['capital', 'condition', 'keluarga', 'anak', 'pendidikan', 'internal', 'eksternal']);
+            $dataLimaC['debitur_id'] = $debiturId;
 
-                $data['ringkasan_penilaian_jaminan'] = $request->file('ringkasan_penilaian_jaminan')
-                    ->store('penilaian_jaminan', 'public');
-            }
-
-            // ==========================================
-            // 4. HANDLE UPLOAD & HAPUS FILE LAMA: CAPACITY
-            // ==========================================
             if ($request->hasFile('capacity')) {
-                if ($existingData && $existingData->capacity) {
-                    if (\Storage::disk('public')->exists($existingData->capacity)) {
-                        \Storage::disk('public')->delete($existingData->capacity);
-                    }
+                if ($existingLimaC && $existingLimaC->capacity && \Storage::disk('public')->exists($existingLimaC->capacity)) {
+                    \Storage::disk('public')->delete($existingLimaC->capacity);
                 }
-
-                $data['capacity'] = $request->file('capacity')
-                    ->store('capacity', 'public');
+                $dataLimaC['capacity'] = $request->file('capacity')->store('capacity', 'public');
+            } elseif ($request->input('hapus_capacity') == '1') {
+                if ($existingLimaC && $existingLimaC->capacity && \Storage::disk('public')->exists($existingLimaC->capacity)) {
+                    \Storage::disk('public')->delete($existingLimaC->capacity);
+                }
+                $dataLimaC['capacity'] = null;
             }
 
-            // ==========================================
-            // 5. SIMPAN / UPDATE DATA (MENGGUNAKAN POLA ALUR 2)
-            // ==========================================
-            if ($existingData) {
-                $existingData->update($data);
+            if ($existingLimaC) {
+                $existingLimaC->update($dataLimaC);
+                $limac = $existingLimaC;
             } else {
-                \App\Models\Muk\LimaC::create($data);
+                $limac = \App\Models\Muk\LimaC::create($dataLimaC);
+            }
+
+            // 2. SIMPAN/UPDATE COLLATERAL UTAMA (Urutan = 1)
+            $collateralUtama = \App\Models\Muk\Collateral::firstOrNew([
+                'limac_id' => $limac->id,
+                'urutan'   => 1
+            ]);
+
+            $collateralUtama->fill($request->only([
+                'no_shm', 'luas', 'pemilik', 'letak_shm', 'tanggal',
+                'info_harga_tanah1', 'info_harga_tanah2', 'info_harga_tanah3',
+                'batas_objek_jaminan', 'catatan_khusus'
+            ]));
+
+            if ($request->hasFile('ringkasan_penilaian_jaminan')) {
+                if ($collateralUtama->ringkasan_penilaian_jaminan && \Storage::disk('public')->exists($collateralUtama->ringkasan_penilaian_jaminan)) {
+                    \Storage::disk('public')->delete($collateralUtama->ringkasan_penilaian_jaminan);
+                }
+                $collateralUtama->ringkasan_penilaian_jaminan = $request->file('ringkasan_penilaian_jaminan')->store('penilaian_jaminan', 'public');
+            } elseif ($request->input('hapus_ringkasan_jaminan') == '1') {
+                if ($collateralUtama->ringkasan_penilaian_jaminan && \Storage::disk('public')->exists($collateralUtama->ringkasan_penilaian_jaminan)) {
+                    \Storage::disk('public')->delete($collateralUtama->ringkasan_penilaian_jaminan);
+                }
+                $collateralUtama->ringkasan_penilaian_jaminan = null;
+            }
+
+            $collateralUtama->save();
+
+            // 3. SIMPAN/UPDATE COLLATERAL TAMBAHAN (Urutan > 1)
+            $oldCollaterals = \App\Models\Muk\Collateral::where('limac_id', $limac->id)->where('urutan', '>', 1)->get();
+            
+            // Hapus record DB urutan > 1 (file fisiknya nanti dikontrol per-item di bawah)
+            \App\Models\Muk\Collateral::where('limac_id', $limac->id)->where('urutan', '>', 1)->delete();
+
+            $collateralTambahan = $request->input('collateral_tambahan', []);
+            $urutan = 2; // Mulai urutan ke-2
+
+            foreach ($collateralTambahan as $index => $item) {
+                $oldItem = $oldCollaterals->values()->get($urutan - 2);
+                $filePath = $oldItem ? $oldItem->ringkasan_penilaian_jaminan : null;
+
+                // Jika user upload file baru
+                if ($request->hasFile("collateral_tambahan.{$index}.ringkasan_penilaian_jaminan")) {
+                    if ($oldItem && $oldItem->ringkasan_penilaian_jaminan && \Storage::disk('public')->exists($oldItem->ringkasan_penilaian_jaminan)) {
+                        \Storage::disk('public')->delete($oldItem->ringkasan_penilaian_jaminan);
+                    }
+                    $filePath = $request->file("collateral_tambahan.{$index}.ringkasan_penilaian_jaminan")->store('penilaian_jaminan', 'public');
+                } 
+                // Jika user menekan tombol hapus file (X)
+                elseif (isset($item['hapus_file']) && $item['hapus_file'] == '1') {
+                    if ($oldItem && $oldItem->ringkasan_penilaian_jaminan && \Storage::disk('public')->exists($oldItem->ringkasan_penilaian_jaminan)) {
+                        \Storage::disk('public')->delete($oldItem->ringkasan_penilaian_jaminan);
+                    }
+                    $filePath = null;
+                }
+
+                \App\Models\Muk\Collateral::create([
+                    'limac_id'                    => $limac->id,
+                    'urutan'                      => $urutan++,
+                    'no_shm'                      => $item['no_shm'] ?? '',
+                    'luas'                        => $item['luas'] ?? '',
+                    'pemilik'                     => $item['pemilik'] ?? '',
+                    'letak_shm'                   => $item['letak_shm'] ?? '',
+                    'ringkasan_penilaian_jaminan' => $filePath,
+                    'tanggal'                     => $item['tanggal'] ?? null,
+                    'info_harga_tanah1'           => $item['info_harga_tanah1'] ?? '',
+                    'info_harga_tanah2'           => $item['info_harga_tanah2'] ?? null,
+                    'info_harga_tanah3'           => $item['info_harga_tanah3'] ?? null,
+                    'batas_objek_jaminan'         => $item['batas_objek_jaminan'] ?? '',
+                    'catatan_khusus'              => $item['catatan_khusus'] ?? '',
+                ]);
+            }
+
+            // Hapus file fisik dari collateral lama yang jumlahnya dikurangi oleh user (misal dulu ada 3, sekarang dikurangi jadi 2)
+            if (count($oldCollaterals) > count($collateralTambahan)) {
+                for ($i = count($collateralTambahan); $i < count($oldCollaterals); $i++) {
+                    $unusedItem = $oldCollaterals->values()->get($i);
+                    if ($unusedItem && $unusedItem->ringkasan_penilaian_jaminan && \Storage::disk('public')->exists($unusedItem->ringkasan_penilaian_jaminan)) {
+                        \Storage::disk('public')->delete($unusedItem->ringkasan_penilaian_jaminan);
+                    }
+                }
             }
 
             DB::commit();
 
-            // ==========================================
-            // 6. KE HALAMAN BERIKUTNYA
-            // ==========================================
             return redirect()
                 ->route('z5-muk')
                 ->with('success', 'Data 5C berhasil disimpan.');
@@ -515,9 +614,7 @@ class MukController extends Controller
             DB::rollBack();
 
             return back()
-                ->withErrors([
-                    'error' => 'Gagal: ' . $e->getMessage()
-                ])
+                ->withErrors(['error' => 'Gagal: ' . $e->getMessage()])
                 ->withInput();
         }
     }
@@ -1635,6 +1732,7 @@ class MukController extends Controller
         $data = Debitur::with([
             'pengajuan_plafon_kredit',
             'informasi_usaha',
+            'limac_collaterals',
             'limac',      
             'referensi_ca',
             'deviasi',
@@ -1657,6 +1755,7 @@ class MukController extends Controller
         $data = Debitur::with([
             'pengajuan_plafon_kredit',            
             'informasi_usaha',
+            'limac_collaterals',
             'limac',
             'referensi_ca',
             'deviasi',
@@ -1679,6 +1778,7 @@ class MukController extends Controller
         $data = Debitur::with([
             'pengajuan_plafon_kredit',            
             'informasi_usaha',
+            'limac_collaterals',
             'limac',
             'referensi_ca',
             'deviasi',
@@ -1705,6 +1805,7 @@ class MukController extends Controller
         $data = Debitur::with([
             'pengajuan_plafon_kredit',            
             'informasi_usaha',
+            'limac_collaterals',
             'limac',
             'referensi_ca',
             'deviasi',
@@ -1716,30 +1817,94 @@ class MukController extends Controller
             'denah',
         ])->findOrFail($id);
 
-        // --- UBAH GAMBAR MENJADI BASE64 AGAR MUNCUL DI WORD ---
-        // Proses agunan_tanah (karena ini yang dipakai pada Blade agunan)
-        $agunanTanahList = $data->agunan_tanah;
-        if ($agunanTanahList) {
-            if ($agunanTanahList instanceof \Illuminate\Database\Eloquent\Collection) {
-                foreach ($agunanTanahList as $agunan) {
-                    $this->convertDenahToBase64($agunan);
-                }
-            } else {
-                $this->convertDenahToBase64($agunanTanahList);
+        // ==========================================
+        // PROSES KONVERSI SEMUA GAMBAR KE BASE64
+        // ==========================================
+
+        // 1. IDI di Bank Lain (Slik)
+        $data->idi_di_bank_lain_base64 = $this->convertImageToBase64($data->idi_di_bank_lain);
+
+        // 2. Plafon Kredit
+        if ($data->pengajuan_plafon_kredit) {
+            $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit_base64 = 
+                $this->convertImageToBase64($data->pengajuan_plafon_kredit->pengajuan_plafon_kredit);
+        }
+
+        // 3. Informasi Usaha (Omset Usaha & Pendukung)
+        if ($data->informasi_usaha) {
+            foreach ($data->informasi_usaha as $inf) {
+                $inf->perhitungan_omset_usaha_base64 = $this->convertImageToBase64($inf->perhitungan_omset_usaha);
+                $inf->perhitungan_omset_pendukung_base64 = $this->convertImageToBase64($inf->perhitungan_omset_pendukung);
             }
         }
 
-        // Proses juga agunans untuk mengantisipasi bagian lain
-        $agunanList = $data->agunans;
-        if ($agunanList) {
-            if ($agunanList instanceof \Illuminate\Database\Eloquent\Collection) {
-                foreach ($agunanList as $agunan) {
-                    $this->convertDenahToBase64($agunan);
-                }
-            } else {
-                $this->convertDenahToBase64($agunanList);
+        // 4. Collateral (Ringkasan Penilaian Jaminan)
+        if ($data->limac_collaterals) {
+            foreach ($data->limac_collaterals as $col) {
+                $col->ringkasan_penilaian_jaminan_base64 = $this->convertImageToBase64($col->ringkasan_penilaian_jaminan);
             }
         }
+
+        // 5. Capacity (Limac)
+        if ($data->limac) {
+            $data->limac->capacity_base64 = $this->convertImageToBase64($data->limac->capacity);
+        }
+
+        // 6. Kesimpulan (Plafon)
+        if ($data->kesimpulan) {
+            $data->kesimpulan->plafon_base64 = $this->convertImageToBase64($data->kesimpulan->plafon);
+        }
+
+        // 7. Jaminan (Google Map, QR, dan Array Foto Jaminan)
+        $fotoJaminanBase64List = []; // Ubah jadi penampung array biasa
+        if ($data->jaminan) {
+            $data->jaminan->google_maps_base64 = $this->convertImageToBase64($data->jaminan->google_maps);
+            $data->jaminan->kode_qr_base64 = $this->convertImageToBase64($data->jaminan->kode_qr, 200);
+            
+            $fotoJaminans = !empty($data->jaminan->foto_jaminan) ? json_decode($data->jaminan->foto_jaminan, true) : [];
+            foreach ($fotoJaminans as $foto) {
+                $fotoJaminanBase64List[] = $this->convertImageToBase64($foto);
+            }
+        }
+
+        // 8. Usaha (Google Map, QR, dan Array Foto Usaha per item)
+        if ($data->usaha) {
+            foreach ($data->usaha as $ush) {
+                $ush->google_maps_base64 = $this->convertImageToBase64($ush->google_maps);
+                $ush->kode_qr_base64 = $this->convertImageToBase64($ush->kode_qr, 200);
+                
+                // 1. Buat array PHP biasa penampung base64
+                $convertedFotoUsaha = [];
+                $fotoUsahas = !empty($ush->foto_usaha) ? json_decode($ush->foto_usaha, true) : [];
+                foreach ($fotoUsahas as $foto) {
+                    $convertedFotoUsaha[] = $this->convertImageToBase64($foto);
+                }
+                
+                // 2. GunakansetAttribute (Cara resmi Laravel untuk mengisi data dinamis ke model)
+                $ush->setAttribute('foto_usaha_base64_list', $convertedFotoUsaha);
+            }
+        }
+
+        // 9. Rumah / Tempat Tinggal (Google Map, QR, dan Array Foto Tempat Tinggal)
+        if ($data->rumah) {
+            $data->rumah->google_maps_base64 = $this->convertImageToBase64($data->rumah->google_maps);
+            $data->rumah->kode_qr_base64 = $this->convertImageToBase64($data->rumah->kode_qr, 200);
+            
+            $convertedFotoRumah = [];
+            $fotoTinggals = !empty($data->rumah->foto_tempat_tinggal) ? json_decode($data->rumah->foto_tempat_tinggal, true) : [];
+            foreach ($fotoTinggals as $foto) {
+                $convertedFotoRumah[] = $this->convertImageToBase64($foto);
+            }
+            
+            // Gunakan setAttribute juga untuk rumah
+            $data->rumah->setAttribute('foto_tempat_tinggal_base64_list', $convertedFotoRumah);
+        }
+
+        // 10. Denah Jaminan (Mengatasi error pemanggilan lama)
+        if ($data->denah) {
+            $data->denah->denah_jaminan_base64 = $this->convertImageToBase64($data->denah->denah_jaminan);
+        }
+
         // ----------------------------------------------------
 
         // Diubah ke riwayat-word2
@@ -1747,69 +1912,87 @@ class MukController extends Controller
 
         return response($view)
             ->header('Content-Type', 'application/vnd.ms-word')
-            ->header('Content-Disposition', 'attachment; filename="Survei ' . $data->nama . '.doc"');
+            ->header('Content-Disposition', 'attachment; filename="Analisa Kredit ' . $data->nama . '.doc"');
     }
 
-    // Fungsi pembantu untuk konversi base64 agar kodingan tidak duplikat
-    private function convertDenahToBase64($agunan)
+    // Fungsi pembantu universal untuk konversi gambar apa pun ke Base64 + Resize otomatis
+    private function convertImageToBase64($filePath, $maxSize = 450) 
     {
-        if (!empty($agunan->denah) && $agunan->denah !== '-') {
-            $pathFisik = storage_path('app/public/' . $agunan->denah);
-            if (file_exists($pathFisik)) {
-                $type = pathinfo($pathFisik, PATHINFO_EXTENSION);
-                $type = strtolower($type);
-                
-                list($origWidth, $origHeight) = getimagesize($pathFisik);
-                
-                $maxSize = 450; // Ukuran kotak maksimal
-                
-                if ($origWidth > $origHeight) {
-                    $newWidth = $maxSize;
-                    $newHeight = round($origHeight * ($maxSize / $origWidth));
-                } else {
-                    $newHeight = $maxSize;
-                    $newWidth = round($origWidth * ($maxSize / $origHeight));
-                }
-
-                $imageCreate = match($type) {
-                    'jpg', 'jpeg' => imagecreatefromjpeg($pathFisik),
-                    'png' => imagecreatefrompng($pathFisik),
-                    'webp' => imagecreatefromwebp($pathFisik),
-                    default => null
-                };
-
-                if ($imageCreate) {
-                    $newImage = imagecreatetruecolor($newWidth, $newHeight);
-                    
-                    if ($type == 'png') {
-                        imagealphablending($newImage, false);
-                        imagesavealpha($newImage, true);
-                    }
-
-                    imagecopyresampled($newImage, $imageCreate, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
-
-                    ob_start();
-                    match($type) {
-                        'jpg', 'jpeg' => imagejpeg($newImage, null, 100),
-                        'png' => imagepng($newImage, null, 0),
-                        'webp' => imagewebp($newImage, 100),
-                        default => imagejpeg($newImage, null, 100)
-                    };
-                    $imgData = ob_get_clean();
-
-                    imagedestroy($imageCreate);
-                    imagedestroy($newImage);
-
-                    $agunan->denah_base64 = 'data:image/' . ($type == 'jpg' ? 'jpeg' : $type) . ';base64,' . base64_encode($imgData);
-                } else {
-                    $agunan->denah_base64 = 'data:image/' . $type . ';base64,' . base64_encode(file_get_contents($pathFisik));
-                }
-            } else {
-                $agunan->denah_base64 = null;
-            }
-        } else {
-            $agunan->denah_base64 = null;
+        if (empty($filePath) || $filePath === '-') {
+            return null;
         }
+
+        // Cek path fisik di storage app/public
+        $pathFisik = storage_path('app/public/' . $filePath);
+        
+        // Fallback jika filenya langsung disimpan di public/storage
+        if (!file_exists($pathFisik)) {
+            $pathFisik = public_path('storage/' . $filePath);
+        }
+
+        if (!file_exists($pathFisik)) {
+            return null;
+        }
+
+        $type = pathinfo($pathFisik, PATHINFO_EXTENSION);
+        $type = strtolower($type);
+
+        // Jika ekstensi tidak didukung GD library, kembalikan base64 murni tanpa resize
+        if (!in_array($type, ['jpg', 'jpeg', 'png', 'webp'])) {
+            $fileData = file_get_contents($pathFisik);
+            $mime = mime_content_type($pathFisik) ?: 'image/jpeg';
+            return 'data:' . $mime . ';base64,' . base64_encode($fileData);
+        }
+
+        try {
+            list($origWidth, $origHeight) = getimagesize($pathFisik);
+            
+            // Hitung skala resize proporsional
+            if ($origWidth > $origHeight) {
+                $newWidth = $maxSize;
+                $newHeight = round($origHeight * ($maxSize / $origWidth));
+            } else {
+                $newHeight = $maxSize;
+                $newWidth = round($origWidth * ($maxSize / $origHeight));
+            }
+
+            $imageCreate = match($type) {
+                'jpg', 'jpeg' => imagecreatefromjpeg($pathFisik),
+                'png' => imagecreatefrompng($pathFisik),
+                'webp' => imagecreatefromwebp($pathFisik),
+                default => null
+            };
+
+            if ($imageCreate) {
+                $newImage = imagecreatetruecolor($newWidth, $newHeight);
+                
+                if ($type == 'png') {
+                    imagealphablending($newImage, false);
+                    imagesavealpha($newImage, true);
+                }
+
+                imagecopyresampled($newImage, $imageCreate, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
+
+                ob_start();
+                match($type) {
+                    'jpg', 'jpeg' => imagejpeg($newImage, null, 90),
+                    'png' => imagepng($newImage, null, 6),
+                    'webp' => imagewebp($newImage, 90),
+                    default => imagejpeg($newImage, null, 90)
+                };
+                $imgData = ob_get_clean();
+
+                imagedestroy($imageCreate);
+                imagedestroy($newImage);
+
+                $mimeType = ($type == 'jpg') ? 'image/jpeg' : 'image/' . $type;
+                return 'data:' . $mimeType . ';base64,' . base64_encode($imgData);
+            }
+        } catch (\Exception $e) {
+            // Fallback aman jika proses GD gagal
+        }
+
+        return 'data:image/jpeg;base64,' . base64_encode(file_get_contents($pathFisik));
     }
 
     // ==========================================
@@ -1820,6 +2003,7 @@ class MukController extends Controller
         $data = Debitur::with([
             'pengajuan_plafon_kredit',            
             'informasi_usaha',
+            'limac_collaterals',
             'limac',
             'referensi_ca',
             'deviasi',

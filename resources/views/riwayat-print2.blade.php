@@ -390,76 +390,101 @@
                         <div style="font-weight: bold;">
                             2. COLLATERAL
                         </div>
-                        <div style="margin-top: 5px;">
-                            <table style="width: 100%; border-collapse: collapse;">
-                                <tr>
-                                    <td style="width: 25%; font-weight: normal; padding-bottom: 3px;">No.SHM</td>
-                                    <td style="width: 3%; text-align: center; padding-bottom: 3px;">:</td>
-                                    <td style="width: 72%; font-weight: normal; padding-bottom: 3px;">{{ $data->limac->no_shm ?? '-' }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: normal; padding-bottom: 3px;">Luas</td>
-                                    <td style="text-align: center; padding-bottom: 3px;">:</td>
-                                    <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->luas ?? '-' }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: normal; padding-bottom: 3px;">Nama Pemilik</td>
-                                    <td style="text-align: center; padding-bottom: 3px;">:</td>
-                                    <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->pemilik ?? '-' }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: normal; padding-bottom: 3px;">Letak SHM</td>
-                                    <td style="text-align: center; padding-bottom: 3px;">:</td>
-                                    <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->letak_shm ?? '-' }}</td>
-                                </tr>
-                            </table>
-                        </div>
 
-                        <!-- Gambar Ringkasan Penilaian Jaminan -->
-                        <div style="padding-left: 0%; margin-top: 10px;">
-                            <div style="font-weight: normal;">
-                                Ringkasan Penilaian Jaminan, Tanggal {{ $data->limac->tanggal ?? '-' }}
-                            </div>
+                        @php
+                            // Ambil data collaterals yang sudah diurutkan berdasarkan 'urutan'
+                            $listCollaterals = ($data && $data->limac_collaterals) 
+                                ? $data->limac_collaterals->sortBy('urutan') 
+                                : collect();
+                        @endphp
+
+                        @foreach($listCollaterals as $collateral)
+
+                            {{-- Label otomatis huruf kecil + angka urutan (a. Collateral 1, b. Collateral 2, dst.) jika > 1 --}}
+                            @if($listCollaterals->count() > 1)
+                                <div style="margin-top: 15px; font-weight: bold; text-decoration: underline;">
+                                    {{ chr(96 + $loop->iteration) }}. Collateral {{ $loop->iteration }}
+                                </div>
+                            @endif
+
                             <div style="margin-top: 5px;">
-                                @if(!empty($data->limac->ringkasan_penilaian_jaminan) && $data->limac->ringkasan_penilaian_jaminan !== '-')
-                                    <div style="display: inline-block; padding: 2px;">
-                                        <img 
-                                            src="{{ asset('storage/' . $data->limac->ringkasan_penilaian_jaminan) }}" 
-                                            alt="Ringkasan Penilaian Jaminan"
-                                            style="max-width: 100%; height: auto; display: block;"
-                                        >
-                                    </div>
-                                @else
-                                    <span>-</span>
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="width: 25%; font-weight: normal; padding-bottom: 3px;">No.SHM</td>
+                                        <td style="width: 3%; text-align: center; padding-bottom: 3px;">:</td>
+                                        <td style="width: 72%; font-weight: normal; padding-bottom: 3px;">{{ $collateral->no_shm ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: normal; padding-bottom: 3px;">Luas</td>
+                                        <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                        <td style="font-weight: normal; padding-bottom: 3px;">{{ $collateral->luas ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: normal; padding-bottom: 3px;">Nama Pemilik</td>
+                                        <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                        <td style="font-weight: normal; padding-bottom: 3px;">{{ $collateral->pemilik ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: normal; padding-bottom: 3px;">Letak SHM</td>
+                                        <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                        <td style="font-weight: normal; padding-bottom: 3px;">{{ $collateral->letak_shm ?? '-' }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!-- Gambar Ringkasan Penilaian Jaminan -->
+                            <div style="padding-left: 0%; margin-top: 10px;">
+                                <div style="font-weight: normal;">
+                                    Ringkasan Penilaian Jaminan, Tanggal {{ $collateral->tanggal ?? '-' }}
+                                </div>
+                                <div style="margin-top: 5px;">
+                                    @if(!empty($collateral->ringkasan_penilaian_jaminan) && $collateral->ringkasan_penilaian_jaminan !== '-')
+                                        <div style="display: inline-block; padding: 2px;">
+                                            <img 
+                                                src="{{ asset('storage/' . $collateral->ringkasan_penilaian_jaminan) }}" 
+                                                alt="Ringkasan Penilaian Jaminan"
+                                                style="max-width: 100%; height: auto; display: block;"
+                                            >
+                                        </div>
+                                    @else
+                                        <span>-</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Informasi Harga Tanah -->
+                            <div style="margin-top: 10px; font-weight: bold;">
+                                Informasi Harga Tanah :
+                            </div>
+                            <div style="margin-top: 3px; padding-left: 15px; margin-bottom: 5px;">
+                                <div style="margin-left: 0%; margin-bottom: 3px; text-align: justify;">1. {{ $collateral->info_harga_tanah1 ?? '-' }}</div>
+                                
+                                @if(!empty($collateral->info_harga_tanah2) && $collateral->info_harga_tanah2 !== '-')
+                                    <div style="margin-left: 0%; margin-bottom: 3px; text-align: justify;">2. {{ $collateral->info_harga_tanah2 }}</div>
+                                @endif
+                                
+                                @if(!empty($collateral->info_harga_tanah3) && $collateral->info_harga_tanah3 !== '-')
+                                    <div style="margin-left: 0%; text-align: justify;">3. {{ $collateral->info_harga_tanah3 }}</div>
                                 @endif
                             </div>
-                        </div>
 
-                        <!-- Informasi Harga Tanah -->
-                        <div style="margin-top: 10px; font-weight: bold;">
-                            Informasi Harga Tanah :
-                        </div>
-                        <div style="margin-top: 3px; padding-left: 15px; margin-bottom: 5px;">
-                            <div style="margin-left: 0%;">1. {{ $data->limac->info_harga_tanah1 ?? '-' }}</div><br>
-                            <div style="margin-left: 0%;">2. {{ $data->limac->info_harga_tanah2 ?? '-' }}</div><br>
-                            <div style="margin-left: 0%;">3. {{ $data->limac->info_harga_tanah3 ?? '-' }}</div>
-                        </div>
+                            <!-- Batas Objek Jaminan -->
+                            <div style="margin-top: 10px; font-weight: bold;">
+                                Batas Objek Jaminan :
+                            </div>
+                            <div style="margin-top: 3px; text-align: justify;">
+                                {{ $collateral->batas_objek_jaminan ?? '-' }}
+                            </div>
 
-                        <!-- Batas Objek Jaminan -->
-                        <div style="margin-top: 10px; font-weight: bold; ">
-                            Batas Objek Jaminan :
-                        </div>
-                        <div style="margin-top: 3px; text-align: justify;">
-                            {{ $data->limac->batas_objek_jaminan ?? '-' }}
-                        </div>
+                            <!-- Catatan Khusus Objek Jaminan -->
+                            <div style="margin-top: 10px; font-weight: bold;">
+                                Catatan Khusus Objek Jaminan :
+                            </div>
+                            <div style="margin-top: 3px; text-align: justify; margin-bottom: 15px;">
+                                {{ $collateral->catatan_khusus ?? '-' }}
+                            </div>
 
-                        <!-- Catatan Khusus Objek Jaminan -->
-                        <div style="margin-top: 10px; font-weight: bold;">
-                            Catatan Khusus Objek Jaminan :
-                        </div>
-                        <div style="margin-top: 3px; text-align: justify;">
-                            {{ $data->limac->catatan_khusus ?? '-' }}
-                        </div>
+                        @endforeach
                     </div>
 
                     <!-- 3. CONDITION -->

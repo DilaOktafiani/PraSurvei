@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Form Survei - {{ $data->nama ?? '-' }}</title>
+    <title>Analisa Kredit - {{ $data->nama ?? '-' }}</title>
     <style>
         @page {
             size: A4;
@@ -68,104 +68,104 @@
         <!-- A. DATA DEBITUR -->
             <div class="mb-6">
                 <!-- Header Section -->
-                <div class="section-header">
+                <div class="section-header" style="padding-left: 3%; font-weight: bold;">
                     A. DATA DEBITUR
                 </div>
                 
                 <div class="text-sm">
-                    <table class="table-form">
+                    <table class="table-form" style="padding-left: 4%; width: 100%; border-collapse: collapse;">
                         <!-- 1. Nama Debitur -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">1.</td>
-                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Nama Debitur</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">1.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Nama Debitur</td>
                             <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 57%; font-weight: normal;">{{ $data->nama ?? '-' }}</td>
+                            <td style="width: 62%; font-weight: normal;">{{ $data->nama ?? '-' }}</td>
                         </tr>
 
                         <!-- 2. Tempat / Tanggal Lahir -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">2.</td>
-                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Tempat / Tgl Lahir</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">2.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Tempat / Tgl Lahir</td>
                             <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 57%;">{{ $data->tempat_tanggal_lahir ?? '-' }}</td>
+                            <td style="width: 62%;">{{ $data->tempat_tanggal_lahir ?? '-' }}</td>
                         </tr>
 
                         <!-- 3. Nama Ibu Kandung -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">3.</td>
-                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Nama Ibu Kandung</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">3.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Nama Ibu Kandung</td>
                             <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 57%;">{{ $data->nama_ibu_kandung ?? '-' }}</td>
+                            <td style="width: 62%;">{{ $data->nama_ibu_kandung ?? '-' }}</td>
                         </tr>
 
                         <!-- 4. Nama Istri / Penjamin -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">4.</td>
-                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Nama Istri / Penjamin</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">4.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Nama Istri / Penjamin</td>
                             <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 57%;">{{ $data->nama_istri_penjamin ?? '-' }}</td>
+                            <td style="width: 62%;">{{ $data->nama_istri_penjamin ?? '-' }}</td>
                         </tr>
 
                         <!-- 5. Alamat KTP -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">5.</td>
-                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Alamat KTP</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">5.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Alamat KTP</td>
                             <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 57%;">{{ $data->alamat_ktp ?? '-' }}</td>
+                            <td style="width: 62%;">{{ $data->alamat_ktp ?? '-' }}</td>
                         </tr>
 
                         <!-- 6. Alamat Domisili -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">6.</td>
-                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Alamat Domisili</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">6.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Alamat Domisili</td>
                             <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 57%;">{{ $data->alamat_domisili ?? '-' }}</td>
+                            <td style="width: 62%;">{{ $data->alamat_domisili ?? '-' }}</td>
                         </tr>
 
                         <!-- 7. Telp / HP -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">7.</td>
-                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Telp / HP</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">7.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Telp / HP</td>
                             <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 57%;">{{ $data->no_hp ?? '-' }}</td>
+                            <td style="width: 62%;">{{ $data->no_hp ?? '-' }}</td>
                         </tr>
 
                         <!-- 8. Pekerjaan -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">8.</td>
-                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Pekerjaan</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">8.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Pekerjaan</td>
                             <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 57%;">{{ $data->pekerjaan ?? '-' }}</td>
+                            <td style="width: 62%;">{{ $data->pekerjaan ?? '-' }}</td>
                         </tr>
 
                         <!-- 9. Bidang Usaha -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">9.</td>
-                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Bidang Usaha</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">9.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Bidang Usaha</td>
                             <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 57%;">{{ $data->bidang_usaha ?? '-' }}</td>
+                            <td style="width: 62%;">{{ $data->bidang_usaha ?? '-' }}</td>
                         </tr>
 
                         <!-- 10. Alamat Kerja / Usaha -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">10.</td>
-                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Alamat Kerja / Usaha</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">10.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Alamat Kerja / Usaha</td>
                             <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 57%;">{{ $data->alamat_usaha ?? '-' }}</td>
+                            <td style="width: 62%;">{{ $data->alamat_usaha ?? '-' }}</td>
                         </tr>
 
                         <!-- 11. Telp / HP Usaha -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">11.</td>
-                            <td style="width: 35%; font-weight: normal; padding-left: 3%;">Telp / HP Usaha</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">11.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Telp / HP Usaha</td>
                             <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 57%;">{{ $data->kontak ?? '-' }}</td>
+                            <td style="width: 62%;">{{ $data->kontak ?? '-' }}</td>
                         </tr>
 
                         <!-- 12. IDI di Bank Lain -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 5%; padding-right: 5%;">12.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 3%;">IDI di Bank Lain</td>
+                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">12.</td>
+                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">IDI di Bank Lain</td>
                             <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
                             <td style="width: 62%;"></td>
                         </tr>
@@ -178,13 +178,28 @@
                         </div>
                         <div style="margin-top: 5px;">
                             @if(!empty($data->idi_di_bank_lain) && $data->idi_di_bank_lain !== '-')
-                                <div style="display: inline-block; padding: 2px;">
-                                    <img 
-                                        src="{{ asset('storage/' . $data->idi_di_bank_lain) }}" 
-                                        alt="IDI di Bank Lain"
-                                        style="max-width: 100%; height: auto; display: block;"
-                                    >
-                                </div>
+                                @php
+                                    // Mengubah path menjadi absolute path di server (mengatasi masalah PDF generator)
+                                    $imagePath = storage_path('app/public/' . $data->idi_di_bank_lain);
+                                    
+                                    // Fallback jika disimpan di public/storage langsung
+                                    if (!file_exists($imagePath)) {
+                                        $imagePath = public_path('storage/' . $data->idi_di_bank_lain);
+                                    }
+                                @endphp
+
+                                @if(file_exists($imagePath))
+                                    <div style="display: inline-block; padding: 2px;">
+                                        <!-- Gunakan base64 atau absolute path langsung -->
+                                        <img 
+                                            src="{{ $imagePath }}" 
+                                            alt="IDI di Bank Lain"
+                                            style="max-width: 100%; height: auto; display: block;"
+                                        >
+                                    </div>
+                                @else
+                                    <span>File gambar tidak ditemukan di server: {{ $data->idi_di_bank_lain }}</span>
+                                @endif
                             @else
                                 <span>-</span>
                             @endif
@@ -207,22 +222,36 @@
         <!-- B. PENGAJUAN PLAFON KREDIT -->
             <div class="mb-6">
                 <!-- Header Section -->
-                <div class="section-header">
+                <div class="section-header" style="padding-left: 3%; font-weight: bold;">
                     B. PENGAJUAN PLAFON KREDIT
                 </div>
                 
                 <div class="text-sm">
+                    
                     <!-- Plafon Kredit -->
                     <div style="padding-left: 5%; padding-right: 5%; margin-top: 5px;">
                         <div style="margin-top: 5px;">
                             @if(!empty($data->pengajuan_plafon_kredit->pengajuan_plafon_kredit) && $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit !== '-')
-                                <div style="display: inline-block; padding: 2px;">
-                                    <img 
-                                        src="{{ asset('storage/' . $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit) }}" 
-                                        alt="Plafon Kredit"
-                                        style="max-width: 100%; height: auto; display: block;"
-                                    >
-                                </div>
+                                @php
+                                    $plafonImage = $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit;
+                                    $imagePath = storage_path('app/public/' . $plafonImage);
+                                    
+                                    if (!file_exists($imagePath)) {
+                                        $imagePath = public_path('storage/' . $plafonImage);
+                                    }
+                                @endphp
+
+                                @if(file_exists($imagePath))
+                                    <div style="display: inline-block; padding: 2px;">
+                                        <img 
+                                            src="{{ $imagePath }}" 
+                                            alt="Plafon Kredit"
+                                            style="max-width: 100%; height: auto; display: block;"
+                                        >
+                                    </div>
+                                @else
+                                    <span>File gambar plafon kredit tidak ditemukan di server.</span>
+                                @endif
                             @else
                                 <span>-</span>
                             @endif
@@ -245,7 +274,7 @@
         <!-- C. INFORMASI MENGENAI USAHA -->
             <div class="mb-6">
                 <!-- Header Section -->
-                <div class="section-header">
+                <div class="section-header" style="padding-left: 3%; font-weight: bold;">
                     C. INFORMASI MENGENAI USAHA
                 </div>
 
@@ -268,14 +297,26 @@
                             </div>
 
                             @if(!empty($usahaUtama->perhitungan_omset_usaha) && $usahaUtama->perhitungan_omset_usaha !== '-')
+                                @php
+                                    $imgOmsetUtama = $usahaUtama->perhitungan_omset_usaha;
+                                    $pathOmsetUtama = storage_path('app/public/' . $imgOmsetUtama);
+                                    if (!file_exists($pathOmsetUtama)) {
+                                        $pathOmsetUtama = public_path('storage/' . $imgOmsetUtama);
+                                    }
+                                @endphp
+
                                 <div style="margin-top: 5px;">
-                                    <div style="display: inline-block; padding: 2px;">
-                                        <img 
-                                            src="{{ asset('storage/' . $usahaUtama->perhitungan_omset_usaha) }}" 
-                                            alt="Perhitungan Omset Usaha"
-                                            style="max-width: 100%; height: auto; display: block;"
-                                        >
-                                    </div>
+                                    @if(file_exists($pathOmsetUtama))
+                                        <div style="display: inline-block; padding: 2px;">
+                                            <img 
+                                                src="{{ $pathOmsetUtama }}" 
+                                                alt="Perhitungan Omset Usaha"
+                                                style="max-width: 100%; height: auto; display: block;"
+                                            >
+                                        </div>
+                                    @else
+                                        <span style="font-size: 11px; color: red;">[File gambar omset usaha utama tidak ditemukan di server]</span>
+                                    @endif
                                 </div>
                             @endif
                         </div>
@@ -290,14 +331,26 @@
                                 </div>
 
                                 @if(!empty($usaha->perhitungan_omset_usaha) && $usaha->perhitungan_omset_usaha !== '-')
+                                    @php
+                                        $imgOmsetLain = $usaha->perhitungan_omset_usaha;
+                                        $pathOmsetLain = storage_path('app/public/' . $imgOmsetLain);
+                                        if (!file_exists($pathOmsetLain)) {
+                                            $pathOmsetLain = public_path('storage/' . $imgOmsetLain);
+                                        }
+                                    @endphp
+
                                     <div style="margin-top: 5px;">
-                                        <div style="display: inline-block; padding: 2px;">
-                                            <img 
-                                                src="{{ asset('storage/' . $usaha->perhitungan_omset_usaha) }}" 
-                                                alt="Perhitungan Omset Usaha"
-                                                style="max-width: 100%; height: auto; display: block;"
-                                            >
-                                        </div>
+                                        @if(file_exists($pathOmsetLain))
+                                            <div style="display: inline-block; padding: 2px;">
+                                                <img 
+                                                    src="{{ $pathOmsetLain }}" 
+                                                    alt="Perhitungan Omset Usaha"
+                                                    style="max-width: 100%; height: auto; display: block;"
+                                                >
+                                            </div>
+                                        @else
+                                            <span style="font-size: 11px; color: red;">[File gambar omset usaha tambahan tidak ditemukan di server]</span>
+                                        @endif
                                     </div>
                                 @endif
                             </div>
@@ -315,14 +368,26 @@
                             </div>
 
                             @if(!empty($usahaUtama->perhitungan_omset_pendukung) && $usahaUtama->perhitungan_omset_pendukung !== '-')
+                                @php
+                                    $imgPendukung = $usahaUtama->perhitungan_omset_pendukung;
+                                    $pathPendukung = storage_path('app/public/' . $imgPendukung);
+                                    if (!file_exists($pathPendukung)) {
+                                        $pathPendukung = public_path('storage/' . $imgPendukung);
+                                    }
+                                @endphp
+
                                 <div style="margin-top: 5px;">
-                                    <div style="display: inline-block; padding: 2px;">
-                                        <img 
-                                            src="{{ asset('storage/' . $usahaUtama->perhitungan_omset_pendukung) }}" 
-                                            alt="Perhitungan Omset Pendukung"
-                                            style="max-width: 100%; height: auto; display: block;"
-                                        >
-                                    </div>
+                                    @if(file_exists($pathPendukung))
+                                        <div style="display: inline-block; padding: 2px;">
+                                            <img 
+                                                src="{{ $pathPendukung }}" 
+                                                alt="Perhitungan Omset Pendukung"
+                                                style="max-width: 100%; height: auto; display: block;"
+                                            >
+                                        </div>
+                                    @else
+                                        <span style="font-size: 11px; color: red;">[File gambar omset pendukung tidak ditemukan di server]</span>
+                                    @endif
                                 </div>
                             @endif
                         </div>
@@ -334,7 +399,7 @@
         <!-- D. URAIAN SINGKAT MENGENAI 5 C -->
             <div class="mb-6">
                 <!-- Header Section -->
-                <div class="section-header">
+                <div class="section-header" style="padding-left: 3%; font-weight: bold;">
                     D. URAIAN SINGKAT MENGENAI 5 C
                 </div>
                 
@@ -355,76 +420,113 @@
                         <div style="font-weight: bold;">
                             2. COLLATERAL
                         </div>
-                        <div style="margin-top: 5px;">
-                            <table style="width: 100%; border-collapse: collapse;">
-                                <tr>
-                                    <td style="width: 25%; font-weight: normal; padding-bottom: 3px;">No.SHM</td>
-                                    <td style="width: 3%; text-align: center; padding-bottom: 3px;">:</td>
-                                    <td style="width: 72%; font-weight: normal; padding-bottom: 3px;">{{ $data->limac->no_shm ?? '-' }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: normal; padding-bottom: 3px;">Luas</td>
-                                    <td style="text-align: center; padding-bottom: 3px;">:</td>
-                                    <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->luas ?? '-' }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: normal; padding-bottom: 3px;">Nama Pemilik</td>
-                                    <td style="text-align: center; padding-bottom: 3px;">:</td>
-                                    <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->pemilik ?? '-' }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: normal; padding-bottom: 3px;">Letak SHM</td>
-                                    <td style="text-align: center; padding-bottom: 3px;">:</td>
-                                    <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->letak_shm ?? '-' }}</td>
-                                </tr>
-                            </table>
-                        </div>
 
-                        <!-- Gambar Ringkasan Penilaian Jaminan -->
-                        <div style="padding-left: 0%; margin-top: 10px;">
-                            <div style="font-weight: normal;">
-                                Ringkasan Penilaian Jaminan, Tanggal {{ $data->limac->tanggal ?? '-' }}
-                            </div>
+                        @php
+                            // Ambil data collaterals yang sudah diurutkan berdasarkan 'urutan'
+                            $listCollaterals = ($data && $data->limac_collaterals) 
+                                ? $data->limac_collaterals->sortBy('urutan') 
+                                : collect();
+                        @endphp
+
+                        @foreach($listCollaterals as $collateral)
+
+                            {{-- Label otomatis huruf kecil + angka urutan (a. Collateral 1, b. Collateral 2, dst.) jika > 1 --}}
+                            @if($listCollaterals->count() > 1)
+                                <div style="margin-top: 15px; font-weight: bold; text-decoration: underline;">
+                                    {{ chr(96 + $loop->iteration) }}. Collateral {{ $loop->iteration }}
+                                </div>
+                            @endif
+
                             <div style="margin-top: 5px;">
-                                @if(!empty($data->limac->ringkasan_penilaian_jaminan) && $data->limac->ringkasan_penilaian_jaminan !== '-')
-                                    <div style="display: inline-block; padding: 2px;">
-                                        <img 
-                                            src="{{ asset('storage/' . $data->limac->ringkasan_penilaian_jaminan) }}" 
-                                            alt="Ringkasan Penilaian Jaminan"
-                                            style="max-width: 100%; height: auto; display: block;"
-                                        >
-                                    </div>
-                                @else
-                                    <span>-</span>
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="width: 25%; font-weight: normal; padding-bottom: 3px;">No.SHM</td>
+                                        <td style="width: 3%; text-align: center; padding-bottom: 3px;">:</td>
+                                        <td style="width: 72%; font-weight: normal; padding-bottom: 3px;">{{ $collateral->no_shm ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: normal; padding-bottom: 3px;">Luas</td>
+                                        <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                        <td style="font-weight: normal; padding-bottom: 3px;">{{ $collateral->luas ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: normal; padding-bottom: 3px;">Nama Pemilik</td>
+                                        <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                        <td style="font-weight: normal; padding-bottom: 3px;">{{ $collateral->pemilik ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: normal; padding-bottom: 3px;">Letak SHM</td>
+                                        <td style="text-align: center; padding-bottom: 3px;">:</td>
+                                        <td style="font-weight: normal; padding-bottom: 3px;">{{ $collateral->letak_shm ?? '-' }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!-- Gambar Ringkasan Penilaian Jaminan -->
+                            <div style="padding-left: 0%; margin-top: 10px;">
+                                <div style="font-weight: normal;">
+                                    Ringkasan Penilaian Jaminan, Tanggal {{ $collateral->tanggal ?? '-' }}
+                                </div>
+                                <div style="margin-top: 5px;">
+                                    @if(!empty($collateral->ringkasan_penilaian_jaminan) && $collateral->ringkasan_penilaian_jaminan !== '-')
+                                        @php
+                                            $imgCollateral = $collateral->ringkasan_penilaian_jaminan;
+                                            $pathCollateral = storage_path('app/public/' . $imgCollateral);
+                                            if (!file_exists($pathCollateral)) {
+                                                $pathCollateral = public_path('storage/' . $imgCollateral);
+                                            }
+                                        @endphp
+
+                                        @if(file_exists($pathCollateral))
+                                            <div style="display: inline-block; padding: 2px;">
+                                                <img 
+                                                    src="{{ $pathCollateral }}" 
+                                                    alt="Ringkasan Penilaian Jaminan"
+                                                    style="max-width: 100%; height: auto; display: block;"
+                                                >
+                                            </div>
+                                        @else
+                                            <span style="font-size: 11px; color: red;">[File gambar ringkasan penilaian jaminan tidak ditemukan di server]</span>
+                                        @endif
+                                    @else
+                                        <span>-</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Informasi Harga Tanah -->
+                            <div style="margin-top: 10px; font-weight: bold;">
+                                Informasi Harga Tanah :
+                            </div>
+                            <div style="margin-top: 3px; padding-left: 15px; margin-bottom: 5px;">
+                                <div style="margin-left: 0%; margin-bottom: 3px; text-align: justify;">1. {{ $collateral->info_harga_tanah1 ?? '-' }}</div>
+                                
+                                @if(!empty($collateral->info_harga_tanah2) && $collateral->info_harga_tanah2 !== '-')
+                                    <div style="margin-left: 0%; margin-bottom: 3px; text-align: justify;">2. {{ $collateral->info_harga_tanah2 }}</div>
+                                @endif
+                                
+                                @if(!empty($collateral->info_harga_tanah3) && $collateral->info_harga_tanah3 !== '-')
+                                    <div style="margin-left: 0%; text-align: justify;">3. {{ $collateral->info_harga_tanah3 }}</div>
                                 @endif
                             </div>
-                        </div>
 
-                        <!-- Informasi Harga Tanah -->
-                        <div style="margin-top: 10px; font-weight: bold;">
-                            Informasi Harga Tanah :
-                        </div>
-                        <div style="margin-top: 3px; padding-left: 15px; margin-bottom: 5px;">
-                            <div style="margin-left: 0%;">1. {{ $data->limac->info_harga_tanah1 ?? '-' }}</div><br>
-                            <div style="margin-left: 0%;">2. {{ $data->limac->info_harga_tanah2 ?? '-' }}</div><br>
-                            <div style="margin-left: 0%;">3. {{ $data->limac->info_harga_tanah3 ?? '-' }}</div>
-                        </div>
+                            <!-- Batas Objek Jaminan -->
+                            <div style="margin-top: 10px; font-weight: bold;">
+                                Batas Objek Jaminan :
+                            </div>
+                            <div style="margin-top: 3px; text-align: justify;">
+                                {{ $collateral->batas_objek_jaminan ?? '-' }}
+                            </div>
 
-                        <!-- Batas Objek Jaminan -->
-                        <div style="margin-top: 10px; font-weight: bold; ">
-                            Batas Objek Jaminan :
-                        </div>
-                        <div style="margin-top: 3px; text-align: justify;">
-                            {{ $data->limac->batas_objek_jaminan ?? '-' }}
-                        </div>
+                            <!-- Catatan Khusus Objek Jaminan -->
+                            <div style="margin-top: 10px; font-weight: bold;">
+                                Catatan Khusus Objek Jaminan :
+                            </div>
+                            <div style="margin-top: 3px; text-align: justify; margin-bottom: 15px;">
+                                {{ $collateral->catatan_khusus ?? '-' }}
+                            </div>
 
-                        <!-- Catatan Khusus Objek Jaminan -->
-                        <div style="margin-top: 10px; font-weight: bold;">
-                            Catatan Khusus Objek Jaminan :
-                        </div>
-                        <div style="margin-top: 3px; text-align: justify;">
-                            {{ $data->limac->catatan_khusus ?? '-' }}
-                        </div>
+                        @endforeach
                     </div>
 
                     <!-- 3. CONDITION -->
@@ -446,13 +548,25 @@
                         <!-- Gambar Capacity -->
                         <div style="margin-top: 5px;">
                             @if(!empty($data->limac->capacity) && $data->limac->capacity !== '-')
-                                <div style="display: inline-block; padding: 2px;">
-                                    <img 
-                                        src="{{ asset('storage/' . $data->limac->capacity) }}" 
-                                        alt="Perhitungan Capacity"
-                                        style="max-width: 100%; height: auto; display: block;"
-                                    >
-                                </div>
+                                @php
+                                    $imgCapacity = $data->limac->capacity;
+                                    $pathCapacity = storage_path('app/public/' . $imgCapacity);
+                                    if (!file_exists($pathCapacity)) {
+                                        $pathCapacity = public_path('storage/' . $imgCapacity);
+                                    }
+                                @endphp
+
+                                @if(file_exists($pathCapacity))
+                                    <div style="display: inline-block; padding: 2px;">
+                                        <img 
+                                            src="{{ $pathCapacity }}" 
+                                            alt="Perhitungan Capacity"
+                                            style="max-width: 100%; height: auto; display: block;"
+                                        >
+                                    </div>
+                                @else
+                                    <span style="font-size: 11px; color: red;">[File gambar capacity tidak ditemukan di server]</span>
+                                @endif
                             @else
                                 <span>-</span>
                             @endif
@@ -505,7 +619,7 @@
 
         <!-- E. REFERENSI CREDIT ANALIST -->
             <div class="mb-6">
-                <div class="section-header">
+                <div class="section-header" style="padding-left: 3%; font-weight: bold;">
                     E. REFERENSI CREDIT ANALIST
                 </div>
                 <div class="text-sm">
@@ -519,7 +633,7 @@
 
         <!-- F. DEVIASI -->
             <div class="mb-6">
-                <div class="section-header">
+                <div class="section-header" style="padding-left: 3%; font-weight: bold;">
                     F. DEVIASI
                 </div>
                 <div class="text-sm">
@@ -533,7 +647,7 @@
 
         <!-- G. KESIMPULAN -->
             <div class="mb-6">
-                <div class="section-header">
+                <div class="section-header" style="padding-left: 3%; font-weight: bold;">
                     G. KESIMPULAN
                 </div>
                 <div class="text-sm">
@@ -547,13 +661,25 @@
                     <!-- Gambar Plafon / Kesimpulan -->
                     <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
                         @if(!empty($data->kesimpulan) && !empty($data->kesimpulan->plafon) && $data->kesimpulan->plafon !== '-')
-                            <div style="display: inline-block; padding: 2px;">
-                                <img 
-                                    src="{{ asset('storage/' . $data->kesimpulan->plafon) }}" 
-                                    alt="Plafon Kredit"
-                                    style="max-width: 100%; height: auto; display: block;"
-                                >
-                            </div>
+                            @php
+                                $imgPlafonKesimpulan = $data->kesimpulan->plafon;
+                                $pathPlafonKesimpulan = storage_path('app/public/' . $imgPlafonKesimpulan);
+                                if (!file_exists($pathPlafonKesimpulan)) {
+                                    $pathPlafonKesimpulan = public_path('storage/' . $imgPlafonKesimpulan);
+                                }
+                            @endphp
+
+                            @if(file_exists($pathPlafonKesimpulan))
+                                <div style="display: inline-block; padding: 2px;">
+                                    <img 
+                                        src="{{ $pathPlafonKesimpulan }}" 
+                                        alt="Plafon Kredit"
+                                        style="max-width: 100%; height: auto; display: block;"
+                                    >
+                                </div>
+                            @else
+                                <span style="font-size: 11px; color: red;">[File gambar plafon kesimpulan tidak ditemukan di server]</span>
+                            @endif
                         @else
                             <span>-</span>
                         @endif
@@ -597,7 +723,7 @@
         <div class="page-container" style="page-break-before: always; break-before: page;">  
             <div class="mb-6">
                 <!-- Header Section -->
-                <div class="section-header" style="text-align: center;">
+                <div class="section-header" style="text-align: center; font-weight: bold;">
                     GAMBAR JAMINAN, TEMPAT USAHA & TEMPAT TINGGAL
                 </div>
 
@@ -630,13 +756,25 @@
                                         <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
                                             <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
                                             @if(!empty($data->jaminan->google_maps) && $data->jaminan->google_maps !== '-')
-                                                <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
-                                                    <img 
-                                                        src="{{ asset('storage/' . $data->jaminan->google_maps) }}" 
-                                                        alt="Google Map" 
-                                                        style="width: 100%; max-width: 350px; height: auto; display: block;"
-                                                    >
-                                                </div>
+                                                @php
+                                                    $imgGmap = $data->jaminan->google_maps;
+                                                    $pathGmap = storage_path('app/public/' . $imgGmap);
+                                                    if (!file_exists($pathGmap)) {
+                                                        $pathGmap = public_path('storage/' . $imgGmap);
+                                                    }
+                                                @endphp
+
+                                                @if(file_exists($pathGmap))
+                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                        <img 
+                                                            src="{{ $pathGmap }}" 
+                                                            alt="Google Map" 
+                                                            style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    <span style="font-size: 11px; color: red;">[File Google Map tidak ditemukan]</span>
+                                                @endif
                                             @else
                                                 <span>-</span>
                                             @endif
@@ -658,13 +796,25 @@
                                             <div>
                                                 <div style="font-weight: bold; margin-bottom: 4px;">Kode QR Maps</div>
                                                 @if(!empty($data->jaminan->kode_qr) && $data->jaminan->kode_qr !== '-')
-                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
-                                                        <img 
-                                                            src="{{ asset('storage/' . $data->jaminan->kode_qr) }}" 
-                                                            alt="Kode QR Maps" 
-                                                            style="width: 150px; height: auto; display: block;"
-                                                        >
-                                                    </div>
+                                                    @php
+                                                        $imgQr = $data->jaminan->kode_qr;
+                                                        $pathQr = storage_path('app/public/' . $imgQr);
+                                                        if (!file_exists($pathQr)) {
+                                                            $pathQr = public_path('storage/' . $imgQr);
+                                                        }
+                                                    @endphp
+
+                                                    @if(file_exists($pathQr))
+                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                            <img 
+                                                                src="{{ $pathQr }}" 
+                                                                alt="Kode QR Maps" 
+                                                                style="width: 150px; height: auto; display: block;"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        <span style="font-size: 11px; color: red;">[File QR Maps tidak ditemukan]</span>
+                                                    @endif
                                                 @else
                                                     <span>-</span>
                                                 @endif
@@ -683,14 +833,26 @@
                                             <!-- Kolom Kiri -->
                                             <td style="border: 1px solid black; padding: 8px; vertical-align: top; width: 50%;">
                                                 @if(isset($chunk[0]))
+                                                    @php
+                                                        $imgLeft = $chunk[0];
+                                                        $pathLeft = storage_path('app/public/' . $imgLeft);
+                                                        if (!file_exists($pathLeft)) {
+                                                            $pathLeft = public_path('storage/' . $imgLeft);
+                                                        }
+                                                    @endphp
+
                                                     <div style="font-weight: bold; margin-bottom: 4px;">Foto Jaminan</div>
-                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
-                                                        <img 
-                                                            src="{{ asset('storage/' . $chunk[0]) }}" 
-                                                            alt="Foto Jaminan" 
-                                                            style="width: 100%; max-width: 350px; height: auto; display: block;"
-                                                        >
-                                                    </div>
+                                                    @if(file_exists($pathLeft))
+                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                            <img 
+                                                                src="{{ $pathLeft }}" 
+                                                                alt="Foto Jaminan" 
+                                                                style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        <span style="font-size: 11px; color: red;">[File foto jaminan tidak ditemukan]</span>
+                                                    @endif
                                                 @else
                                                     &nbsp;
                                                 @endif
@@ -699,14 +861,26 @@
                                             <!-- Kolom Kanan -->
                                             <td style="border: 1px solid black; padding: 8px; vertical-align: top; width: 50%;">
                                                 @if(isset($chunk[1]))
+                                                    @php
+                                                        $imgRight = $chunk[1];
+                                                        $pathRight = storage_path('app/public/' . $imgRight);
+                                                        if (!file_exists($pathRight)) {
+                                                            $pathRight = public_path('storage/' . $imgRight);
+                                                        }
+                                                    @endphp
+
                                                     <div style="font-weight: bold; margin-bottom: 4px;">Foto Jaminan</div>
-                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
-                                                        <img 
-                                                            src="{{ asset('storage/' . $chunk[1]) }}" 
-                                                            alt="Foto Jaminan" 
-                                                            style="width: 100%; max-width: 350px; height: auto; display: block;"
-                                                        >
-                                                    </div>
+                                                    @if(file_exists($pathRight))
+                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                            <img 
+                                                                src="{{ $pathRight }}" 
+                                                                alt="Foto Jaminan" 
+                                                                style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        <span style="font-size: 11px; color: red;">[File foto jaminan tidak ditemukan]</span>
+                                                    @endif
                                                 @else
                                                     &nbsp;
                                                 @endif
@@ -753,13 +927,25 @@
                                             <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
                                                 <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
                                                 @if(!empty($usahaItem->google_maps) && $usahaItem->google_maps !== '-')
-                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
-                                                        <img 
-                                                            src="{{ asset('storage/' . $usahaItem->google_maps) }}" 
-                                                            alt="Google Map" 
-                                                            style="width: 100%; max-width: 350px; height: auto; display: block;"
-                                                        >
-                                                    </div>
+                                                    @php
+                                                        $imgUsahaMap = $usahaItem->google_maps;
+                                                        $pathUsahaMap = storage_path('app/public/' . $imgUsahaMap);
+                                                        if (!file_exists($pathUsahaMap)) {
+                                                            $pathUsahaMap = public_path('storage/' . $imgUsahaMap);
+                                                        }
+                                                    @endphp
+
+                                                    @if(file_exists($pathUsahaMap))
+                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                            <img 
+                                                                src="{{ $pathUsahaMap }}" 
+                                                                alt="Google Map" 
+                                                                style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        <span style="font-size: 11px; color: red;">[File Google Map usaha tidak ditemukan]</span>
+                                                    @endif
                                                 @else
                                                     <span>-</span>
                                                 @endif
@@ -781,13 +967,25 @@
                                                 <div>
                                                     <div style="font-weight: bold; margin-bottom: 4px;">Kode QR Maps</div>
                                                     @if(!empty($usahaItem->kode_qr) && $usahaItem->kode_qr !== '-')
-                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
-                                                            <img 
-                                                                src="{{ asset('storage/' . $usahaItem->kode_qr) }}" 
-                                                                alt="Kode QR Maps" 
-                                                                style="width: 150px; height: auto; display: block;"
-                                                            >
-                                                        </div>
+                                                        @php
+                                                            $imgUsahaQr = $usahaItem->kode_qr;
+                                                            $pathUsahaQr = storage_path('app/public/' . $imgUsahaQr);
+                                                            if (!file_exists($pathUsahaQr)) {
+                                                                $pathUsahaQr = public_path('storage/' . $imgUsahaQr);
+                                                            }
+                                                        @endphp
+
+                                                        @if(file_exists($pathUsahaQr))
+                                                            <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                                <img 
+                                                                    src="{{ $pathUsahaQr }}" 
+                                                                    alt="Kode QR Maps" 
+                                                                    style="width: 150px; height: auto; display: block;"
+                                                                >
+                                                            </div>
+                                                        @else
+                                                            <span style="font-size: 11px; color: red;">[File QR Maps usaha tidak ditemukan]</span>
+                                                        @endif
                                                     @else
                                                         <span>-</span>
                                                     @endif
@@ -806,14 +1004,26 @@
                                                 <!-- Kolom Kiri -->
                                                 <td style="border: 1px solid black; padding: 8px; vertical-align: top; width: 50%;">
                                                     @if(isset($chunk[0]))
+                                                        @php
+                                                            $imgUsahaLeft = $chunk[0];
+                                                            $pathUsahaLeft = storage_path('app/public/' . $imgUsahaLeft);
+                                                            if (!file_exists($pathUsahaLeft)) {
+                                                                $pathUsahaLeft = public_path('storage/' . $imgUsahaLeft);
+                                                            }
+                                                        @endphp
+
                                                         <div style="font-weight: bold; margin-bottom: 4px;">Foto Usaha</div>
-                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
-                                                            <img 
-                                                                src="{{ asset('storage/' . $chunk[0]) }}" 
-                                                                alt="Foto Usaha" 
-                                                                style="width: 100%; max-width: 350px; height: auto; display: block;"
-                                                            >
-                                                        </div>
+                                                        @if(file_exists($pathUsahaLeft))
+                                                            <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                                <img 
+                                                                    src="{{ $pathUsahaLeft }}" 
+                                                                    alt="Foto Usaha" 
+                                                                    style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                                >
+                                                            </div>
+                                                        @else
+                                                            <span style="font-size: 11px; color: red;">[File foto usaha tidak ditemukan]</span>
+                                                        @endif
                                                     @else
                                                         &nbsp;
                                                     @endif
@@ -822,14 +1032,26 @@
                                                 <!-- Kolom Kanan -->
                                                 <td style="border: 1px solid black; padding: 8px; vertical-align: top; width: 50%;">
                                                     @if(isset($chunk[1]))
+                                                        @php
+                                                            $imgUsahaRight = $chunk[1];
+                                                            $pathUsahaRight = storage_path('app/public/' . $imgUsahaRight);
+                                                            if (!file_exists($pathUsahaRight)) {
+                                                                $pathUsahaRight = public_path('storage/' . $imgUsahaRight);
+                                                            }
+                                                        @endphp
+
                                                         <div style="font-weight: bold; margin-bottom: 4px;">Foto Usaha</div>
-                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
-                                                            <img 
-                                                                src="{{ asset('storage/' . $chunk[1]) }}" 
-                                                                alt="Foto Usaha" 
-                                                                style="width: 100%; max-width: 350px; height: auto; display: block;"
-                                                            >
-                                                        </div>
+                                                        @if(file_exists($pathUsahaRight))
+                                                            <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                                <img 
+                                                                    src="{{ $pathUsahaRight }}" 
+                                                                    alt="Foto Usaha" 
+                                                                    style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                                >
+                                                            </div>
+                                                        @else
+                                                            <span style="font-size: 11px; color: red;">[File foto usaha tidak ditemukan]</span>
+                                                        @endif
                                                     @else
                                                         &nbsp;
                                                     @endif
@@ -869,13 +1091,25 @@
                                         <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
                                             <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
                                             @if(!empty($data->rumah->google_maps) && $data->rumah->google_maps !== '-')
-                                                <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
-                                                    <img 
-                                                        src="{{ asset('storage/' . $data->rumah->google_maps) }}" 
-                                                        alt="Google Map" 
-                                                        style="width: 100%; max-width: 350px; height: auto; display: block;"
-                                                    >
-                                                </div>
+                                                @php
+                                                    $imgRumahMap = $data->rumah->google_maps;
+                                                    $pathRumahMap = storage_path('app/public/' . $imgRumahMap);
+                                                    if (!file_exists($pathRumahMap)) {
+                                                        $pathRumahMap = public_path('storage/' . $imgRumahMap);
+                                                    }
+                                                @endphp
+
+                                                @if(file_exists($pathRumahMap))
+                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                        <img 
+                                                            src="{{ $pathRumahMap }}" 
+                                                            alt="Google Map" 
+                                                            style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                        >
+                                                    </div>
+                                                @else
+                                                    <span style="font-size: 11px; color: red;">[File Google Map tempat tinggal tidak ditemukan]</span>
+                                                @endif
                                             @else
                                                 <span>-</span>
                                             @endif
@@ -897,13 +1131,25 @@
                                             <div>
                                                 <div style="font-weight: bold; margin-bottom: 4px;">Kode QR Maps</div>
                                                 @if(!empty($data->rumah->kode_qr) && $data->rumah->kode_qr !== '-')
-                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
-                                                        <img 
-                                                            src="{{ asset('storage/' . $data->rumah->kode_qr) }}" 
-                                                            alt="Kode QR Maps" 
-                                                            style="width: 150px; height: auto; display: block;"
-                                                        >
-                                                    </div>
+                                                    @php
+                                                        $imgRumahQr = $data->rumah->kode_qr;
+                                                        $pathRumahQr = storage_path('app/public/' . $imgRumahQr);
+                                                        if (!file_exists($pathRumahQr)) {
+                                                            $pathRumahQr = public_path('storage/' . $imgRumahQr);
+                                                        }
+                                                    @endphp
+
+                                                    @if(file_exists($pathRumahQr))
+                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                            <img 
+                                                                src="{{ $pathRumahQr }}" 
+                                                                alt="Kode QR Maps" 
+                                                                style="width: 150px; height: auto; display: block;"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        <span style="font-size: 11px; color: red;">[File QR Maps tempat tinggal tidak ditemukan]</span>
+                                                    @endif
                                                 @else
                                                     <span>-</span>
                                                 @endif
@@ -922,14 +1168,26 @@
                                             <!-- Kolom Kiri -->
                                             <td style="border: 1px solid black; padding: 8px; vertical-align: top; width: 50%;">
                                                 @if(isset($chunk[0]))
+                                                    @php
+                                                        $imgRumahLeft = $chunk[0];
+                                                        $pathRumahLeft = storage_path('app/public/' . $imgRumahLeft);
+                                                        if (!file_exists($pathRumahLeft)) {
+                                                            $pathRumahLeft = public_path('storage/' . $imgRumahLeft);
+                                                        }
+                                                    @endphp
+
                                                     <div style="font-weight: bold; margin-bottom: 4px;">Foto Tempat Tinggal</div>
-                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
-                                                        <img 
-                                                            src="{{ asset('storage/' . $chunk[0]) }}" 
-                                                            alt="Foto Tempat Tinggal" 
-                                                            style="width: 100%; max-width: 350px; height: auto; display: block;"
-                                                        >
-                                                    </div>
+                                                    @if(file_exists($pathRumahLeft))
+                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                            <img 
+                                                                src="{{ $pathRumahLeft }}" 
+                                                                alt="Foto Tempat Tinggal" 
+                                                                style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        <span style="font-size: 11px; color: red;">[File foto tempat tinggal tidak ditemukan]</span>
+                                                    @endif
                                                 @else
                                                     &nbsp;
                                                 @endif
@@ -938,14 +1196,26 @@
                                             <!-- Kolom Kanan -->
                                             <td style="border: 1px solid black; padding: 8px; vertical-align: top; width: 50%;">
                                                 @if(isset($chunk[1]))
+                                                    @php
+                                                        $imgRumahRight = $chunk[1];
+                                                        $pathRumahRight = storage_path('app/public/' . $imgRumahRight);
+                                                        if (!file_exists($pathRumahRight)) {
+                                                            $pathRumahRight = public_path('storage/' . $imgRumahRight);
+                                                        }
+                                                    @endphp
+
                                                     <div style="font-weight: bold; margin-bottom: 4px;">Foto Tempat Tinggal</div>
-                                                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
-                                                        <img 
-                                                            src="{{ asset('storage/' . $chunk[1]) }}" 
-                                                            alt="Foto Tempat Tinggal" 
-                                                            style="width: 100%; max-width: 350px; height: auto; display: block;"
-                                                        >
-                                                    </div>
+                                                    @if(file_exists($pathRumahRight))
+                                                        <div style="border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 6px; display: inline-block;">
+                                                            <img 
+                                                                src="{{ $pathRumahRight }}" 
+                                                                alt="Foto Tempat Tinggal" 
+                                                                style="width: 100%; max-width: 350px; height: auto; display: block;"
+                                                            >
+                                                        </div>
+                                                    @else
+                                                        <span style="font-size: 11px; color: red;">[File foto tempat tinggal tidak ditemukan]</span>
+                                                    @endif
                                                 @else
                                                     &nbsp;
                                                 @endif
@@ -965,7 +1235,7 @@
         <div class="page-container" style="page-break-before: always; break-before: page;">
             <div class="mb-6">
                 <!-- Header Section -->
-                <div class="section-header" style="text-align: center;">
+                <div class="section-header" style="text-align: center; font-weight: bold;">
                     SPESIFIKASI JAMINAN KREDIT, MELIPUTI
                 </div>
                 
@@ -1148,7 +1418,7 @@
         <div class="page-container" style="page-break-before: always; break-before: page;">   
             <div class="mb-6">
                 <!-- Header Section -->
-                <div class="section-header" style="text-align: center;">
+                <div class="section-header" style="text-align: center; font-weight: bold;">
                     DENAH JAMINAN
                 </div>
                 
@@ -1156,13 +1426,25 @@
                     <!-- Denah -->
                     <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
                         @if(!empty($data->denah) && !empty($data->denah->denah_jaminan) && $data->denah->denah_jaminan !== '-')
-                            <div style="display: inline-block; padding: 2px;">
-                                <img 
-                                    src="{{ asset('storage/' . $data->denah->denah_jaminan) }}" 
-                                    alt="Denah"
-                                    style="max-width: 100%; height: auto; display: block;"
-                                >
-                            </div>
+                            @php
+                                $imgDenah = $data->denah->denah_jaminan;
+                                $pathDenah = storage_path('app/public/' . $imgDenah);
+                                if (!file_exists($pathDenah)) {
+                                    $pathDenah = public_path('storage/' . $imgDenah);
+                                }
+                            @endphp
+
+                            @if(file_exists($pathDenah))
+                                <div style="display: inline-block; padding: 2px;">
+                                    <img 
+                                        src="{{ $pathDenah }}" 
+                                        alt="Denah"
+                                        style="max-width: 100%; height: auto; display: block;"
+                                    >
+                                </div>
+                            @else
+                                <span style="font-size: 11px; color: red;">[File gambar denah jaminan tidak ditemukan di server]</span>
+                            @endif
                         @else
                             <span>-</span>
                         @endif
