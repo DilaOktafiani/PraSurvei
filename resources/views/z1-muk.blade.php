@@ -345,19 +345,19 @@
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('mukForm', () => ({
-            searchQuery: '',
+            searchQuery: @json($debitur->nama ?? ''),
             results: [],
             openDropdown: false,
-            selectedItem: null,
+            selectedItem: @json($debitur ? ['no_register' => $debitur->no_register, 'nama' => $debitur->nama, 'usaha' => $debitur->pekerjaan] : null),
 
-            // HARUS pakai nama 'form' agar sinkron dengan x-model="form...." di HTML
+            // Langsung isi form dari $debitur jika ada (kembali dari Alur 2 / Edit)
             form: {
-                no_register: '',
-                nama: '',
-                usaha: '',
-                nama_pasangan: '',
-                alamat_ktp: '',
-                alamat_domisili: ''
+                no_register:   @json($debitur->no_register ?? ''),
+                nama:          @json($debitur->nama ?? ''),
+                usaha:         @json($debitur->pekerjaan ?? ''),
+                nama_pasangan: @json($debitur->nama_istri_penjamin ?? ''),
+                alamat_ktp:    @json($debitur->alamat_ktp ?? ''),
+                alamat_domisili: @json($debitur->alamat_domisili ?? '')
             },
 
             searchPrasurvei() {
@@ -385,13 +385,12 @@
                 this.searchQuery = item.nama; 
                 this.openDropdown = false;
 
-                // Masukkan data ke objek form
-                this.form.no_register = item.no_register;
-                this.form.nama = item.nama;
-                this.form.usaha = item.usaha;
-                this.form.nama_pasangan = item.nama_pasangan;
-                this.form.alamat_ktp = item.alamat_ktp;
-                this.form.alamat_domisili = item.alamat_domisili;
+                this.form.no_register   = item.no_register || '';
+                this.form.nama          = item.nama || '';
+                this.form.usaha         = item.usaha || '';
+                this.form.nama_pasangan = item.nama_pasangan || '';
+                this.form.alamat_ktp    = item.alamat_ktp || '';
+                this.form.alamat_domisili = item.alamat_domisili || '';
             },
 
             resetManual() {
@@ -399,7 +398,14 @@
                 this.searchQuery = '';
                 this.results = [];
                 this.openDropdown = false;
-                this.form = { no_register: '', nama: '', usaha: '', nama_pasangan: '', alamat_ktp: '', alamat_domisili: '' };
+                this.form = { 
+                    no_register: '', 
+                    nama: '', 
+                    usaha: '', 
+                    nama_pasangan: '', 
+                    alamat_ktp: '', 
+                    alamat_domisili: '' 
+                };
             }
         }));
     });

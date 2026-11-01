@@ -943,13 +943,16 @@ class MukController extends Controller
         $jaminan = Jaminan::where('debitur_id', $debiturId)->first();
 
         // Tentukan apakah file wajib diisi (jika belum ada data sama sekali di database)
-        $fileValidation = ($jaminan && $jaminan->google_maps) ? 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240' : 'required|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240';
-        $fileQrValidation = ($jaminan && $jaminan->kode_qr) ? 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240' : 'required|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240';
+        // PERUBAHAN: mimes diubah menjadi jpg,jpeg,png saja
+        $fileValidation = ($jaminan && $jaminan->google_maps) ? 'nullable|file|mimes:jpg,jpeg,png|max:10240' : 'required|file|mimes:jpg,jpeg,png|max:10240';
+        $fileQrValidation = ($jaminan && $jaminan->kode_qr) ? 'nullable|file|mimes:jpg,jpeg,png|max:10240' : 'required|file|mimes:jpg,jpeg,png|max:10240';
         
         // Validasi Foto Jaminan sebagai array (maksimal 50 file)
         $hasExistingFotoJaminan = $jaminan && !empty($jaminan->foto_jaminan);
         $fileFotoValidation = $hasExistingFotoJaminan ? 'nullable|array|max:50' : 'required|array|max:50';
-        $fileFotoItemValidation = 'file|mimes:pdf,jpg,jpeg,png,dwg|max:10240';
+        
+        // PERUBAHAN: mimes diubah menjadi jpg,jpeg,png saja
+        $fileFotoItemValidation = 'file|mimes:jpg,jpeg,png|max:10240';
 
         // 1. Validasi input sesuai dengan form & kondisi file
         $request->validate([
@@ -1083,13 +1086,16 @@ class MukController extends Controller
             ->first();
 
         // Tentukan apakah file wajib diisi (jika belum ada data sama sekali di database untuk urutan ini)
-        $fileGoogleMapsValidation = ($usaha && $usaha->google_maps) ? 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240' : 'required|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240';
-        $fileKodeQrValidation = ($usaha && $usaha->kode_qr) ? 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240' : 'required|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240';
+        // PERUBAHAN: mimes diubah menjadi jpg,jpeg,png saja
+        $fileGoogleMapsValidation = ($usaha && $usaha->google_maps) ? 'nullable|file|mimes:jpg,jpeg,png|max:10240' : 'required|file|mimes:jpg,jpeg,png|max:10240';
+        $fileKodeQrValidation = ($usaha && $usaha->kode_qr) ? 'nullable|file|mimes:jpg,jpeg,png|max:10240' : 'required|file|mimes:jpg,jpeg,png|max:10240';
         
         // Validasi Foto Usaha sebagai array (maksimal 50 file)
         $hasExistingFotoUsaha = $usaha && !empty($usaha->foto_usaha);
         $fileFotoValidation = $hasExistingFotoUsaha ? 'nullable|array|max:50' : 'required|array|max:50';
-        $fileFotoItemValidation = 'file|mimes:pdf,jpg,jpeg,png,dwg|max:10240';
+        
+        // PERUBAHAN: mimes diubah menjadi jpg,jpeg,png saja
+        $fileFotoItemValidation = 'file|mimes:jpg,jpeg,png|max:10240';
 
         // Validasi input (maksimal urutan disesuaikan menjadi 10)
         $request->validate([
@@ -1260,13 +1266,16 @@ class MukController extends Controller
         $rumah = Rumah::where('debitur_id', $debiturId)->first();
 
         // Tentukan apakah file wajib diisi (jika belum ada data sama sekali di database)
-        $fileValidation   = ($rumah && $rumah->google_maps) ? 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240' : 'required|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240';
-        $fileQrValidation = ($rumah && $rumah->kode_qr) ? 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240' : 'required|file|mimes:pdf,jpg,jpeg,png,dwg|max:10240';
+        // PERUBAHAN: mimes diubah menjadi jpg,jpeg,png saja
+        $fileValidation   = ($rumah && $rumah->google_maps) ? 'nullable|file|mimes:jpg,jpeg,png|max:10240' : 'required|file|mimes:jpg,jpeg,png|max:10240';
+        $fileQrValidation = ($rumah && $rumah->kode_qr) ? 'nullable|file|mimes:jpg,jpeg,png|max:10240' : 'required|file|mimes:jpg,jpeg,png|max:10240';
         
         // Validasi Foto Tempat Tinggal sebagai array (maksimal 50 file)
         $hasExistingFoto   = $rumah && !empty($rumah->foto_tempat_tinggal);
         $fileFotoValidation = $hasExistingFoto ? 'nullable|array|max:50' : 'required|array|max:50';
-        $fileFotoItemValidation = 'file|mimes:pdf,jpg,jpeg,png,dwg|max:10240';
+        
+        // PERUBAHAN: mimes diubah menjadi jpg,jpeg,png saja
+        $fileFotoItemValidation = 'file|mimes:jpg,jpeg,png|max:10240';
 
         // 1. Validasi input sesuai dengan form & kondisi file
         $request->validate([

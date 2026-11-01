@@ -76,9 +76,9 @@
                         Gambar Google Maps <span class="text-red-500">*</span>
                     </label>
                     <div id="container_file_google_maps" class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
-                        <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
+                        <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: JPG, JPEG, atau PNG. Maks 10 MB.</p>
                         
-                        <input type="file" id="file_google_maps" name="google_maps" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelect(this)"
+                        <input type="file" id="file_google_maps" name="google_maps" accept=".jpg, .jpeg, .png" class="hidden" onchange="handleFileSelect(this)"
                             {{ isset($data->google_maps) && $data->google_maps ? '' : 'required' }}
                             data-has-file="{{ isset($data->google_maps) && $data->google_maps ? 'true' : 'false' }}">
 
@@ -128,9 +128,9 @@
                         Kode QR Maps <span class="text-red-500">*</span>
                     </label>
                     <div id="container_file_kode_qr" class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
-                        <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: PDF, drawing, atau image. Maks 10 MB.</p>
+                        <p class="text-sm text-gray-500 mb-4">Upload 1 file yang didukung: JPG, JPEG, atau PNG. Maks 10 MB.</p>
                         
-                        <input type="file" id="file_kode_qr" name="kode_qr" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" onchange="handleFileSelectKodeQr(this)"
+                        <input type="file" id="file_kode_qr" name="kode_qr" accept=".jpg, .jpeg, .png" class="hidden" onchange="handleFileSelectKodeQr(this)"
                             {{ isset($data->kode_qr) && $data->kode_qr ? '' : 'required' }}
                             data-has-file="{{ isset($data->kode_qr) && $data->kode_qr ? 'true' : 'false' }}">
 
@@ -165,9 +165,9 @@
                         Foto Jaminan <span class="text-red-500">*</span>
                     </label>
                     <div id="container_file_foto_jaminan" class="w-full border border-gray-300 rounded-lg px-3 py-4 text-sm">
-                        <p class="text-sm text-gray-500 mb-4">Upload maksimal 50 file pendukung: PDF, drawing, atau image. Maks 10 MB per file.</p>
+                        <p class="text-sm text-gray-500 mb-4">Upload maksimal 50 file pendukung: JPG, JPEG, atau PNG. Maks 10 MB per file.</p>
                         
-                        <input type="file" id="file_foto_jaminan" name="foto_jaminan[]" accept=".pdf, .jpg, .jpeg, .png, .dwg" class="hidden" multiple onchange="handleFileSelectFotoJaminan(this)"
+                        <input type="file" id="file_foto_jaminan" name="foto_jaminan[]" accept=".jpg, .jpeg, .png" class="hidden" multiple onchange="handleFileSelectFotoJaminan(this)"
                             {{ isset($data->foto_jaminan) && $data->foto_jaminan ? '' : 'required' }}
                             data-has-file="{{ isset($data->foto_jaminan) && $data->foto_jaminan ? 'true' : 'false' }}">
 

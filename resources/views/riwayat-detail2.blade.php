@@ -219,14 +219,34 @@
                     <div class="grid grid-cols-1 sm:grid-cols-12">
                         <div class="p-8 sm:col-span-12">
                             @if(!empty($data->idi_di_bank_lain) && $data->idi_di_bank_lain !== '-')
-                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
-                                    <img 
-                                        src="{{ asset('storage/' . $data->idi_di_bank_lain) }}" 
-                                        alt="IDI di Bank Lain"
-                                        style="width: 700px; height: auto;"
-                                        class="block"
-                                    >
-                                </div>
+                                @php
+                                    $extension = strtolower(pathinfo($data->idi_di_bank_lain, PATHINFO_EXTENSION));
+                                @endphp
+
+                                {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan tombol Lihat Dokumen --}}
+                                @if(in_array($extension, ['pdf', 'dwg']))
+                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-4">
+                                        <a href="{{ asset('storage/' . $data->idi_di_bank_lain) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 text-[#0082CB] text-sm font-semibold rounded-md hover:bg-blue-100 transition shadow-xs">
+                                            <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                            </svg>
+                                            Lihat Dokumen ({{ strtoupper($extension) }})
+                                        </a>
+                                    </div>
+
+                                {{-- JIKA FILE BERUPA IMAGE (JPG, JPEG, PNG): Tampilkan gambar ukuran besar sesuai aslinya --}}
+                                @elseif(in_array($extension, ['jpg', 'jpeg', 'png']))
+                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                        <img 
+                                            src="{{ asset('storage/' . $data->idi_di_bank_lain) }}" 
+                                            alt="IDI di Bank Lain"
+                                            style="width: 700px; height: auto;"
+                                            class="block"
+                                        >
+                                    </div>
+                                @else
+                                    <span class="text-gray-600 text-sm">{{ basename($data->idi_di_bank_lain) }}</span>
+                                @endif
                             @else
                                 <span>-</span>
                             @endif
@@ -256,17 +276,37 @@
                     <!-- Pengajuan Plafon Kredit -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">
                         <div class="p-8 sm:col-span-12">
-                            {{-- Ubah pengecekan agar mengakses relasi dan kolom tabel plafon kredit dengan benar --}}
+                            {{-- Pengecekan aman berdasarkan relasi modelmu --}}
                             @if(!empty($data->pengajuan_plafon_kredit) && !empty($data->pengajuan_plafon_kredit->pengajuan_plafon_kredit) && $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit !== '-')
-                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
-                                    <img 
-                                        {{-- Tambahkan ->pengajuan_plafon_kredit di depan untuk mengambil path dari relasi model --}}
-                                        src="{{ asset('storage/' . $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit) }}" 
-                                        alt="Plafon Kredit"
-                                        style="width: 700px; height: auto;"
-                                        class="block"
-                                    >
-                                </div>
+                                @php
+                                    $filePath = $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit;
+                                    $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+                                @endphp
+
+                                {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan tombol Lihat Dokumen --}}
+                                @if(in_array($extension, ['pdf', 'dwg']))
+                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-4">
+                                        <a href="{{ asset('storage/' . $filePath) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 text-[#0082CB] text-sm font-semibold rounded-md hover:bg-blue-100 transition shadow-xs">
+                                            <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                            </svg>
+                                            Lihat Dokumen ({{ strtoupper($extension) }})
+                                        </a>
+                                    </div>
+
+                                {{-- JIKA FILE BERUPA IMAGE (JPG, JPEG, PNG): Tampilkan gambar ukuran 700px --}}
+                                @elseif(in_array($extension, ['jpg', 'jpeg', 'png']))
+                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                        <img 
+                                            src="{{ asset('storage/' . $filePath) }}" 
+                                            alt="Plafon Kredit"
+                                            style="width: 700px; height: auto;"
+                                            class="block"
+                                        >
+                                    </div>
+                                @else
+                                    <span class="text-gray-600 text-sm">{{ basename($filePath) }}</span>
+                                @endif
                             @else
                                 <span>-</span>
                             @endif
@@ -300,7 +340,7 @@
                         $usahaLainnya = $listUsaha->where('urutan', '>', 1);
                     @endphp
 
-                    {{-- 1. BAGIAN UTAMA (Urutan 1: Judul + Isi + Gambar) --}}
+                    {{-- 1. BAGIAN UTAMA (Urutan 1: Judul + Isi + Gambar/Dokumen) --}}
                     @if($usahaUtama && (!empty($usahaUtama->gambaran_pekerjaan_debitur) || !empty($usahaUtama->perhitungan_omset_usaha)))
                         <div class="grid grid-cols-1 sm:grid-cols-12 mb-4">
                             <div class="p-2 font-semibold sm:col-span-12 pl-8">
@@ -313,14 +353,35 @@
 
                             @if(!empty($usahaUtama->perhitungan_omset_usaha) && $usahaUtama->perhitungan_omset_usaha !== '-')
                                 <div class="py-2 px-8 sm:col-span-12 pl-8">
-                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
-                                        <img 
-                                            src="{{ asset('storage/' . $usahaUtama->perhitungan_omset_usaha) }}" 
-                                            alt="Perhitungan Omset Usaha"
-                                            style="width: 700px; height: auto;"
-                                            class="block"
-                                        >
-                                    </div>
+                                    @php
+                                        $fileOmsetUtama = $usahaUtama->perhitungan_omset_usaha;
+                                        $extOmsetUtama = strtolower(pathinfo($fileOmsetUtama, PATHINFO_EXTENSION));
+                                    @endphp
+
+                                    {{-- JIKA PDF ATAU DWG --}}
+                                    @if(in_array($extOmsetUtama, ['pdf', 'dwg']))
+                                        <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-4">
+                                            <a href="{{ asset('storage/' . $fileOmsetUtama) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 text-[#0082CB] text-sm font-semibold rounded-md hover:bg-blue-100 transition shadow-xs">
+                                                <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                                </svg>
+                                                Lihat Dokumen ({{ strtoupper($extOmsetUtama) }})
+                                            </a>
+                                        </div>
+
+                                    {{-- JIKA GAMBAR (JPG, JPEG, PNG) --}}
+                                    @elseif(in_array($extOmsetUtama, ['jpg', 'jpeg', 'png']))
+                                        <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                            <img 
+                                                src="{{ asset('storage/' . $fileOmsetUtama) }}" 
+                                                alt="Perhitungan Omset Usaha"
+                                                style="width: 700px; height: auto;"
+                                                class="block"
+                                            >
+                                        </div>
+                                    @else
+                                        <span class="text-gray-600 text-sm">{{ basename($fileOmsetUtama) }}</span>
+                                    @endif
                                 </div>
                             @endif
                         </div>
@@ -337,21 +398,42 @@
 
                                 @if(!empty($usaha->perhitungan_omset_usaha) && $usaha->perhitungan_omset_usaha !== '-')
                                     <div class="py-2 px-8 sm:col-span-12 pl-8">
-                                        <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
-                                            <img 
-                                                src="{{ asset('storage/' . $usaha->perhitungan_omset_usaha) }}" 
-                                                alt="Perhitungan Omset Usaha"
-                                                style="width: 700px; height: auto;"
-                                                class="block"
-                                            >
-                                        </div>
+                                        @php
+                                            $fileOmsetLain = $usaha->perhitungan_omset_usaha;
+                                            $extOmsetLain = strtolower(pathinfo($fileOmsetLain, PATHINFO_EXTENSION));
+                                        @endphp
+
+                                        {{-- JIKA PDF ATAU DWG --}}
+                                        @if(in_array($extOmsetLain, ['pdf', 'dwg']))
+                                            <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-4">
+                                                <a href="{{ asset('storage/' . $fileOmsetLain) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 text-[#0082CB] text-sm font-semibold rounded-md hover:bg-blue-100 transition shadow-xs">
+                                                    <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                                    </svg>
+                                                    Lihat Dokumen ({{ strtoupper($extOmsetLain) }})
+                                                </a>
+                                            </div>
+
+                                        {{-- JIKA GAMBAR (JPG, JPEG, PNG) --}}
+                                        @elseif(in_array($extOmsetLain, ['jpg', 'jpeg', 'png']))
+                                            <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                                <img 
+                                                    src="{{ asset('storage/' . $fileOmsetLain) }}" 
+                                                    alt="Perhitungan Omset Usaha"
+                                                    style="width: 700px; height: auto;"
+                                                    class="block"
+                                                >
+                                            </div>
+                                        @else
+                                            <span class="text-gray-600 text-sm">{{ basename($fileOmsetLain) }}</span>
+                                        @endif
                                     </div>
                                 @endif
                             </div>
                         @endif
                     @endforeach
 
-                    <!-- 2. Usaha Pendukung Lain -->
+                    {{-- 2. Usaha Pendukung Lain --}}
                     <div class="grid grid-cols-1 sm:grid-cols-12 mb-4">
                         <div class="p-2 font-semibold sm:col-span-12 pl-8">
                             2. Usaha Pendukung Lain
@@ -360,27 +442,49 @@
                             {{ $data->informasi_usaha->where('urutan', 1)->first()->usaha_pendukung ?? '-' }}
                         </div>
 
-                        {{-- Jika ada file omset pendukung, tampilkan gambarnya --}}
+                        {{-- Jika ada file omset pendukung, tampilkan gambar atau dokumennya --}}
                         @php
-                            $usahaUtama = $data->informasi_usaha->where('urutan', 1)->first();
+                            $usahaUtamaPendukung = $data->informasi_usaha->where('urutan', 1)->first();
                         @endphp
 
-                        @if(!empty($usahaUtama->perhitungan_omset_pendukung) && $usahaUtama->perhitungan_omset_pendukung !== '-')
+                        @if(!empty($usahaUtamaPendukung->perhitungan_omset_pendukung) && $usahaUtamaPendukung->perhitungan_omset_pendukung !== '-')
                             <div class="py-2 px-8 sm:col-span-12 pl-8">
-                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
-                                    <img 
-                                        src="{{ asset('storage/' . $usahaUtama->perhitungan_omset_pendukung) }}" 
-                                        alt="Perhitungan Omset Pendukung"
-                                        style="width: 700px; height: auto;"
-                                        class="block"
-                                    >
-                                </div>
+                                @php
+                                    $fileOmsetPendukung = $usahaUtamaPendukung->perhitungan_omset_pendukung;
+                                    $extOmsetPendukung = strtolower(pathinfo($fileOmsetPendukung, PATHINFO_EXTENSION));
+                                @endphp
+
+                                {{-- JIKA PDF ATAU DWG --}}
+                                @if(in_array($extOmsetPendukung, ['pdf', 'dwg']))
+                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-4">
+                                        <a href="{{ asset('storage/' . $fileOmsetPendukung) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 text-[#0082CB] text-sm font-semibold rounded-md hover:bg-blue-100 transition shadow-xs">
+                                            <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                            </svg>
+                                            Lihat Dokumen ({{ strtoupper($extOmsetPendukung) }})
+                                        </a>
+                                    </div>
+
+                                {{-- JIKA GAMBAR (JPG, JPEG, PNG) --}}
+                                @elseif(in_array($extOmsetPendukung, ['jpg', 'jpeg', 'png']))
+                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                        <img 
+                                            src="{{ asset('storage/' . $fileOmsetPendukung) }}" 
+                                            alt="Perhitungan Omset Pendukung"
+                                            style="width: 700px; height: auto;"
+                                            class="block"
+                                        >
+                                    </div>
+                                @else
+                                    <span class="text-gray-600 text-sm">{{ basename($fileOmsetPendukung) }}</span>
+                                @endif
                             </div>
                         @endif
                     </div>
-                
+
                 </div>
             </div>
+
             <!-- D. URAIAN SINGKAT MENGENAI 5 C -->
             <div class="mb-6">
                 <div class="text-[#0A3370] px-3.5 py-2 font-bold text-base uppercase rounded-none">
@@ -482,18 +586,39 @@
                             </div>
                         </div>
 
-                        <!-- Ringkasan Penilaian Jaminan -->
+                        <!-- Ringkasan Penilaian Jaminan (Support PDF, DWG, & Image) -->
                         <div class="grid grid-cols-1 sm:grid-cols-12">
                             <div class="p-8 sm:col-span-12">
                                 @if(!empty($collateral->ringkasan_penilaian_jaminan) && $collateral->ringkasan_penilaian_jaminan !== '-')
-                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
-                                        <img 
-                                            src="{{ asset('storage/' . $collateral->ringkasan_penilaian_jaminan) }}" 
-                                            alt="Ringkasan Penilaian Jaminan"
-                                            style="width: 700px; height: auto;"
-                                            class="block"
-                                        >
-                                    </div>
+                                    @php
+                                        $fileCollateral = $collateral->ringkasan_penilaian_jaminan;
+                                        $extCollateral = strtolower(pathinfo($fileCollateral, PATHINFO_EXTENSION));
+                                    @endphp
+
+                                    {{-- JIKA PDF ATAU DWG --}}
+                                    @if(in_array($extCollateral, ['pdf', 'dwg']))
+                                        <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-4">
+                                            <a href="{{ asset('storage/' . $fileCollateral) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 text-[#0082CB] text-sm font-semibold rounded-md hover:bg-blue-100 transition shadow-xs">
+                                                <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                                </svg>
+                                                Lihat Dokumen ({{ strtoupper($extCollateral) }})
+                                            </a>
+                                        </div>
+
+                                    {{-- JIKA GAMBAR (JPG, JPEG, PNG) --}}
+                                    @elseif(in_array($extCollateral, ['jpg', 'jpeg', 'png']))
+                                        <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                            <img 
+                                                src="{{ asset('storage/' . $fileCollateral) }}" 
+                                                alt="Ringkasan Penilaian Jaminan"
+                                                style="width: 700px; height: auto;"
+                                                class="block"
+                                            >
+                                        </div>
+                                    @else
+                                        <span class="text-gray-600 text-sm">{{ basename($fileCollateral) }}</span>
+                                    @endif
                                 @else
                                     <span>-</span>
                                 @endif
@@ -584,14 +709,35 @@
                     <div class="grid grid-cols-1 sm:grid-cols-12">
                         <div class="p-8 sm:col-span-12">
                             @if(!empty($data->limac->capacity) && $data->limac->capacity !== '-')
-                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
-                                    <img 
-                                        src="{{ asset('storage/' . $data->limac->capacity) }}" 
-                                        alt="Perhitungan Capacity"
-                                        style="width: 700px; height: auto;"
-                                        class="block"
-                                    >
-                                </div>
+                                @php
+                                    $fileCapacity = $data->limac->capacity;
+                                    $extCapacity = strtolower(pathinfo($fileCapacity, PATHINFO_EXTENSION));
+                                @endphp
+
+                                {{-- JIKA FILE BERUPA PDF ATAU DWG --}}
+                                @if(in_array($extCapacity, ['pdf', 'dwg']))
+                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-4">
+                                        <a href="{{ asset('storage/' . $fileCapacity) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 text-[#0082CB] text-sm font-semibold rounded-md hover:bg-blue-100 transition shadow-xs">
+                                            <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                            </svg>
+                                            Lihat Dokumen ({{ strtoupper($extCapacity) }})
+                                        </a>
+                                    </div>
+
+                                {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                                @elseif(in_array($extCapacity, ['jpg', 'jpeg', 'png']))
+                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                        <img 
+                                            src="{{ asset('storage/' . $fileCapacity) }}" 
+                                            alt="Perhitungan Capacity"
+                                            style="width: 700px; height: auto;"
+                                            class="block"
+                                        >
+                                    </div>
+                                @else
+                                    <span class="text-gray-600 text-sm">{{ basename($fileCapacity) }}</span>
+                                @endif
                             @else
                                 <span>-</span>
                             @endif
@@ -721,18 +867,39 @@
                         </div>
                     </div>
 
-                    <!-- Kesimpulan-->
+                    <!-- Kesimpulan -->
                     <div class="grid grid-cols-1 sm:grid-cols-12">
                         <div class="p-8 sm:col-span-12">
                             @if(!empty($data->kesimpulan) && !empty($data->kesimpulan->plafon) && $data->kesimpulan->plafon !== '-')
-                                <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
-                                    <img 
-                                        src="{{ asset('storage/' . $data->kesimpulan->plafon) }}" 
-                                        alt="Plafon Kredit"
-                                        style="width: 700px; height: auto;"
-                                        class="block"
-                                    >
-                                </div>
+                                @php
+                                    $fileKesimpulan = $data->kesimpulan->plafon;
+                                    $extKesimpulan = strtolower(pathinfo($fileKesimpulan, PATHINFO_EXTENSION));
+                                @endphp
+
+                                {{-- JIKA FILE BERUPA PDF ATAU DWG --}}
+                                @if(in_array($extKesimpulan, ['pdf', 'dwg']))
+                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-4">
+                                        <a href="{{ asset('storage/' . $fileKesimpulan) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 text-[#0082CB] text-sm font-semibold rounded-md hover:bg-blue-100 transition shadow-xs">
+                                            <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                            </svg>
+                                            Lihat Dokumen ({{ strtoupper($extKesimpulan) }})
+                                        </a>
+                                    </div>
+
+                                {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                                @elseif(in_array($extKesimpulan, ['jpg', 'jpeg', 'png']))
+                                    <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                        <img 
+                                            src="{{ asset('storage/' . $fileKesimpulan) }}" 
+                                            alt="Plafon Kredit"
+                                            style="width: 700px; height: auto;"
+                                            class="block"
+                                        >
+                                    </div>
+                                @else
+                                    <span class="text-gray-600 text-sm">{{ basename($fileKesimpulan) }}</span>
+                                @endif
                             @else
                                 <span>-</span>
                             @endif
@@ -1401,14 +1568,35 @@
             <div class="grid grid-cols-1 sm:grid-cols-12">
                 <div class="p-8 sm:col-span-12">
                     @if(!empty($data->denah) && !empty($data->denah->denah_jaminan) && $data->denah->denah_jaminan !== '-')
-                        <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
-                            <img 
-                                src="{{ asset('storage/' . $data->denah->denah_jaminan) }}" 
-                                alt="Denah"
-                                style="width: 700px; height: auto;"
-                                class="block"
-                            >
-                        </div>
+                        @php
+                            $fileDenah = $data->denah->denah_jaminan;
+                            $extDenah = strtolower(pathinfo($fileDenah, PATHINFO_EXTENSION));
+                        @endphp
+
+                        {{-- JIKA FILE BERUPA PDF ATAU DWG --}}
+                        @if(in_array($extDenah, ['pdf', 'dwg']))
+                            <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-4">
+                                <a href="{{ asset('storage/' . $fileDenah) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 text-[#0082CB] text-sm font-semibold rounded-md hover:bg-blue-100 transition shadow-xs">
+                                    <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                    </svg>
+                                    Lihat Dokumen ({{ strtoupper($extDenah) }})
+                                </a>
+                            </div>
+
+                        {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                        @elseif(in_array($extDenah, ['jpg', 'jpeg', 'png']))
+                            <div class="inline-block border border-gray-200 rounded overflow-hidden bg-white shadow-sm p-1.5">
+                                <img 
+                                    src="{{ asset('storage/' . $fileDenah) }}" 
+                                    alt="Denah"
+                                    style="width: 700px; height: auto;"
+                                    class="block"
+                                >
+                            </div>
+                        @else
+                            <span class="text-gray-600 text-sm">{{ basename($fileDenah) }}</span>
+                        @endif
                     @else
                         <span>-</span>
                     @endif

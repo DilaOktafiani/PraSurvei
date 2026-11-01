@@ -213,13 +213,29 @@
                         </div>
                         <div style="margin-top: 5px;">
                             @if(!empty($data->idi_di_bank_lain) && $data->idi_di_bank_lain !== '-')
-                                <div style="display: inline-block; padding: 2px;">
-                                    <img 
-                                        src="{{ asset('storage/' . $data->idi_di_bank_lain) }}" 
-                                        alt="IDI di Bank Lain"
-                                        style="max-width: 100%; height: auto; display: block;"
-                                    >
-                                </div>
+                                @php
+                                    $fileSlik = $data->idi_di_bank_lain;
+                                    $extSlik = strtolower(pathinfo($fileSlik, PATHINFO_EXTENSION));
+                                @endphp
+
+                                {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran --}}
+                                @if(in_array($extSlik, ['pdf', 'dwg']))
+                                    <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
+                                        [Lampiran Dokumen {{ strtoupper($extSlik) }}: {{ basename($fileSlik) }} - Harap periksa file digital]
+                                    </div>
+
+                                {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                                @elseif(in_array($extSlik, ['jpg', 'jpeg', 'png']))
+                                    <div style="display: inline-block; padding: 2px; border: 1px solid #e5e7eb; border-radius: 4px; background-color: #ffffff;">
+                                        <img 
+                                            src="{{ asset('storage/' . $fileSlik) }}" 
+                                            alt="IDI di Bank Lain"
+                                            style="max-width: 100%; height: auto; display: block;"
+                                        >
+                                    </div>
+                                @else
+                                    <span style="color: #4b5563; font-size: 13px;">{{ basename($fileSlik) }}</span>
+                                @endif
                             @else
                                 <span>-</span>
                             @endif
@@ -251,13 +267,29 @@
                     <div style="padding-left: 5%; padding-right: 5%; margin-top: 5px;">
                         <div style="margin-top: 5px;">
                             @if(!empty($data->pengajuan_plafon_kredit->pengajuan_plafon_kredit) && $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit !== '-')
-                                <div style="display: inline-block; padding: 2px;">
-                                    <img 
-                                        src="{{ asset('storage/' . $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit) }}" 
-                                        alt="Plafon Kredit"
-                                        style="max-width: 100%; height: auto; display: block;"
-                                    >
-                                </div>
+                                @php
+                                    $filePlafon = $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit;
+                                    $extPlafon = strtolower(pathinfo($filePlafon, PATHINFO_EXTENSION));
+                                @endphp
+
+                                {{-- JIKA FILE BERUPA PDF, DWG, ATAU DWF: Tampilkan sebagai teks/lampiran --}}
+                                @if(in_array($extPlafon, ['pdf', 'dwg', 'dwf']))
+                                    <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
+                                        [Lampiran Dokumen {{ strtoupper($extPlafon) }}: {{ basename($filePlafon) }} - Harap periksa file digital]
+                                    </div>
+
+                                {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG): Tampilkan gambarnya --}}
+                                @elseif(in_array($extPlafon, ['jpg', 'jpeg', 'png']))
+                                    <div style="display: inline-block; padding: 2px;">
+                                        <img 
+                                            src="{{ asset('storage/' . $filePlafon) }}" 
+                                            alt="Plafon Kredit"
+                                            style="max-width: 100%; height: auto; display: block;"
+                                        >
+                                    </div>
+                                @else
+                                    <span style="color: #4b5563; font-size: 13px;">{{ basename($filePlafon) }}</span>
+                                @endif
                             @else
                                 <span>-</span>
                             @endif
@@ -506,13 +538,29 @@
                         <!-- Gambar Capacity -->
                         <div style="margin-top: 5px;">
                             @if(!empty($data->limac->capacity) && $data->limac->capacity !== '-')
-                                <div style="display: inline-block; padding: 2px;">
-                                    <img 
-                                        src="{{ asset('storage/' . $data->limac->capacity) }}" 
-                                        alt="Perhitungan Capacity"
-                                        style="max-width: 100%; height: auto; display: block;"
-                                    >
-                                </div>
+                                @php
+                                    $fileCapacity = $data->limac->capacity;
+                                    $extCapacity = strtolower(pathinfo($fileCapacity, PATHINFO_EXTENSION));
+                                @endphp
+
+                                {{-- JIKA FILE BERUPA PDF, DWG, ATAU DWF: Tampilkan sebagai teks/lampiran --}}
+                                @if(in_array($extCapacity, ['pdf', 'dwg', 'dwf']))
+                                    <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
+                                        [Lampiran Dokumen {{ strtoupper($extCapacity) }}: {{ basename($fileCapacity) }} - Harap periksa file digital]
+                                    </div>
+
+                                {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG): Tampilkan gambarnya --}}
+                                @elseif(in_array($extCapacity, ['jpg', 'jpeg', 'png']))
+                                    <div style="display: inline-block; padding: 2px;">
+                                        <img 
+                                            src="{{ asset('storage/' . $fileCapacity) }}" 
+                                            alt="Perhitungan Capacity"
+                                            style="max-width: 100%; height: auto; display: block;"
+                                        >
+                                    </div>
+                                @else
+                                    <span style="color: #4b5563; font-size: 13px;">{{ basename($fileCapacity) }}</span>
+                                @endif
                             @else
                                 <span>-</span>
                             @endif
@@ -607,13 +655,29 @@
                     <!-- Gambar Plafon / Kesimpulan -->
                     <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
                         @if(!empty($data->kesimpulan) && !empty($data->kesimpulan->plafon) && $data->kesimpulan->plafon !== '-')
-                            <div style="display: inline-block; padding: 2px;">
-                                <img 
-                                    src="{{ asset('storage/' . $data->kesimpulan->plafon) }}" 
-                                    alt="Plafon Kredit"
-                                    style="max-width: 100%; height: auto; display: block;"
-                                >
-                            </div>
+                            @php
+                                $fileKesimpulan = $data->kesimpulan->plafon;
+                                $extKesimpulan = strtolower(pathinfo($fileKesimpulan, PATHINFO_EXTENSION));
+                            @endphp
+
+                            {{-- JIKA FILE BERUPA PDF, DWG, ATAU DWF: Tampilkan sebagai teks/lampiran --}}
+                            @if(in_array($extKesimpulan, ['pdf', 'dwg', 'dwf']))
+                                <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
+                                    [Lampiran Dokumen {{ strtoupper($extKesimpulan) }}: {{ basename($fileKesimpulan) }} - Harap periksa file digital]
+                                </div>
+
+                            {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG): Tampilkan gambarnya --}}
+                            @elseif(in_array($extKesimpulan, ['jpg', 'jpeg', 'png']))
+                                <div style="display: inline-block; padding: 2px;">
+                                    <img 
+                                        src="{{ asset('storage/' . $fileKesimpulan) }}" 
+                                        alt="Plafon Kredit"
+                                        style="max-width: 100%; height: auto; display: block;"
+                                    >
+                                </div>
+                            @else
+                                <span style="color: #4b5563; font-size: 13px;">{{ basename($fileKesimpulan) }}</span>
+                            @endif
                         @else
                             <span>-</span>
                         @endif
@@ -1205,7 +1269,7 @@
         </div>
 
         <!-- DENAH JAMINAN -->
-        <div class="page-container" style="page-break-before: always; break-before: page;">   
+        <div class="page-container" style="page-break-before: always; break-before: page;">  
             <div class="mb-6">
                 <!-- Header Section -->
                 <div class="section-header" style="text-align: center;">
@@ -1216,13 +1280,29 @@
                     <!-- Denah -->
                     <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
                         @if(!empty($data->denah) && !empty($data->denah->denah_jaminan) && $data->denah->denah_jaminan !== '-')
-                            <div style="display: inline-block; padding: 2px;">
-                                <img 
-                                    src="{{ asset('storage/' . $data->denah->denah_jaminan) }}" 
-                                    alt="Denah"
-                                    style="max-width: 100%; height: auto; display: block;"
-                                >
-                            </div>
+                            @php
+                                $fileDenah = $data->denah->denah_jaminan;
+                                $extDenah = strtolower(pathinfo($fileDenah, PATHINFO_EXTENSION));
+                            @endphp
+
+                            {{-- JIKA FILE BERUPA PDF, DWG, ATAU DWF: Tampilkan sebagai teks/lampiran --}}
+                            @if(in_array($extDenah, ['pdf', 'dwg', 'dwf']))
+                                <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
+                                    [Lampiran Dokumen {{ strtoupper($extDenah) }}: {{ basename($fileDenah) }} - Harap periksa file digital]
+                                </div>
+
+                            {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG): Tampilkan gambarnya --}}
+                            @elseif(in_array($extDenah, ['jpg', 'jpeg', 'png']))
+                                <div style="display: inline-block; padding: 2px;">
+                                    <img 
+                                        src="{{ asset('storage/' . $fileDenah) }}" 
+                                        alt="Denah"
+                                        style="max-width: 100%; height: auto; display: block;"
+                                    >
+                                </div>
+                            @else
+                                <span style="color: #4b5563; font-size: 13px;">{{ basename($fileDenah) }}</span>
+                            @endif
                         @else
                             <span>-</span>
                         @endif
