@@ -25,7 +25,7 @@
         text-align: center;
         font-size: 12pt;
         margin: 0 0 15px 0;
-        color: #0A3370;
+        color: #000000;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
@@ -86,6 +86,7 @@
 </head>
 
 <body>
+    
     <div class="page-container">
         <h2 class="main-title">ANALISA KREDIT</h2>
 
@@ -196,20 +197,50 @@
                     </table>
 
                     <!-- Hasil Slik & Gambar -->
-                    <div style="padding-left: 5%; margin-top: 10px;">
+                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
                         <div style="font-weight: normal;">
                             Hasil Slik, Tanggal {{ $data->tanggal_slik ?? '-' }}
                         </div>
                         <div style="margin-top: 5px;">
-                            @if(!empty($data->idi_di_bank_lain_base64))
-                                <div style="display: inline-block; padding: 2px;">
-                                    <!-- Langsung gunakan variabel _base64 dari controller -->
-                                    <img 
-                                        src="{{ $data->idi_di_bank_lain_base64 }}" 
-                                        alt="IDI di Bank Lain"
-                                        style="max-width: 100%; height: auto; display: block;"
-                                    >
-                                </div>
+                            @if(!empty($data->idi_di_bank_lain) && $data->idi_di_bank_lain !== '-')
+                                @php
+                                    $fileSlik = $data->idi_di_bank_lain;
+                                    $extSlik = strtolower(pathinfo($fileSlik, PATHINFO_EXTENSION));
+                                @endphp
+
+                                {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran kotak --}}
+                                @if(in_array($extSlik, ['pdf', 'dwg']))
+                                    <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
+                                        [Lampiran Dokumen {{ strtoupper($extSlik) }}: {{ basename($fileSlik) }} - Harap periksa file digital]
+                                    </div>
+
+                                {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                                @elseif(in_array($extSlik, ['jpg', 'jpeg', 'png']))
+                                    @php
+                                        // Mengubah path menjadi absolute path di server (mengatasi masalah PDF generator)
+                                        $imagePath = storage_path('app/public/' . $fileSlik);
+                                        
+                                        // Fallback jika disimpan di public/storage langsung
+                                        if (!file_exists($imagePath)) {
+                                            $imagePath = public_path('storage/' . $fileSlik);
+                                        }
+                                    @endphp
+
+                                    @if(file_exists($imagePath))
+                                        {{-- Wrapper dengan padding seimbang (kiri-kanan) dan border rapi --}}
+                                        <div style="display: inline-block; padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 4px; background-color: #ffffff; max-width: 100%;">
+                                            <img 
+                                                src="{{ $imagePath }}" 
+                                                alt="IDI di Bank Lain"
+                                                style="max-width: 100%; height: auto; display: block; margin: 0 auto;"
+                                            >
+                                        </div>
+                                    @else
+                                        <span style="color: #4b5563; font-size: 13px;">File gambar tidak ditemukan di server: {{ basename($fileSlik) }}</span>
+                                    @endif
+                                @else
+                                    <span style="color: #4b5563; font-size: 13px;">{{ basename($fileSlik) }}</span>
+                                @endif
                             @else
                                 <span>-</span>
                             @endif
@@ -243,24 +274,39 @@
                         <div style="margin-top: 5px;">
                             @if(!empty($data->pengajuan_plafon_kredit->pengajuan_plafon_kredit) && $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit !== '-')
                                 @php
-                                    $plafonImage = $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit;
-                                    $imagePath = storage_path('app/public/' . $plafonImage);
-                                    
-                                    if (!file_exists($imagePath)) {
-                                        $imagePath = public_path('storage/' . $plafonImage);
-                                    }
+                                    $filePlafon = $data->pengajuan_plafon_kredit->pengajuan_plafon_kredit;
+                                    $extPlafon = strtolower(pathinfo($filePlafon, PATHINFO_EXTENSION));
                                 @endphp
 
-                                @if(file_exists($imagePath))
-                                    <div style="display: inline-block; padding: 2px;">
-                                        <img 
-                                            src="{{ $imagePath }}" 
-                                            alt="Plafon Kredit"
-                                            style="max-width: 100%; height: auto; display: block;"
-                                        >
+                                {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran kotak --}}
+                                @if(in_array($extPlafon, ['pdf', 'dwg']))
+                                    <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block; margin: 2px 0;">
+                                        [Lampiran Dokumen {{ strtoupper($extPlafon) }}: {{ basename($filePlafon) }} - Harap periksa file digital]
                                     </div>
+
+                                {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                                @elseif(in_array($extPlafon, ['jpg', 'jpeg', 'png']))
+                                    @php
+                                        $imagePath = storage_path('app/public/' . $filePlafon);
+                                        
+                                        if (!file_exists($imagePath)) {
+                                            $imagePath = public_path('storage/' . $filePlafon);
+                                        }
+                                    @endphp
+
+                                    @if(file_exists($imagePath))
+                                        <div style="display: inline-block; padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 4px; background-color: #ffffff; max-width: 100%;">
+                                            <img 
+                                                src="{{ $imagePath }}" 
+                                                alt="Plafon Kredit"
+                                                style="max-width: 100%; height: auto; display: block; margin: 0 auto;"
+                                            >
+                                        </div>
+                                    @else
+                                        <span style="color: #4b5563; font-size: 13px;">File gambar plafon kredit tidak ditemukan di server: {{ basename($filePlafon) }}</span>
+                                    @endif
                                 @else
-                                    <span>File gambar plafon kredit tidak ditemukan di server.</span>
+                                    <span style="color: #4b5563; font-size: 13px;">{{ basename($filePlafon) }}</span>
                                 @endif
                             @else
                                 <span>-</span>
@@ -308,24 +354,39 @@
 
                             @if(!empty($usahaUtama->perhitungan_omset_usaha) && $usahaUtama->perhitungan_omset_usaha !== '-')
                                 @php
-                                    $imgOmsetUtama = $usahaUtama->perhitungan_omset_usaha;
-                                    $pathOmsetUtama = storage_path('app/public/' . $imgOmsetUtama);
-                                    if (!file_exists($pathOmsetUtama)) {
-                                        $pathOmsetUtama = public_path('storage/' . $imgOmsetUtama);
-                                    }
+                                    $fileOmsetUtama = $usahaUtama->perhitungan_omset_usaha;
+                                    $extOmsetUtama = strtolower(pathinfo($fileOmsetUtama, PATHINFO_EXTENSION));
                                 @endphp
 
                                 <div style="margin-top: 5px;">
-                                    @if(file_exists($pathOmsetUtama))
-                                        <div style="display: inline-block; padding: 2px;">
-                                            <img 
-                                                src="{{ $pathOmsetUtama }}" 
-                                                alt="Perhitungan Omset Usaha"
-                                                style="max-width: 100%; height: auto; display: block;"
-                                            >
+                                    {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran kotak --}}
+                                    @if(in_array($extOmsetUtama, ['pdf', 'dwg']))
+                                        <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block; margin: 2px 0;">
+                                            [Lampiran Dokumen {{ strtoupper($extOmsetUtama) }}: {{ basename($fileOmsetUtama) }} - Harap periksa file digital]
                                         </div>
+
+                                    {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                                    @elseif(in_array($extOmsetUtama, ['jpg', 'jpeg', 'png']))
+                                        @php
+                                            $pathOmsetUtama = storage_path('app/public/' . $fileOmsetUtama);
+                                            if (!file_exists($pathOmsetUtama)) {
+                                                $pathOmsetUtama = public_path('storage/' . $fileOmsetUtama);
+                                            }
+                                        @endphp
+
+                                        @if(file_exists($pathOmsetUtama))
+                                            <div style="display: inline-block; padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 4px; background-color: #ffffff; max-width: 100%;">
+                                                <img 
+                                                    src="{{ $pathOmsetUtama }}" 
+                                                    alt="Perhitungan Omset Usaha"
+                                                    style="max-width: 100%; height: auto; display: block; margin: 0 auto;"
+                                                >
+                                            </div>
+                                        @else
+                                            <span style="font-size: 11px; color: red;">[File gambar omset usaha utama tidak ditemukan di server: {{ basename($fileOmsetUtama) }}]</span>
+                                        @endif
                                     @else
-                                        <span style="font-size: 11px; color: red;">[File gambar omset usaha utama tidak ditemukan di server]</span>
+                                        <span style="color: #4b5563; font-size: 13px;">{{ basename($fileOmsetUtama) }}</span>
                                     @endif
                                 </div>
                             @endif
@@ -342,24 +403,39 @@
 
                                 @if(!empty($usaha->perhitungan_omset_usaha) && $usaha->perhitungan_omset_usaha !== '-')
                                     @php
-                                        $imgOmsetLain = $usaha->perhitungan_omset_usaha;
-                                        $pathOmsetLain = storage_path('app/public/' . $imgOmsetLain);
-                                        if (!file_exists($pathOmsetLain)) {
-                                            $pathOmsetLain = public_path('storage/' . $imgOmsetLain);
-                                        }
+                                        $fileOmsetLain = $usaha->perhitungan_omset_usaha;
+                                        $extOmsetLain = strtolower(pathinfo($fileOmsetLain, PATHINFO_EXTENSION));
                                     @endphp
 
                                     <div style="margin-top: 5px;">
-                                        @if(file_exists($pathOmsetLain))
-                                            <div style="display: inline-block; padding: 2px;">
-                                                <img 
-                                                    src="{{ $pathOmsetLain }}" 
-                                                    alt="Perhitungan Omset Usaha"
-                                                    style="max-width: 100%; height: auto; display: block;"
-                                                >
+                                        {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran kotak --}}
+                                        @if(in_array($extOmsetLain, ['pdf', 'dwg']))
+                                            <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block; margin: 2px 0;">
+                                                [Lampiran Dokumen {{ strtoupper($extOmsetLain) }}: {{ basename($fileOmsetLain) }} - Harap periksa file digital]
                                             </div>
+
+                                        {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                                        @elseif(in_array($extOmsetLain, ['jpg', 'jpeg', 'png']))
+                                            @php
+                                                $pathOmsetLain = storage_path('app/public/' . $fileOmsetLain);
+                                                if (!file_exists($pathOmsetLain)) {
+                                                    $pathOmsetLain = public_path('storage/' . $fileOmsetLain);
+                                                }
+                                            @endphp
+
+                                            @if(file_exists($pathOmsetLain))
+                                                <div style="display: inline-block; padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 4px; background-color: #ffffff; max-width: 100%;">
+                                                    <img 
+                                                        src="{{ $pathOmsetLain }}" 
+                                                        alt="Perhitungan Omset Usaha"
+                                                        style="max-width: 100%; height: auto; display: block; margin: 0 auto;"
+                                                    >
+                                                </div>
+                                            @else
+                                                <span style="font-size: 11px; color: red;">[File gambar omset usaha tambahan tidak ditemukan di server: {{ basename($fileOmsetLain) }}]</span>
+                                            @endif
                                         @else
-                                            <span style="font-size: 11px; color: red;">[File gambar omset usaha tambahan tidak ditemukan di server]</span>
+                                            <span style="color: #4b5563; font-size: 13px;">{{ basename($fileOmsetLain) }}</span>
                                         @endif
                                     </div>
                                 @endif
@@ -379,24 +455,39 @@
 
                             @if(!empty($usahaUtama->perhitungan_omset_pendukung) && $usahaUtama->perhitungan_omset_pendukung !== '-')
                                 @php
-                                    $imgPendukung = $usahaUtama->perhitungan_omset_pendukung;
-                                    $pathPendukung = storage_path('app/public/' . $imgPendukung);
-                                    if (!file_exists($pathPendukung)) {
-                                        $pathPendukung = public_path('storage/' . $imgPendukung);
-                                    }
+                                    $filePendukung = $usahaUtama->perhitungan_omset_pendukung;
+                                    $extPendukung = strtolower(pathinfo($filePendukung, PATHINFO_EXTENSION));
                                 @endphp
 
                                 <div style="margin-top: 5px;">
-                                    @if(file_exists($pathPendukung))
-                                        <div style="display: inline-block; padding: 2px;">
-                                            <img 
-                                                src="{{ $pathPendukung }}" 
-                                                alt="Perhitungan Omset Pendukung"
-                                                style="max-width: 100%; height: auto; display: block;"
-                                            >
+                                    {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran kotak --}}
+                                    @if(in_array($extPendukung, ['pdf', 'dwg']))
+                                        <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block; margin: 2px 0;">
+                                            [Lampiran Dokumen {{ strtoupper($extPendukung) }}: {{ basename($filePendukung) }} - Harap periksa file digital]
                                         </div>
+
+                                    {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                                    @elseif(in_array($extPendukung, ['jpg', 'jpeg', 'png']))
+                                        @php
+                                            $pathPendukung = storage_path('app/public/' . $filePendukung);
+                                            if (!file_exists($pathPendukung)) {
+                                                $pathPendukung = public_path('storage/' . $filePendukung);
+                                            }
+                                        @endphp
+
+                                        @if(file_exists($pathPendukung))
+                                            <div style="display: inline-block; padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 4px; background-color: #ffffff; max-width: 100%;">
+                                                <img 
+                                                    src="{{ $pathPendukung }}" 
+                                                    alt="Perhitungan Omset Pendukung"
+                                                    style="max-width: 100%; height: auto; display: block; margin: 0 auto;"
+                                                >
+                                            </div>
+                                        @else
+                                            <span style="font-size: 11px; color: red;">[File gambar omset pendukung tidak ditemukan di server: {{ basename($filePendukung) }}]</span>
+                                        @endif
                                     @else
-                                        <span style="font-size: 11px; color: red;">[File gambar omset pendukung tidak ditemukan di server]</span>
+                                        <span style="color: #4b5563; font-size: 13px;">{{ basename($filePendukung) }}</span>
                                     @endif
                                 </div>
                             @endif
@@ -472,7 +563,7 @@
                                 </table>
                             </div>
 
-                            <!-- Gambar Ringkasan Penilaian Jaminan -->
+                            <!-- Gambar / Dokumen Ringkasan Penilaian Jaminan -->
                             <div style="padding-left: 0%; margin-top: 10px;">
                                 <div style="font-weight: normal;">
                                     Ringkasan Penilaian Jaminan, Tanggal {{ $collateral->tanggal ?? '-' }}
@@ -480,23 +571,38 @@
                                 <div style="margin-top: 5px;">
                                     @if(!empty($collateral->ringkasan_penilaian_jaminan) && $collateral->ringkasan_penilaian_jaminan !== '-')
                                         @php
-                                            $imgCollateral = $collateral->ringkasan_penilaian_jaminan;
-                                            $pathCollateral = storage_path('app/public/' . $imgCollateral);
-                                            if (!file_exists($pathCollateral)) {
-                                                $pathCollateral = public_path('storage/' . $imgCollateral);
-                                            }
+                                            $fileCollateral = $collateral->ringkasan_penilaian_jaminan;
+                                            $extCollateral = strtolower(pathinfo($fileCollateral, PATHINFO_EXTENSION));
                                         @endphp
 
-                                        @if(file_exists($pathCollateral))
-                                            <div style="display: inline-block; padding: 2px;">
-                                                <img 
-                                                    src="{{ $pathCollateral }}" 
-                                                    alt="Ringkasan Penilaian Jaminan"
-                                                    style="max-width: 100%; height: auto; display: block;"
-                                                >
+                                        {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran kotak --}}
+                                        @if(in_array($extCollateral, ['pdf', 'dwg']))
+                                            <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block; margin: 2px 0;">
+                                                [Lampiran Dokumen {{ strtoupper($extCollateral) }}: {{ basename($fileCollateral) }} - Harap periksa file digital]
                                             </div>
+
+                                        {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                                        @elseif(in_array($extCollateral, ['jpg', 'jpeg', 'png']))
+                                            @php
+                                                $pathCollateral = storage_path('app/public/' . $fileCollateral);
+                                                if (!file_exists($pathCollateral)) {
+                                                    $pathCollateral = public_path('storage/' . $fileCollateral);
+                                                }
+                                            @endphp
+
+                                            @if(file_exists($pathCollateral))
+                                                <div style="display: inline-block; padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 4px; background-color: #ffffff; max-width: 100%;">
+                                                    <img 
+                                                        src="{{ $pathCollateral }}" 
+                                                        alt="Ringkasan Penilaian Jaminan"
+                                                        style="max-width: 100%; height: auto; display: block; margin: 0 auto;"
+                                                    >
+                                                </div>
+                                            @else
+                                                <span style="font-size: 11px; color: red;">[File gambar ringkasan penilaian jaminan tidak ditemukan di server: {{ basename($fileCollateral) }}]</span>
+                                            @endif
                                         @else
-                                            <span style="font-size: 11px; color: red;">[File gambar ringkasan penilaian jaminan tidak ditemukan di server]</span>
+                                            <span style="color: #4b5563; font-size: 13px;">{{ basename($fileCollateral) }}</span>
                                         @endif
                                     @else
                                         <span>-</span>
@@ -559,23 +665,38 @@
                         <div style="margin-top: 5px;">
                             @if(!empty($data->limac->capacity) && $data->limac->capacity !== '-')
                                 @php
-                                    $imgCapacity = $data->limac->capacity;
-                                    $pathCapacity = storage_path('app/public/' . $imgCapacity);
-                                    if (!file_exists($pathCapacity)) {
-                                        $pathCapacity = public_path('storage/' . $imgCapacity);
-                                    }
+                                    $fileCapacity = $data->limac->capacity;
+                                    $extCapacity = strtolower(pathinfo($fileCapacity, PATHINFO_EXTENSION));
                                 @endphp
 
-                                @if(file_exists($pathCapacity))
-                                    <div style="display: inline-block; padding: 2px;">
-                                        <img 
-                                            src="{{ $pathCapacity }}" 
-                                            alt="Perhitungan Capacity"
-                                            style="max-width: 100%; height: auto; display: block;"
-                                        >
+                                {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran kotak --}}
+                                @if(in_array($extCapacity, ['pdf', 'dwg']))
+                                    <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block; margin: 2px 0;">
+                                        [Lampiran Dokumen {{ strtoupper($extCapacity) }}: {{ basename($fileCapacity) }} - Harap periksa file digital]
                                     </div>
+
+                                {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                                @elseif(in_array($extCapacity, ['jpg', 'jpeg', 'png']))
+                                    @php
+                                        $pathCapacity = storage_path('app/public/' . $fileCapacity);
+                                        if (!file_exists($pathCapacity)) {
+                                            $pathCapacity = public_path('storage/' . $fileCapacity);
+                                        }
+                                    @endphp
+
+                                    @if(file_exists($pathCapacity))
+                                        <div style="display: inline-block; padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 4px; background-color: #ffffff; max-width: 100%;">
+                                            <img 
+                                                src="{{ $pathCapacity }}" 
+                                                alt="Perhitungan Capacity"
+                                                style="max-width: 100%; height: auto; display: block; margin: 0 auto;"
+                                            >
+                                        </div>
+                                    @else
+                                        <span style="font-size: 11px; color: red;">[File gambar capacity tidak ditemukan di server: {{ basename($fileCapacity) }}]</span>
+                                    @endif
                                 @else
-                                    <span style="font-size: 11px; color: red;">[File gambar capacity tidak ditemukan di server]</span>
+                                    <span style="color: #4b5563; font-size: 13px;">{{ basename($fileCapacity) }}</span>
                                 @endif
                             @else
                                 <span>-</span>
@@ -672,23 +793,38 @@
                     <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
                         @if(!empty($data->kesimpulan) && !empty($data->kesimpulan->plafon) && $data->kesimpulan->plafon !== '-')
                             @php
-                                $imgPlafonKesimpulan = $data->kesimpulan->plafon;
-                                $pathPlafonKesimpulan = storage_path('app/public/' . $imgPlafonKesimpulan);
-                                if (!file_exists($pathPlafonKesimpulan)) {
-                                    $pathPlafonKesimpulan = public_path('storage/' . $imgPlafonKesimpulan);
-                                }
+                                $fileKesimpulanPlafon = $data->kesimpulan->plafon;
+                                $extKesimpulanPlafon = strtolower(pathinfo($fileKesimpulanPlafon, PATHINFO_EXTENSION));
                             @endphp
 
-                            @if(file_exists($pathPlafonKesimpulan))
-                                <div style="display: inline-block; padding: 2px;">
-                                    <img 
-                                        src="{{ $pathPlafonKesimpulan }}" 
-                                        alt="Plafon Kredit"
-                                        style="max-width: 100%; height: auto; display: block;"
-                                    >
+                            {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran kotak --}}
+                            @if(in_array($extKesimpulanPlafon, ['pdf', 'dwg']))
+                                <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block; margin: 2px 0;">
+                                    [Lampiran Dokumen {{ strtoupper($extKesimpulanPlafon) }}: {{ basename($fileKesimpulanPlafon) }} - Harap periksa file digital]
                                 </div>
+
+                            {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                            @elseif(in_array($extKesimpulanPlafon, ['jpg', 'jpeg', 'png']))
+                                @php
+                                    $pathPlafonKesimpulan = storage_path('app/public/' . $fileKesimpulanPlafon);
+                                    if (!file_exists($pathPlafonKesimpulan)) {
+                                        $pathPlafonKesimpulan = public_path('storage/' . $fileKesimpulanPlafon);
+                                    }
+                                @endphp
+
+                                @if(file_exists($pathPlafonKesimpulan))
+                                    <div style="display: inline-block; padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 4px; background-color: #ffffff; max-width: 100%;">
+                                        <img 
+                                            src="{{ $pathPlafonKesimpulan }}" 
+                                            alt="Plafon Kredit"
+                                            style="max-width: 100%; height: auto; display: block; margin: 0 auto;"
+                                        >
+                                    </div>
+                                @else
+                                    <span style="font-size: 11px; color: red;">[File gambar plafon kesimpulan tidak ditemukan di server: {{ basename($fileKesimpulanPlafon) }}]</span>
+                                @endif
                             @else
-                                <span style="font-size: 11px; color: red;">[File gambar plafon kesimpulan tidak ditemukan di server]</span>
+                                <span style="color: #4b5563; font-size: 13px;">{{ basename($fileKesimpulanPlafon) }}</span>
                             @endif
                         @else
                             <span>-</span>
@@ -1255,101 +1391,102 @@
                             <!-- 1. Sertifikat -->
                             <tr>
                                 <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">1.</td>
-                                <td style="width: 33%; font-weight: normal; padding-bottom: 4px;">Sertifikat</td>
+                                <!-- Label dipersempit dari 33% ke 30% agar titik dua bergeser ke kiri -->
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Sertifikat</td>
                                 <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="width: 59%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->sertifikat ?? '-' }}</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->sertifikat ?? '-' }}</td>
                             </tr>
 
                             <!-- 2. Nomor / NIB -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">2.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">Nomor / NIB</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->nomor_nib ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">2.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Nomor / NIB</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->nomor_nib ?? '-' }}</td>
                             </tr>
 
                             <!-- 3. Luas Tanah (P x L) -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">3.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">Luas Tanah (p x l)</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->luas_tanah ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">3.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Luas Tanah (p x l)</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->luas_tanah ?? '-' }}</td>
                             </tr>
 
                             <!-- 4. Luas Bangunan (P x L) -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">4.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">Luas Bangunan (p x l)</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->luas_bangunan ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">4.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Luas Bangunan (p x l)</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->luas_bangunan ?? '-' }}</td>
                             </tr>
 
                             <!-- 5. Lebar Depan -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">5.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">Lebar Depan</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->lebar_depan ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">5.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Lebar Depan</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->lebar_depan ?? '-' }}</td>
                             </tr>
 
                             <!-- 6. PBG -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">6.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">PBG</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->pbg ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">6.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">PBG</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->pbg ?? '-' }}</td>
                             </tr>
 
                             <!-- 7. Orientasi -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">7.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">Orientasi</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->orientasi ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">7.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Orientasi</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->orientasi ?? '-' }}</td>
                             </tr>
 
                             <!-- 8. Jumlah Ruangan -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; vertical-align: top; padding-bottom: 4px;">8.</td>
-                                <td style="font-weight: normal; vertical-align: top; padding-bottom: 4px;">Jumlah Ruangan</td>
-                                <td style="text-align: center; font-weight: normal; vertical-align: top; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">
+                                <td style="width: 5%; text-align: center; font-weight: normal; vertical-align: top; padding-bottom: 4px;">8.</td>
+                                <td style="width: 30%; font-weight: normal; vertical-align: top; padding-bottom: 4px;">Jumlah Ruangan</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; vertical-align: top; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; padding-bottom: 4px;">
                                     <table style="width: 100%; border-collapse: collapse;">
                                         <tr>
-                                            <td style="width: 15%; border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->kamar_tidur ?? '-' }}</td>
-                                            <td style="width: 35%; padding-left: 6px; font-weight: normal;">Kamar Tidur</td>
-                                            <td style="width: 15%; border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->kamar_mandi ?? '-' }}</td>
-                                            <td style="width: 35%; padding-left: 6px; font-weight: normal;">Kamar Mandi</td>
+                                            <td style="width: 13%; border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->kamar_tidur ?? '-' }}</td>
+                                            <td style="width: 37%; padding-left: 4px; font-weight: normal;">Kamar Tidur</td>
+                                            <td style="width: 13%; border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->kamar_mandi ?? '-' }}</td>
+                                            <td style="width: 37%; padding-left: 4px; font-weight: normal;">Kamar Mandi</td>
                                         </tr>
                                         <tr>
-                                            <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px; margin-top: 2px;">{{ $data->spesifikasi->ruang_keluarga ?? '-' }}</td>
-                                            <td style="padding-left: 6px; font-weight: normal;">Ruang Keluarga</td>
+                                            <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->ruang_keluarga ?? '-' }}</td>
+                                            <td style="padding-left: 4px; font-weight: normal;">Ruang Keluarga</td>
                                             <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->ruang_makan ?? '-' }}</td>
-                                            <td style="padding-left: 6px; font-weight: normal;">Ruang Makan</td>
+                                            <td style="padding-left: 4px; font-weight: normal;">Ruang Makan</td>
                                         </tr>
                                         <tr>
                                             <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->ruang_tamu ?? '-' }}</td>
-                                            <td style="padding-left: 6px; font-weight: normal;">Ruang Tamu</td>
+                                            <td style="padding-left: 4px; font-weight: normal;">Ruang Tamu</td>
                                             <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->dapur ?? '-' }}</td>
-                                            <td style="padding-left: 6px; font-weight: normal;">Dapur</td>
+                                            <td style="padding-left: 4px; font-weight: normal;">Dapur</td>
                                         </tr>
                                         <tr>
                                             <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->kamar_pembantu ?? '-' }}</td>
-                                            <td style="padding-left: 6px; font-weight: normal;">Kamar Pembantu</td>
+                                            <td style="padding-left: 4px; font-weight: normal;">Kamar Pembantu</td>
                                             <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->pekarangan ?? '-' }}</td>
-                                            <td style="padding-left: 6px; font-weight: normal;">Taman / Pekarangan</td>
+                                            <td style="padding-left: 4px; font-weight: normal;">Taman / Pekarangan</td>
                                         </tr>
                                         <tr>
                                             <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->gudang ?? '-' }}</td>
-                                            <td style="padding-left: 6px; font-weight: normal;">Gudang</td>
+                                            <td style="padding-left: 4px; font-weight: normal;">Gudang</td>
                                             <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->carport ?? '-' }}</td>
-                                            <td style="padding-left: 6px; font-weight: normal;">Carport</td>
+                                            <td style="padding-left: 4px; font-weight: normal;">Carport</td>
                                         </tr>
                                         <tr>
                                             <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->garasi ?? '-' }}</td>
-                                            <td style="padding-left: 6px; font-weight: normal;">Garasi</td>
+                                            <td style="padding-left: 4px; font-weight: normal;">Garasi</td>
                                             <td style="border: 1px solid black; text-align: center; font-weight: normal; background: white; padding: 2px;">{{ $data->spesifikasi->ruangan_lain ?? '-' }}</td>
-                                            <td style="padding-left: 6px; font-weight: normal;">.....</td>
+                                            <td style="padding-left: 4px; font-weight: normal;">.....</td>
                                         </tr>
                                     </table>
                                 </td>
@@ -1357,66 +1494,66 @@
 
                             <!-- 9. Fasilitas Lainnya -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-top: 4px; padding-bottom: 4px;">9.</td>
-                                <td style="font-weight: normal; padding-top: 4px; padding-bottom: 4px;">Fasilitas Lainnya</td>
-                                <td style="text-align: center; font-weight: normal; padding-top: 4px; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-top: 4px; padding-bottom: 4px;">{{ $data->spesifikasi->fasilitas_lain ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-top: 4px; padding-bottom: 4px;">9.</td>
+                                <td style="width: 30%; font-weight: normal; padding-top: 4px; padding-bottom: 4px;">Fasilitas Lainnya</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-top: 4px; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-top: 4px; padding-bottom: 4px;">{{ $data->spesifikasi->fasilitas_lain ?? '-' }}</td>
                             </tr>
 
                             <!-- 10. Kondisi Bangunan -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">10.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">Kondisi Bangunan</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->kondisi_bangunan ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">10.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Kondisi Bangunan</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->kondisi_bangunan ?? '-' }}</td>
                             </tr>
 
                             <!-- 11. Kondisi Lantai -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">11.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">Kondisi Lantai</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->kondisi_lantai ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">11.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Kondisi Lantai</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->kondisi_lantai ?? '-' }}</td>
                             </tr>
 
                             <!-- 12. Kondisi Plafon -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">12.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">Kondisi Plafon</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->kondisi_plafon ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">12.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Kondisi Plafon</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->kondisi_plafon ?? '-' }}</td>
                             </tr>
 
                             <!-- 13. Bahan Atap -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">13.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">Bahan Atap</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->bahan_atap ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">13.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Bahan Atap</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->bahan_atap ?? '-' }}</td>
                             </tr>
 
                             <!-- 14. Struktur Atap -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">14.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">Struktur Atap</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->struktur_atap ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">14.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Struktur Atap</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->struktur_atap ?? '-' }}</td>
                             </tr>
 
                             <!-- 15. Listrik -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">15.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">Listrik</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->listrik ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">15.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Listrik</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->listrik ?? '-' }}</td>
                             </tr>
 
                             <!-- 16. Air -->
                             <tr>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">16.</td>
-                                <td style="font-weight: normal; padding-bottom: 4px;">Air</td>
-                                <td style="text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->air ?? '-' }}</td>
+                                <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">16.</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Air</td>
+                                <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->air ?? '-' }}</td>
                             </tr>
                         </table>
                     </div>
@@ -1437,23 +1574,38 @@
                     <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
                         @if(!empty($data->denah) && !empty($data->denah->denah_jaminan) && $data->denah->denah_jaminan !== '-')
                             @php
-                                $imgDenah = $data->denah->denah_jaminan;
-                                $pathDenah = storage_path('app/public/' . $imgDenah);
-                                if (!file_exists($pathDenah)) {
-                                    $pathDenah = public_path('storage/' . $imgDenah);
-                                }
+                                $fileDenah = $data->denah->denah_jaminan;
+                                $extDenah = strtolower(pathinfo($fileDenah, PATHINFO_EXTENSION));
                             @endphp
 
-                            @if(file_exists($pathDenah))
-                                <div style="display: inline-block; padding: 2px;">
-                                    <img 
-                                        src="{{ $pathDenah }}" 
-                                        alt="Denah"
-                                        style="max-width: 100%; height: auto; display: block;"
-                                    >
+                            {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran kotak --}}
+                            @if(in_array($extDenah, ['pdf', 'dwg']))
+                                <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block; margin: 2px 0;">
+                                    [Lampiran Dokumen {{ strtoupper($extDenah) }}: {{ basename($fileDenah) }} - Harap periksa file digital]
                                 </div>
+
+                            {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG) --}}
+                            @elseif(in_array($extDenah, ['jpg', 'jpeg', 'png']))
+                                @php
+                                    $pathDenah = storage_path('app/public/' . $fileDenah);
+                                    if (!file_exists($pathDenah)) {
+                                        $pathDenah = public_path('storage/' . $fileDenah);
+                                    }
+                                @endphp
+
+                                @if(file_exists($pathDenah))
+                                    <div style="display: inline-block; padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 4px; background-color: #ffffff; max-width: 100%;">
+                                        <img 
+                                            src="{{ $pathDenah }}" 
+                                            alt="Denah"
+                                            style="max-width: 100%; height: auto; display: block; margin: 0 auto;"
+                                        >
+                                    </div>
+                                @else
+                                    <span style="font-size: 11px; color: red;">[File gambar denah jaminan tidak ditemukan di server: {{ basename($fileDenah) }}]</span>
+                                @endif
                             @else
-                                <span style="font-size: 11px; color: red;">[File gambar denah jaminan tidak ditemukan di server]</span>
+                                <span style="color: #4b5563; font-size: 13px;">{{ basename($fileDenah) }}</span>
                             @endif
                         @else
                             <span>-</span>

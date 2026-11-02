@@ -272,8 +272,8 @@
                                     $extPlafon = strtolower(pathinfo($filePlafon, PATHINFO_EXTENSION));
                                 @endphp
 
-                                {{-- JIKA FILE BERUPA PDF, DWG, ATAU DWF: Tampilkan sebagai teks/lampiran --}}
-                                @if(in_array($extPlafon, ['pdf', 'dwg', 'dwf']))
+                                {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran --}}
+                                @if(in_array($extPlafon, ['pdf', 'dwg']))
                                     <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
                                         [Lampiran Dokumen {{ strtoupper($extPlafon) }}: {{ basename($filePlafon) }} - Harap periksa file digital]
                                     </div>
@@ -335,14 +335,30 @@
                             </div>
 
                             @if(!empty($usahaUtama->perhitungan_omset_usaha) && $usahaUtama->perhitungan_omset_usaha !== '-')
+                                @php
+                                    $fileOmsetUtama = $usahaUtama->perhitungan_omset_usaha;
+                                    $extOmsetUtama = strtolower(pathinfo($fileOmsetUtama, PATHINFO_EXTENSION));
+                                @endphp
+
                                 <div style="margin-top: 5px;">
-                                    <div style="display: inline-block; padding: 2px;">
-                                        <img 
-                                            src="{{ asset('storage/' . $usahaUtama->perhitungan_omset_usaha) }}" 
-                                            alt="Perhitungan Omset Usaha"
-                                            style="max-width: 100%; height: auto; display: block;"
-                                        >
-                                    </div>
+                                    {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran --}}
+                                    @if(in_array($extOmsetUtama, ['pdf', 'dwg']))
+                                        <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
+                                            [Lampiran Dokumen {{ strtoupper($extOmsetUtama) }}: {{ basename($fileOmsetUtama) }} - Harap periksa file digital]
+                                        </div>
+
+                                    {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG): Tampilkan gambarnya --}}
+                                    @elseif(in_array($extOmsetUtama, ['jpg', 'jpeg', 'png']))
+                                        <div style="display: inline-block; padding: 2px;">
+                                            <img 
+                                                src="{{ asset('storage/' . $fileOmsetUtama) }}" 
+                                                alt="Perhitungan Omset Usaha"
+                                                style="max-width: 100%; height: auto; display: block;"
+                                            >
+                                        </div>
+                                    @else
+                                        <span style="color: #4b5563; font-size: 13px;">{{ basename($fileOmsetUtama) }}</span>
+                                    @endif
                                 </div>
                             @endif
                         </div>
@@ -357,14 +373,30 @@
                                 </div>
 
                                 @if(!empty($usaha->perhitungan_omset_usaha) && $usaha->perhitungan_omset_usaha !== '-')
+                                    @php
+                                        $fileOmsetLain = $usaha->perhitungan_omset_usaha;
+                                        $extOmsetLain = strtolower(pathinfo($fileOmsetLain, PATHINFO_EXTENSION));
+                                    @endphp
+
                                     <div style="margin-top: 5px;">
-                                        <div style="display: inline-block; padding: 2px;">
-                                            <img 
-                                                src="{{ asset('storage/' . $usaha->perhitungan_omset_usaha) }}" 
-                                                alt="Perhitungan Omset Usaha"
-                                                style="max-width: 100%; height: auto; display: block;"
-                                            >
-                                        </div>
+                                        {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran --}}
+                                        @if(in_array($extOmsetLain, ['pdf', 'dwg']))
+                                            <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
+                                                [Lampiran Dokumen {{ strtoupper($extOmsetLain) }}: {{ basename($fileOmsetLain) }} - Harap periksa file digital]
+                                            </div>
+
+                                        {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG): Tampilkan gambarnya --}}
+                                        @elseif(in_array($extOmsetLain, ['jpg', 'jpeg', 'png']))
+                                            <div style="display: inline-block; padding: 2px;">
+                                                <img 
+                                                    src="{{ asset('storage/' . $fileOmsetLain) }}" 
+                                                    alt="Perhitungan Omset Usaha"
+                                                    style="max-width: 100%; height: auto; display: block;"
+                                                >
+                                            </div>
+                                        @else
+                                            <span style="color: #4b5563; font-size: 13px;">{{ basename($fileOmsetLain) }}</span>
+                                        @endif
                                     </div>
                                 @endif
                             </div>
@@ -382,14 +414,30 @@
                             </div>
 
                             @if(!empty($usahaUtama->perhitungan_omset_pendukung) && $usahaUtama->perhitungan_omset_pendukung !== '-')
+                                @php
+                                    $fileOmsetPendukung = $usahaUtama->perhitungan_omset_pendukung;
+                                    $extOmsetPendukung = strtolower(pathinfo($fileOmsetPendukung, PATHINFO_EXTENSION));
+                                @endphp
+
                                 <div style="margin-top: 5px;">
-                                    <div style="display: inline-block; padding: 2px;">
-                                        <img 
-                                            src="{{ asset('storage/' . $usahaUtama->perhitungan_omset_pendukung) }}" 
-                                            alt="Perhitungan Omset Pendukung"
-                                            style="max-width: 100%; height: auto; display: block;"
-                                        >
-                                    </div>
+                                    {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran --}}
+                                    @if(in_array($extOmsetPendukung, ['pdf', 'dwg']))
+                                        <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
+                                            [Lampiran Dokumen {{ strtoupper($extOmsetPendukung) }}: {{ basename($fileOmsetPendukung) }} - Harap periksa file digital]
+                                        </div>
+
+                                    {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG): Tampilkan gambarnya --}}
+                                    @elseif(in_array($extOmsetPendukung, ['jpg', 'jpeg', 'png']))
+                                        <div style="display: inline-block; padding: 2px;">
+                                            <img 
+                                                src="{{ asset('storage/' . $fileOmsetPendukung) }}" 
+                                                alt="Perhitungan Omset Pendukung"
+                                                style="max-width: 100%; height: auto; display: block;"
+                                            >
+                                        </div>
+                                    @else
+                                        <span style="color: #4b5563; font-size: 13px;">{{ basename($fileOmsetPendukung) }}</span>
+                                    @endif
                                 </div>
                             @endif
                         </div>
@@ -471,13 +519,29 @@
                                 </div>
                                 <div style="margin-top: 5px;">
                                     @if(!empty($collateral->ringkasan_penilaian_jaminan) && $collateral->ringkasan_penilaian_jaminan !== '-')
-                                        <div style="display: inline-block; padding: 2px;">
-                                            <img 
-                                                src="{{ asset('storage/' . $collateral->ringkasan_penilaian_jaminan) }}" 
-                                                alt="Ringkasan Penilaian Jaminan"
-                                                style="max-width: 100%; height: auto; display: block;"
-                                            >
-                                        </div>
+                                        @php
+                                            $fileCollateral = $collateral->ringkasan_penilaian_jaminan;
+                                            $extCollateral = strtolower(pathinfo($fileCollateral, PATHINFO_EXTENSION));
+                                        @endphp
+
+                                        {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran --}}
+                                        @if(in_array($extCollateral, ['pdf', 'dwg']))
+                                            <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
+                                                [Lampiran Dokumen {{ strtoupper($extCollateral) }}: {{ basename($fileCollateral) }} - Harap periksa file digital]
+                                            </div>
+
+                                        {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG): Tampilkan gambarnya --}}
+                                        @elseif(in_array($extCollateral, ['jpg', 'jpeg', 'png']))
+                                            <div style="display: inline-block; padding: 2px;">
+                                                <img 
+                                                    src="{{ asset('storage/' . $fileCollateral) }}" 
+                                                    alt="Ringkasan Penilaian Jaminan"
+                                                    style="max-width: 100%; height: auto; display: block;"
+                                                >
+                                            </div>
+                                        @else
+                                            <span style="color: #4b5563; font-size: 13px;">{{ basename($fileCollateral) }}</span>
+                                        @endif
                                     @else
                                         <span>-</span>
                                     @endif
@@ -543,8 +607,8 @@
                                     $extCapacity = strtolower(pathinfo($fileCapacity, PATHINFO_EXTENSION));
                                 @endphp
 
-                                {{-- JIKA FILE BERUPA PDF, DWG, ATAU DWF: Tampilkan sebagai teks/lampiran --}}
-                                @if(in_array($extCapacity, ['pdf', 'dwg', 'dwf']))
+                                {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran --}}
+                                @if(in_array($extCapacity, ['pdf', 'dwg']))
                                     <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
                                         [Lampiran Dokumen {{ strtoupper($extCapacity) }}: {{ basename($fileCapacity) }} - Harap periksa file digital]
                                     </div>
@@ -660,8 +724,8 @@
                                 $extKesimpulan = strtolower(pathinfo($fileKesimpulan, PATHINFO_EXTENSION));
                             @endphp
 
-                            {{-- JIKA FILE BERUPA PDF, DWG, ATAU DWF: Tampilkan sebagai teks/lampiran --}}
-                            @if(in_array($extKesimpulan, ['pdf', 'dwg', 'dwf']))
+                            {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran --}}
+                            @if(in_array($extKesimpulan, ['pdf', 'dwg']))
                                 <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
                                     [Lampiran Dokumen {{ strtoupper($extKesimpulan) }}: {{ basename($fileKesimpulan) }} - Harap periksa file digital]
                                 </div>
@@ -1285,8 +1349,8 @@
                                 $extDenah = strtolower(pathinfo($fileDenah, PATHINFO_EXTENSION));
                             @endphp
 
-                            {{-- JIKA FILE BERUPA PDF, DWG, ATAU DWF: Tampilkan sebagai teks/lampiran --}}
-                            @if(in_array($extDenah, ['pdf', 'dwg', 'dwf']))
+                            {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran --}}
+                            @if(in_array($extDenah, ['pdf', 'dwg']))
                                 <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block;">
                                     [Lampiran Dokumen {{ strtoupper($extDenah) }}: {{ basename($fileDenah) }} - Harap periksa file digital]
                                 </div>
