@@ -1865,7 +1865,7 @@ class MukController extends Controller
         }
 
         // 7. Jaminan (Google Map, QR, dan Array Foto Jaminan)
-        $fotoJaminanBase64List = []; // Ubah jadi penampung array biasa
+        $fotoJaminanBase64List = []; 
         if ($data->jaminan) {
             $data->jaminan->google_maps_base64 = $this->convertImageToBase64($data->jaminan->google_maps);
             $data->jaminan->kode_qr_base64 = $this->convertImageToBase64($data->jaminan->kode_qr, 200);
@@ -1874,6 +1874,9 @@ class MukController extends Controller
             foreach ($fotoJaminans as $foto) {
                 $fotoJaminanBase64List[] = $this->convertImageToBase64($foto);
             }
+            
+            // Gunakan setAttribute agar terbaca di file Blade
+            $data->jaminan->setAttribute('foto_jaminan_base64_list', $fotoJaminanBase64List);
         }
 
         // 8. Usaha (Google Map, QR, dan Array Foto Usaha per item)
@@ -1882,14 +1885,12 @@ class MukController extends Controller
                 $ush->google_maps_base64 = $this->convertImageToBase64($ush->google_maps);
                 $ush->kode_qr_base64 = $this->convertImageToBase64($ush->kode_qr, 200);
                 
-                // 1. Buat array PHP biasa penampung base64
                 $convertedFotoUsaha = [];
                 $fotoUsahas = !empty($ush->foto_usaha) ? json_decode($ush->foto_usaha, true) : [];
                 foreach ($fotoUsahas as $foto) {
                     $convertedFotoUsaha[] = $this->convertImageToBase64($foto);
                 }
                 
-                // 2. GunakansetAttribute (Cara resmi Laravel untuk mengisi data dinamis ke model)
                 $ush->setAttribute('foto_usaha_base64_list', $convertedFotoUsaha);
             }
         }
@@ -1905,7 +1906,6 @@ class MukController extends Controller
                 $convertedFotoRumah[] = $this->convertImageToBase64($foto);
             }
             
-            // Gunakan setAttribute juga untuk rumah
             $data->rumah->setAttribute('foto_tempat_tinggal_base64_list', $convertedFotoRumah);
         }
 
