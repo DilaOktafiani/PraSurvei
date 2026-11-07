@@ -101,98 +101,98 @@
                     <table class="table-form" style="padding-left: 4%; width: 100%; border-collapse: collapse;">
                         <!-- 1. Nama Debitur -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">1.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Nama Debitur</td>
-                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 62%; font-weight: normal;">{{ $data->nama ?? '-' }}</td>
+                            <td style="width: 25px; vertical-align: top; text-align: left; padding: 2px 0;">1.</td>
+                            <td style="width: 180px; vertical-align: top; padding: 2px 0;">Nama Debitur</td>
+                            <td style="width: 15px; vertical-align: top; text-align: center; padding: 2px 0;">:</td>
+                            <td style="vertical-align: top; padding: 2px 0;">{{ $data->nama ?? '-' }}</td>
                         </tr>
 
                         <!-- 2. Tempat / Tanggal Lahir -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">2.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Tempat / Tgl Lahir</td>
-                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 62%;">{{ $data->tempat_tanggal_lahir ?? '-' }}</td>
+                            <td style="vertical-align: top; text-align: left; padding: 2px 0;">2.</td>
+                            <td style="vertical-align: top; padding: 2px 0;">Tempat / Tgl Lahir</td>
+                            <td style="vertical-align: top; text-align: center; padding: 2px 0;">:</td>
+                            <td style="vertical-align: top; padding: 2px 0;">{{ $data->tempat_tanggal_lahir ?? '-' }}</td>
                         </tr>
 
                         <!-- 3. Nama Ibu Kandung -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">3.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Nama Ibu Kandung</td>
-                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 62%;">{{ $data->nama_ibu_kandung ?? '-' }}</td>
+                            <td style="vertical-align: top; text-align: left; padding: 2px 0;">3.</td>
+                            <td style="vertical-align: top; padding: 2px 0;">Nama Ibu Kandung</td>
+                            <td style="vertical-align: top; text-align: center; padding: 2px 0;">:</td>
+                            <td style="vertical-align: top; padding: 2px 0;">{{ $data->nama_ibu_kandung ?? '-' }}</td>
                         </tr>
 
                         <!-- 4. Nama Istri / Penjamin -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">4.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Nama Istri / Penjamin</td>
-                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 62%;">{{ $data->nama_istri_penjamin ?? '-' }}</td>
+                            <td style="vertical-align: top; text-align: left; padding: 2px 0;">4.</td>
+                            <td style="vertical-align: top; padding: 2px 0;">Nama Istri / Penjamin</td>
+                            <td style="vertical-align: top; text-align: center; padding: 2px 0;">:</td>
+                            <td style="vertical-align: top; padding: 2px 0;">{{ $data->nama_istri_penjamin ?? '-' }}</td>
                         </tr>
 
                         <!-- 5. Alamat KTP -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">5.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Alamat KTP</td>
-                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 62%;">{{ $data->alamat_ktp ?? '-' }}</td>
+                            <td style="vertical-align: top; text-align: left; padding: 2px 0;">5.</td>
+                            <td style="vertical-align: top; padding: 2px 0;">Alamat KTP</td>
+                            <td style="vertical-align: top; text-align: center; padding: 2px 0;">:</td>
+                            <td style="vertical-align: top; padding: 2px 0;">{{ $data->alamat_ktp ?? '-' }}</td>
                         </tr>
 
                         <!-- 6. Alamat Domisili -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">6.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Alamat Domisili</td>
-                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 62%;">{{ $data->alamat_domisili ?? '-' }}</td>
+                            <td style="vertical-align: top; text-align: left; padding: 2px 0;">6.</td>
+                            <td style="vertical-align: top; padding: 2px 0;">Alamat Domisili</td>
+                            <td style="vertical-align: top; text-align: center; padding: 2px 0;">:</td>
+                            <td style="vertical-align: top; padding: 2px 0;">{{ $data->alamat_domisili ?? '-' }}</td>
                         </tr>
 
                         <!-- 7. Telp / HP -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">7.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Telp / HP</td>
-                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 62%;">{{ $data->no_hp ?? '-' }}</td>
+                            <td style="vertical-align: top; text-align: left; padding: 2px 0;">7.</td>
+                            <td style="vertical-align: top; padding: 2px 0;">Telp / HP</td>
+                            <td style="vertical-align: top; text-align: center; padding: 2px 0;">:</td>
+                            <td style="vertical-align: top; padding: 2px 0;">{{ $data->no_hp ?? '-' }}</td>
                         </tr>
 
                         <!-- 8. Pekerjaan -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">8.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Pekerjaan</td>
-                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 62%;">{{ $data->pekerjaan ?? '-' }}</td>
+                            <td style="vertical-align: top; text-align: left; padding: 2px 0;">8.</td>
+                            <td style="vertical-align: top; padding: 2px 0;">Pekerjaan</td>
+                            <td style="vertical-align: top; text-align: center; padding: 2px 0;">:</td>
+                            <td style="vertical-align: top; padding: 2px 0;">{{ $data->pekerjaan ?? '-' }}</td>
                         </tr>
 
                         <!-- 9. Bidang Usaha -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">9.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Bidang Usaha</td>
-                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 62%;">{{ $data->bidang_usaha ?? '-' }}</td>
+                            <td style="vertical-align: top; text-align: left; padding: 2px 0;">9.</td>
+                            <td style="vertical-align: top; padding: 2px 0;">Bidang Usaha</td>
+                            <td style="vertical-align: top; text-align: center; padding: 2px 0;">:</td>
+                            <td style="vertical-align: top; padding: 2px 0;">{{ $data->bidang_usaha ?? '-' }}</td>
                         </tr>
 
                         <!-- 10. Alamat Kerja / Usaha -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">10.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Alamat Kerja / Usaha</td>
-                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 62%;">{{ $data->alamat_usaha ?? '-' }}</td>
+                            <td style="vertical-align: top; text-align: left; padding: 2px 0;">10.</td>
+                            <td style="vertical-align: top; padding: 2px 0;">Alamat Kerja / Usaha</td>
+                            <td style="vertical-align: top; text-align: center; padding: 2px 0;">:</td>
+                            <td style="vertical-align: top; padding: 2px 0;">{{ $data->alamat_usaha ?? '-' }}</td>
                         </tr>
 
                         <!-- 11. Telp / HP Usaha -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">11.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">Telp / HP Usaha</td>
-                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 62%;">{{ $data->kontak ?? '-' }}</td>
+                            <td style="vertical-align: top; text-align: left; padding: 2px 0;">11.</td>
+                            <td style="vertical-align: top; padding: 2px 0;">Telp / HP Usaha</td>
+                            <td style="vertical-align: top; text-align: center; padding: 2px 0;">:</td>
+                            <td style="vertical-align: top; padding: 2px 0;">{{ $data->kontak ?? '-' }}</td>
                         </tr>
 
                         <!-- 12. IDI di Bank Lain -->
                         <tr>
-                            <td style="width: 5%; text-align: center; font-weight: normal; padding-left: 2%; padding-right: 2%;">12.</td>
-                            <td style="width: 30%; font-weight: normal; padding-left: 2%;">IDI di Bank Lain</td>
-                            <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                            <td style="width: 62%;"></td>
+                            <td style="vertical-align: top; text-align: left; padding: 2px 0;">12.</td>
+                            <td style="vertical-align: top; padding: 2px 0;">IDI di Bank Lain</td>
+                            <td style="vertical-align: top; text-align: center; padding: 2px 0;">:</td>
+                            <td style="vertical-align: top; padding: 2px 0;"></td>
                         </tr>
                     </table>
 

@@ -2029,6 +2029,6 @@ class MukController extends Controller
 
         return response($view)
             ->header('Content-Type', 'application/vnd.ms-excel')
-            ->header('Content-Disposition', 'attachment; filename="Survei ' . $data->nama . '.xls"');
+            ->header('Content-Disposition', 'attachment; filename="Analisa Kredit ' . $data->nama . '.xls"');
     }
 }
