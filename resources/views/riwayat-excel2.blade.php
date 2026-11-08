@@ -137,7 +137,7 @@
                 <tr>
                     <td colspan="1" style="text-align: center;">7.</td>
                     <td colspan="2" class="bg-label">Telp / HP</td>
-                    <td colspan="7">{{ $data->no_hp ?? '-' }}</td>
+                    <td colspan="7">{{ $data->no_hp ? "'" . $data->no_hp : '-' }}</td>
                 </tr>
 
                 <!-- 8. Pekerjaan -->
@@ -165,7 +165,7 @@
                 <tr>
                     <td colspan="1" style="text-align: center;">11.</td>
                     <td colspan="2" class="bg-label">Telp / HP Usaha</td>
-                    <td colspan="7">{{ $data->kontak ?? '-' }}</td>
+                    <td colspan="7">{{ $data->kontak ? "'" . $data->kontak : '-' }}</td>
                 </tr>
 
                 <!-- 12. IDI di Bank Lain (Hasil SLIK & Lampiran) -->
@@ -708,16 +708,14 @@
             <tbody>
                 <!-- 1. LOKASI DAN FOTO JAMINAN -->
                 <tr>
-                    <td colspan="1" style="width: 5%; text-align: center; vertical-align: top; font-weight: bold;">1.</td>
-                    <td colspan="9" style="width: 95%; vertical-align: top; font-weight: bold; padding-bottom: 6px;">
+                    <td colspan="10" class="bg-label" style="width: 100%; text-align: center; vertical-align: top; font-weight: bold; padding: 6px;">
                         Lokasi dan Foto Jaminan
                     </td>
                 </tr>
 
                 <!-- Baris Google Map & Detail Lokasi Jaminan -->
                 <tr>
-                    <td colspan="1" style="vertical-align: top;"></td>
-                    <td colspan="4" style="width: 47%; vertical-align: top; border: 1px solid #d9d9d9; padding: 6px; background-color: #ffffff;">
+                    <td colspan="5" style="width: 47%; vertical-align: top; border: 1px solid #d9d9d9; padding: 6px; background-color: #ffffff;">
                         <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
                         @if(!empty($data->jaminan->google_maps) && $data->jaminan->google_maps !== '-')
                             @php
@@ -768,9 +766,8 @@
 
                 @foreach($chunksJaminan as $chunkJaminan)
                     <tr>
-                        <td colspan="1" style="vertical-align: top;"></td>
                         <!-- Kolom Kiri Foto Jaminan -->
-                        <td colspan="4" style="width: 47%; vertical-align: top; border: 1px solid #d9d9d9; padding: 6px; background-color: #ffffff;">
+                        <td colspan="5" style="width: 47%; vertical-align: top; border: 1px solid #d9d9d9; padding: 6px; background-color: #ffffff;">
                             @if(isset($chunkJaminan[0]))
                                 @php
                                     $fileLeft = $chunkJaminan[0];
@@ -802,10 +799,9 @@
                 @endforeach
 
 
-                <!-- 2. LOKASI DAN FOTO TEMPAT USAHA -->
+                <!-- LOKASI DAN FOTO TEMPAT USAHA -->
                 <tr>
-                    <td colspan="1" style="width: 5%; text-align: center; vertical-align: top; font-weight: bold; padding-top: 15px;">2.</td>
-                    <td colspan="9" style="width: 95%; vertical-align: top; font-weight: bold; padding-top: 15px; padding-bottom: 6px;">
+                    <td colspan="10" class="bg-label" style="width: 100%; text-align: center; vertical-align: top; font-weight: bold; padding-top: 15px; padding-bottom: 6px;">
                         Lokasi dan Foto Tempat Usaha
                     </td>
                 </tr>
@@ -821,16 +817,14 @@
 
                     <!-- Sub Header Nama Usaha (a, b, c) -->
                     <tr>
-                        <td colspan="1" style="vertical-align: top;"></td>
-                        <td colspan="9" style="font-weight: bold; padding-top: 6px; padding-bottom: 4px; background-color: #fafafa;">
+                        <td colspan="10" style="font-weight: bold; padding-top: 6px; padding-bottom: 4px; background-color: #fafafa;">
                             {{ $hurufUrutan }}. Lokasi dan Foto Tempat Usaha {{ $usahaItem->nama_usaha }}
                         </td>
                     </tr>
 
                     <!-- Baris Google Map & Detail Lokasi Usaha -->
                     <tr>
-                        <td colspan="1" style="vertical-align: top;"></td>
-                        <td colspan="4" style="width: 47%; vertical-align: top; border: 1px solid #d9d9d9; padding: 6px; background-color: #ffffff;">
+                        <td colspan="5" style="width: 47%; vertical-align: top; border: 1px solid #d9d9d9; padding: 6px; background-color: #ffffff;">
                             <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
                             @if(!empty($usahaItem->google_maps) && $usahaItem->google_maps !== '-')
                                 @php
@@ -881,9 +875,8 @@
 
                     @foreach($chunksUsaha as $chunkUsaha)
                         <tr>
-                            <td colspan="1" style="vertical-align: top;"></td>
                             <!-- Kolom Kiri Foto Usaha -->
-                            <td colspan="4" style="width: 47%; vertical-align: top; border: 1px solid #d9d9d9; padding: 6px; background-color: #ffffff;">
+                            <td colspan="5" style="width: 47%; vertical-align: top; border: 1px solid #d9d9d9; padding: 6px; background-color: #ffffff;">
                                 @if(isset($chunkUsaha[0]))
                                     @php
                                         $fileUsahaLeft = $chunkUsaha[0];
@@ -916,18 +909,16 @@
                 @endforeach
 
 
-                <!-- 3. LOKASI DAN FOTO TEMPAT TINGGAL -->
+                <!-- LOKASI DAN FOTO TEMPAT TINGGAL -->
                 <tr>
-                    <td colspan="1" style="width: 5%; text-align: center; vertical-align: top; font-weight: bold; padding-top: 15px;">3.</td>
-                    <td colspan="9" style="width: 95%; vertical-align: top; font-weight: bold; padding-top: 15px; padding-bottom: 6px;">
+                    <td colspan="10" class="bg-label" style="width: 100%; text-align: center; vertical-align: top; font-weight: bold; padding-top: 15px; padding-bottom: 6px;">
                         Lokasi dan Foto Tempat Tinggal
                     </td>
                 </tr>
 
                 <!-- Baris Google Map & Detail Lokasi Tempat Tinggal -->
                 <tr>
-                    <td colspan="1" style="vertical-align: top;"></td>
-                    <td colspan="4" style="width: 47%; vertical-align: top; border: 1px solid #d9d9d9; padding: 6px; background-color: #ffffff;">
+                    <td colspan="5" style="width: 47%; vertical-align: top; border: 1px solid #d9d9d9; padding: 6px; background-color: #ffffff;">
                         <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
                         @if(!empty($data->rumah->google_maps) && $data->rumah->google_maps !== '-')
                             @php
@@ -978,9 +969,8 @@
 
                 @foreach($chunksRumah as $chunkRumah)
                     <tr>
-                        <td colspan="1" style="vertical-align: top;"></td>
                         <!-- Kolom Kiri Foto Tempat Tinggal -->
-                        <td colspan="4" style="width: 47%; vertical-align: top; border: 1px solid #d9d9d9; padding: 6px; background-color: #ffffff;">
+                        <td colspan="5" style="width: 47%; vertical-align: top; border: 1px solid #d9d9d9; padding: 6px; background-color: #ffffff;">
                             @if(isset($chunkRumah[0]))
                                 @php
                                     $fileRumahLeft = $chunkRumah[0];
@@ -1070,47 +1060,47 @@
                     <td colspan="7" style="vertical-align: top;">{{ $data->spesifikasi->orientasi ?? '-' }}</td>
                 </tr>
 
-                <!-- 8. Jumlah Ruangan (Diberi bg-label agar seragam) -->
+                <!-- 8. Jumlah Ruangan -->
                 <tr>
                     <td colspan="1" style="text-align: center; vertical-align: top;">8.</td>
-                    <td colspan="2" class="bg-label" style="vertical-align: top;">Jumlah Ruangan</td>
-                    <td colspan="7" style="vertical-align: top;">
+                    <td colspan="2" class="bg-label" style="vertical-align: top; font-weight: normal;">Jumlah Ruangan</td>
+                    <td colspan="7" style="vertical-align: top; padding: 0;">
                         <table class="bg-label" style="width: 100%; border-collapse: collapse;">
                             <tr>
-                                <td class="bg-label" style="width: 13%; border: 1px solid #d9d9d9; text-align: center; padding: 2px;">{{ $data->spesifikasi->kamar_tidur ?? '-' }}</td>
-                                <td class="bg-label" style="width: 37%; padding-left: 6px;">Kamar Tidur</td>
-                                <td class="bg-label" style="width: 13%; border: 1px solid #d9d9d9; text-align: center; padding: 2px;">{{ $data->spesifikasi->kamar_mandi ?? '-' }}</td>
-                                <td class="bg-label" style="width: 37%; padding-left: 6px;">Kamar Mandi</td>
+                                <td colspan="1" class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px; font-weight: normal;">{{ $data->spesifikasi->kamar_tidur ?? '-' }}</td>
+                                <td colspan="2" class="bg-label" style="padding-left: 6px; font-weight: normal;">Kamar Tidur</td>
+                                <td colspan="2" class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px; font-weight: normal;">{{ $data->spesifikasi->kamar_mandi ?? '-' }}</td>
+                                <td colspan="2" class="bg-label" style="padding-left: 6px; font-weight: normal;">Kamar Mandi</td>
                             </tr>
                             <tr>
-                                <td class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px;">{{ $data->spesifikasi->ruang_keluarga ?? '-' }}</td>
-                                <td class="bg-label" style="padding-left: 6px;">Ruang Keluarga</td>
-                                <td class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px;">{{ $data->spesifikasi->ruang_makan ?? '-' }}</td>
-                                <td class="bg-label" style="padding-left: 6px;">Ruang Makan</td>
+                                <td colspan="1" class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px; font-weight: normal;">{{ $data->spesifikasi->ruang_keluarga ?? '-' }}</td>
+                                <td colspan="2" class="bg-label" style="padding-left: 6px; font-weight: normal;">Ruang Keluarga</td>
+                                <td colspan="2" class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px; font-weight: normal;">{{ $data->spesifikasi->ruang_makan ?? '-' }}</td>
+                                <td colspan="2" class="bg-label" style="padding-left: 6px; font-weight: normal;">Ruang Makan</td>
                             </tr>
                             <tr>
-                                <td class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px;">{{ $data->spesifikasi->ruang_tamu ?? '-' }}</td>
-                                <td class="bg-label" style="padding-left: 6px;">Ruang Tamu</td>
-                                <td class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px;">{{ $data->spesifikasi->dapur ?? '-' }}</td>
-                                <td class="bg-label" style="padding-left: 6px;">Dapur</td>
+                                <td colspan="1" class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px; font-weight: normal;">{{ $data->spesifikasi->ruang_tamu ?? '-' }}</td>
+                                <td colspan="2" class="bg-label" style="padding-left: 6px; font-weight: normal;">Ruang Tamu</td>
+                                <td colspan="2" class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px; font-weight: normal;">{{ $data->spesifikasi->dapur ?? '-' }}</td>
+                                <td colspan="2" class="bg-label" style="padding-left: 6px; font-weight: normal;">Dapur</td>
                             </tr>
                             <tr>
-                                <td class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px;">{{ $data->spesifikasi->kamar_pembantu ?? '-' }}</td>
-                                <td class="bg-label" style="padding-left: 6px;">Kamar Pembantu</td>
-                                <td class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px;">{{ $data->spesifikasi->pekarangan ?? '-' }}</td>
-                                <td class="bg-label" style="padding-left: 6px;">Taman / Pekarangan</td>
+                                <td colspan="1" class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px; font-weight: normal;">{{ $data->spesifikasi->kamar_pembantu ?? '-' }}</td>
+                                <td colspan="2" class="bg-label" style="padding-left: 6px; font-weight: normal;">Kamar Pembantu</td>
+                                <td colspan="2" class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px; font-weight: normal;">{{ $data->spesifikasi->pekarangan ?? '-' }}</td>
+                                <td colspan="2" class="bg-label" style="padding-left: 6px; font-weight: normal;">Taman / Pekarangan</td>
                             </tr>
                             <tr>
-                                <td class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px;">{{ $data->spesifikasi->gudang ?? '-' }}</td>
-                                <td class="bg-label" style="padding-left: 6px;">Gudang</td>
-                                <td class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px;">{{ $data->spesifikasi->carport ?? '-' }}</td>
-                                <td class="bg-label" style="padding-left: 6px;">Carport</td>
+                                <td colspan="1" class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px; font-weight: normal;">{{ $data->spesifikasi->gudang ?? '-' }}</td>
+                                <td colspan="2" class="bg-label" style="padding-left: 6px; font-weight: normal;">Gudang</td>
+                                <td colspan="2" class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px; font-weight: normal;">{{ $data->spesifikasi->carport ?? '-' }}</td>
+                                <td colspan="2" class="bg-label" style="padding-left: 6px; font-weight: normal;">Carport</td>
                             </tr>
                             <tr>
-                                <td class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px;">{{ $data->spesifikasi->garasi ?? '-' }}</td>
-                                <td class="bg-label" style="padding-left: 6px;">Garasi</td>
-                                <td class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px;">{{ $data->spesifikasi->ruangan_lain ?? '-' }}</td>
-                                <td class="bg-label" style="padding-left: 6px;">.....</td>
+                                <td colspan="1" class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px; font-weight: normal;">{{ $data->spesifikasi->garasi ?? '-' }}</td>
+                                <td colspan="2" class="bg-label" style="padding-left: 6px; font-weight: normal;">Garasi</td>
+                                <td colspan="2" class="bg-label" style="border: 1px solid #d9d9d9; text-align: center; padding: 2px; font-weight: normal;">{{ $data->spesifikasi->ruangan_lain ?? '-' }}</td>
+                                <td colspan="2" class="bg-label" style="padding-left: 6px; font-weight: normal;">.....</td>
                             </tr>
                         </table>
                     </td>
