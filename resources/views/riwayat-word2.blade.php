@@ -839,7 +839,7 @@
                                         <!-- Baris Maps & QR -->
                                         <tr style="page-break-inside: avoid;">
                                             <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
-                                                <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
+                                                <div style="font-weight: normal; margin-bottom: 4px;">Google Map</div>
                                                 @if(!empty($data->jaminan->google_maps) && $data->jaminan->google_maps !== '-')
                                                     @if(!empty($data->jaminan->google_maps_base64))
                                                         <img src="{{ $data->jaminan->google_maps_base64 }}" alt="Google Map" width="280" height="190" style="display: block;">
@@ -852,7 +852,7 @@
                                             </td>
                                             <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%; word-wrap: break-word;">
                                                 <div style="margin-bottom: 12px;">
-                                                    <div style="font-weight: bold; margin-bottom: 2px;">Link Share Location</div>
+                                                    <div style="font-weight: normal; margin-bottom: 2px;">Link Share Location</div>
                                                     @if(!empty($data->jaminan->share_location))
                                                         <a href="{{ $data->jaminan->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; word-break: break-all; font-size: 13px;">
                                                             {{ $data->jaminan->share_location }}
@@ -862,7 +862,7 @@
                                                     @endif
                                                 </div>
                                                 <div>
-                                                    <div style="font-weight: bold; margin-bottom: 2px;">Kode QR Maps</div>
+                                                    <div style="font-weight: normal; margin-bottom: 2px;">Kode QR Maps</div>
                                                     @if(!empty($data->jaminan->kode_qr) && $data->jaminan->kode_qr !== '-')
                                                         @if(!empty($data->jaminan->kode_qr_base64))
                                                             <img src="{{ $data->jaminan->kode_qr_base64 }}" alt="Kode QR Maps" width="90" height="90" style="display: block;">
@@ -886,7 +886,7 @@
                                             <tr style="page-break-inside: avoid;">
                                                 <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
                                                     @if(isset($chunk[0]) && !empty($chunk[0]))
-                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Jaminan {{ ($index * 2) + 1 }}</div>
+                                                        <div style="font-weight: normal; margin-bottom: 4px;">Foto Jaminan {{ ($index * 2) + 1 }}</div>
                                                         <img src="{{ $chunk[0] }}" alt="Foto Jaminan" width="280" height="190" style="display: block;">
                                                     @else
                                                         &nbsp;
@@ -894,7 +894,7 @@
                                                 </td>
                                                 <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
                                                     @if(isset($chunk[1]) && !empty($chunk[1]))
-                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Jaminan {{ ($index * 2) + 2 }}</div>
+                                                        <div style="font-weight: normal; margin-bottom: 4px;">Foto Jaminan {{ ($index * 2) + 2 }}</div>
                                                         <img src="{{ $chunk[1] }}" alt="Foto Jaminan" width="280" height="190" style="display: block;">
                                                     @else
                                                         &nbsp;
@@ -950,7 +950,7 @@
                                                         <!-- Baris Maps & QR Usaha -->
                                                         <tr style="page-break-inside: avoid;">
                                                             <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
-                                                                <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
+                                                                <div style="font-weight: normal; margin-bottom: 4px;">Google Map</div>
                                                                 @if(!empty($usahaItem->google_maps) && $usahaItem->google_maps !== '-')
                                                                     @if(!empty($usahaItem->google_maps_base64))
                                                                         <img src="{{ $usahaItem->google_maps_base64 }}" alt="Google Map Usaha" width="280" height="190" style="display: block;">
@@ -963,7 +963,7 @@
                                                             </td>
                                                             <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%; word-wrap: break-word;">
                                                                 <div style="margin-bottom: 12px;">
-                                                                    <div style="font-weight: bold; margin-bottom: 2px;">Link Share Location</div>
+                                                                    <div style="font-weight: normal; margin-bottom: 2px;">Link Share Location</div>
                                                                     @if(!empty($usahaItem->share_location))
                                                                         <a href="{{ $usahaItem->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; word-break: break-all; font-size: 13px;">
                                                                             {{ $usahaItem->share_location }}
@@ -973,7 +973,7 @@
                                                                     @endif
                                                                 </div>
                                                                 <div>
-                                                                    <div style="font-weight: bold; margin-bottom: 2px;">Kode QR Maps</div>
+                                                                    <div style="font-weight: normal; margin-bottom: 2px;">Kode QR Maps</div>
                                                                     @if(!empty($usahaItem->kode_qr) && $usahaItem->kode_qr !== '-')
                                                                         @if(!empty($usahaItem->kode_qr_base64))
                                                                             <img src="{{ $usahaItem->kode_qr_base64 }}" alt="QR Usaha" width="90" height="90" style="display: block;">
@@ -997,7 +997,7 @@
                                                             <tr style="page-break-inside: avoid;">
                                                                 <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
                                                                     @if(isset($chunk[0]) && !empty($chunk[0]))
-                                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Usaha {{ ($index * 2) + 1 }}</div>
+                                                                        <div style="font-weight: normal; margin-bottom: 4px;">Foto Usaha {{ ($index * 2) + 1 }}</div>
                                                                         <img src="{{ $chunk[0] }}" alt="Foto Usaha" width="280" height="190" style="display: block;">
                                                                     @else
                                                                         &nbsp;
@@ -1005,7 +1005,7 @@
                                                                 </td>
                                                                 <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
                                                                     @if(isset($chunk[1]) && !empty($chunk[1]))
-                                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Usaha {{ ($index * 2) + 2 }}</div>
+                                                                        <div style="font-weight: normal; margin-bottom: 4px;">Foto Usaha {{ ($index * 2) + 2 }}</div>
                                                                         <img src="{{ $chunk[1] }}" alt="Foto Usaha" width="280" height="190" style="display: block;">
                                                                     @else
                                                                         &nbsp;
@@ -1048,7 +1048,7 @@
                                         <!-- Baris Maps & QR Tempat Tinggal -->
                                         <tr style="page-break-inside: avoid;">
                                             <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
-                                                <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
+                                                <div style="font-weight: normal; margin-bottom: 4px;">Google Map</div>
                                                 @if(!empty($data->rumah->google_maps) && $data->rumah->google_maps !== '-')
                                                     @if(!empty($data->rumah->google_maps_base64))
                                                         <img src="{{ $data->rumah->google_maps_base64 }}" alt="Google Map Tempat Tinggal" width="280" height="190" style="display: block;">
@@ -1061,7 +1061,7 @@
                                             </td>
                                             <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%; word-wrap: break-word;">
                                                 <div style="margin-bottom: 12px;">
-                                                    <div style="font-weight: bold; margin-bottom: 2px;">Link Share Location</div>
+                                                    <div style="font-weight: normal; margin-bottom: 2px;">Link Share Location</div>
                                                     @if(!empty($data->rumah->share_location))
                                                         <a href="{{ $data->rumah->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; word-break: break-all; font-size: 13px;">
                                                             {{ $data->rumah->share_location }}
@@ -1071,7 +1071,7 @@
                                                     @endif
                                                 </div>
                                                 <div>
-                                                    <div style="font-weight: bold; margin-bottom: 2px;">Kode QR Maps</div>
+                                                    <div style="font-weight: normal; margin-bottom: 2px;">Kode QR Maps</div>
                                                     @if(!empty($data->rumah->kode_qr) && $data->rumah->kode_qr !== '-')
                                                         @if(!empty($data->rumah->kode_qr_base64))
                                                             <img src="{{ $data->rumah->kode_qr_base64 }}" alt="QR Tempat Tinggal" width="90" height="90" style="display: block;">
@@ -1095,7 +1095,7 @@
                                             <tr style="page-break-inside: avoid;">
                                                 <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
                                                     @if(isset($chunk[0]) && !empty($chunk[0]))
-                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Tempat Tinggal {{ ($index * 2) + 1 }}</div>
+                                                        <div style="font-weight: normal; margin-bottom: 4px;">Foto Tempat Tinggal {{ ($index * 2) + 1 }}</div>
                                                         <img src="{{ $chunk[0] }}" alt="Foto Tempat Tinggal" width="280" height="190" style="display: block;">
                                                     @else
                                                         &nbsp;
@@ -1103,7 +1103,7 @@
                                                 </td>
                                                 <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
                                                     @if(isset($chunk[1]) && !empty($chunk[1]))
-                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Tempat Tinggal {{ ($index * 2) + 2 }}</div>
+                                                        <div style="font-weight: normal; margin-bottom: 4px;">Foto Tempat Tinggal {{ ($index * 2) + 2 }}</div>
                                                         <img src="{{ $chunk[1] }}" alt="Foto Tempat Tinggal" width="280" height="190" style="display: block;">
                                                     @else
                                                         &nbsp;
