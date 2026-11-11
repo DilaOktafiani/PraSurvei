@@ -1864,46 +1864,55 @@ class MukController extends Controller
             $data->kesimpulan->plafon_base64 = $this->convertImageToBase64($data->kesimpulan->plafon);
         }
 
+        // ==========================================
         // 7. Jaminan (Google Map, QR, dan Array Foto Jaminan)
+        // ==========================================
         $fotoJaminanBase64List = []; 
         if ($data->jaminan) {
-            $data->jaminan->google_maps_base64 = $this->convertImageToBase64($data->jaminan->google_maps);
-            $data->jaminan->kode_qr_base64 = $this->convertImageToBase64($data->jaminan->kode_qr, 200);
+            // Resize Google Map jadi maksimal 300px
+            $data->jaminan->google_maps_base64 = $this->convertImageToBase64($data->jaminan->google_maps, 300);
+            
+            // Resize QR Code jadi maksimal 100px
+            $data->jaminan->kode_qr_base64 = $this->convertImageToBase64($data->jaminan->kode_qr, 100);
             
             $fotoJaminans = !empty($data->jaminan->foto_jaminan) ? json_decode($data->jaminan->foto_jaminan, true) : [];
             foreach ($fotoJaminans as $foto) {
-                $fotoJaminanBase64List[] = $this->convertImageToBase64($foto);
+                // Resize Foto Jaminan jadi maksimal 300px
+                $fotoJaminanBase64List[] = $this->convertImageToBase64($foto, 300);
             }
             
-            // Gunakan setAttribute agar terbaca di file Blade
             $data->jaminan->setAttribute('foto_jaminan_base64_list', $fotoJaminanBase64List);
         }
 
+        // ==========================================
         // 8. Usaha (Google Map, QR, dan Array Foto Usaha per item)
+        // ==========================================
         if ($data->usaha) {
             foreach ($data->usaha as $ush) {
-                $ush->google_maps_base64 = $this->convertImageToBase64($ush->google_maps);
-                $ush->kode_qr_base64 = $this->convertImageToBase64($ush->kode_qr, 200);
+                $ush->google_maps_base64 = $this->convertImageToBase64($ush->google_maps, 300);
+                $ush->kode_qr_base64 = $this->convertImageToBase64($ush->kode_qr, 100);
                 
                 $convertedFotoUsaha = [];
                 $fotoUsahas = !empty($ush->foto_usaha) ? json_decode($ush->foto_usaha, true) : [];
                 foreach ($fotoUsahas as $foto) {
-                    $convertedFotoUsaha[] = $this->convertImageToBase64($foto);
+                    $convertedFotoUsaha[] = $this->convertImageToBase64($foto, 300);
                 }
                 
                 $ush->setAttribute('foto_usaha_base64_list', $convertedFotoUsaha);
             }
         }
 
+        // ==========================================
         // 9. Rumah / Tempat Tinggal (Google Map, QR, dan Array Foto Tempat Tinggal)
+        // ==========================================
         if ($data->rumah) {
-            $data->rumah->google_maps_base64 = $this->convertImageToBase64($data->rumah->google_maps);
-            $data->rumah->kode_qr_base64 = $this->convertImageToBase64($data->rumah->kode_qr, 200);
+            $data->rumah->google_maps_base64 = $this->convertImageToBase64($data->rumah->google_maps, 300);
+            $data->rumah->kode_qr_base64 = $this->convertImageToBase64($data->rumah->kode_qr, 100);
             
             $convertedFotoRumah = [];
             $fotoTinggals = !empty($data->rumah->foto_tempat_tinggal) ? json_decode($data->rumah->foto_tempat_tinggal, true) : [];
             foreach ($fotoTinggals as $foto) {
-                $convertedFotoRumah[] = $this->convertImageToBase64($foto);
+                $convertedFotoRumah[] = $this->convertImageToBase64($foto, 300);
             }
             
             $data->rumah->setAttribute('foto_tempat_tinggal_base64_list', $convertedFotoRumah);

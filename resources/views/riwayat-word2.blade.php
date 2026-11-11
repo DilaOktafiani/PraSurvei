@@ -656,19 +656,19 @@
                         </div>
                         <table style="width: 100%; border-collapse: collapse; margin-top: 3px; padding-left: 15px;">
                             <tr>
-                                <td style="width: 25%; font-weight: normal; padding-bottom: 3px;">Tanggungan Keluarga</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 3px;">Tanggungan Keluarga</td>
                                 <td style="width: 3%; text-align: center; padding-bottom: 3px;">:</td>
-                                <td style="width: 72%; font-weight: normal; padding-bottom: 3px;">{{ $data->limac->keluarga ?? '-' }}</td>
+                                <td style="width: 67%; font-weight: normal; padding-bottom: 3px;">{{ $data->limac->keluarga ?? '-' }}</td>
                             </tr>
                             <tr>
-                                <td style="font-weight: normal; padding-bottom: 3px;">Tanggungan Anak</td>
-                                <td style="text-align: center; padding-bottom: 3px;">:</td>
-                                <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->anak ?? '-' }}</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 3px;">Tanggungan Anak</td>
+                                <td style="width: 3%; text-align: center; padding-bottom: 3px;">:</td>
+                                <td style="width: 67%; font-weight: normal; padding-bottom: 3px;">{{ $data->limac->anak ?? '-' }}</td>
                             </tr>
                             <tr>
-                                <td style="font-weight: normal; padding-bottom: 3px;">Tanggungan Pendidikan</td>
-                                <td style="text-align: center; padding-bottom: 3px;">:</td>
-                                <td style="font-weight: normal; padding-bottom: 3px;">{{ $data->limac->pendidikan ?? '-' }}</td>
+                                <td style="width: 30%; font-weight: normal; padding-bottom: 3px;">Tanggungan Pendidikan</td>
+                                <td style="width: 3%; text-align: center; padding-bottom: 3px;">:</td>
+                                <td style="width: 67%; font-weight: normal; padding-bottom: 3px;">{{ $data->limac->pendidikan ?? '-' }}</td>
                             </tr>
                         </table>
                     </div>
@@ -806,151 +806,29 @@
                 </div>
             </div>
 
+        <!-- ========================================== -->
         <!-- GAMBAR JAMINAN, TEMPAT USAHA & TEMPAT TINGGAL -->
-        <div class="page-container" style="page-break-before: always; break-before: page;">  
-            <div class="mb-6">
+        <!-- ========================================== -->
+        <div class="page-container" style="margin-top: 20px;">  
+            <div class="mb-6" style="padding-left: 5%; padding-right: 5%;">
                 
-                <!-- Header Section -->
-                <div class="section-header" style="text-align: center; font-weight: bold;">
-                    GAMBAR JAMINAN, TEMPAT USAHA & TEMPAT TINGGAL
-                </div>
-
                 <div class="text-sm">
-                    <!-- 1. Lokasi dan Foto Jaminan -->
-                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
-                        <div style="font-weight: bold; margin-bottom: 8px;">
-                            1. Lokasi dan Foto Jaminan
-                        </div>
-                        
-                        <div style="margin-bottom: 20px;">
-                            <table width="100%" border="1" cellpadding="6" cellspacing="0" style="width: 100%; border-collapse: collapse; border-color: #000000; font-size: 14px;">
-                                <thead>
-                                    <tr style="background-color: #f3f4f6;">
-                                        <th width="50%" style="border: 1px solid black; text-align: left; width: 50%;">Gambar</th>
-                                        <th width="50%" style="border: 1px solid black; text-align: left; width: 50%;">Deskripsi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Baris 1: Google Map di Kiri, Link & QR Code di Kanan -->
-                                    <tr>
-                                        <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
-                                            <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
-                                            @if(!empty($data->jaminan->google_maps) && $data->jaminan->google_maps !== '-')
-                                                @if(!empty($data->jaminan->google_maps_base64))
-                                                    <img 
-                                                        src="{{ $data->jaminan->google_maps_base64 }}" 
-                                                        alt="Google Map" 
-                                                        width="300"
-                                                        style="width: 100%; max-width: 300px; height: auto; display: block;"
-                                                    >
-                                                @else
-                                                    <span style="font-size: 11px; color: red;">[File Google Map base64 tidak tersedia]</span>
-                                                @endif
-                                            @else
-                                                <span>-</span>
-                                            @endif
-                                        </td>
-                                        <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
-                                            <!-- Link Share Location -->
-                                            <div style="margin-bottom: 16px;">
-                                                <div style="font-weight: bold; margin-bottom: 4px;">Link Share Location</div>
-                                                @if(!empty($data->jaminan->share_location))
-                                                    <a href="{{ $data->jaminan->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; word-break: break-all;">
-                                                        {{ $data->jaminan->share_location }}
-                                                    </a>
-                                                @else
-                                                    <span>-</span>
-                                                @endif
-                                            </div>
 
-                                            <!-- Kode QR Maps -->
-                                            <div>
-                                                <div style="font-weight: bold; margin-bottom: 4px;">Kode QR Maps</div>
-                                                @if(!empty($data->jaminan->kode_qr) && $data->jaminan->kode_qr !== '-')
-                                                    @if(!empty($data->jaminan->kode_qr_base64))
-                                                        <img 
-                                                            src="{{ $data->jaminan->kode_qr_base64 }}" 
-                                                            alt="Kode QR Maps" 
-                                                            width="130"
-                                                            style="width: 130px; max-width: 130px; height: auto; display: block;"
-                                                        >
-                                                    @else
-                                                        <span style="font-size: 11px; color: red;">[File QR Maps base64 tidak tersedia]</span>
-                                                    @endif
-                                                @else
-                                                    <span>-</span>
-                                                @endif
-                                            </div>
-                                        </td>
-                                    </tr>
+                    <!-- KUNCI UTAMA: Bungkus Judul Utama dan Bagian 1 ke dalam 1 Tabel Luar agar Judul tidak tertinggal di halaman kosong -->
+                    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 25px;" cellspacing="0" cellpadding="0">
+                        <tr style="page-break-inside: avoid; break-inside: avoid;">
+                            <td style="border: none; padding: 0;">
+                                
+                                <!-- Header Utama yang tadinya terpisah, sekarang dipaksa masuk ke dalam satu kesatuan -->
+                                <div class="section-header" style="text-align: center; font-weight: bold; margin-bottom: 20px; font-size: 14px;">
+                                    GAMBAR JAMINAN, TEMPAT USAHA & TEMPAT TINGGAL
+                                </div>
 
-                                    <!-- Baris Berikutnya: Foto Jaminan (Berpasangan / 2 Kolom menggunakan Base64 list) -->
-                                    @php
-                                        $fotoJaminanBase64List = $data->jaminan->foto_jaminan_base64_list ?? [];
-                                        $chunks = array_chunk($fotoJaminanBase64List, 2);
-                                    @endphp
-
-                                    @foreach($chunks as $chunk)
-                                        <tr>
-                                            <!-- Kolom Kiri Foto Jaminan -->
-                                            <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
-                                                @if(isset($chunk[0]) && !empty($chunk[0]))
-                                                    <div style="font-weight: bold; margin-bottom: 4px;">Foto Jaminan</div>
-                                                    <img 
-                                                        src="{{ $chunk[0] }}" 
-                                                        alt="Foto Jaminan" 
-                                                        width="300"
-                                                        style="width: 100%; max-width: 300px; height: auto; display: block;"
-                                                    >
-                                                @else
-                                                    &nbsp;
-                                                @endif
-                                            </td>
-
-                                            <!-- Kolom Kanan Foto Jaminan -->
-                                            <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
-                                                @if(isset($chunk[1]) && !empty($chunk[1]))
-                                                    <div style="font-weight: bold; margin-bottom: 4px;">Foto Jaminan</div>
-                                                    <img 
-                                                        src="{{ $chunk[1] }}" 
-                                                        alt="Foto Jaminan" 
-                                                        width="300"
-                                                        style="width: 100%; max-width: 300px; height: auto; display: block;"
-                                                    >
-                                                @else
-                                                    &nbsp;
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- 2. Lokasi dan Foto Tempat Usaha -->
-                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
-                        <div style="font-weight: bold; margin-bottom: 8px;">
-                            2. Lokasi dan Foto Tempat Usaha
-                        </div>
-
-                        @php
-                            $listUsaha = $data->usaha ? $data->usaha->sortBy('urutan') : collect();
-                        @endphp
-
-                        @foreach($listUsaha as $usahaItem)
-                            @php
-                                $hurufUrutan = chr(96 + $loop->iteration); 
-                            @endphp
-
-                            <!-- Judul Bagian dengan Penomoran Huruf (a, b, c) -->
-                            <div style="font-weight: bold; margin-top: 10px; margin-bottom: 6px;">
-                                {{ $hurufUrutan }}. Lokasi dan Foto Tempat Usaha {{ $usahaItem->nama_usaha }}
-                            </div>
-
-                            <!-- Tabel Detail Lokasi & Foto Usaha -->
-                            <div style="margin-bottom: 20px;">
-                                <table width="100%" border="1" cellpadding="6" cellspacing="0" style="width: 100%; border-collapse: collapse; border-color: #000000; font-size: 14px;">
+                                <div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">
+                                    1. Lokasi dan Foto Jaminan
+                                </div>
+                                
+                                <table width="100%" border="1" cellpadding="6" cellspacing="0" style="width: 100%; border-collapse: collapse; border-color: #000000; font-size: 14px; table-layout: fixed;">
                                     <thead>
                                         <tr style="background-color: #f3f4f6;">
                                             <th width="50%" style="border: 1px solid black; text-align: left; width: 50%;">Gambar</th>
@@ -958,53 +836,38 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Baris 1: Google Map di Kiri, Link & QR Code di Kanan -->
-                                        <tr>
+                                        <!-- Baris Maps & QR -->
+                                        <tr style="page-break-inside: avoid;">
                                             <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
                                                 <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
-                                                @if(!empty($usahaItem->google_maps) && $usahaItem->google_maps !== '-')
-                                                    @if(!empty($usahaItem->google_maps_base64))
-                                                        {{-- Kotak putih dihapus, gambar langsung tampil bersih menggunakan Base64 --}}
-                                                        <img 
-                                                            src="{{ $usahaItem->google_maps_base64 }}" 
-                                                            alt="Google Map" 
-                                                            width="300"
-                                                            style="width: 100%; max-width: 300px; height: auto; display: block;"
-                                                        >
+                                                @if(!empty($data->jaminan->google_maps) && $data->jaminan->google_maps !== '-')
+                                                    @if(!empty($data->jaminan->google_maps_base64))
+                                                        <img src="{{ $data->jaminan->google_maps_base64 }}" alt="Google Map" width="280" height="190" style="display: block;">
                                                     @else
-                                                        <span style="font-size: 11px; color: red;">[File Google Map usaha base64 tidak tersedia]</span>
+                                                        <span style="font-size: 12px; color: red;">[File Google Map tidak tersedia]</span>
                                                     @endif
                                                 @else
                                                     <span>-</span>
                                                 @endif
                                             </td>
-                                            <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
-                                                <!-- Link Share Location -->
-                                                <div style="margin-bottom: 16px;">
-                                                    <div style="font-weight: bold; margin-bottom: 4px;">Link Share Location</div>
-                                                    @if(!empty($usahaItem->share_location))
-                                                        <a href="{{ $usahaItem->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; word-break: break-all;">
-                                                            {{ $usahaItem->share_location }}
+                                            <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%; word-wrap: break-word;">
+                                                <div style="margin-bottom: 12px;">
+                                                    <div style="font-weight: bold; margin-bottom: 2px;">Link Share Location</div>
+                                                    @if(!empty($data->jaminan->share_location))
+                                                        <a href="{{ $data->jaminan->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; word-break: break-all; font-size: 13px;">
+                                                            {{ $data->jaminan->share_location }}
                                                         </a>
                                                     @else
                                                         <span>-</span>
                                                     @endif
                                                 </div>
-
-                                                <!-- Kode QR Maps -->
                                                 <div>
-                                                    <div style="font-weight: bold; margin-bottom: 4px;">Kode QR Maps</div>
-                                                    @if(!empty($usahaItem->kode_qr) && $usahaItem->kode_qr !== '-')
-                                                        @if(!empty($usahaItem->kode_qr_base64))
-                                                            {{-- Kotak putih dihapus, QR Code langsung tampil bersih menggunakan Base64 --}}
-                                                            <img 
-                                                                src="{{ $usahaItem->kode_qr_base64 }}" 
-                                                                alt="Kode QR Maps" 
-                                                                width="130"
-                                                                style="width: 130px; max-width: 130px; height: auto; display: block;"
-                                                            >
+                                                    <div style="font-weight: bold; margin-bottom: 2px;">Kode QR Maps</div>
+                                                    @if(!empty($data->jaminan->kode_qr) && $data->jaminan->kode_qr !== '-')
+                                                        @if(!empty($data->jaminan->kode_qr_base64))
+                                                            <img src="{{ $data->jaminan->kode_qr_base64 }}" alt="Kode QR Maps" width="90" height="90" style="display: block;">
                                                         @else
-                                                            <span style="font-size: 11px; color: red;">[File QR Maps usaha base64 tidak tersedia]</span>
+                                                            <span style="font-size: 12px; color: red;">[QR tidak tersedia]</span>
                                                         @endif
                                                     @else
                                                         <span>-</span>
@@ -1013,41 +876,26 @@
                                             </td>
                                         </tr>
 
-                                        <!-- Baris Berikutnya: Foto Usaha (Berpasangan / 2 Kolom menggunakan Base64 list) -->
+                                        <!-- Baris Foto Jaminan Berpasangan -->
                                         @php
-                                            $fotoUsahaBase64List = $usahaItem->foto_usaha_base64_list ?? [];
-                                            $chunks = array_chunk($fotoUsahaBase64List, 2);
+                                            $fotoJaminanBase64List = $data->jaminan->foto_jaminan_base64_list ?? [];
+                                            $chunksJaminan = array_chunk($fotoJaminanBase64List, 2);
                                         @endphp
 
-                                        @foreach($chunks as $chunk)
-                                            <tr>
-                                                <!-- Kolom Kiri -->
+                                        @foreach($chunksJaminan as $index => $chunk)
+                                            <tr style="page-break-inside: avoid;">
                                                 <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
                                                     @if(isset($chunk[0]) && !empty($chunk[0]))
-                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Usaha</div>
-                                                        {{-- Kotak putih dihapus, gambar langsung tampil bersih menggunakan Base64 --}}
-                                                        <img 
-                                                            src="{{ $chunk[0] }}" 
-                                                            alt="Foto Usaha" 
-                                                            width="300"
-                                                            style="width: 100%; max-width: 300px; height: auto; display: block;"
-                                                        >
+                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Jaminan {{ ($index * 2) + 1 }}</div>
+                                                        <img src="{{ $chunk[0] }}" alt="Foto Jaminan" width="280" height="190" style="display: block;">
                                                     @else
                                                         &nbsp;
                                                     @endif
                                                 </td>
-
-                                                <!-- Kolom Kanan -->
                                                 <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
                                                     @if(isset($chunk[1]) && !empty($chunk[1]))
-                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Usaha</div>
-                                                        {{-- Kotak putih dihapus, gambar langsung tampil bersih menggunakan Base64 --}}
-                                                        <img 
-                                                            src="{{ $chunk[1] }}" 
-                                                            alt="Foto Usaha" 
-                                                            width="300"
-                                                            style="width: 100%; max-width: 300px; height: auto; display: block;"
-                                                        >
+                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Jaminan {{ ($index * 2) + 2 }}</div>
+                                                        <img src="{{ $chunk[1] }}" alt="Foto Jaminan" width="280" height="190" style="display: block;">
                                                     @else
                                                         &nbsp;
                                                     @endif
@@ -1056,132 +904,219 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                            </div>
-                        @endforeach
-                    </div>
 
-                    <!-- 3. Lokasi dan Foto Tempat Tinggal -->
-                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px; margin-bottom: 40px;">
-                        <div style="font-weight: bold; margin-bottom: 8px;">
-                            3. Lokasi dan Foto Tempat Tinggal
-                        </div>
-                        
-                        <div>
-                            <table width="100%" border="1" cellpadding="6" cellspacing="0" style="width: 100%; border-collapse: collapse; border-color: #000000; font-size: 14px;">
+                            </td>
+                        </tr>
+                    </table>
+
+
+                    <!-- ========================================== -->
+                    <!-- 2. LOKASI DAN FOTO TEMPAT USAHA -->
+                    <!-- ========================================== -->
+                    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 25px;" cellspacing="0" cellpadding="0">
+                        <tr style="page-break-inside: avoid; break-inside: avoid;">
+                            <td style="border: none; padding: 0;">
+
+                                <!-- Judul Utama Bagian 2 kini dibungkus dalam satu wadah dengan isinya agar tidak tertinggal -->
+                                <div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">
+                                    2. Lokasi dan Foto Tempat Usaha
+                                </div>
+
+                                @php
+                                    $listUsaha = $data->usaha ? $data->usaha->sortBy('urutan') : collect();
+                                @endphp
+
+                                @foreach($listUsaha as $usahaItem)
+                                    @php
+                                        $hurufUrutan = chr(96 + $loop->iteration); 
+                                    @endphp
+
+                                    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 25px;" cellspacing="0" cellpadding="0">
+                                        <tr style="page-break-inside: avoid; break-inside: avoid;">
+                                            <td style="border: none; padding: 0;">
+
+                                                <div style="font-weight: bold; margin-top: 5px; margin-bottom: 6px; font-size: 14px;">
+                                                    {{ $hurufUrutan }}. Lokasi dan Foto Tempat Usaha {{ $usahaItem->nama_usaha }}
+                                                </div>
+
+                                                <table width="100%" border="1" cellpadding="6" cellspacing="0" style="width: 100%; border-collapse: collapse; border-color: #000000; font-size: 14px; table-layout: fixed;">
+                                                    <thead>
+                                                        <tr style="background-color: #f3f4f6;">
+                                                            <th width="50%" style="border: 1px solid black; text-align: left; width: 50%;">Gambar</th>
+                                                            <th width="50%" style="border: 1px solid black; text-align: left; width: 50%;">Deskripsi</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- Baris Maps & QR Usaha -->
+                                                        <tr style="page-break-inside: avoid;">
+                                                            <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
+                                                                <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
+                                                                @if(!empty($usahaItem->google_maps) && $usahaItem->google_maps !== '-')
+                                                                    @if(!empty($usahaItem->google_maps_base64))
+                                                                        <img src="{{ $usahaItem->google_maps_base64 }}" alt="Google Map Usaha" width="280" height="190" style="display: block;">
+                                                                    @else
+                                                                        <span style="font-size: 12px; color: red;">[Map usaha tidak tersedia]</span>
+                                                                    @endif
+                                                                @else
+                                                                    <span>-</span>
+                                                                @endif
+                                                            </td>
+                                                            <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%; word-wrap: break-word;">
+                                                                <div style="margin-bottom: 12px;">
+                                                                    <div style="font-weight: bold; margin-bottom: 2px;">Link Share Location</div>
+                                                                    @if(!empty($usahaItem->share_location))
+                                                                        <a href="{{ $usahaItem->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; word-break: break-all; font-size: 13px;">
+                                                                            {{ $usahaItem->share_location }}
+                                                                        </a>
+                                                                    @else
+                                                                        <span>-</span>
+                                                                    @endif
+                                                                </div>
+                                                                <div>
+                                                                    <div style="font-weight: bold; margin-bottom: 2px;">Kode QR Maps</div>
+                                                                    @if(!empty($usahaItem->kode_qr) && $usahaItem->kode_qr !== '-')
+                                                                        @if(!empty($usahaItem->kode_qr_base64))
+                                                                            <img src="{{ $usahaItem->kode_qr_base64 }}" alt="QR Usaha" width="90" height="90" style="display: block;">
+                                                                        @else
+                                                                            <span style="font-size: 12px; color: red;">[QR tidak tersedia]</span>
+                                                                        @endif
+                                                                    @else
+                                                                        <span>-</span>
+                                                                    @endif
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <!-- Baris Foto Usaha Berpasangan -->
+                                                        @php
+                                                            $fotoUsahaBase64List = $usahaItem->foto_usaha_base64_list ?? [];
+                                                            $chunksUsaha = array_chunk($fotoUsahaBase64List, 2);
+                                                        @endphp
+
+                                                        @foreach($chunksUsaha as $index => $chunk)
+                                                            <tr style="page-break-inside: avoid;">
+                                                                <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
+                                                                    @if(isset($chunk[0]) && !empty($chunk[0]))
+                                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Usaha {{ ($index * 2) + 1 }}</div>
+                                                                        <img src="{{ $chunk[0] }}" alt="Foto Usaha" width="280" height="190" style="display: block;">
+                                                                    @else
+                                                                        &nbsp;
+                                                                    @endif
+                                                                </td>
+                                                                <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
+                                                                    @if(isset($chunk[1]) && !empty($chunk[1]))
+                                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Usaha {{ ($index * 2) + 2 }}</div>
+                                                                        <img src="{{ $chunk[1] }}" alt="Foto Usaha" width="280" height="190" style="display: block;">
+                                                                    @else
+                                                                        &nbsp;
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                @endforeach
+
+                            </td>
+                        </tr>
+                    </table>
+
+
+                    <!-- ========================================== -->
+                    <!-- 3. LOKASI DAN FOTO TEMPAT TINGGAL -->
+                    <!-- ========================================== -->
+                    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 25px;" cellspacing="0" cellpadding="0">
+                        <tr style="page-break-inside: avoid; break-inside: avoid;">
+                            <td style="border: none; padding: 0;">
+
+                                <div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">
+                                    3. Lokasi dan Foto Tempat Tinggal
+                                </div>
                                 
-                                <!-- CSS untuk mematikan repeat header & mencegah baris terpotong -->
-                                <style>
-                                    thead { display: table-row-group; } 
-                                    tr { page-break-inside: avoid; page-break-after: auto; } 
-                                </style>
-
-                                <thead>
-                                    <tr style="background-color: #f3f4f6;">
-                                        <th width="50%" style="border: 1px solid black; text-align: left; width: 50%;">Gambar</th>
-                                        <th width="50%" style="border: 1px solid black; text-align: left; width: 50%;">Deskripsi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Baris 1: Google Map di Kiri, Link & QR Code di Kanan -->
-                                    <tr>
-                                        <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
-                                            <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
-                                            @if(!empty($data->rumah->google_maps) && $data->rumah->google_maps !== '-')
-                                                @if(!empty($data->rumah->google_maps_base64))
-                                                    {{-- Kotak putih dihapus, gambar langsung tampil bersih menggunakan Base64 --}}
-                                                    <img 
-                                                        src="{{ $data->rumah->google_maps_base64 }}" 
-                                                        alt="Google Map" 
-                                                        width="300"
-                                                        style="width: 100%; max-width: 300px; height: auto; display: block;"
-                                                    >
-                                                @else
-                                                    <span style="font-size: 11px; color: red;">[File Google Map tempat tinggal base64 tidak tersedia]</span>
-                                                @endif
-                                            @else
-                                                <span>-</span>
-                                            @endif
-                                        </td>
-                                        <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
-                                            <!-- Link Share Location -->
-                                            <div style="margin-bottom: 16px;">
-                                                <div style="font-weight: bold; margin-bottom: 4px;">Link Share Location</div>
-                                                @if(!empty($data->rumah->share_location))
-                                                    <a href="{{ $data->rumah->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; word-break: break-all;">
-                                                        {{ $data->rumah->share_location }}
-                                                    </a>
-                                                @else
-                                                    <span>-</span>
-                                                @endif
-                                            </div>
-
-                                            <!-- Kode QR Maps -->
-                                            <div>
-                                                <div style="font-weight: bold; margin-bottom: 4px;">Kode QR Maps</div>
-                                                @if(!empty($data->rumah->kode_qr) && $data->rumah->kode_qr !== '-')
-                                                    @if(!empty($data->rumah->kode_qr_base64))
-                                                        {{-- Kotak putih dihapus, QR Code langsung tampil bersih menggunakan Base64 --}}
-                                                        <img 
-                                                            src="{{ $data->rumah->kode_qr_base64 }}" 
-                                                            alt="Kode QR Maps" 
-                                                            width="130"
-                                                            style="width: 130px; max-width: 130px; height: auto; display: block;"
-                                                        >
+                                <table width="100%" border="1" cellpadding="6" cellspacing="0" style="width: 100%; border-collapse: collapse; border-color: #000000; font-size: 14px; table-layout: fixed;">
+                                    <thead>
+                                        <tr style="background-color: #f3f4f6;">
+                                            <th width="50%" style="border: 1px solid black; text-align: left; width: 50%;">Gambar</th>
+                                            <th width="50%" style="border: 1px solid black; text-align: left; width: 50%;">Deskripsi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Baris Maps & QR Tempat Tinggal -->
+                                        <tr style="page-break-inside: avoid;">
+                                            <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
+                                                <div style="font-weight: bold; margin-bottom: 4px;">Google Map</div>
+                                                @if(!empty($data->rumah->google_maps) && $data->rumah->google_maps !== '-')
+                                                    @if(!empty($data->rumah->google_maps_base64))
+                                                        <img src="{{ $data->rumah->google_maps_base64 }}" alt="Google Map Tempat Tinggal" width="280" height="190" style="display: block;">
                                                     @else
-                                                        <span style="font-size: 11px; color: red;">[File QR Maps tempat tinggal base64 tidak tersedia]</span>
+                                                        <span style="font-size: 12px; color: red;">[Map tempat tinggal tidak tersedia]</span>
                                                     @endif
                                                 @else
                                                     <span>-</span>
                                                 @endif
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <!-- Baris Berikutnya: Foto Tempat Tinggal (Berpasangan / 2 Kolom menggunakan Base64 list) -->
-                                    @php
-                                        $fotoTinggalBase64List = $data->rumah->foto_tempat_tinggal_base64_list ?? [];
-                                        $chunks = array_chunk($fotoTinggalBase64List, 2);
-                                    @endphp
-
-                                    @foreach($chunks as $chunk)
-                                        <tr>
-                                            <!-- Kolom Kiri -->
-                                            <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
-                                                @if(isset($chunk[0]) && !empty($chunk[0]))
-                                                    <div style="font-weight: bold; margin-bottom: 4px;">Foto Tempat Tinggal</div>
-                                                    {{-- Kotak putih dihapus, gambar langsung tampil bersih menggunakan Base64 --}}
-                                                    <img 
-                                                        src="{{ $chunk[0] }}" 
-                                                        alt="Foto Tempat Tinggal" 
-                                                        width="300"
-                                                        style="width: 100%; max-width: 300px; height: auto; display: block;"
-                                                    >
-                                                @else
-                                                    &nbsp;
-                                                @endif
                                             </td>
-
-                                            <!-- Kolom Kanan -->
-                                            <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
-                                                @if(isset($chunk[1]) && !empty($chunk[1]))
-                                                    <div style="font-weight: bold; margin-bottom: 4px;">Foto Tempat Tinggal</div>
-                                                    {{-- Kotak putih dihapus, gambar langsung tampil bersih menggunakan Base64 --}}
-                                                    <img 
-                                                        src="{{ $chunk[1] }}" 
-                                                        alt="Foto Tempat Tinggal" 
-                                                        width="300"
-                                                        style="width: 100%; max-width: 300px; height: auto; display: block;"
-                                                    >
-                                                @else
-                                                    &nbsp;
-                                                @endif
+                                            <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%; word-wrap: break-word;">
+                                                <div style="margin-bottom: 12px;">
+                                                    <div style="font-weight: bold; margin-bottom: 2px;">Link Share Location</div>
+                                                    @if(!empty($data->rumah->share_location))
+                                                        <a href="{{ $data->rumah->share_location }}" target="_blank" style="color: #2563eb; text-decoration: underline; word-break: break-all; font-size: 13px;">
+                                                            {{ $data->rumah->share_location }}
+                                                        </a>
+                                                    @else
+                                                        <span>-</span>
+                                                    @endif
+                                                </div>
+                                                <div>
+                                                    <div style="font-weight: bold; margin-bottom: 2px;">Kode QR Maps</div>
+                                                    @if(!empty($data->rumah->kode_qr) && $data->rumah->kode_qr !== '-')
+                                                        @if(!empty($data->rumah->kode_qr_base64))
+                                                            <img src="{{ $data->rumah->kode_qr_base64 }}" alt="QR Tempat Tinggal" width="90" height="90" style="display: block;">
+                                                        @else
+                                                            <span style="font-size: 12px; color: red;">[QR tidak tersedia]</span>
+                                                        @endif
+                                                    @else
+                                                        <span>-</span>
+                                                    @endif
+                                                </div>
                                             </td>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+
+                                        <!-- Baris Foto Tempat Tinggal Berpasangan -->
+                                        @php
+                                            $fotoTinggalBase64List = $data->rumah->foto_tempat_tinggal_base64_list ?? [];
+                                            $chunksTinggal = array_chunk($fotoTinggalBase64List, 2);
+                                        @endphp
+
+                                        @foreach($chunksTinggal as $index => $chunk)
+                                            <tr style="page-break-inside: avoid;">
+                                                <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
+                                                    @if(isset($chunk[0]) && !empty($chunk[0]))
+                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Tempat Tinggal {{ ($index * 2) + 1 }}</div>
+                                                        <img src="{{ $chunk[0] }}" alt="Foto Tempat Tinggal" width="280" height="190" style="display: block;">
+                                                    @else
+                                                        &nbsp;
+                                                    @endif
+                                                </td>
+                                                <td width="50%" style="border: 1px solid black; vertical-align: top; width: 50%;">
+                                                    @if(isset($chunk[1]) && !empty($chunk[1]))
+                                                        <div style="font-weight: bold; margin-bottom: 4px;">Foto Tempat Tinggal {{ ($index * 2) + 2 }}</div>
+                                                        <img src="{{ $chunk[1] }}" alt="Foto Tempat Tinggal" width="280" height="190" style="display: block;">
+                                                    @else
+                                                        &nbsp;
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+
+                            </td>
+                        </tr>
+                    </table>
 
                 </div>
             </div>
@@ -1191,7 +1126,7 @@
         <div class="page-container" style="page-break-before: always; break-before: page;">
             <div class="mb-6">
                 <!-- Header Section -->
-                <div class="section-header" style="text-align: center; font-weight: bold;">
+                <div class="section-header" style="text-align: center; font-weight: bold; margin-bottom: 20px;">
                     SPESIFIKASI JAMINAN KREDIT, MELIPUTI
                 </div>
                 
@@ -1363,7 +1298,7 @@
                                 <td style="width: 5%; text-align: center; font-weight: normal; padding-bottom: 4px;">16.</td>
                                 <td style="width: 30%; font-weight: normal; padding-bottom: 4px;">Air</td>
                                 <td style="width: 3%; text-align: center; font-weight: normal; padding-bottom: 4px;">:</td>
-                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 4px;">{{ $data->spesifikasi->air ?? '-' }}</td>
+                                <td style="width: 62%; font-weight: normal; color: #000000; padding-bottom: 400px;">{{ $data->spesifikasi->air ?? '-' }}</td>
                             </tr>
                         </table>
                     </div>
@@ -1372,50 +1307,60 @@
         </div>
 
         <!-- DENAH JAMINAN -->
-        <div class="page-container" style="page-break-before: always; break-before: page;">   
-            <div class="mb-6">
+        <div style="page-break-before: always; break-before: page; margin-top: 0;">
+            <div class="page-container"> 
+                <div class="mb-6">
 
-                <div style="page-break-inside: avoid; break-inside: avoid;">
-                <!-- Header Section -->
-                <div class="section-header" style="text-align: center; font-weight: bold;">
-                    DENAH JAMINAN
-                </div>
-                
-                <div class="text-sm">
-                    <!-- Denah -->
-                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
-                        @if(!empty($data->denah) && !empty($data->denah->denah_jaminan) && $data->denah->denah_jaminan !== '-')
-                            @php
-                                $fileDenah = $data->denah->denah_jaminan;
-                                $extDenah = strtolower(pathinfo($fileDenah, PATHINFO_EXTENSION));
-                            @endphp
+                    <!-- Bungkus dalam Tabel 1 Kolom agar tidak terpisah halaman -->
+                    <table style="width: 100%; border-collapse: collapse; border: none;" cellspacing="0" cellpadding="0">
+                        <tr style="page-break-inside: avoid; break-inside: avoid;">
+                            <td style="border: none; padding: 0;">
+                                
+                                <!-- Header Section -->
+                                <div class="section-header" style="text-align: center; font-weight: bold; margin-bottom: 20px;">
+                                    DENAH JAMINAN
+                                </div>
+                                
+                                <div class="text-sm">
+                                    <!-- Denah -->
+                                    <div style="padding-left: 5%; padding-right: 5%; margin-top: 10px;">
+                                        @if(!empty($data->denah) && !empty($data->denah->denah_jaminan) && $data->denah->denah_jaminan !== '-')
+                                            @php
+                                                $fileDenah = $data->denah->denah_jaminan;
+                                                $extDenah = strtolower(pathinfo($fileDenah, PATHINFO_EXTENSION));
+                                            @endphp
 
-                            {{-- JIKA FILE BERUPA PDF ATAU DWG: Tampilkan sebagai teks/lampiran kotak --}}
-                            @if(in_array($extDenah, ['pdf', 'dwg']))
-                                <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block; margin: 2px 0;">
-                                    [Lampiran Dokumen {{ strtoupper($extDenah) }}: {{ basename($fileDenah) }} - Harap periksa file digital]
+                                            {{-- JIKA FILE BERUPA PDF ATAU DWG --}}
+                                            @if(in_array($extDenah, ['pdf', 'dwg']))
+                                                <div style="font-size: 13px; font-style: italic; color: #374151; border: 1px dashed #9ca3af; padding: 6px 10px; border-radius: 4px; background-color: #f9fafb; display: inline-block; margin: 2px 0;">
+                                                    [Lampiran Dokumen {{ strtoupper($extDenah) }}: {{ basename($fileDenah) }} - Harap periksa file digital]
+                                                </div>
+
+                                            {{-- JIKA FILE BERUPA GAMBAR --}}
+                                            @elseif(in_array($extDenah, ['jpg', 'jpeg', 'png', 'webp']))
+                                                
+                                                @if(!empty($data->denah->denah_jaminan_base64))
+                                                    <img 
+                                                        src="{{ $data->denah->denah_jaminan_base64 }}" 
+                                                        alt="Denah"
+                                                        style="max-width: 100%; height: auto; display: block;"
+                                                    >
+                                                @else
+                                                    <span style="font-size: 11px; color: red;">[File gambar denah jaminan tidak ditemukan di server: {{ basename($fileDenah) }}]</span>
+                                                @endif
+                                            @else
+                                                <span style="color: #4b5563; font-size: 13px;">{{ basename($fileDenah) }}</span>
+                                            @endif
+                                        @else
+                                            <span>-</span>
+                                        @endif
+                                    </div>
                                 </div>
 
-                            {{-- JIKA FILE BERUPA GAMBAR (JPG, JPEG, PNG, WEBP) --}}
-                            @elseif(in_array($extDenah, ['jpg', 'jpeg', 'png', 'webp']))
-                                
-                                @if(!empty($data->denah->denah_jaminan_base64))
-                                    {{-- Kotak putih dihapus, gambar langsung tampil bersih menggunakan Base64 --}}
-                                    <img 
-                                        src="{{ $data->denah->denah_jaminan_base64 }}" 
-                                        alt="Denah"
-                                        style="max-width: 100%; height: auto; display: block;"
-                                    >
-                                @else
-                                    <span style="font-size: 11px; color: red;">[File gambar denah jaminan tidak ditemukan di server: {{ basename($fileDenah) }}]</span>
-                                @endif
-                            @else
-                                <span style="color: #4b5563; font-size: 13px;">{{ basename($fileDenah) }}</span>
-                            @endif
-                        @else
-                            <span>-</span>
-                        @endif
-                    </div>
+                            </td>
+                        </tr>
+                    </table>
+
                 </div>
             </div>
         </div>
